@@ -1,0 +1,93 @@
+---
+version: 2
+deployment:
+  name: browser extension - deploy beta
+  source-plan: ADGEXT-BEBETASPECS
+release-naming: ${bamboo.inject.version}-beta
+environments:
+  - static.adtidy.org
+  - Chrome WebStore
+static.adtidy.org:
+  triggers: []
+  tasks:
+    - clean
+    - checkout:
+        repository: bamboo-deploy-publisher
+        path: bamboo-deploy-publisher
+        force-clean-build: 'true'
+    - artifact-download:
+        artifacts:
+          - name: edge.zip
+          - name: chrome.zip
+          - name: firefox.zip
+          - name: build.txt
+          - name: chrome.crx
+          - name: update.xml
+          - name: firefox.xpi
+          - name: update.json
+          - name: adguard-api.zip
+    - script:
+        interpreter: SHELL
+        scripts:
+          - |-
+            set -x
+            set -e
+
+            # Fix mixed logs
+            exec 2>&1
+
+            ls -la
+
+            ./bamboo-deploy-publisher/deploy.sh browser-extension-beta
+  final-tasks: []
+  variables: {}
+  requirements:
+    - adg-docker: 'true'
+  notifications:
+    - events:
+        - deployment-started-and-finished
+      recipients:
+        - webhook:
+            name: Deploy webhook
+            url: http://prod.jirahub.service.eu.consul/v1/webhook/bamboo?channel=adguard-qa
+
+Chrome WebStore:
+  triggers: []
+  tasks:
+    - clean
+    - checkout:
+        repository: bamboo-deploy-publisher
+        path: bamboo-deploy-publisher
+        force-clean-build: 'true'
+    - artifact-download:
+        artifacts:
+          - name: edge.zip
+          - name: chrome.zip
+          - name: firefox.zip
+          - name: build.txt
+          - name: chrome.crx
+          - name: update.xml
+    - script:
+        interpreter: SHELL
+        scripts:
+          - |-
+            set -x
+            set -e
+
+            # Fix mixed logs
+            exec 2>&1
+
+            ls -la
+
+            ./bamboo-deploy-publisher/deploy.sh browser-extension-webstore-beta
+  final-tasks: []
+  variables: {}
+  requirements:
+    - adg-docker: 'true'
+  notifications:
+    - events:
+        - deployment-started-and-finished
+      recipients:
+        - webhook:
+            name: Deploy webhook
+            url: http://prod.jirahub.service.eu.consul/v1/webhook/bamboo?channel=adguard-qa
