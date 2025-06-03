@@ -50,7 +50,7 @@ export const engine = (function () {
             engine: 'extension',
             version: backgroundPage.app && backgroundPage.app.getVersion(),
             verbose: true,
-            compatibility: TSUrlFilter.CompatibilityTypes.extension,
+            compatibility: TSUrlFilter.CompatibilityTypes.extension
         };
 
         TSUrlFilter.setConfiguration(config);
@@ -88,7 +88,7 @@ export const engine = (function () {
         const {
             requestUrl,
             frameUrl,
-            requestType,
+            requestType
         } = matchQuery;
 
         let { frameRule } = matchQuery;
@@ -97,7 +97,7 @@ export const engine = (function () {
             'Filtering http request for url: {0}, document: {1}, requestType: {2}',
             requestUrl,
             frameUrl,
-            requestType,
+            requestType
         );
 
         if (!isReady()) {
@@ -112,7 +112,7 @@ export const engine = (function () {
         const request = new TSUrlFilter.Request(
             requestUrl,
             frameUrl,
-            RequestTypes.transformRequestType(requestType),
+            RequestTypes.transformRequestType(requestType)
         );
 
         const result = engine.matchRequest(request, frameRule);
@@ -122,7 +122,7 @@ export const engine = (function () {
             result.getBasicResult(),
             requestUrl,
             frameUrl,
-            requestType,
+            requestType
         );
 
         return result;
@@ -175,6 +175,6 @@ export const engine = (function () {
 
         matchRequest,
         matchFrame,
-        getCosmeticResult,
+        getCosmeticResult
     };
 })();

@@ -28,7 +28,7 @@ const abstractHitStats = {
     addRuleHit: errorFunction,
     addDomainView: errorFunction,
     cleanup: errorFunction,
-    getStats: errorFunction,
+    getStats: errorFunction
 };
 
 export default abstractHitStats;

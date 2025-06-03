@@ -63,7 +63,8 @@ export const startAssistant = () => {
 
                 if (!assistant) {
                     assistant = adguardAssistant();
-                } else {
+                }
+                else {
                     assistant.close();
                 }
 

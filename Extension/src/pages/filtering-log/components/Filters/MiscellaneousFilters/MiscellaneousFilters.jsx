@@ -1,6 +1,6 @@
 import React, {
     useContext,
-    useRef,
+    useRef
 } from 'react';
 import { observer } from 'mobx-react';
 
@@ -19,23 +19,23 @@ const MiscellaneousFilters = observer(() => {
         requestSourceFilters,
         setRequestSourceFilters,
         miscellaneousFilters,
-        setMiscellaneousFilters,
+        setMiscellaneousFilters
     } = logStore;
 
     return (
-        <div className="miscellaneous-filters">
+        <div className='miscellaneous-filters'>
             <div
-                className="miscellaneous-filters__filters"
+                className='miscellaneous-filters__filters'
                 ref={ref}
             >
-                <div className="miscellaneous-filters__section">
+                <div className='miscellaneous-filters__section'>
                     <Tags
                         type={NAVIGATION_TAGS.PARTY}
                         tags={requestSourceFilters}
                         setTags={setRequestSourceFilters}
                     />
                 </div>
-                <div className="miscellaneous-filters__section">
+                <div className='miscellaneous-filters__section'>
                     <Tags
                         type={NAVIGATION_TAGS.REGULAR}
                         tags={miscellaneousFilters}

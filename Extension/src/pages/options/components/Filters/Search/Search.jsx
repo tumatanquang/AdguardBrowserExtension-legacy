@@ -16,16 +16,16 @@ const isDesktopScreen = window.innerWidth > TABLET_SCREEN_WIDTH;
 const options = [
     {
         value: SEARCH_FILTERS.ALL,
-        title: reactTranslator.getMessage('options_filters_list_search_display_option_all_filters'),
+        title: reactTranslator.getMessage('options_filters_list_search_display_option_all_filters')
     },
     {
         value: SEARCH_FILTERS.ENABLED,
-        title: reactTranslator.getMessage('options_filters_list_search_display_option_enabled'),
+        title: reactTranslator.getMessage('options_filters_list_search_display_option_enabled')
     },
     {
         value: SEARCH_FILTERS.DISABLED,
-        title: reactTranslator.getMessage('options_filters_list_search_display_option_disabled'),
-    },
+        title: reactTranslator.getMessage('options_filters_list_search_display_option_disabled')
+    }
 ];
 
 const Search = observer(() => {
@@ -39,7 +39,7 @@ const Search = observer(() => {
         setSearchInput,
         searchInput,
         setSearchSelect,
-        searchSelect,
+        searchSelect
     } = settingsStore;
 
     useEffect(() => {
@@ -112,14 +112,14 @@ const Search = observer(() => {
     }, []);
 
     return (
-        <div className="search" ref={searchRef}>
-            <label className="search__label" htmlFor="search__input">
+        <div className='search' ref={searchRef}>
+            <label className='search__label' htmlFor='search__input'>
                 <input
-                    id="search__input"
+                    id='search__input'
                     onFocus={onSearchInputFocus}
                     onBlur={onSearchInputBlur}
-                    className="search__input"
-                    type="text"
+                    className='search__input'
+                    type='text'
                     placeholder={reactTranslator.getMessage('options_filters_search')}
                     ref={searchInputRef}
                     onChange={searchInputHandler}
@@ -128,17 +128,17 @@ const Search = observer(() => {
             </label>
             {searchInput ? (
                 <button
-                    type="button"
-                    className="button"
+                    type='button'
+                    className='button'
                     aria-label={reactTranslator.getMessage('close_button_title')}
                     onClick={searchCloseHandler}
                 >
-                    <Icon id="#cross" classname="search__cross" />
+                    <Icon id='#cross' classname='search__cross' />
                 </button>
-            ) : <Icon id="#magnifying" classname="icon--magnifying" />}
-            <div className="search__select">
+            ) : <Icon id='#magnifying' classname='icon--magnifying' />}
+            <div className='search__select'>
                 <Select
-                    id="search-select"
+                    id='search-select'
                     handler={searchSelectHandler}
                     options={options}
                     value={searchSelect}

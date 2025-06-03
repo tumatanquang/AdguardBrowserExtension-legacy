@@ -16,7 +16,7 @@
     if (theme === 'dark') {
         document.body.classList.add('body_dark');
     }
-    if (theme === 'light') {
+    else if (theme === 'light') {
         document.body.classList.add('body_light');
     }
 })();

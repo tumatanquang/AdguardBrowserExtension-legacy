@@ -24,8 +24,8 @@ jest.mock('../../../../Extension/src/background/utils/local-storage', () => {
             getItem,
             setItem,
             removeItem,
-            hasItem,
-        },
+            hasItem
+        }
     };
 });
 
@@ -38,7 +38,7 @@ describe('pageStats', () => {
         5: { groupId: 5, groupName: 'Security', displayNumber: 5 },
         6: { groupId: 6, groupName: 'Other', displayNumber: 6 },
         7: { groupId: 7, groupName: 'Language-specific', displayNumber: 7 },
-        0: { groupId: 0, groupName: 'Custom', displayNumber: 99 },
+        0: { groupId: 0, groupName: 'Custom', displayNumber: 99 }
     };
 
     jest.spyOn(subscriptions, 'getGroups').mockImplementation(() => {
@@ -56,7 +56,7 @@ describe('pageStats', () => {
         2: { filterId: 2, groupId: 2 },
         3: { filterId: 3, groupId: 2 },
         4: { filterId: 4, groupId: 3 },
-        5: { filterId: 5, groupId: 5 },
+        5: { filterId: 5, groupId: 5 }
     };
 
     jest.spyOn(subscriptions, 'getFilter').mockImplementation((filterId) => {

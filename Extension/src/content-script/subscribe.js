@@ -29,7 +29,7 @@
         let title = null;
         let url = null;
 
-        for (let i = 0; i < urlParams.length; i += 1) {
+        for (let i = 0; i < urlParams.length; ++i) {
             const parts = urlParams[i].split('=', 2);
             if (parts.length !== 2) {
                 continue;
@@ -48,7 +48,7 @@
 
         return {
             title,
-            url,
+            url
         };
     };
 
@@ -74,7 +74,8 @@
             if (target.host !== 'subscribe.adblockplus.org' || target.pathname !== '/') {
                 return;
             }
-        } else if (!(/^abp:\/*subscribe\/*\?/i.test(target.href)
+        }
+        else if (!(/^abp:\/*subscribe\/*\?/i.test(target.href)
             || /^adguard:\/*subscribe\/*\?/i.test(target.href))) {
             return;
         }
@@ -85,7 +86,8 @@
         let urlParams;
         if (target.search) {
             urlParams = target.search.substring(1).replace(/&amp;/g, '&').split('&');
-        } else {
+        }
+        else {
             const { href } = target;
             const index = href.indexOf('?');
             urlParams = href.substring(index + 1).replace(/&amp;/g, '&').split('&');
@@ -102,7 +104,7 @@
         contentPage.sendMessage({
             type: 'addFilterSubscription',
             url,
-            title,
+            title
         });
     };
 

@@ -11,9 +11,9 @@
 #%#var AG_removeParent = function(el, fn) { while (el && el.parentNode) { if (fn(el)) { el.parentNode.removeChild(el); return; } el = el.parentNode; } };
 #%#var AG_removeCookie=function(a){var e=/./;/^\/.+\/$/.test(a)?e=new RegExp(a.slice(1,-1)):""!==a&&(e=new RegExp(a.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")));a=function(){for(var a=document.cookie.split(";"),g=a.length;g--;){cookieStr=a[g];var d=cookieStr.indexOf("=");if(-1!==d&&(d=cookieStr.slice(0,d).trim(),e.test(d)))for(var h=document.location.hostname.split("."),f=0;f<h.length-1;f++){var b=h.slice(f).join(".");if(b){var c=d+"=",k="; domain="+b;b="; domain=."+b;document.cookie=c+"; expires=Thu, 01 Jan 1970 00:00:00 GMT";document.cookie=c+k+"; expires=Thu, 01 Jan 1970 00:00:00 GMT";document.cookie=c+b+"; expires=Thu, 01 Jan 1970 00:00:00 GMT";document.cookie=c+"; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";document.cookie=c+k+"; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";document.cookie=c+b+"; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"}}}};a();window.addEventListener("beforeunload",a)};
 #%#var AG_defineProperty=function(){var p,q=Object.defineProperty;if("function"==typeof WeakMap)p=WeakMap;else{var r=0,t=function(){this.a=(r+=Math.random()).toString()};t.prototype.set=function(a,b){var d=a[this.a];d&&d[0]===a?d[1]=b:q(a,this.a,{value:[a,b],writable:!0});return this};t.prototype.get=function(a){var b;return(b=a[this.a])&&b[0]===a?b[1]:void 0};t.prototype.has=function(a){var b=a[this.a];return b?b[0]===a:!1};p=t}function u(a){this.b=a;this.h=Object.create(null)}function v(a,b,d,e){this.a=a;this.i=b;this.c=d;this.f=e}function w(){this.g=/^([^\\\.]|\\.)*?\./;this.j=/\\(.)/g;this.a=new p}function x(a,b){var d=b.f;if(d&&!("beforeGet"in d||"beforeSet"in d))return z(d);var e={get:function(){var c=b.f;c&&c.beforeGet&&c.beforeGet.call(this,b.a.b);a:if(c=b.g)c=A(c)?c.value:c.get?c.get.call(this):void 0;else{c=b.a.b;if(b.i in c&&(c=B(c),null!==c)){var d=C.call(c,b.i);c=d?d.call(this):c[b.i];break a}c=void 0}(this===b.a.b||D.call(b.a.b,this))&&E(a,c,b.c);return c},set:function(c){if(this===b.a.b||D.call(b.a.b,this)){b.f&&b.f.beforeSet&&(c=b.f.beforeSet.call(this,c,this));var d=b.g;d&&A(d)&&d.value===c?c=!0:(d=F(b,c,this),G(c)&&(c=H(a,c),I(a,c,b.c)),c=d)}else c=F(b,c,this);return c}};d&&J(d,e,K);return e}function I(a,b,d){for(var e in d.h){var c=d.h[e];if(b.h[e]){var h=a,g=b.h[e],k=c;!k.f||g.f||"undefined"===typeof g.a.b||g.g||(g.g=z(k.f));g.c&&k.c&&g.c!==k.c&&I(h,g.c,k.c)}else{g=h=void 0;k=a;var f=b,l=c.i,m="undefined"!==typeof f.b,y=!1;m&&(g=L(f.b,l))&&!g.configurable&&(y=!0,h=f.b[l]);var n=y?H(k,h):new u(c.c.b);I(k,n,c.c);n=new v(f,l,n,c.f);f.h[l]=n;m&&(n.g=g,m=x(k,n),y?E(k,h,c.c):(q(f.b,l,m),g&&A(g)&&(M(m,g.value,f.b),E(k,g.value,c.c))))}}}function E(a,b,d){G(b)&&(b=H(a,b),I(a,b,d))}function F(a,b,d){var e=a.g;if(!e){e=B(a.a.b);if(null!==e&&(e=N.call(e,a.i)))return e.call(d,b);if(!O(a.a.b))return!1;a.g={value:b,configurable:!0,writable:!0,enumerable:!0};return!0}return M(e,b,d)}function H(a,b){var d=a.a.get(b);d||(d=new u(b),a.a.set(b,d));return d}function A(a){return"undefined"!==typeof a.writable}function J(a,b,d){for(var e=0,c=d.length;e<c;e++){var h=d[e];h in a&&(b[h]=a[h])}}function z(a){if(a){var b={};J(a,b,P);return b}}function M(a,b,d){if(A(a))return a.writable?(a.value=b,!0):!1;if(!a.set)return!1;a.set.call(d,b);return!0}var P="configurable enumerable value get set writable".split(" "),K=P.slice(0,2),L=Object.getOwnPropertyDescriptor,O=Object.isExtensible,B=Object.getPrototypeOf,D=Object.prototype.isPrototypeOf,C=Object.prototype.__lookupGetter__||function(a){return(a=Q(this,a))&&a.get?a.get:void 0},N=Object.prototype.__lookupSetter__||function(a){return(a=Q(this,a))&&a.set?a.set:void 0};function Q(a,b){if(b in a){for(;!w.hasOwnProperty.call(a,b);)a=B(a);return L(a,b)}}function G(a){var b=typeof a;return"function"===b||"object"===b&&null!==a?!0:!1}var R;return function(a,b,d){R||(R=new w);var e=R;d=d||window;var c=new u;a+=".";var h=c||new u;for(var g=e.g,k=e.j,f,l,m;a;){f=g.exec(a);if(null===f)throw 1;f=f[0].length;l=a.slice(0,f-1).replace(k,"$1");a=a.slice(f);(f=h.h[l])?m=f.c:(m=new u,f=new v(h,l,m),h.h[l]=f);h=m}if(!f)throw 1;a=f;a.f=b;E(e,d,c)};}();
-#%#var AG_abortOnPropertyWrite=function(a,b){var c=Math.random().toString(36).substr(2,8);AG_defineProperty(a,{beforeSet:function(){b&&console.warn("AdGuard aborted property write: "+a);throw new ReferenceError(c);}});var d=window.onerror;window.onerror=function(e){if("string"===typeof e&&-1!==e.indexOf(c))return b&&console.warn("AdGuard has caught window.onerror: "+a),!0;if(d instanceof Function)return d.apply(this,arguments)}};
-#%#var AG_abortOnPropertyRead=function(a,b){var c=Math.random().toString(36).substr(2,8);AG_defineProperty(a,{beforeGet:function(){b&&console.warn("AdGuard aborted property read: "+a);throw new ReferenceError(c);}});var d=window.onerror;window.onerror=function(e){if("string"===typeof e&&-1!==e.indexOf(c))return b&&console.warn("AdGuard has caught window.onerror: "+a),!0;if(d instanceof Function)return d.apply(this,arguments)}};
-#%#var AG_abortInlineScript=function(g,b,c){var d=function(){if("currentScript"in document)return document.currentScript;var a=document.getElementsByTagName("script");return a[a.length-1]},e=Math.random().toString(36).substr(2,8),h=d();AG_defineProperty(b,{beforeGet:function(){var a=d();if(a instanceof HTMLScriptElement&&a!==h&&""===a.src&&g.test(a.textContent))throw c&&console.warn("AdGuard aborted execution of an inline script"),new ReferenceError(e);}});var f=window.onerror;window.onerror=function(a){if("string"===typeof a&&-1!==a.indexOf(e))return c&&console.warn("AdGuard has caught window.onerror: "+b),!0;if(f instanceof Function)return f.apply(this,arguments)}};
+#%#var AG_abortOnPropertyWrite=function(a,b){var c=Math.random().toString(36).substr(2,8);AG_defineProperty(a,{beforeSet:function(){b&&console.warn("AdGuard aborted property write: "+a);throw new ReferenceError(c);}});var d=window.onerror;window.onerror=function(e){if("string"===typeof e&&e.indexOf(c) >= 0)return b&&console.warn("AdGuard has caught window.onerror: "+a),!0;if(d instanceof Function)return d.apply(this,arguments)}};
+#%#var AG_abortOnPropertyRead=function(a,b){var c=Math.random().toString(36).substr(2,8);AG_defineProperty(a,{beforeGet:function(){b&&console.warn("AdGuard aborted property read: "+a);throw new ReferenceError(c);}});var d=window.onerror;window.onerror=function(e){if("string"===typeof e&&e.indexOf(c) >= 0)return b&&console.warn("AdGuard has caught window.onerror: "+a),!0;if(d instanceof Function)return d.apply(this,arguments)}};
+#%#var AG_abortInlineScript=function(g,b,c){var d=function(){if("currentScript"in document)return document.currentScript;var a=document.getElementsByTagName("script");return a[a.length-1]},e=Math.random().toString(36).substr(2,8),h=d();AG_defineProperty(b,{beforeGet:function(){var a=d();if(a instanceof HTMLScriptElement&&a!==h&&""===a.src&&g.test(a.textContent))throw c&&console.warn("AdGuard aborted execution of an inline script"),new ReferenceError(e);}});var f=window.onerror;window.onerror=function(a){if("string"===typeof a&&a.indexOf(e) >= 0)return c&&console.warn("AdGuard has caught window.onerror: "+b),!0;if(f instanceof Function)return f.apply(this,arguments)}};
 #%#var AG_setConstant=function(e,a){if("undefined"===a)a=void 0;else if("false"===a)a=!1;else if("true"===a)a=!0;else if("noopFunc"===a)a=function(){};else if("trueFunc"===a)a=function(){return!0};else if("falseFunc"===a)a=function(){return!1};else if(/^\d+$/.test(a)){if(a=parseFloat(a),isNaN(a)||32767<Math.abs(a))return}else return;var b=!1;AG_defineProperty(e,{get:function(){return a},set:function(c){if(b)var d=!0;else void 0!==c&&void 0!==a&&typeof c!==typeof a&&(b=!0),d=b;d&&(a=c)}})};
 ||dekkcewpqrep.com^
 ||ugripaid.com^
@@ -4742,7 +4742,7 @@ expres.cz,televizeseznam.cz,ahaonline.cz,extra.cz,mobilmania.cz,idnes.cz,aktuali
 expres.cz,televizeseznam.cz,ahaonline.cz,extra.cz,mobilmania.cz,idnes.cz,aktuality.sk,aktualne.cz,auto.cz,blesk.cz,centrum.cz,cnews.cz,e15.cz,sport.cz,super.cz,tiscali.cz,zive.cz#%#//scriptlet('abort-current-inline-script', 'document.createElement', 'kununu_mul')
 expres.cz,televizeseznam.cz,ahaonline.cz,extra.cz,mobilmania.cz,idnes.cz,aktuality.sk,aktualne.cz,auto.cz,blesk.cz,centrum.cz,cnews.cz,e15.cz,sport.cz,super.cz,tiscali.cz,zive.cz#%#//scriptlet("abort-on-property-read", "Object.prototype.kununu_mul")
 !+ NOT_PLATFORM(windows, mac, android, ext_ff)
-novinky.cz#%#!function(){if(location.pathname.indexOf("/iframe/player")===-1){Object.defineProperty(Object.prototype, 'kununu_mul', { get: function(){ throw null; }, set: function(){ throw null; }});}}();
+novinky.cz#%#!function(){if(location.pathname.indexOf("/iframe/player") < 0){Object.defineProperty(Object.prototype, 'kununu_mul', { get: function(){ throw null; }, set: function(){ throw null; }});}}();
 !+ NOT_PLATFORM(windows, mac, android, ext_ff)
 karaoketexty.cz#%#//scriptlet("abort-current-inline-script", "Math", "adbDetect")
 ceskenoviny.cz##.box-offer
@@ -6456,7 +6456,7 @@ anime-suba.com##.Anadvertisement0
 anime-suba.com##img[src^="https://www.anime-suba.com/Anime-Suba/Admin/imgAnadvertisement/"]
 ||anime-suba.com/Anime-Suba/Admin/imgAnadvertisement/
 ||googles.video^$media,redirect=noopmp3-0.1s,domain=anime-suba.com
-anime-suba.com#%#AG_onLoad(function(){if(-1!=window.location.href.indexOf("/player/")&&"undefined"!=typeof kosana&&"function"==typeof kosana.skipAd){var a=0;const b=function(b,c){var d=document.querySelector(".skip-btn");d&&10>a?(a++,kosana.skipAd()):c.disconnect()},c=new MutationObserver(b);c.observe(document,{childList:!0,attributes:!0,subtree:!0})}});
+anime-suba.com#%#AG_onLoad(function(){if(window.location.href.indexOf("/player/") >= 0&&"undefined"!=typeof kosana&&"function"==typeof kosana.skipAd){var a=0;const b=function(b,c){var d=document.querySelector(".skip-btn");d&&10>a?(a++,kosana.skipAd()):c.disconnect()},c=new MutationObserver(b);c.observe(document,{childList:!0,attributes:!0,subtree:!0})}});
 thaiticketmajor.com##.banner-container
 ||dunnung.com/wp-content/uploads/*/*/*.gif
 dunplayer.review#%#//scriptlet("set-constant", "Object.prototype.ads", "emptyArr")
@@ -6526,7 +6526,7 @@ manga168.com##.bigcover
 manga168.com###ads_fox_bottom
 manga168.com#$#.terebody { padding-top: 0 !important }
 *.gif$domain=hanimesubth.com,image
-fairyanime.com#%#AG_onLoad(function(){if(-1!=window.location.href.indexOf("/kosana/")&&"function"===typeof kosana.skipAd&&"function"===typeof kosana.setup){var a=kosana.setup.toString().match(/videoAdUrl/g);if(null!==a)for(var b=0;b<a.length;b++)kosana.skipAd()}});
+fairyanime.com#%#AG_onLoad(function(){if(window.location.href.indexOf("/kosana/") >= 0&&"function"===typeof kosana.skipAd&&"function"===typeof kosana.setup){var a=kosana.setup.toString().match(/videoAdUrl/g);if(null!==a)for(var b=0;b<a.length;b++)kosana.skipAd()}});
 .gif$domain=037hdmovie.com
 037hdmovie.com###fix_footer2
 037hdmovie.com###banner-left
@@ -7007,8 +7007,8 @@ animepahe.ru,btcmovies.xyz,vidsrc.me,123movies-hd.online,dramacool.*,123movies.*
 animepahe.ru,btcmovies.xyz,vidsrc.me,123movies-hd.online,dramacool.*,123movies.*,ahwaktv.tv,jujmanga.com,otakufr.co,srsone.top,otakudesu.moe,phimgiz.net,himovies.to,hhdstreams.club,uhdstreams.club,holymanga.net,strims.world,kissanime.*,xmovies8.pw,sektekomik.com,moviesjoy.*,1337x.*,0gomovies.*,vipbox.lc,watch-serieshd.cc,semawur.com,tamilblasters.unblockit.dev,shingekinokyojinepisodes.com,bigg-boss14.su,tinyzonetv.to,ekinomaniak.net,rexdlfile.com,downloadhub.ink,cuturl.in,123movie.date,manganelo.link,janusnotes.com,hblinks.pro,akwams.*,1337x.is,desiupload.co,leechall.com,allcalidad.la,kissmanga.link,disasterscans.com,masteranime.es,savesubs.com,gdtot.*,mkvcinemas.*,mangakik.com,akwam.*,goo-2o.com,mirrored.to,europixhd.io#%#//scriptlet("json-prune", "*", "rot_url")
 seehd.ws,watchers.to#%#(function(){var b=document.addEventListener;document.addEventListener=function(){-1==arguments[1].toString().indexOf("inXP(e.target")&&b.apply(document,arguments)};var c=window.setInterval;window.setInterval=function(){if(-1==arguments[0].toString().indexOf("pSC(ppu_main,"))return c.apply(window,arguments)};Object.defineProperty(window,"onbeforeunload",{set:function(a){return-1==a.toString().indexOf("location.href=options.url")?a:null}})})();
 1fichier.com,pornfapr.com,freepornhq.xxx,piratebays.co.uk,gameofbay.org,kickass.unlockproj.party,kickass.com.se,hdsector.com#%#(function(){var b=document.addEventListener;document.addEventListener=function(){-1==arguments[1].toString().indexOf("inXP(e.target")&&b.apply(document,arguments)};var c=window.setInterval;window.setInterval=function(){if(-1==arguments[0].toString().indexOf("pSC(ppu_main,"))return c.apply(window,arguments)};Object.defineProperty(window,"onbeforeunload",{set:function(a){return-1==a.toString().indexOf("location.href=options.url")?a:null}})})();
-animeflv.net,vidtodo.me,m4ufree.com#%#!function(b,c){function a(a,b){return typeof a!=='function'?!0:a.toString().indexOf(b)===-1}b=document.addEventListener,document.addEventListener=function(){a(arguments[1],'inXP(e.target')&&b.apply(document,arguments)},c=window.setInterval,window.setInterval=function(){return a(arguments[0],'pSC(ppu_main,')?c.apply(window,arguments):void 0},AG_defineProperty('onbeforeunload',{beforeSet:function(b){return a(b,'location.href=options.url')?b:null}})}();
-kat.sx,videoszoofiliahd.com,rarbgto.org,rarbgunblock.org,nopeporn.com,rarbg.to,unblockedhyperbay.info,tpbairproxy.in,proxybayduck.fi,piratebaai.click,capjackproxy.net,ikwildepiratebay.org,proxyproxyproxy.nl,proxypirate.in,gameofbay.org,tpbunblocked.org,unblocktpb.com,piratebays.co.uk,tpbportal.in,thepiratebay.uk.net,piratetoday.click,batpirate.info,baypirate.click,piratebaai.club,proxyspotting.in,baypiratebay.be,unblockedbay.info,baybaypirate.org,rowpirate.org,kickass.cd,eztv.unblocked.sh,porn00.org,megadrive.co,altadefinizione01.zone,tamilrockers.tw,vidto.me,rarbgmirror.org,vidzi.tv#%#!function(b,c){function a(a,b){return typeof a!=='function'?!0:a.toString().indexOf(b)===-1}b=document.addEventListener,document.addEventListener=function(){a(arguments[1],'inXP(e.target')&&b.apply(document,arguments)},c=window.setInterval,window.setInterval=function(){return a(arguments[0],'cookies.ppu_main')?c.apply(window,arguments):void 0},AG_defineProperty('onbeforeunload',{beforeSet:function(b){return a(b,'location.href=options.url')?b:null}})}();
+animeflv.net,vidtodo.me,m4ufree.com#%#!function(b,c){function a(a,b){return typeof a!=='function'?!0:a.toString().indexOf(b) < 0}b=document.addEventListener,document.addEventListener=function(){a(arguments[1],'inXP(e.target')&&b.apply(document,arguments)},c=window.setInterval,window.setInterval=function(){return a(arguments[0],'pSC(ppu_main,')?c.apply(window,arguments):void 0},AG_defineProperty('onbeforeunload',{beforeSet:function(b){return a(b,'location.href=options.url')?b:null}})}();
+kat.sx,videoszoofiliahd.com,rarbgto.org,rarbgunblock.org,nopeporn.com,rarbg.to,unblockedhyperbay.info,tpbairproxy.in,proxybayduck.fi,piratebaai.click,capjackproxy.net,ikwildepiratebay.org,proxyproxyproxy.nl,proxypirate.in,gameofbay.org,tpbunblocked.org,unblocktpb.com,piratebays.co.uk,tpbportal.in,thepiratebay.uk.net,piratetoday.click,batpirate.info,baypirate.click,piratebaai.club,proxyspotting.in,baypiratebay.be,unblockedbay.info,baybaypirate.org,rowpirate.org,kickass.cd,eztv.unblocked.sh,porn00.org,megadrive.co,altadefinizione01.zone,tamilrockers.tw,vidto.me,rarbgmirror.org,vidzi.tv#%#!function(b,c){function a(a,b){return typeof a!=='function'?!0:a.toString().indexOf(b) < 0}b=document.addEventListener,document.addEventListener=function(){a(arguments[1],'inXP(e.target')&&b.apply(document,arguments)},c=window.setInterval,window.setInterval=function(){return a(arguments[0],'cookies.ppu_main')?c.apply(window,arguments):void 0},AG_defineProperty('onbeforeunload',{beforeSet:function(b){return a(b,'location.href=options.url')?b:null}})}();
 animeskai.com,animeflv.ru#%#!function(d,e){function f(g,h){return"function"!=typeof g||-1===g.toString().indexOf(h)}d=document.addEventListener,document.addEventListener=function(){f(arguments[1],"['tagName']['toLowerCase']()&&document")&&d.apply(document,arguments)},e=window.setInterval,window.setInterval=function(){return f(arguments[0],"['overlayName'])[")?e.apply(window,arguments):void 0},AG_defineProperty("onbeforeunload",{beforeSet:function beforeSet(g){return f(g,"location.href=options.url")?g:null}})}();
 flashx.pw,rarbg2019.org,rarbgmirrored.org,rarbgget.org,proxyrarbg.org,x1337x.eu,1337x.to,1337x.st,x1337x.ws,kissasian.li,tvsinpagar.com,filmux.org,egy.best#%#!function(a,b){function c(i,j){return"function"!=typeof i||-1===i.toString().indexOf(j)}a=document.addEventListener,document.addEventListener=function(){c(arguments[1],")]=null,!(")&&a.apply(document,arguments)},b=window.setInterval,window.setInterval=function(){return c(arguments[0],"popunder")?b.apply(window,arguments):void 0},AG_defineProperty("onbeforeunload",{beforeSet:function(j){return c(j,"location.href=options.url")?j:null}})}();
 albvid.com,m4ufree.tv,bludvfilmes.com,torrentrapid.com,cda-hd.cc,ettv.tv,x1337x.se,hpjav.tv,bayproxy.eu,veu.xxx,proxytpb.org,zombay.org,tpbbay.eu,proxyoneahoy.net,piratebays.co,pirateproxy.tf,piratebaymirror.eu,pirate.trade,thepiratebay-proxy.com,wearepirates.click,ukpirate.org,hyperproxy.net,duckingproxy.eu,piratebayproxy.tf,tpbmirror.us,pirateproxy.yt,alivbay.org,piratebay.red,pirateproxy.wf,ukpirateproxy.xyz,piratebay247.net,pirateprox.club,baypiratebay.be,indiaproxy.in,thepirate.click,seehd.pl,superanimes.site,streamdreams.org,vergol.com,vidmoly.me,mp3fiber.com#%#!function(a,b){function c(i,j){return"function"!=typeof i||-1===i.toString().indexOf(j)}a=document.addEventListener,document.addEventListener=function(){c(arguments[1],"'popunder'")&&a.apply(document,arguments)},b=window.setInterval,window.setInterval=function(){return c(arguments[0],"'ppu_")?b.apply(window,arguments):void 0},AG_defineProperty("onbeforeunload",{beforeSet:function(j){return c(j,"location.href=options.url")?j:null}})}();
@@ -8443,7 +8443,7 @@ fuqer.com#%#//scriptlet("abort-on-property-read", "fUnder")
 yts.life#%#document.cookie = "visitx=1; path=/";
 !+ NOT_PLATFORM(windows, mac, android)
 xsexvideos.pro,mature-tube.sexy#%#//scriptlet('prevent-setTimeout', '/window\.location\.href = ("\/sell\.php"|popURL)/')
-moneymanagement.com.au#%#(function(){if(-1!=window.location.href.indexOf("/intro-mm"))for(var c=document.cookie.split(";"),b=0;b<c.length;b++){var a=c[b];a=a.split("=");"redirect_url_to_intro"==a[0]&&window.location.replace(decodeURIComponent(a[1]))}})();
+moneymanagement.com.au#%#(function(){if(window.location.href.indexOf("/intro-mm") >= 0)for(var c=document.cookie.split(";"),b=0;b<c.length;b++){var a=c[b];a=a.split("=");"redirect_url_to_intro"==a[0]&&window.location.replace(decodeURIComponent(a[1]))}})();
 iddeas.xyz#%#//scriptlet("prevent-window-open")
 iddeas.xyz#%#window.open = function() {};
 vev.red,vidup.io#%#//scriptlet("set-constant", "Object.prototype.ads", "undefined")
@@ -8471,7 +8471,7 @@ cambro.tv#%#AG_defineProperty('flashvars.adv_postpause_src', {value: ""});
 cambro.tv#%#AG_defineProperty('flashvars.popunder_url', {value: ""});
 laidhub.com#%#//scriptlet("abort-on-property-read", "OpenPopUnder")
 zegtrends.com,icutlink.com#%#//scriptlet("prevent-window-open")
-icutlink.com#%#(function() { var _eval = window.eval; window.eval = function(a) { if ( a.toString().indexOf('__PPU_CHECK') === -1 ) { _eval(a); return; } }; })();
+icutlink.com#%#(function() { var _eval = window.eval; window.eval = function(a) { if ( a.toString().indexOf('__PPU_CHECK') < 0 ) { _eval(a); return; } }; })();
 voxc.org#%#//scriptlet("abort-on-property-read", "PopUP")
 javbangers.com,cambro.tv#%#//scriptlet('abort-current-inline-script', 'document.attachEvent', 'initBCPopunder')
 bs.to#%#//scriptlet("abort-current-inline-script", "Date", "a.href,a.href")
@@ -8521,19 +8521,19 @@ xhamster20.desi,xhamster19.desi,xhwebsite2.com,xhamster18.desi,xhadult3.com,xhad
 xhamster20.desi,xhamster19.desi,xhwebsite2.com,xhamster18.desi,xhadult3.com,xhadult2.com,xhmoon5.com,xhwide1.com,xhwide8.com,xhamster3.*,xhplanet2.com,xhamster18.*,xhamster17.*,megaxh.com,xhamster16.*,hamsterix.*,xhamster13.*,xhamster10.*,xhamster4.*,xhamster3.*,xhamster2.*,xhamster.*#%#//scriptlet('set-local-storage-item', 'popseen', 'true')
 xhamster20.desi,xhamster19.desi,xhwebsite2.com,xhamster18.desi,xhadult3.com,xhadult2.com,xhmoon5.com,xhwide1.com,xhwide8.com,xhamster3.*,xhplanet2.com,xhamster18.*,xhamster17.*,megaxh.com,xhamster16.*,hamsterix.*,xhamster13.*,xhamster10.*,xhamster4.*,xhamster3.*,xhamster2.*,xhamster.*#%#//scriptlet("abort-current-inline-script", "document.createElement", "initTabUnder")
 easyexploits.com#%#//scriptlet("abort-on-property-read", "S9tt")
-ytss.unblocked.to#%#(function() { var _eval = window.eval; window.eval = function(a) { if ( a.toString().indexOf('popunder') === -1 ) { _eval(a); return; } }; })();
+ytss.unblocked.to#%#(function() { var _eval = window.eval; window.eval = function(a) { if ( a.toString().indexOf('popunder') < 0 ) { _eval(a); return; } }; })();
 hotpornfile.org#%#//scriptlet("abort-on-property-read", "F900")
 hotpornfile.org#%#//scriptlet("abort-on-property-read", "cIPop")
 hotpornfile.org#%#//scriptlet("abort-on-property-read", "_clk_na_list")
 shotfly.in#%#//scriptlet("prevent-window-open")
-up-load.io#%#(function() { var _eval = window.eval; window.eval = function(a) { if ( a.toString().indexOf('__PPU_CHECK') === -1 ) { _eval(a); return; } }; })();
+up-load.io#%#(function() { var _eval = window.eval; window.eval = function(a) { if ( a.toString().indexOf('__PPU_CHECK') < 0 ) { _eval(a); return; } }; })();
 smwebs.xyz#%#window.open = function() {};
 headfonics.com#%#//scriptlet("abort-on-property-read", "advanced_ads_ready")
 shemaleorgy.xxx#%#document.cookie = "pu_count=1";
 softonic.cn,softonic.com,softonic.pl#%#document.cookie = "session.DI_ModalShown=1; path=/;";
 cle0desktop.blogspot.com#%#//scriptlet("abort-on-property-read", "popunder")
 ultraurls.com#%#window.open = function() {};
-ultraurls.com#%#(function() { var _eval = window.eval; window.eval = function(a) { if ( a.toString().indexOf('__PPU_CHECK') === -1 ) { _eval(a); return; } }; })();
+ultraurls.com#%#(function() { var _eval = window.eval; window.eval = function(a) { if ( a.toString().indexOf('__PPU_CHECK') < 0 ) { _eval(a); return; } }; })();
 soundpark-club.casa,soundpark.best,sound-park.world,soundpark.red#%#AG_onLoad(function() { $(function() { $('.dnl').unbind('click'); }); });
 soundpark-club.casa,soundpark.best,sound-park.world,soundpark.red#%#(function() { window.open_ = window.open; var w_open = window.open, regex = /anizablevetor\.pro/; window.open = function(a, b) { if (typeof a !== 'string' || !regex.test(a)) { w_open(a, b); } }; })();
 hihbt.com#%#//scriptlet("abort-current-inline-script", "window.open")
@@ -8588,7 +8588,7 @@ mangovideo.pw#%#//scriptlet("abort-on-property-read", "myFunctions")
 analdin.com,mangovideo.pw,streamporn.pw#%#//scriptlet("abort-on-property-read", "popunder")
 kastream.biz#%#window.open = function() {};
 fileflares.com#%#(function(){var c=document.addEventListener;document.addEventListener=function(a,b,d,e){"click"!=a&&-1==b.toString().indexOf('bi()')&&c(a,b,d,e)}.bind(document);})();
-link.tl#%#AG_onLoad(function() { setTimeout(function() {if(window.location.href.indexOf("/i/") != -1) { document.querySelector(" .skip > a").click(); }}, 300); });
+link.tl#%#AG_onLoad(function() { setTimeout(function() {if(window.location.href.indexOf("/i/") >= 0) { document.querySelector(" .skip > a").click(); }}, 300); });
 x1337x.eu,1337x.to,1337x.st,x1337x.ws#%#//scriptlet("set-constant", "S9tt", "noopFunc")
 imgmaze.pw,imgview.pw#%#//scriptlet("set-constant", "_pop", "emptyArr")
 shrtfly.com#%#AG_onLoad(function() { setTimeout(function() { $("#go-popup").remove(); }, 300); });
@@ -8598,7 +8598,7 @@ arcadeprehacks.com#%#//scriptlet("abort-current-inline-script", "Math.random", "
 tnaflix.com#%#window.open = function() {};
 soundpark-club.com#%#AG_onLoad(function() { $(function() { $('.dnl').unbind('click'); }); });
 soundpark-club.com#%#(function() { window.open_ = window.open; var w_open = window.open, regex = /afletedly\.info/; window.open = function(a, b) { if (typeof a !== 'string' || !regex.test(a)) { w_open(a, b); } }; })();
-mydramaoppa.com#%#AG_defineProperty('dtGonza.playeradstime', {value: -1}); AG_onLoad(function() { setTimeout(function() { if(window.location.href.indexOf("/links/") != -1) { var el = document.getElementById("link"); if(el) { var link = el.getAttribute("href"); location.replace(link); } }}, 300); });
+mydramaoppa.com#%#AG_defineProperty('dtGonza.playeradstime', {value: -1}); AG_onLoad(function() { setTimeout(function() { if(window.location.href.indexOf("/links/") >= 0) { var el = document.getElementById("link"); if(el) { var link = el.getAttribute("href"); location.replace(link); } }}, 300); });
 vidbom.com#%#//scriptlet("abort-current-inline-script", "atob", "removeCookie")
 flix555.com#%#window.open = function() {};
 adsrt.me#%#window.open = function() {};
@@ -8635,7 +8635,7 @@ vivo.sx#%#(function(){var c=document.addEventListener;document.addEventListener=
 vivo.sx#%#(function(){var b=window.setTimeout;window.setTimeout=function(a,c){if(!/Object\[/.test(a.toString()))return b(a,c)};})();
 vivo.sx#%#(function(){Object.defineProperty(window,"open",{writable:!1,enumerable:!1,configurable:!1,value:window.open})})();
 onionplay.net#%#//scriptlet('set-constant', 'scds', '0')
-ultimate-guitar.com#%#document.cookie = "_ug_interstitialShown=1; path=/;"; AG_onLoad(function() { if (location.href.indexOf('/components/ads/interstitial/view?id=') > -1) { var el = document.querySelector('#countdown ~ div[style] > a[href].red_cl'); if(el) { el.click(); } } });
+ultimate-guitar.com#%#document.cookie = "_ug_interstitialShown=1; path=/;"; AG_onLoad(function() { if (location.href.indexOf('/components/ads/interstitial/view?id=') >= 0) { var el = document.querySelector('#countdown ~ div[style] > a[href].red_cl'); if(el) { el.click(); } } });
 pogo.com#%#//scriptlet("adjust-setTimeout", "this.onComplete()", "20000", "0.02")
 xxxdan.com#%#//scriptlet("abort-current-inline-script", "document.cookie", "nasl")
 bc.vc#%#//scriptlet("set-constant", "history.pushState", "noopFunc")
@@ -8657,7 +8657,7 @@ vidcloud.co#%#AG_onLoad(function() { setTimeout(function() { loadPlayer(); }, 30
 intoupload.net#%#AG_onLoad(function() { setTimeout(function() { $('#chkIsAdd').click(); }, 300); });
 cwtvembeds.com#%#window.open = function() {};
 sport7.pw#%#window.open = function() {};
-phillymag.com#%#AG_onLoad(function() { if (window.location.pathname.indexOf('/welcome/') > -1) { document.cookie = "10up-prestitial=true; path=/;"; var wlochref = window.location.href; var dec = decodeURIComponent(wlochref); var loc = dec.replace(/https?:\/\/(www\.)?phillymag.com\/welcome\/[\s\S]*?(https?)/,'$2'); window.location = loc; } });
+phillymag.com#%#AG_onLoad(function() { if (window.location.pathname.indexOf('/welcome/') >= 0) { document.cookie = "10up-prestitial=true; path=/;"; var wlochref = window.location.href; var dec = decodeURIComponent(wlochref); var loc = dec.replace(/https?:\/\/(www\.)?phillymag.com\/welcome\/[\s\S]*?(https?)/,'$2'); window.location = loc; } });
 katfile.com#%#window.open = function() {};
 veporns.com#%#AG_onLoad(function() { setTimeout(function() { document.getElementById("bt").click(); }, 300); });
 embedy.me#%#window.open = function() {};
@@ -8668,7 +8668,7 @@ upvid.co#%#AG_onLoad(function() { setTimeout(function() { document.getElementsBy
 vixenless.com,bestialporn.com,bestialitysexanimals.com,mynakedwife.video,bestialitytaboo.tv,mujeresdesnudas.club,megaxtreme.net#%#//scriptlet("abort-current-inline-script", "$", "clickObject")
 intoupload.com#%#AG_onLoad(function() { var el = document.getElementById("chkIsAdd"); if(el) el.checked = false; });
 pacogames.com#%#AG_onLoad(function() { setTimeout(function() { AG_defineProperty('Garter.ads.affiliate.enabled', { value: false }); }, 1000); });
-valueresearchonline.com#%#AG_onLoad(function() { if (window.location.pathname.indexOf('/ads/splash.asp') > -1) { document.cookie = "HasSeenSplash=True; path=/;"; window.location = 'http://valueresearchonline.com/'; } });
+valueresearchonline.com#%#AG_onLoad(function() { if (window.location.pathname.indexOf('/ads/splash.asp') >= 0) { document.cookie = "HasSeenSplash=True; path=/;"; window.location = 'http://valueresearchonline.com/'; } });
 medicalnewstoday.com#%#window.atob = function() {};
 sex.com#%#window.open = function() {};
 thevid.net#%#(function(){var c=document.addEventListener;document.addEventListener=function(a,b,d,e){"click"!=a&&-1==b.toString().indexOf('"dtnoppu"')&&c(a,b,d,e)}.bind(document);})();
@@ -8702,10 +8702,10 @@ vuxm.com#%#AG_onLoad(function() { setTimeout(function() {document.getElementsByC
 viralnova.com#%#//scriptlet("set-constant", "oio", "noopFunc")
 vcrypt.net#%#//scriptlet("remove-attr", "onclick", ".btncontinue")
 chicksextube.com#%#AG_onLoad(function() { setTimeout(function() { $('body').unbind('click'); }, 300); });
-tmearn.com#%#(function() { var _eval = window.eval; window.eval = function(a) { if ( a.toString().indexOf('__PPU_CHECK') === -1 ) { _eval(a); return; } }; })();
+tmearn.com#%#(function() { var _eval = window.eval; window.eval = function(a) { if ( a.toString().indexOf('__PPU_CHECK') < 0 ) { _eval(a); return; } }; })();
 downsub.com#%#//scriptlet("abort-current-inline-script", "atob", "window.TextDecoder")
 flashx.*#%#//scriptlet("prevent-window-open")
-ndtv.com#%#AG_onLoad(function() { if (window.location.href.indexOf("hpinterstitialnew.html") != -1) { window.setCookie1('sitecapture_interstitial', 1, 1); window.location.href = "http://www.ndtv.com/"; } });
+ndtv.com#%#AG_onLoad(function() { if (window.location.href.indexOf("hpinterstitialnew.html") >= 0) { window.setCookie1('sitecapture_interstitial', 1, 1); window.location.href = "http://www.ndtv.com/"; } });
 imgprime.com#%#AG_onLoad(function() {setTimeout(function() { if(linkid) { document.location.href = linkid;};}, 300); });
 cam4.de.com,cam4s.com#%#document.cookie = "bannerPops=under";
 savemyrights.com#%#//scriptlet("set-constant", "document.onclick", "true")
@@ -8764,7 +8764,7 @@ drudgereport.com#%#URL.createObjectURL=function(){return"about:blank"};
 israelnationalnews.com#%#//scriptlet("abort-current-inline-script", "Math.random", "new RegExp")
 peekvids.com#%#window["pop_clicked"] = 1;
 animeshow.tv#%#window.open = function() {};
-bypassed.eu,bypassed.bz,hindilinks4u.to,psarips.com,123movies.net,foumovies.com#%#(function() { var _eval = window.eval; window.eval = function(a) { if ( a.toString().indexOf('charCodeAt') === -1 ) { _eval(a); return; } }; })();
+bypassed.eu,bypassed.bz,hindilinks4u.to,psarips.com,123movies.net,foumovies.com#%#(function() { var _eval = window.eval; window.eval = function(a) { if ( a.toString().indexOf('charCodeAt') < 0 ) { _eval(a); return; } }; })();
 9to5google.com,9to5mac.com,9to5toys.com,dronedj.com,electrek.co#%#window.canRunAds = true; window.OXHBConfig = {};
 verystream.com#%#window.addEventListener("load", function(){ var el = document.getElementById("videooverlay"); if(el){el.click();} });
 qz.com#%#AG_onLoad(function(){if(document.body.classList){document.body.classList.remove("has-marquee");var a=document.getElementById("settingsNav");a&&a.classList.remove("header-stuck")}});
@@ -8789,7 +8789,7 @@ flaticon.com#%#AG_onLoad(function() { document.cookie = "launcher_popup" + "=" +
 8muses.com#%#AG_onLoad(function() { for (var key in window) { if (key.indexOf('_0x') == 0) { window[key] = []; } }; });
 datafilehost.com#%#AG_onLoad(function() { setTimeout(function() { document.getElementById("with_manager").click(); },300); });
 linkshrink.net#%#document.cookie = "AABE2=1";
-ndtv.com#%#AG_onLoad(function() { if (window.location.href.indexOf("hpinterstitial.aspx") != -1) { window.setCookie1('sitecapture_interstitial', 1, 1); window.location.href = "http://www.ndtv.com/"; } });
+ndtv.com#%#AG_onLoad(function() { if (window.location.href.indexOf("hpinterstitial.aspx") >= 0) { window.setCookie1('sitecapture_interstitial', 1, 1); window.location.href = "http://www.ndtv.com/"; } });
 nypost.com#%#window.checkState = function() {};
 videomega.tv#%#if (typeof localStorage != 'undefined' && localStorage.setItem) { localStorage.setItem('ppu_main_none', 1 + (1 ? "; expires=" + (new Date((new Date()).getTime() )).toUTCString() : "")); }
 pcmag.com#%#window.checkState = function() {};

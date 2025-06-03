@@ -28,6 +28,6 @@ export const redirectsTokensCache = (function () {
 
     return {
         generateToken,
-        hasToken,
+        hasToken
     };
 })();

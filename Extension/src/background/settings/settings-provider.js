@@ -61,7 +61,7 @@ export const settingsProvider = (function () {
             customUrl: filter.customUrl,
             enabled: filter.enabled,
             title: filter.name || '',
-            trusted: filter.trusted,
+            trusted: filter.trusted
         }));
     };
 
@@ -97,15 +97,15 @@ export const settingsProvider = (function () {
                 'user-filter': {
                     'rules': content,
                     'disabled-rules': '',
-                    enabled: userFilterEnabled,
+                    enabled: userFilterEnabled
                 },
                 'whitelist': {
                     'inverted': !defaultAllowlistMode,
                     'domains': allowlistDomains,
                     'inverted-domains': blockListDomains,
-                    'enabled': allowlistEnabled,
-                },
-            },
+                    'enabled': allowlistEnabled
+                }
+            }
         };
 
         return section;
@@ -132,8 +132,8 @@ export const settingsProvider = (function () {
                 'stealth-block-first-party-cookies': settings.getSelfDestructFirstPartyCookies(),
                 'stealth-block-first-party-cookies-time': settings.getSelfDestructFirstPartyCookiesTime(),
                 'block-known-trackers': blockKnownTrackers,
-                'strip-tracking-parameters': stripTrackingParameters,
-            },
+                'strip-tracking-parameters': stripTrackingParameters
+            }
         };
         return section;
     };
@@ -154,8 +154,8 @@ export const settingsProvider = (function () {
                 'autodetect-filters': settings.isAutodetectFilters(),
                 'safebrowsing-enabled': settings.safebrowsingInfoEnabled(),
                 'filters-update-period': settings.getFiltersUpdatePeriod(),
-                'appearance-theme': settings.getAppearanceTheme(),
-            },
+                'appearance-theme': settings.getAppearanceTheme()
+            }
         };
 
         return section;
@@ -173,8 +173,8 @@ export const settingsProvider = (function () {
                 'show-info-about-adguard': settings.isShowInfoAboutAdguardFullVersion(),
                 'show-app-updated-info': settings.isShowAppUpdatedNotification(),
                 'hide-rate-adguard': settings.isHideRateBlock(),
-                'user-rules-editor-wrap': settings.isUserRulesEditorWrap(),
-            },
+                'user-rules-editor-wrap': settings.isUserRulesEditorWrap()
+            }
         };
 
         return section;
@@ -195,7 +195,8 @@ export const settingsProvider = (function () {
 
         if (set['allow-acceptable-ads']) {
             await application.addAndEnableFilters([utils.filters.ids.SEARCH_AND_SELF_PROMO_FILTER_ID]);
-        } else {
+        }
+        else {
             application.disableFilters([utils.filters.ids.SEARCH_AND_SELF_PROMO_FILTER_ID]);
         }
     };
@@ -246,7 +247,8 @@ export const settingsProvider = (function () {
 
         if (set['strip-tracking-parameters']) {
             await application.addAndEnableFilters([utils.filters.ids.URL_TRACKING_FILTER_ID]);
-        } else {
+        }
+        else {
             application.disableFilters([utils.filters.ids.URL_TRACKING_FILTER_ID]);
         }
     };
@@ -271,7 +273,7 @@ export const settingsProvider = (function () {
             customUrl,
             title,
             trusted,
-            enabled,
+            enabled
         } = customFilterData;
 
         const options = { title, trusted, enabled };
@@ -288,7 +290,8 @@ export const settingsProvider = (function () {
                 const customFilter = await addCustomFilter(customFilterInitial);
                 log.info(`Settings sync: Custom filter was added: ${customFilter.customUrl}`);
                 result.push({ error: null, filter: customFilter });
-            } catch (e) {
+            }
+            catch (e) {
                 const { customUrl } = customFilterInitial;
                 const message = `Settings sync: Error occurred while downloading: ${customUrl} - ${e.message}`;
                 log.info(message);
@@ -341,7 +344,7 @@ export const settingsProvider = (function () {
         const existingCustomFilters = enrichedFiltersInitials.filter(f => f.filterId);
         const redundantExistingCustomFiltersIds = getCustomFiltersToRemove(presentCustomFilters, customFiltersInitials);
 
-        if (redundantExistingCustomFiltersIds.length > 0) {
+        if (redundantExistingCustomFiltersIds.length !== 0) {
             removeCustomFilters(redundantExistingCustomFiltersIds);
         }
 
@@ -414,12 +417,12 @@ export const settingsProvider = (function () {
             allowlist: allowlistDomains,
             blocklist: blacklistDomains,
             mode: !allowlistSection.inverted,
-            enabled: typeof allowlistSection.enabled === 'undefined' ? true : !!allowlistSection.enabled,
+            enabled: allowlistSection.enabled === undefined ? true : !!allowlistSection.enabled
         });
 
         const userFilterSection = section.filters['user-filter'] || {};
         const userRules = userFilterSection.rules || '';
-        const userFilterEnabled = typeof userFilterSection.enabled === 'undefined'
+        const userFilterEnabled = userFilterSection.enabled === undefined
             ? true
             : userFilterSection.enabled;
 
@@ -439,7 +442,6 @@ export const settingsProvider = (function () {
                 const filterData = customFiltersData
                     .find((filter) => {
                         if (!filter.customUrl) {
-                            // eslint-disable-next-line max-len
                             throw new Error(`Custom filter should always have custom URL: ${JSON.stringify(filter)}`);
                         }
                         return filter.customUrl === availableCustomFilter.customUrl;
@@ -462,7 +464,7 @@ export const settingsProvider = (function () {
      */
     const loadSettingsBackupJson = async function () {
         const result = {
-            'protocol-version': BACKUP_PROTOCOL_VERSION,
+            'protocol-version': BACKUP_PROTOCOL_VERSION
         };
 
         const generalSettingsSection = loadGeneralSettingsSection();
@@ -503,7 +505,8 @@ export const settingsProvider = (function () {
         function onFinished(success) {
             if (success) {
                 log.info('Settings import finished successfully');
-            } else {
+            }
+            else {
                 log.error('Error importing settings');
             }
 
@@ -514,7 +517,8 @@ export const settingsProvider = (function () {
 
         try {
             input = JSON.parse(json);
-        } catch (ex) {
+        }
+        catch (ex) {
             log.error('Error parsing input json {0}, {1}', json, ex);
             onFinished(false);
             return false;
@@ -538,7 +542,8 @@ export const settingsProvider = (function () {
             await applyFiltersSection(input);
             onFinished(true);
             return true;
-        } catch (e) {
+        }
+        catch (e) {
             log.error(e);
             onFinished(false);
             return false;
@@ -562,7 +567,8 @@ export const settingsProvider = (function () {
             await application.addAndEnableFilters(subscriptions.getLangSuitableFilters());
 
             return true;
-        } catch (e) {
+        }
+        catch (e) {
             log.error(e);
             return false;
         }
@@ -583,6 +589,6 @@ export const settingsProvider = (function () {
         /**
          * Applies default settings json
          */
-        applyDefaultSettings,
+        applyDefaultSettings
     };
 })();

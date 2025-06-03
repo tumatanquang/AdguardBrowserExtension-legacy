@@ -1,10 +1,17 @@
 (function(source, args) {
+    const flag = "done";
+    const uniqueIdentifier = source.uniqueId + source.name + "_" + (Array.isArray(args) ? args.join("_") : "");
+    if (source.uniqueId) {
+        if (Window.prototype.toString[uniqueIdentifier] === flag) {
+            return;
+        }
+    }
     function metrikaYandexWatch(source) {
-        const cbName = "yandex_metrika_callbacks";
-        const asyncCallbackFromOptions = function asyncCallbackFromOptions() {
-            let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-            let callback = options.callback;
-            const ctx = options.ctx;
+        var cbName = "yandex_metrika_callbacks";
+        var asyncCallbackFromOptions = function asyncCallbackFromOptions() {
+            var options = arguments.length !== 0 && arguments[0] !== undefined ? arguments[0] : {};
+            var callback = options.callback;
+            var ctx = options.ctx;
             if (typeof callback === "function") {
                 callback = ctx !== undefined ? callback.bind(ctx) : callback;
                 setTimeout((function() {
@@ -53,30 +60,28 @@
         hit(source);
     }
     function hit(source) {
-        if (source.verbose !== true) {
+        var ADGUARD_PREFIX = "[AdGuard]";
+        if (!source.verbose) {
             return;
         }
         try {
-            const log = console.log.bind(console);
-            const trace = console.trace.bind(console);
-            let prefix = source.ruleText || "";
-            if (source.domainName) {
-                const AG_SCRIPTLET_MARKER = "#%#//";
-                const UBO_SCRIPTLET_MARKER = "##+js";
-                let ruleStartIndex;
-                if (source.ruleText.indexOf(AG_SCRIPTLET_MARKER) > -1) {
-                    ruleStartIndex = source.ruleText.indexOf(AG_SCRIPTLET_MARKER);
-                } else if (source.ruleText.indexOf(UBO_SCRIPTLET_MARKER) > -1) {
-                    ruleStartIndex = source.ruleText.indexOf(UBO_SCRIPTLET_MARKER);
+            var trace = console.trace.bind(console);
+            var label = "".concat(ADGUARD_PREFIX, " ");
+            if (source.engine === "corelibs") {
+                label += source.ruleText;
+            } else {
+                if (source.domainName) {
+                    label += "".concat(source.domainName);
                 }
-                const rulePart = source.ruleText.slice(ruleStartIndex);
-                prefix = "".concat(source.domainName).concat(rulePart);
+                if (source.args) {
+                    label += "#%#//scriptlet('".concat(source.name, "', '").concat(source.args.join("', '"), "')");
+                } else {
+                    label += "#%#//scriptlet('".concat(source.name, "')");
+                }
             }
-            log("".concat(prefix, " trace start"));
             if (trace) {
-                trace();
+                trace(label);
             }
-            log("".concat(prefix, " trace end"));
         } catch (e) {}
         if (typeof window.__debug === "function") {
             window.__debug(source);
@@ -89,6 +94,14 @@
     const updatedArgs = args ? [].concat(source).concat(args) : [ source ];
     try {
         metrikaYandexWatch.apply(this, updatedArgs);
+        if (source.uniqueId) {
+            Object.defineProperty(Window.prototype.toString, uniqueIdentifier, {
+                value: flag,
+                enumerable: false,
+                writable: false,
+                configurable: false
+            });
+        }
     } catch (e) {
         console.log(e);
     }

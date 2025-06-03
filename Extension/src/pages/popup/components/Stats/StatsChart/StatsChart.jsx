@@ -17,7 +17,7 @@ export const StatsChart = observer(() => {
     }
 
     return (
-        <div className="stats-chart">
+        <div className='stats-chart'>
             <Filters />
             <Chart
                 stats={stats}

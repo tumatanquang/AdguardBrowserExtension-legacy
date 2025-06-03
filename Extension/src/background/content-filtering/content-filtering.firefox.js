@@ -64,7 +64,7 @@ const modificationsListener = {
      */
     onModificationFinished(requestId) {
         requestContextStorage.onContentModificationFinished(requestId);
-    },
+    }
 };
 
 const firefoxContentFiltering = new TSUrlFilter.ContentFiltering(modificationsListener);

@@ -9,7 +9,7 @@ import {
     API_URL,
     LOCALES_RELATIVE_PATH,
     FORMAT,
-    LOCALE_DATA_FILENAME,
+    LOCALE_DATA_FILENAME
 } from './locales-constants';
 
 const LOCALES_UPLOAD_URL = `${API_URL}/upload`;
@@ -25,7 +25,7 @@ const prepare = (locale) => {
     formData.append('project', PROJECT_ID);
     formData.append('file', fs.createReadStream(path.join(LOCALES_DIR, `${locale}/${LOCALE_DATA_FILENAME}`)));
     const headers = {
-        ...formData.getHeaders(),
+        ...formData.getHeaders()
     };
     return { formData, url: LOCALES_UPLOAD_URL, headers };
 };

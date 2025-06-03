@@ -5,18 +5,18 @@ import { reactTranslator } from '../../../../../common/translators/reactTranslat
 import { Popover } from '../../../../common/components/ui/Popover';
 import { isMacOs } from '../../../../../common/user-agent-utils';
 
-export const Tags = ({
+export function Tags({
     tags,
     setTags,
-    type,
-}) => {
+    type
+}) {
     const { allButtonEnabled, filters } = tags;
 
     const enableOne = (tagId) => {
         const updatedTags = filters.map((tag) => {
             return {
                 ...tag,
-                enabled: tag.id === tagId,
+                enabled: tag.id === tagId
             };
         });
 
@@ -41,30 +41,32 @@ export const Tags = ({
                     if (tag.id !== tagId) {
                         return {
                             ...tag,
-                            enabled: false,
+                            enabled: false
                         };
                     }
                     return { ...tag };
                 });
                 setTags({ filters: updatedTags, allButtonEnabled: false });
-            } else {
+            }
+            else {
                 // disable only selected
                 updatedTags = filters.map((tag) => {
                     if (tag.id === tagId) {
                         return {
                             ...tag,
-                            enabled: false,
+                            enabled: false
                         };
                     }
                     return tag;
                 });
                 setTags({ filters: updatedTags, allButtonEnabled });
             }
-        } else {
+        }
+        else {
             updatedTags = filters.map((tag) => {
                 return {
                     ...tag,
-                    enabled: tag.id === tagId ? !tag.enabled : tag.enabled,
+                    enabled: tag.id === tagId ? !tag.enabled : tag.enabled
                 };
             });
 
@@ -74,11 +76,12 @@ export const Tags = ({
                 updatedTags = filters.map((tag) => {
                     return {
                         ...tag,
-                        enabled: true,
+                        enabled: true
                     };
                 });
                 setTags({ filters: updatedTags, allButtonEnabled: true });
-            } else {
+            }
+            else {
                 setTags({ filters: updatedTags, allButtonEnabled });
             }
         }
@@ -87,7 +90,8 @@ export const Tags = ({
     const handleTagClick = (e) => {
         if (isMacOs ? e.metaKey : e.ctrlKey) {
             toggleMultiple(e.target.value);
-        } else {
+        }
+        else {
             enableOne(e.target.value);
         }
     };
@@ -102,12 +106,12 @@ export const Tags = ({
                 id,
                 title,
                 enabled,
-                tooltip,
+                tooltip
             } = tag;
             const button = (
                 <button
                     className={classNames(`tag tag--${id}`, type && `tag--${type}`, { active: !allButtonEnabled && enabled })}
-                    type="button"
+                    type='button'
                     onClick={handleTagClick}
                     value={id}
                     key={id}
@@ -130,7 +134,7 @@ export const Tags = ({
         <>
             <button
                 className={classNames('tag', type && `tag--${type}`, { active: allButtonEnabled })}
-                type="button"
+                type='button'
                 onClick={handleAllClick}
             >
                 {reactTranslator.getMessage('filtering_type_all')}
@@ -138,4 +142,4 @@ export const Tags = ({
             {renderTypes()}
         </>
     );
-};
+}

@@ -1,4 +1,11 @@
 (function(source, args) {
+    const flag = "done";
+    const uniqueIdentifier = source.uniqueId + source.name + "_" + (Array.isArray(args) ? args.join("_") : "");
+    if (source.uniqueId) {
+        if (Window.prototype.toString[uniqueIdentifier] === flag) {
+            return;
+        }
+    }
     function Pardot(source) {
         window.piVersion = "1.0.2";
         window.piScriptNum = 0;
@@ -17,7 +24,7 @@
                     campaign_id: ""
                 }
             };
-            window.piScriptNum += 1;
+            ++window.piScriptNum;
         }
         window.piResponse = noopFunc;
         window.piTracker = piTracker;
@@ -25,30 +32,28 @@
         hit(source);
     }
     function hit(source) {
-        if (source.verbose !== true) {
+        var ADGUARD_PREFIX = "[AdGuard]";
+        if (!source.verbose) {
             return;
         }
         try {
-            const log = console.log.bind(console);
-            const trace = console.trace.bind(console);
-            let prefix = source.ruleText || "";
-            if (source.domainName) {
-                const AG_SCRIPTLET_MARKER = "#%#//";
-                const UBO_SCRIPTLET_MARKER = "##+js";
-                let ruleStartIndex;
-                if (source.ruleText.indexOf(AG_SCRIPTLET_MARKER) > -1) {
-                    ruleStartIndex = source.ruleText.indexOf(AG_SCRIPTLET_MARKER);
-                } else if (source.ruleText.indexOf(UBO_SCRIPTLET_MARKER) > -1) {
-                    ruleStartIndex = source.ruleText.indexOf(UBO_SCRIPTLET_MARKER);
+            var trace = console.trace.bind(console);
+            var label = "".concat(ADGUARD_PREFIX, " ");
+            if (source.engine === "corelibs") {
+                label += source.ruleText;
+            } else {
+                if (source.domainName) {
+                    label += "".concat(source.domainName);
                 }
-                const rulePart = source.ruleText.slice(ruleStartIndex);
-                prefix = "".concat(source.domainName).concat(rulePart);
+                if (source.args) {
+                    label += "#%#//scriptlet('".concat(source.name, "', '").concat(source.args.join("', '"), "')");
+                } else {
+                    label += "#%#//scriptlet('".concat(source.name, "')");
+                }
             }
-            log("".concat(prefix, " trace start"));
             if (trace) {
-                trace();
+                trace(label);
             }
-            log("".concat(prefix, " trace end"));
         } catch (e) {}
         if (typeof window.__debug === "function") {
             window.__debug(source);
@@ -64,6 +69,14 @@
     const updatedArgs = args ? [].concat(source).concat(args) : [ source ];
     try {
         Pardot.apply(this, updatedArgs);
+        if (source.uniqueId) {
+            Object.defineProperty(Window.prototype.toString, uniqueIdentifier, {
+                value: flag,
+                enumerable: false,
+                writable: false,
+                configurable: false
+            });
+        }
     } catch (e) {
         console.log(e);
     }

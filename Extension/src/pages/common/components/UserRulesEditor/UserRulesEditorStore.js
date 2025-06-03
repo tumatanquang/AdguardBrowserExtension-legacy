@@ -4,7 +4,7 @@ import {
     computed,
     observable,
     runInAction,
-    makeObservable,
+    makeObservable
 } from 'mobx';
 
 import { messenger } from '../../../services/messenger';
@@ -13,8 +13,8 @@ import { createSavingService, EVENTS as SAVING_FSM_EVENTS, STATES } from '../Edi
 const savingService = createSavingService({
     id: 'userRules',
     services: {
-        saveData: (_, e) => messenger.saveUserRules(e.value),
-    },
+        saveData: (_, e) => messenger.saveUserRules(e.value)
+    }
 });
 
 class UserRulesEditorStore {
@@ -53,19 +53,19 @@ class UserRulesEditorStore {
     }
 
     @action
-    setUserRulesEditorContentChangedState = (state) => {
-        this.userRulesEditorContentChanged = state;
-    };
+        setUserRulesEditorContentChangedState = (state) => {
+            this.userRulesEditorContentChanged = state;
+        };
 
     @action
-    setUserRulesExportAvailableState = (state) => {
-        this.userRulesExportAvailable = state;
-    };
+        setUserRulesExportAvailableState = (state) => {
+            this.userRulesExportAvailable = state;
+        };
 
     @action
-    setUserRulesEditorPrefsDropped = (state) => {
-        this.userRulesEditorPrefsDropped = state;
-    };
+        setUserRulesEditorPrefsDropped = (state) => {
+            this.userRulesEditorPrefsDropped = state;
+        };
 
     @action
     updateSetting(settingId, value) {
@@ -80,9 +80,7 @@ class UserRulesEditorStore {
     async toggleUserRulesEditorWrapMode() {
         this.userRulesEditorWrap = !this.userRulesEditorWrap;
         if (this.settings) {
-            await this.updateSetting(
-                this.settings.names.USER_RULES_EDITOR_WRAP, this.userRulesEditorWrap,
-            );
+            await this.updateSetting(this.settings.names.USER_RULES_EDITOR_WRAP, this.userRulesEditorWrap);
         }
     }
 
@@ -95,7 +93,7 @@ class UserRulesEditorStore {
     get userRulesEditorWrapState() {
         if (this.settings) {
             this.setUserRulesEditorWrapMode(
-                this.settings.values[this.settings.names.USER_RULES_EDITOR_WRAP],
+                this.settings.values[this.settings.names.USER_RULES_EDITOR_WRAP]
             );
         }
 

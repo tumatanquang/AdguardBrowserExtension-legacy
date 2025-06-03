@@ -62,7 +62,7 @@ export const userrules = (function () {
      * @param content Rules text
      */
     const updateUserRulesText = function (content) {
-        const lines = content.length > 0 ? content.split(/\n/) : [];
+        const lines = content.length !== 0 ? content.split(/\n/) : [];
         listeners.notifyListeners(listeners.UPDATE_FILTER_RULES, userFilter, lines);
     };
 
@@ -79,7 +79,8 @@ export const userrules = (function () {
         if (frameInfo.frameRule) {
             if (frameInfo.frameRule.filterId === utils.filters.ALLOWLIST_FILTER_ID) {
                 allowlist.unAllowlistUrl(frameInfo.url);
-            } else {
+            }
+            else {
                 removeRule(frameInfo.frameRule.ruleText);
             }
         }
@@ -97,7 +98,7 @@ export const userrules = (function () {
             .filter((userRuleString) => {
                 return !TSUrlFilter.RuleSyntaxUtils.isRuleForUrl(
                     userRuleString,
-                    url,
+                    url
                 );
             })
             .join('\n');
@@ -115,7 +116,7 @@ export const userrules = (function () {
         return userRulesStrings
             .some(userRuleString => TSUrlFilter.RuleSyntaxUtils.isRuleForUrl(
                 userRuleString,
-                url,
+                url
             ));
     };
 
@@ -138,17 +139,18 @@ export const userrules = (function () {
         conversionMap.clear();
 
         const result = [];
-        for (let i = 0; i < rulesLines.length; i += 1) {
+        for (let i = 0; i < rulesLines.length; ++i) {
             const line = rulesLines[i];
             let converted = [];
             try {
                 converted = TSUrlFilter.RuleConverter.convertRule(line);
-            } catch (e) {
+            }
+            catch (e) {
                 log.info(`Error converting rule ${line}, due to: ${e.message}`);
             }
             result.push(...converted);
 
-            if (converted.length > 0) {
+            if (converted.length !== 0) {
                 if (converted.length > 1 || converted[0] !== line) {
                     // Fill the map only for converted rules
                     converted.forEach((x) => {
@@ -183,6 +185,6 @@ export const userrules = (function () {
         removeRulesByUrl,
         hasRulesForUrl,
         convertRules,
-        getSourceRule,
+        getSourceRule
     };
 })();

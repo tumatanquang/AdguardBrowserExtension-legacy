@@ -35,7 +35,7 @@ const Actions = observer(() => {
 
     const preserveLogClassName = cn(
         'record',
-        { active: preserveLogEnabled },
+        { active: preserveLogEnabled }
     );
 
     const preserveLogTooltipText = preserveLogEnabled
@@ -45,28 +45,28 @@ const Actions = observer(() => {
     const preserveLogInputId = 'preserveLog';
 
     return (
-        <div className="actions">
-            <div className="actions__col">
+        <div className='actions'>
+            <div className='actions__col'>
                 <TabSelector />
             </div>
-            <div className="actions__col actions__buttons">
-                <div className="actions__action">
+            <div className='actions__col actions__buttons'>
+                <div className='actions__action'>
                     <Popover text={reactTranslator.getMessage('filtering_clear_log_events')}>
                         <button
-                            type="button"
-                            className="actions__clear"
+                            type='button'
+                            className='actions__clear'
                             aria-label={reactTranslator.getMessage('filtering_clear_log_events')}
                             onClick={clearLogHandler}
                         >
-                            <Icon id="#trash" classname="icon--trash actions__del" />
+                            <Icon id='#trash' classname='icon--trash actions__del' />
                         </button>
                     </Popover>
                 </div>
-                <div className="actions__action actions__preserve">
+                <div className='actions__action actions__preserve'>
                     <input
-                        className="checkbox-input"
-                        type="checkbox"
-                        name="preserveLog"
+                        className='checkbox-input'
+                        type='checkbox'
+                        name='preserveLog'
                         id={preserveLogInputId}
                         onChange={preserveLogHandler}
                         checked={preserveLogEnabled}
@@ -75,27 +75,27 @@ const Actions = observer(() => {
                     {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
                     <label
                         htmlFor={preserveLogInputId}
-                        className="checkbox-label"
+                        className='checkbox-label'
                     >
                         <Popover text={preserveLogTooltipText}>
                             <div className={preserveLogClassName}>
-                                <Icon id="#radio" classname="icon--24" />
+                                <Icon id='#radio' classname='icon--24' />
                             </div>
                         </Popover>
                     </label>
                 </div>
-                <div className="actions__action">
+                <div className='actions__action'>
                     <button
-                        className="actions__refresh"
-                        type="button"
+                        className='actions__refresh'
+                        type='button'
                         onClick={refreshPage}
                     >
-                        <Icon id="#reload" classname="icon--reload actions__refresh-ico" />
+                        <Icon id='#reload' classname='icon--reload actions__refresh-ico' />
                         {reactTranslator.getMessage('filtering_refresh_tab_short')}
                     </button>
                 </div>
             </div>
-            <div className="actions__col actions__search">
+            <div className='actions__col actions__search'>
                 <EventsSearch />
             </div>
         </div>

@@ -1,0 +1,6 @@
+build/
+dist/
+node_modules/
+private/
+Extension/web-accessible-resources/**/*.xml
+Extension/filters/

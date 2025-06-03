@@ -38,176 +38,176 @@ export const notifications = (function () {
         locales: {
             en: {
                 title: 'What does AI say?',
-                btn: 'Guess',
+                btn: 'Guess'
             },
             ru: {
                 title: 'Пойми ИИ',
-                btn: 'Играть',
+                btn: 'Играть'
             },
             ko: {
                 title: '인공지능은 뭐라고 말하나요?',
-                btn: '게임 시작',
+                btn: '게임 시작'
             },
             es: {
                 title: 'Quiz: piensa como una IA',
-                btn: 'Comenzar',
+                btn: 'Comenzar'
             },
             de: {
                 title: 'Was sagt KI?',
-                btn: 'Spielen',
+                btn: 'Spielen'
             },
             pt_pt: {
                 title: 'Quiz: pensa como uma IA',
-                btn: 'Começar',
+                btn: 'Começar'
             },
             pt_br: {
                 title: 'Quiz: pense como uma IA',
-                btn: 'Começar',
+                btn: 'Começar'
             },
             zh_tw: {
                 title: '成為一個“更懂” AI 的人',
-                btn: '進行遊戲！',
+                btn: '進行遊戲！'
             },
             zh_cn: {
                 title: '成为一个“更懂” AI 的人',
-                btn: '玩儿游戏！',
+                btn: '玩儿游戏！'
             },
             ja: {
                 title: 'AI（人工知能）を 理解してみよう',
-                btn: '玩儿游戏！',
+                btn: '玩儿游戏！'
             },
             fr: {
                 title: 'L\'IA dit quoi?',
-                btn: 'Devinez!',
+                btn: 'Devinez!'
             },
             it: {
                 title: 'Cosa dice l\'IA?',
-                btn: 'Indovinarlo',
+                btn: 'Indovinarlo'
             },
             uk: {
                 title: 'Що говорить штучний інтелект?',
-                btn: 'Грати',
+                btn: 'Грати'
             },
             ar: {
                 title: 'ماذا يقول الذكاء الاصطناعي؟',
-                btn: 'لعب',
+                btn: 'لعب'
             },
             be: {
                 title: 'Што кажа штучны інтэлект?',
-                btn: 'Гуляць',
+                btn: 'Гуляць'
             },
             bg: {
                 title: 'Какво казва ИИ?',
-                btn: 'Играя',
+                btn: 'Играя'
             },
             ca: {
                 title: 'Què diu la IA?',
-                btn: 'Jugar',
+                btn: 'Jugar'
             },
             cs: {
                 title: 'Co říká umělá inteligence?',
-                btn: 'Přehrát',
+                btn: 'Přehrát'
             },
             da: {
                 title: 'Hvad siger den kunstige intelligens?',
-                btn: 'Spil',
+                btn: 'Spil'
             },
             el: {
                 title: 'Τι λέει η Τεχνητή Νοημοσύνη;',
-                btn: 'Παίζω',
+                btn: 'Παίζω'
             },
             es_419: {
                 title: 'Quiz: piensa como una IA',
-                btn: 'Comenzar',
+                btn: 'Comenzar'
             },
             fa: {
                 title: 'هوش مصنوعی چه می گوید؟',
-                btn: 'بازی',
+                btn: 'بازی'
             },
             fi: {
                 title: 'Mitä tekoäly sanoo?',
-                btn: 'Leikkiä',
+                btn: 'Leikkiä'
             },
             he: {
                 title: '?מה אומרת בינה מלאכותית',
-                btn: 'משחק',
+                btn: 'משחק'
             },
             hr: {
                 title: 'Što kaže umjetna inteligencija?',
-                btn: 'Igrati',
+                btn: 'Igrati'
             },
             hu: {
                 title: 'Mit mond az MI?',
-                btn: 'Játszik',
+                btn: 'Játszik'
             },
             hy: {
                 title: 'Ի՞նչ է ասում ԱԻ-ն:',
-                btn: 'Խաղալ',
+                btn: 'Խաղալ'
             },
             id: {
                 title: 'Apa yang dikatakan AI?',
-                btn: 'Bermain',
+                btn: 'Bermain'
             },
             lt: {
                 title: 'Ką sako dirbtinis intelektas?',
-                btn: 'Žaisti',
+                btn: 'Žaisti'
             },
             ms: {
                 title: 'Apa kata Kecerdasan Buatan?',
-                btn: 'Bermain',
+                btn: 'Bermain'
             },
             nb: {
                 title: 'Hva sier kunstig intelligens?',
-                btn: 'Skuespill',
+                btn: 'Skuespill'
             },
             nl: {
                 title: 'Wat zegt KI?',
-                btn: 'Spelen',
+                btn: 'Spelen'
             },
             pl: {
                 title: 'Co mówi sztuczna inteligencja?',
-                btn: 'Grać',
+                btn: 'Grać'
             },
             ro: {
                 title: 'Ce spune inteligența artificială?',
-                btn: 'Juca',
+                btn: 'Juca'
             },
             sk: {
                 title: 'Čo hovorí umelá inteligencia?',
-                btn: 'Hrať',
+                btn: 'Hrať'
             },
             sl: {
                 title: 'Kaj pravi umetna inteligenca?',
-                btn: 'Igrati',
+                btn: 'Igrati'
             },
             sr: {
                 title: 'Šta kaže veštačka inteligencija?',
-                btn: 'Igra',
+                btn: 'Igra'
             },
             sv: {
                 title: 'Vad säger artificiell intelligens?',
-                btn: 'Leka',
+                btn: 'Leka'
             },
             tr: {
                 title: 'Yapay zeka ne diyor?',
-                btn: 'Oyun',
+                btn: 'Oyun'
             },
             vi: {
                 title: 'AI nói gì?',
-                btn: 'Chơi',
+                btn: 'Chơi'
             },
             hi: {
                 title: 'आर्टिफिशियल इंटेलिजेंस क्या कहता है?',
-                btn: 'खेल',
+                btn: 'खेल'
             },
             et: {
                 title: 'Mida ütleb tehisintellekt?',
-                btn: 'Mängima',
+                btn: 'Mängima'
             },
             th: {
                 title: 'ปัญญาประดิษฐ์พูดว่าอย่างไร?',
-                btn: 'เล่น',
-            },
+                btn: 'เล่น'
+            }
         },
         text: '',
         url: 'https://link.adtidy.net/forward.html?action=birthday_14_promo&app=browser_extension',
@@ -218,14 +218,14 @@ export const notifications = (function () {
             return lazyGet(birthday14Notification, 'icons', () => ({
                 ICON_GREEN: {
                     '19': backgroundPage.getURL('assets/icons/bd14-on-19.png'),
-                    '38': backgroundPage.getURL('assets/icons/bd14-on-38.png'),
+                    '38': backgroundPage.getURL('assets/icons/bd14-on-38.png')
                 },
                 ICON_GRAY: {
                     '19': backgroundPage.getURL('assets/icons/bd14-off-19.png'),
-                    '38': backgroundPage.getURL('assets/icons/bd14-off-38.png'),
-                },
+                    '38': backgroundPage.getURL('assets/icons/bd14-off-38.png')
+                }
             }));
-        },
+        }
     };
 
     /**
@@ -244,7 +244,7 @@ export const notifications = (function () {
      * @property {string} type;
      */
     const notifications = {
-        birthday14Promo: birthday14Notification,
+        birthday14Promo: birthday14Notification
     };
 
     /**
@@ -254,7 +254,7 @@ export const notifications = (function () {
     const getLastNotificationTime = function () {
         let lastTime = localStorage.getItem(LAST_NOTIFICATION_TIME) || 0;
         if (lastTime === 0) {
-            lastTime = new Date().getTime();
+            lastTime = Date.now();
             localStorage.setItem(LAST_NOTIFICATION_TIME, lastTime);
         }
         return lastTime;
@@ -294,14 +294,14 @@ export const notifications = (function () {
     const initNotifications = function () {
         const notificationsKeys = Object.keys(notifications);
 
-        for (let i = 0; i < notificationsKeys.length; i += 1) {
+        for (let i = 0; i < notificationsKeys.length; ++i) {
             const notificationKey = notificationsKeys[i];
             const notification = notifications[notificationKey];
 
             notification.text = getNotificationText(notification);
 
             const to = new Date(notification.to).getTime();
-            const expired = new Date().getTime() > to;
+            const expired = Date.now() > to;
 
             if (!notification.text || expired) {
                 // Remove expired and invalid
@@ -360,7 +360,7 @@ export const notifications = (function () {
             return null;
         }
 
-        const currentTime = new Date().getTime();
+        const currentTime = Date.now();
         const timeSinceLastNotification = currentTime - getLastNotificationTime();
         if (timeSinceLastNotification < minPeriod) {
             // Just a check to not show the notification too often
@@ -378,7 +378,7 @@ export const notifications = (function () {
         const notificationsKeys = Object.keys(notifications);
         const viewedNotifications = localStorage.getItem(VIEWED_NOTIFICATIONS) || [];
 
-        for (let i = 0; i < notificationsKeys.length; i += 1) {
+        for (let i = 0; i < notificationsKeys.length; ++i) {
             const notificationKey = notificationsKeys[i];
             const notification = notifications[notificationKey];
             const from = new Date(notification.from).getTime();
@@ -399,6 +399,6 @@ export const notifications = (function () {
         getCurrentNotification,
         setNotificationViewed,
         VIEWED_NOTIFICATIONS,
-        LAST_NOTIFICATION_TIME,
+        LAST_NOTIFICATION_TIME
     };
 })();

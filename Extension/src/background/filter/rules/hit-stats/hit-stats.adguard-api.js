@@ -23,7 +23,7 @@ const apiHitStats = {
     addRuleHit: falseNoop,
     addDomainView: falseNoop,
     cleanup: falseNoop,
-    getStats: falseNoop,
+    getStats: falseNoop
 };
 
 export default apiHitStats;

@@ -9,7 +9,7 @@ import {
     SRC_RELATIVE_PATH,
     SRC_FILENAME_EXTENSIONS,
     PERSISTENT_MESSAGES,
-    LOCALES_RELATIVE_PATH,
+    LOCALES_RELATIVE_PATH
 } from './locales-constants';
 
 const LOCALES_DIR = path.resolve(__dirname, LOCALES_RELATIVE_PATH);
@@ -22,7 +22,7 @@ const SRC_DIR = path.resolve(__dirname, SRC_RELATIVE_PATH);
  */
 const canContainLocalesStrings = (filePath) => {
     let isSrcFile = false;
-    for (let i = 0; i < SRC_FILENAME_EXTENSIONS.length; i += 1) {
+    for (let i = 0; i < SRC_FILENAME_EXTENSIONS.length; ++i) {
         isSrcFile = filePath.endsWith(SRC_FILENAME_EXTENSIONS[i]) || isSrcFile;
 
         if (isSrcFile) {
@@ -44,7 +44,8 @@ const getSrcFilesContents = (dirPath, contents = []) => {
         const fullPath = path.join(dirPath, file);
         if (fs.lstatSync(fullPath).isDirectory()) {
             getSrcFilesContents(fullPath, contents);
-        } else if (canContainLocalesStrings(fullPath)) {
+        }
+        else if (canContainLocalesStrings(fullPath)) {
             contents.push(fs.readFileSync(fullPath).toString());
         }
     });
@@ -73,7 +74,8 @@ export const checkUnusedMessages = async () => {
 
     if (unusedMessages.length === 0) {
         cliLog.success('There are no unused messages');
-    } else {
+    }
+    else {
         cliLog.warningRed('Unused messages:');
         unusedMessages.forEach((key) => {
             cliLog.warning(`  ${key}`);

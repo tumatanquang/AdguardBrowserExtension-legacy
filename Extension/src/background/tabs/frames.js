@@ -205,7 +205,7 @@ export const frames = (function () {
 
             tabsApi.updateTabMetadata(tab.tabId, {
                 frameRule,
-                applicationFilteringDisabled,
+                applicationFilteringDisabled
             });
         }
     };
@@ -261,7 +261,7 @@ export const frames = (function () {
                         || utils.filters.isUserFilterRule(rule);
                 frameRule = {
                     filterId: rule.getFilterListId(),
-                    ruleText: rule.getText(),
+                    ruleText: rule.getText()
                 };
             }
             // It means site in exception
@@ -282,7 +282,7 @@ export const frames = (function () {
             frameRule,
             adguardProductName,
             totalBlockedTab,
-            totalBlocked,
+            totalBlocked
         };
     };
 
@@ -309,7 +309,8 @@ export const frames = (function () {
     const resetBlockedAdsCount = function (tab) {
         if (tab) {
             tabsApi.updateTabMetadata(tab.tabId, { blocked: 0 });
-        } else {
+        }
+        else {
             pageStats.resetStats();
         }
     };
@@ -356,6 +357,6 @@ export const frames = (function () {
         resetBlockedAdsCount,
         isIncognitoTab,
         shouldStopRequestProcess,
-        checkAndRecordMainFrame,
+        checkAndRecordMainFrame
     };
 })();

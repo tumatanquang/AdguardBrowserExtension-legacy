@@ -33,7 +33,6 @@ export const ElementCollapser = (function () {
         let codeUnit;
         let result = '';
         const firstCodeUnit = string.charCodeAt(0);
-        // eslint-disable-next-line no-plusplus
         while (++index < length) {
             codeUnit = string.charCodeAt(index);
             // Note: there’s no need to special-case astral symbols, surrogate
@@ -135,9 +134,10 @@ export const ElementCollapser = (function () {
             // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/733
             hideBySelector(
                 selectorText,
-                'visibility: hidden!important; height: 0px!important; min-height: 0px!important;',
+                'visibility: hidden!important; height: 0px!important; min-height: 0px!important;'
             );
-        } else {
+        }
+        else {
             hideBySelector(selectorText, null);
         }
     };
@@ -248,6 +248,6 @@ export const ElementCollapser = (function () {
     return {
         collapseElement,
         isCollapsed,
-        clear,
+        clear
     };
 })();

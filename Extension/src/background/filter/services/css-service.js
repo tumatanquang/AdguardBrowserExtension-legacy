@@ -19,18 +19,19 @@ export const cssService = (() => {
         let selectorsCount = 0;
         // eslint-disable-next-line no-restricted-syntax
         for (const selector of elemhideRules) {
-            selectorsCount += 1;
+            ++selectorsCount;
 
             elemhides.push(selector.getContent());
 
             if (selectorsCount % CSS_SELECTORS_PER_LINE === 0 || !groupElemhideSelectors) {
                 elemhides.push(ELEMHIDE_CSS_STYLE);
-            } else {
+            }
+            else {
                 elemhides.push(', ');
             }
         }
 
-        if (elemhides.length > 0) {
+        if (elemhides.length !== 0) {
             // Last element should always be a style (it will replace either a comma or the same style)
             elemhides[elemhides.length - 1] = ELEMHIDE_CSS_STYLE;
         }
@@ -130,6 +131,6 @@ export const cssService = (() => {
 
     return {
         buildStyleSheet,
-        buildStyleSheetHits,
+        buildStyleSheetHits
     };
 })();

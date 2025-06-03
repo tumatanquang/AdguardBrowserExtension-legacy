@@ -19,17 +19,17 @@ const RequestCreateRule = observer(() => {
 
     const RULE_OPTIONS_MAP = {
         [RULE_OPTIONS.RULE_DOMAIN]: {
-            label: `${reactTranslator.getMessage('filtering_modal_apply_domains')}`,
+            label: `${reactTranslator.getMessage('filtering_modal_apply_domains')}`
         },
         [RULE_OPTIONS.RULE_THIRD_PARTY]: {
-            label: `${reactTranslator.getMessage('filtering_modal_third_party')}`,
+            label: `${reactTranslator.getMessage('filtering_modal_third_party')}`
         },
         [RULE_OPTIONS.RULE_IMPORTANT]: {
-            label: `${reactTranslator.getMessage('filtering_modal_important')}`,
+            label: `${reactTranslator.getMessage('filtering_modal_important')}`
         },
         [RULE_OPTIONS.RULE_REMOVE_PARAM]: {
-            label: `${reactTranslator.getMessage('filtering_modal_remove_param')}`,
-        },
+            label: `${reactTranslator.getMessage('filtering_modal_remove_param')}`
+        }
     };
 
     const handlePatternChange = (pattern) => () => {
@@ -38,12 +38,12 @@ const RequestCreateRule = observer(() => {
 
     const renderPatterns = (patterns) => {
         const patternItems = patterns.map((pattern, idx) => (
-            <div className="radio-button-wrapper">
+            <div className='radio-button-wrapper'>
                 <input
-                    type="radio"
+                    type='radio'
                     id={pattern}
-                    name="rulePattern"
-                    className="radio-button-input"
+                    name='rulePattern'
+                    className='radio-button-input'
                     value={pattern}
                     checked={pattern === wizardStore.rulePattern}
                     onChange={handlePatternChange(pattern)}
@@ -51,20 +51,20 @@ const RequestCreateRule = observer(() => {
                 <label
                     /* eslint-disable-next-line react/no-array-index-key */
                     key={`pattern${idx}`}
-                    className="radio-button-label"
+                    className='radio-button-label'
                     htmlFor={pattern}
                 >
                     {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-                    <div className="radio-button" />
+                    <div className='radio-button' />
                 </label>
-                <div className="radio-button-desc">
+                <div className='radio-button-desc'>
                     {pattern}
                 </div>
             </div>
         ));
 
         return (
-            <div className="patterns__content">
+            <div className='patterns__content'>
                 {patternItems}
             </div>
         );
@@ -98,11 +98,11 @@ const RequestCreateRule = observer(() => {
             }
 
             return (
-                <div className="checkbox-wrapper">
+                <div className='checkbox-wrapper'>
                     <input
                         id={id}
-                        className="checkbox-input"
-                        type="checkbox"
+                        className='checkbox-input'
+                        type='checkbox'
                         name={id}
                         value={id}
                         onChange={handleOptionsChange(id)}
@@ -111,14 +111,14 @@ const RequestCreateRule = observer(() => {
                     {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
                     <label
                         htmlFor={id}
-                        className="checkbox-label"
+                        className='checkbox-label'
                         key={id}
                     >
-                        <div className="custom-checkbox">
-                            <Icon id="#checked" classname="icon--checked" />
+                        <div className='custom-checkbox'>
+                            <Icon id='#checked' classname='icon--checked' />
                         </div>
                     </label>
-                    <div className="checkbox-label__desc">
+                    <div className='checkbox-label__desc'>
                         {label}
                     </div>
                 </div>
@@ -127,7 +127,7 @@ const RequestCreateRule = observer(() => {
 
         return (
             <form>
-                <div className="options__content">
+                <div className='options__content'>
                     {renderedOptions}
                 </div>
             </form>
@@ -154,7 +154,7 @@ const RequestCreateRule = observer(() => {
     const {
         element,
         script,
-        requestRule,
+        requestRule
     } = logStore.selectedEvent;
 
     // Must invoke wizardStore.rulePatterns unconditionally to trigger wizardStore.rule computation
@@ -176,36 +176,36 @@ const RequestCreateRule = observer(() => {
         <>
             <div className={cn('request-modal__title', { 'request-modal__title_fixed': contentOverflowed })}>
                 <button
-                    type="button"
+                    type='button'
                     onClick={handleBackClick}
-                    className="request-modal__navigation request-modal__navigation--button"
+                    className='request-modal__navigation request-modal__navigation--button'
                 >
-                    <Icon classname="icon--24" id="#arrow-left" />
-                    <span className="request-modal__header">{title}</span>
+                    <Icon classname='icon--24' id='#arrow-left' />
+                    <span className='request-modal__header'>{title}</span>
                 </button>
             </div>
-            <div ref={ref} className="request-modal__content">
-                <div className="request-info">
-                    <div className="request-info__key">
+            <div ref={ref} className='request-modal__content'>
+                <div className='request-info'>
+                    <div className='request-info__key'>
                         {reactTranslator.getMessage('filtering_modal_rule_text_desc')}
                     </div>
                     <textarea
-                        className="request-info__value request-modal__rule-text"
+                        className='request-info__value request-modal__rule-text'
                         onChange={handleRuleChange}
                         value={wizardStore.rule}
                     />
                 </div>
                 {showPatterns && (
-                    <div className="request-info patterns">
-                        <div className="request-info__key">
+                    <div className='request-info patterns'>
+                        <div className='request-info__key'>
                             {reactTranslator.getMessage('filtering_modal_patterns_desc')}
                         </div>
                         {rulePatterns}
                     </div>
                 )}
                 {showOptions && (
-                    <div className="request-info options">
-                        <div className="request-info__key">
+                    <div className='request-info options'>
+                        <div className='request-info__key'>
                             {reactTranslator.getMessage('filtering_modal_options_desc')}
                         </div>
                         {options}
@@ -214,8 +214,8 @@ const RequestCreateRule = observer(() => {
             </div>
             <div className={cn('request-modal__controls', { 'request-modal__controls_fixed': contentOverflowed })}>
                 <button
-                    type="button"
-                    className="request-modal__button"
+                    type='button'
+                    className='request-modal__button'
                     onClick={handleAddRuleClick}
                     title={reactTranslator.getMessage('filtering_modal_add_rule')}
                 >

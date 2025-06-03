@@ -51,7 +51,7 @@ const tabsApi = ((tabsImpl) => {
     // Synchronize opened tabs
     (async () => {
         const aTabs = await tabsImpl.getAll();
-        for (let i = 0; i < aTabs.length; i += 1) {
+        for (let i = 0; i < aTabs.length; ++i) {
             const aTab = aTabs[i];
             tabs[aTab.tabId] = aTab;
         }
@@ -150,7 +150,7 @@ const tabsApi = ((tabsImpl) => {
     const getAll = async () => {
         const aTabs = await tabsImpl.getAll();
         const result = [];
-        for (let i = 0; i < aTabs.length; i += 1) {
+        for (let i = 0; i < aTabs.length; ++i) {
             const aTab = aTabs[i];
             const tab = syncTabs(tabs, aTab);
             result.push(tab);
@@ -162,7 +162,7 @@ const tabsApi = ((tabsImpl) => {
     const forEach = function (callback) {
         (async () => {
             const aTabs = await tabsImpl.getAll();
-            for (let i = 0; i < aTabs.length; i += 1) {
+            for (let i = 0; i < aTabs.length; ++i) {
                 const aTab = aTabs[i];
                 let tab = tabs[aTab.tabId];
                 if (!tab) {
@@ -220,7 +220,7 @@ const tabsApi = ((tabsImpl) => {
                 url,
                 status: 'loading',
                 // We mark this tabs as synthetic because actually they may not exists
-                synthetic: true,
+                synthetic: true
             };
             onTabCreated(tab);
         }
@@ -230,7 +230,7 @@ const tabsApi = ((tabsImpl) => {
             }
             tab.frames[frameId] = {
                 url,
-                domainName,
+                domainName
             };
         }
     };
@@ -334,7 +334,7 @@ const tabsApi = ((tabsImpl) => {
 
         insertCssCode,
         executeScriptCode,
-        executeScriptFile,
+        executeScriptFile
     };
 })(tabsImpl);
 

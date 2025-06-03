@@ -61,17 +61,17 @@ export const url = (function () {
             }
 
             let firstIdx = url.indexOf('//');
-            if (firstIdx === -1) {
+            if (firstIdx < 0) {
                 /**
                  * It's non hierarchical structured URL (e.g. stun: or turn:)
                  * https://tools.ietf.org/html/rfc4395#section-2.2
                  * https://tools.ietf.org/html/draft-nandakumar-rtcweb-stun-uri-08#appendix-B
                  */
                 firstIdx = url.indexOf(':');
-                if (firstIdx === -1) {
+                if (firstIdx < 0) {
                     return null;
                 }
-                firstIdx -= 1;
+                --firstIdx;
             }
 
             const nextSlashIdx = url.indexOf('/', firstIdx + 2);
@@ -82,11 +82,11 @@ export const url = (function () {
                 lastIdx = startParamsIdx;
             }
 
-            let host = lastIdx === -1 ? url.substring(firstIdx + 2) : url.substring(firstIdx + 2, lastIdx);
+            let host = lastIdx < 0 ? url.substring(firstIdx + 2) : url.substring(firstIdx + 2, lastIdx);
 
             const portIndex = host.indexOf(':');
 
-            host = portIndex === -1 ? host : host.substring(0, portIndex);
+            host = portIndex < 0 ? host : host.substring(0, portIndex);
 
             // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1586
             const lastChar = host.charAt(host.length - 1);
@@ -124,7 +124,7 @@ export const url = (function () {
             const address4 = address.match(RE_V4inV6);
             if (address4) {
                 const temp4 = address4[0].split('.');
-                for (let i = 0; i < 4; i += 1) {
+                for (let i = 0; i < 4; ++i) {
                     if (/^0[0-9]+/.test(temp4[i])) {
                         return false;
                     }
@@ -171,7 +171,7 @@ export const url = (function () {
             // eslint-disable-next-line prefer-destructuring
             u2 = u2.split(/[#?]/)[0];
             return u1 === u2;
-        },
+        }
     };
 
     return UrlUtils;

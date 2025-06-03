@@ -37,7 +37,7 @@ const browsersFilteringLog = (function () {
 
     const backgroundTab = {
         tabId: backgroundTabId,
-        title: translator.getMessage('background_tab_title'),
+        title: translator.getMessage('background_tab_title')
     };
 
     const tabsInfoMap = Object.create(null);
@@ -66,7 +66,7 @@ const browsersFilteringLog = (function () {
      * We collect filtering events if opened at least one page of log
      */
     const onOpenFilteringLogPage = function () {
-        openedFilteringLogsPage += 1;
+        ++openedFilteringLogsPage;
     };
 
     /**
@@ -182,14 +182,16 @@ const browsersFilteringLog = (function () {
             destinationRuleDTO.cspRule = sourceRule.isOptionEnabled(TSUrlFilter.NetworkRuleOption.Csp);
             destinationRuleDTO.modifierValue = sourceRule.getAdvancedModifierValue();
             destinationRuleDTO.cookieRule = sourceRule.isOptionEnabled(TSUrlFilter.NetworkRuleOption.Cookie);
-        } else if (sourceRule instanceof TSUrlFilter.CosmeticRule) {
+        }
+        else if (sourceRule instanceof TSUrlFilter.CosmeticRule) {
             const ruleType = sourceRule.getType();
             if (ruleType === TSUrlFilter.CosmeticRuleType.Html) {
                 destinationRuleDTO.contentRule = true;
-                // eslint-disable-next-line max-len
-            } else if (ruleType === TSUrlFilter.CosmeticRuleType.ElementHiding || ruleType === TSUrlFilter.CosmeticRuleType.Css) {
+            }
+            else if (ruleType === TSUrlFilter.CosmeticRuleType.ElementHiding || ruleType === TSUrlFilter.CosmeticRuleType.Css) {
                 destinationRuleDTO.cssRule = true;
-            } else if (ruleType === TSUrlFilter.CosmeticRuleType.Js) {
+            }
+            else if (ruleType === TSUrlFilter.CosmeticRuleType.Js) {
                 destinationRuleDTO.scriptRule = true;
             }
         }
@@ -279,7 +281,7 @@ const browsersFilteringLog = (function () {
         requestRule,
         timestamp,
         eventId,
-        method,
+        method
     }) {
         if (!canAddEvent(tab.tabId)) {
             return;
@@ -297,7 +299,7 @@ const browsersFilteringLog = (function () {
             requestType,
             timestamp,
             requestThirdParty: TSUrlFilter.isThirdPartyRequest(requestUrl, frameUrl),
-            method,
+            method
         };
 
         addRuleToFilteringEvent(filteringEvent, requestRule);
@@ -320,7 +322,7 @@ const browsersFilteringLog = (function () {
         frameUrl,
         requestType,
         timestamp,
-        requestRule,
+        requestRule
     }) {
         if (!requestRule || !canAddEvent(tab.tabId)) {
             return;
@@ -332,7 +334,7 @@ const browsersFilteringLog = (function () {
             frameUrl,
             frameDomain,
             requestType,
-            timestamp,
+            timestamp
         };
 
         addRuleToFilteringEvent(filteringEvent, requestRule);
@@ -353,7 +355,7 @@ const browsersFilteringLog = (function () {
         frameUrl,
         requestType,
         rule,
-        timestamp,
+        timestamp
     }) => {
         if (!rule || !canAddEvent(tab.tabId)) {
             return;
@@ -366,7 +368,7 @@ const browsersFilteringLog = (function () {
             frameUrl,
             frameDomain,
             requestType,
-            timestamp,
+            timestamp
         };
 
         addRuleToFilteringEvent(filteringEvent, rule);
@@ -388,7 +390,7 @@ const browsersFilteringLog = (function () {
         frameUrl,
         requestType,
         rule,
-        timestamp,
+        timestamp
     }) => {
         if (!rule || !canAddEvent(tab.tabId)) {
             return;
@@ -401,7 +403,7 @@ const browsersFilteringLog = (function () {
             frameUrl,
             frameDomain,
             requestType,
-            timestamp,
+            timestamp
         };
 
         addRuleToFilteringEvent(filteringEvent, rule);
@@ -429,7 +431,7 @@ const browsersFilteringLog = (function () {
             frameUrl,
             frameDomain,
             requestType: RequestTypes.DOCUMENT,
-            timestamp: Date.now(),
+            timestamp: Date.now()
         };
 
         addRuleToFilteringEvent(filteringEvent, rule);
@@ -457,7 +459,7 @@ const browsersFilteringLog = (function () {
         tabId,
         cookieName,
         cookieValue,
-        cookieDomain,
+        cookieDomain
     }) => {
         const tabInfo = getFilteringInfoByTabId(tabId);
         const filteringEvents = tabInfo?.filteringEvents;
@@ -493,7 +495,7 @@ const browsersFilteringLog = (function () {
         cookieRule,
         isModifyingCookieRule,
         thirdParty,
-        timestamp,
+        timestamp
     }) => {
         if (!canAddEvent(tabId)) {
             return;
@@ -503,7 +505,7 @@ const browsersFilteringLog = (function () {
             tabId,
             cookieName,
             cookieValue,
-            cookieDomain,
+            cookieDomain
         })) {
             return;
         }
@@ -514,7 +516,7 @@ const browsersFilteringLog = (function () {
             requestThirdParty: thirdParty,
             cookieName,
             cookieValue,
-            timestamp,
+            timestamp
         };
 
         if (cookieRule) {
@@ -543,7 +545,7 @@ const browsersFilteringLog = (function () {
         const tabInfo = getFilteringInfoByTabId(tab.tabId);
         const events = tabInfo.filteringEvents;
         if (events) {
-            for (let i = events.length - 1; i >= 0; i -= 1) {
+            for (let i = events.length; --i >= 0;) {
                 const event = events[i];
                 if (event.eventId === eventId) {
                     addRuleToFilteringEvent(event, requestRule);
@@ -568,7 +570,7 @@ const browsersFilteringLog = (function () {
         const tabInfo = getFilteringInfoByTabId(tab.tabId);
         const events = tabInfo.filteringEvents;
         if (events) {
-            for (let i = events.length - 1; i >= 0; i -= 1) {
+            for (let i = events.length; --i >= 0;) {
                 const event = events[i];
                 if (event.eventId === eventId) {
                     addReplaceRulesToFilteringEvent(event, replaceRules);
@@ -593,7 +595,7 @@ const browsersFilteringLog = (function () {
         const tabInfo = getFilteringInfoByTabId(tab.tabId);
         const events = tabInfo.filteringEvents;
         if (events) {
-            for (let i = events.length - 1; i >= 0; i -= 1) {
+            for (let i = events.length; --i >= 0;) {
                 const event = events[i];
                 if (event.eventId === eventId) {
                     event.stealthActions = actions;
@@ -618,7 +620,7 @@ const browsersFilteringLog = (function () {
         const tabInfo = getFilteringInfoByTabId(tab.tabId);
         const events = tabInfo.filteringEvents;
         if (events) {
-            for (let i = events.length - 1; i >= 0; i -= 1) {
+            for (let i = events.length; --i >= 0;) {
                 const event = events[i];
                 if (event.eventId === eventId) {
                     event.cspReportBlocked = cspReportBlocked;
@@ -643,7 +645,7 @@ const browsersFilteringLog = (function () {
         const tabInfo = getFilteringInfoByTabId(tab.tabId);
         const events = tabInfo.filteringEvents;
         if (events) {
-            for (let i = events.length - 1; i >= 0; i -= 1) {
+            for (let i = events.length; --i >= 0;) {
                 const event = events[i];
                 if (event.eventId === eventId) {
                     event.statusCode = statusCode;
@@ -677,13 +679,14 @@ const browsersFilteringLog = (function () {
         // As Object.keys() returns strings we convert them to integers,
         // because tabId is integer in extension API
         const tabIdsToRemove = Object.keys(tabsInfoMap).map(id => parseInt(id, 10));
-        for (let i = 0; i < tabs.length; i += 1) {
+        for (let i = 0; i < tabs.length; ++i) {
             const openTab = tabs[i];
             const tabInfo = tabsInfoMap[openTab.tabId];
             if (!tabInfo) {
                 // add tab
                 addTab(openTab);
-            } else {
+            }
+            else {
                 // update tab
                 updateTab(openTab);
             }
@@ -692,7 +695,7 @@ const browsersFilteringLog = (function () {
                 tabIdsToRemove.splice(index, 1);
             }
         }
-        for (let j = 0; j < tabIdsToRemove.length; j += 1) {
+        for (let j = 0; j < tabIdsToRemove.length; ++j) {
             removeTabById(tabIdsToRemove[j]);
         }
 
@@ -762,7 +765,7 @@ const browsersFilteringLog = (function () {
         onCloseFilteringLogPage,
 
         isPreserveLogEnabled,
-        setPreserveLogState,
+        setPreserveLogState
     };
 })();
 

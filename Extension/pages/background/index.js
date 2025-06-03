@@ -16,5 +16,5 @@ messageHandler.init();
 window.adguard = {
     tabs: tabsApi,
     filtersUpdate,
-    userrules,
+    userrules
 };

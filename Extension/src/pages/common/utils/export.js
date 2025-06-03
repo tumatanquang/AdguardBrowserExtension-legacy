@@ -27,25 +27,25 @@ import { MESSAGE_TYPES } from '../../../common/constants';
 export const ExportTypes = {
     USER_FILTER: 'user_filter',
     ALLOW_LIST: 'allow_list',
-    SETTINGS: 'settings',
+    SETTINGS: 'settings'
 };
 
 const exportMetadata = {
     [ExportTypes.USER_FILTER]: {
         name: 'user_rules',
         messageType: MESSAGE_TYPES.GET_USER_RULES,
-        ext: 'txt',
+        ext: 'txt'
     },
     [ExportTypes.ALLOW_LIST]: {
         name: 'allowlist',
         messageType: MESSAGE_TYPES.GET_ALLOWLIST_DOMAINS,
-        ext: 'txt',
+        ext: 'txt'
     },
     [ExportTypes.SETTINGS]: {
         name: 'settings',
         messageType: MESSAGE_TYPES.LOAD_SETTINGS_JSON,
-        ext: 'json',
-    },
+        ext: 'json'
+    }
 };
 
 /**
@@ -55,7 +55,7 @@ export const exportData = async (type) => {
     const {
         messageType,
         name,
-        ext,
+        ext
     } = exportMetadata[type];
 
     const currentTimeString = format(Date.now(), 'yyyyMMdd_HHmmss');

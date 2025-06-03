@@ -6,7 +6,7 @@ import {
     configure,
     observable,
     runInAction,
-    makeObservable,
+    makeObservable
 } from 'mobx';
 import punycode from 'punycode/';
 
@@ -23,58 +23,58 @@ class PopupStore {
 
     // need for render blocking before first data retrieving
     @observable
-    isInitialDataReceived = false;
+        isInitialDataReceived = false;
 
     @observable
-    applicationFilteringDisabled = null;
+        applicationFilteringDisabled = null;
 
     @observable
-    applicationAvailable = true;
+        applicationAvailable = true;
 
     @observable
-    canAddRemoveRule = true;
+        canAddRemoveRule = true;
 
     @observable
-    url = null;
+        url = null;
 
     @observable
-    viewState = VIEW_STATES.ACTIONS;
+        viewState = VIEW_STATES.ACTIONS;
 
     @observable
-    totalBlocked = 0;
+        totalBlocked = 0;
 
     @observable
-    totalBlockedTab = 0;
+        totalBlockedTab = 0;
 
     @observable
-    documentAllowlisted = null;
+        documentAllowlisted = null;
 
     @observable
-    userAllowlisted = null;
+        userAllowlisted = null;
 
     @observable
-    showInfoAboutFullVersion = true;
+        showInfoAboutFullVersion = true;
 
     @observable
-    isEdgeBrowser = false;
+        isEdgeBrowser = false;
 
     @observable
-    stats = null;
+        stats = null;
 
     @observable
-    selectedTimeRange = TIME_RANGES.WEEK;
+        selectedTimeRange = TIME_RANGES.WEEK;
 
     @observable
-    selectedBlockedType = this.TOTAL_BLOCKED_GROUP_ID;
+        selectedBlockedType = this.TOTAL_BLOCKED_GROUP_ID;
 
     @observable
-    promoNotification = null;
+        promoNotification = null;
 
     @observable
-    hasCustomRulesToReset = false;
+        hasCustomRulesToReset = false;
 
     @observable
-    settings = null;
+        settings = null;
 
     currentTabId = null;
 
@@ -83,65 +83,65 @@ class PopupStore {
     }
 
     @action
-    getPopupData = async () => {
+        getPopupData = async () => {
         // get current tab id
-        const tabs = await browser.tabs.query({
-            active: true,
-            currentWindow: true,
-        });
-        const currentTab = tabs?.[0];
+            const tabs = await browser.tabs.query({
+                active: true,
+                currentWindow: true
+            });
+            const currentTab = tabs?.[0];
 
-        const response = await messenger.getTabInfoForPopup(currentTab?.id);
+            const response = await messenger.getTabInfoForPopup(currentTab?.id);
 
-        runInAction(() => {
-            const {
-                frameInfo,
-                options,
-                stats,
-                settings,
-            } = response;
+            runInAction(() => {
+                const {
+                    frameInfo,
+                    options,
+                    stats,
+                    settings
+                } = response;
 
-            // frame info
-            this.applicationFilteringDisabled = frameInfo.applicationFilteringDisabled;
-            this.applicationAvailable = frameInfo.applicationAvailable;
-            this.url = frameInfo.url;
-            this.totalBlocked = frameInfo.totalBlocked;
-            this.totalBlockedTab = frameInfo.totalBlockedTab;
-            this.domainName = frameInfo.domainName;
-            this.documentAllowlisted = frameInfo.documentAllowlisted;
-            this.userAllowlisted = frameInfo.userAllowlisted;
-            this.canAddRemoveRule = frameInfo.canAddRemoveRule;
+                // frame info
+                this.applicationFilteringDisabled = frameInfo.applicationFilteringDisabled;
+                this.applicationAvailable = frameInfo.applicationAvailable;
+                this.url = frameInfo.url;
+                this.totalBlocked = frameInfo.totalBlocked;
+                this.totalBlockedTab = frameInfo.totalBlockedTab;
+                this.domainName = frameInfo.domainName;
+                this.documentAllowlisted = frameInfo.documentAllowlisted;
+                this.userAllowlisted = frameInfo.userAllowlisted;
+                this.canAddRemoveRule = frameInfo.canAddRemoveRule;
 
-            // options
-            this.showInfoAboutFullVersion = options.showInfoAboutFullVersion;
-            this.isEdgeBrowser = options.isEdgeBrowser;
-            this.promoNotification = options.notification;
-            this.hasCustomRulesToReset = options.hasCustomRulesToReset;
+                // options
+                this.showInfoAboutFullVersion = options.showInfoAboutFullVersion;
+                this.isEdgeBrowser = options.isEdgeBrowser;
+                this.promoNotification = options.notification;
+                this.hasCustomRulesToReset = options.hasCustomRulesToReset;
 
-            // stats
-            this.stats = stats;
+                // stats
+                this.stats = stats;
 
-            // settings
-            this.settings = settings;
+                // settings
+                this.settings = settings;
 
-            this.isInitialDataReceived = true;
-            this.currentTabId = currentTab?.id;
-        });
-    };
-
-    @action
-    changeApplicationFilteringDisabled = async (state) => {
-        await messenger.changeApplicationFilteringDisabled(state);
-
-        runInAction(() => {
-            this.applicationFilteringDisabled = state;
-        });
-    };
+                this.isInitialDataReceived = true;
+                this.currentTabId = currentTab?.id;
+            });
+        };
 
     @action
-    setViewState = (state) => {
-        this.viewState = state;
-    };
+        changeApplicationFilteringDisabled = async (state) => {
+            await messenger.changeApplicationFilteringDisabled(state);
+
+            runInAction(() => {
+                this.applicationFilteringDisabled = state;
+            });
+        };
+
+    @action
+        setViewState = (state) => {
+            this.viewState = state;
+        };
 
     @computed
     get currentSite() {
@@ -153,17 +153,21 @@ class PopupStore {
 
     @computed
     get currentStatusMessage() {
-        let messageKey = '';
+        let messageKey;
 
         if (!this.applicationAvailable) {
             messageKey = 'popup_site_filtering_state_secure_page';
-        } else if (!this.canAddRemoveRule) {
+        }
+        else if (!this.canAddRemoveRule) {
             messageKey = 'popup_site_exception_information';
-        } else if (this.applicationFilteringDisabled) {
+        }
+        else if (this.applicationFilteringDisabled) {
             messageKey = 'popup_site_filtering_state_paused';
-        } else if (this.documentAllowlisted) {
+        }
+        else if (this.documentAllowlisted) {
             messageKey = 'popup_site_filtering_state_disabled';
-        } else {
+        }
+        else {
             messageKey = 'popup_site_filtering_state_enabled';
         }
 
@@ -175,30 +179,28 @@ class PopupStore {
     }
 
     @action
-    toggleAllowlisted = () => {
-        if (!this.applicationAvailable || this.applicationFilteringDisabled) {
-            return;
-        }
-        if (!this.canAddRemoveRule) {
-            return;
-        }
+        toggleAllowlisted = () => {
+            if (!this.applicationAvailable || this.applicationFilteringDisabled || !this.canAddRemoveRule) {
+                return;
+            }
 
-        let isAllowlisted = this.documentAllowlisted;
+            let isAllowlisted = this.documentAllowlisted;
 
-        if (isAllowlisted) {
-            messenger.removeAllowlistDomain(this.currentTabId);
-            isAllowlisted = false;
-        } else {
-            messenger.addAllowlistDomain(this.currentTabId);
-            isAllowlisted = true;
-        }
+            if (isAllowlisted) {
+                messenger.removeAllowlistDomain(this.currentTabId);
+                isAllowlisted = false;
+            }
+            else {
+                messenger.addAllowlistDomain(this.currentTabId);
+                isAllowlisted = true;
+            }
 
-        runInAction(() => {
-            this.documentAllowlisted = isAllowlisted;
-            this.userAllowlisted = isAllowlisted;
-            this.totalBlockedTab = 0;
-        });
-    };
+            runInAction(() => {
+                this.documentAllowlisted = isAllowlisted;
+                this.userAllowlisted = isAllowlisted;
+                this.totalBlockedTab = 0;
+            });
+        };
 
     @computed
     get popupState() {
@@ -222,12 +224,12 @@ class PopupStore {
     }
 
     @action
-    getStatisticsData = async () => {
-        const { stats } = await messenger.getStatisticsData();
-        runInAction(() => {
-            this.stats = stats;
-        });
-    };
+        getStatisticsData = async () => {
+            const { stats } = await messenger.getStatisticsData();
+            runInAction(() => {
+                this.stats = stats;
+            });
+        };
 
     getDataByRange = (stats, range) => {
         switch (range) {
@@ -235,7 +237,7 @@ class PopupStore {
                 return stats.lastMonth[stats.lastMonth.length - 1];
             case TIME_RANGES.WEEK: {
                 const result = {};
-                for (let i = 0; i < stats.lastWeek.length; i += 1) {
+                for (let i = 0; i < stats.lastWeek.length; ++i) {
                     const day = stats.lastWeek[i];
                     // eslint-disable-next-line no-restricted-syntax
                     for (const type of Object.keys(day)) {
@@ -248,7 +250,7 @@ class PopupStore {
                 return stats.lastYear[stats.lastYear.length - 1];
             case TIME_RANGES.YEAR: {
                 const result = {};
-                for (let i = 0; i < stats.lastYear.length; i += 1) {
+                for (let i = 0; i < stats.lastYear.length; ++i) {
                     const month = stats.lastYear[i];
                     // eslint-disable-next-line no-restricted-syntax
                     for (const type of Object.keys(month)) {
@@ -283,52 +285,52 @@ class PopupStore {
                 return {
                     groupId,
                     blocked,
-                    groupName,
+                    groupName
                 };
             })
             .filter((group) => group.blocked > 0 || group.groupId === this.TOTAL_BLOCKED_GROUP_ID);
     }
 
     @action
-    setSelectedBlockedType = (value) => {
-        this.selectedBlockedType = value;
-    };
+        setSelectedBlockedType = (value) => {
+            this.selectedBlockedType = value;
+        };
 
     @action
-    setSelectedTimeRange = (value) => {
-        this.selectedTimeRange = value;
-    };
+        setSelectedTimeRange = (value) => {
+            this.selectedTimeRange = value;
+        };
 
     @action
-    closePromoNotification = async () => {
-        this.promoNotification = null;
-        await messenger.sendMessage(MESSAGE_TYPES.SET_NOTIFICATION_VIEWED, { withDelay: false });
-    };
-
-    @action
-    openPromoNotificationUrl = async () => {
-        let { url } = this.promoNotification;
-        url = `${url}&from=popup`;
-        runInAction(() => {
+        closePromoNotification = async () => {
             this.promoNotification = null;
-        });
-        await messenger.sendMessage(MESSAGE_TYPES.SET_NOTIFICATION_VIEWED, { withDelay: false });
-        await messenger.sendMessage('openTab', { url });
-    };
+            await messenger.sendMessage(MESSAGE_TYPES.SET_NOTIFICATION_VIEWED, { withDelay: false });
+        };
 
     @action
-    updateBlockedStats = (tabInfo) => {
-        this.totalBlocked = tabInfo.totalBlocked;
-        this.totalBlockedTab = tabInfo.totalBlockedTab;
-    }
+        openPromoNotificationUrl = async () => {
+            let { url } = this.promoNotification;
+            url = `${url}&from=popup`;
+            runInAction(() => {
+                this.promoNotification = null;
+            });
+            await messenger.sendMessage(MESSAGE_TYPES.SET_NOTIFICATION_VIEWED, { withDelay: false });
+            await messenger.sendMessage('openTab', { url });
+        };
 
     @action
-    onSettingUpdated = (name, value) => {
-        if (!this.settings) {
-            return;
-        }
-        this.settings.values[name] = value;
-    };
+        updateBlockedStats = (tabInfo) => {
+            this.totalBlocked = tabInfo.totalBlocked;
+            this.totalBlockedTab = tabInfo.totalBlockedTab;
+        };
+
+    @action
+        onSettingUpdated = (name, value) => {
+            if (!this.settings) {
+                return;
+            }
+            this.settings.values[name] = value;
+        };
 
     @computed
     get appearanceTheme() {
@@ -337,6 +339,14 @@ class PopupStore {
         }
 
         return this.settings.values[this.settings.names.APPEARANCE_THEME];
+    }
+
+    @computed
+    get showAdguardPromoInfo() {
+        if (!this.settings) {
+            return null;
+        }
+        return !this.settings.values[this.settings.names.DISABLE_SHOW_ADGUARD_PROMO_INFO];
     }
 }
 

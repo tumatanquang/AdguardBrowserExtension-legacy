@@ -22,6 +22,7 @@ import { prefs } from '../../prefs';
 import { log } from '../../../common/log';
 import { browserUtils } from '../../utils/browser-utils';
 import { lazyGet } from '../../utils/lazy';
+import { SAFEBROWSING_LOOKUP_URL, LOCAL_FILTER_IDS } from '../../../common/constants';
 
 /**
  * Class for working with our backend server.
@@ -99,7 +100,7 @@ export const backend = (function () {
          * Browsing Security lookups. In case of Firefox lookups are disabled for HTTPS urls.
          */
         get safebrowsingLookupUrl() {
-            return 'https://sb.adtidy.org/safebrowsing-lookup-short-hash.html';
+            return SAFEBROWSING_LOOKUP_URL;
         },
 
         // Folder that contains filters metadata and files with rules. 'filters' by default
@@ -112,8 +113,8 @@ export const backend = (function () {
         },
         // Array of filter identifiers, that have local file with rules. Range from 1 to 14 by default
         get localFilterIds() {
-            return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
-        },
+            return LOCAL_FILTER_IDS;
+        }
     };
 
     /**
@@ -125,7 +126,7 @@ export const backend = (function () {
         adguard_ext_firefox: browserUtils.isFirefoxBrowser(),
         adguard_ext_edge: browserUtils.isEdgeBrowser(),
         adguard_ext_safari: false,
-        adguard_ext_opera: browserUtils.isOperaBrowser(),
+        adguard_ext_opera: browserUtils.isOperaBrowser()
     };
 
     /**
@@ -166,7 +167,8 @@ export const backend = (function () {
                 request.onabort = errorCallbackWrapper('Request was aborted');
                 request.ontimeout = errorCallbackWrapper('Request stopped by timeout');
                 request.send(null);
-            } catch (ex) {
+            }
+            catch (ex) {
                 reject(ex);
             }
         });
@@ -199,7 +201,8 @@ export const backend = (function () {
     function parseJson(text) {
         try {
             return JSON.parse(text);
-        } catch (ex) {
+        }
+        catch (ex) {
             log.error('Error parse json {0}', ex);
             return null;
         }
@@ -251,14 +254,14 @@ export const backend = (function () {
      */
     const downloadFilterRules = (filterId, forceRemote, useOptimizedFilters) => {
         let url;
-
         if (forceRemote || settings.localFilterIds.indexOf(filterId) < 0) {
             url = getUrlForDownloadFilterRules(filterId, useOptimizedFilters);
-        } else {
+        }
+        else if (useOptimizedFilters) {
+            url = backgroundPage.getURL(`${settings.localFiltersFolder}/filter_mobile_${filterId}.txt`);
+        }
+        else {
             url = backgroundPage.getURL(`${settings.localFiltersFolder}/filter_${filterId}.txt`);
-            if (useOptimizedFilters) {
-                url = backgroundPage.getURL(`${settings.localFiltersFolder}/filter_mobile_${filterId}.txt`);
-            }
         }
 
         return FiltersDownloader.download(url, FilterCompilerConditionsConstants);
@@ -288,7 +291,8 @@ export const backend = (function () {
             }
 
             return lines;
-        } catch (e) {
+        }
+        catch (e) {
             delete loadingSubscriptions[url];
             const message = e instanceof Error ? e.message : e;
             throw new Error(message);
@@ -320,8 +324,9 @@ export const backend = (function () {
 
         try {
             response = await executeRequestAsync(url, 'application/json');
-        } catch (e) {
-            const exMessage = e?.message || 'couldn\'t load local filters metadata';
+        }
+        catch (e) {
+            const exMessage = e?.message || "couldn't load local filters metadata";
             throw createError(exMessage, url);
         }
 
@@ -347,8 +352,9 @@ export const backend = (function () {
         let response;
         try {
             response = await executeRequestAsync(url, 'application/json');
-        } catch (e) {
-            const exMessage = e?.message || 'couldn\'t load local filters i18n metadata';
+        }
+        catch (e) {
+            const exMessage = e?.message || "couldn't load local filters i18n metadata";
             throw createError(exMessage, url);
         }
 
@@ -373,8 +379,9 @@ export const backend = (function () {
         let response;
         try {
             response = await executeRequestAsync(url, 'application/json');
-        } catch (e) {
-            const exMessage = e?.message || 'couldn\'t load local script rules';
+        }
+        catch (e) {
+            const exMessage = e?.message || "couldn't load local script rules";
             throw createError(exMessage, url);
         }
 
@@ -403,8 +410,9 @@ export const backend = (function () {
 
         try {
             response = await executeRequestAsync(url, 'application/x-yaml');
-        } catch (e) {
-            const exMessage = e?.message || 'couldn\'t load redirect sources';
+        }
+        catch (e) {
+            const exMessage = e?.message || "couldn't load redirect sources";
             throw createError(exMessage, url);
         }
 
@@ -434,8 +442,7 @@ export const backend = (function () {
      * @param comment       Message text
      */
     const sendUrlReport = function (url, messageType, comment) {
-        let params = `url=${encodeURIComponent(url)}`;
-        params += `&messageType=${encodeURIComponent(messageType)}`;
+        let params = `url=${encodeURIComponent(url)}&messageType=${encodeURIComponent(messageType)}`;
         if (comment) {
             params += `&comment=${encodeURIComponent(comment)}`;
         }
@@ -457,11 +464,9 @@ export const backend = (function () {
      * @param enabledFilters    List of enabled filters
      */
     const sendHitStats = function (stats, enabledFilters) {
-        let params = `stats=${encodeURIComponent(stats)}`;
-        params += `&v=${encodeURIComponent(backgroundPage.app.getVersion())}`;
-        params += `&b=${encodeURIComponent(prefs.browser)}`;
+        let params = `stats=${encodeURIComponent(stats)}&v=${encodeURIComponent(backgroundPage.app.getVersion())}&b=${encodeURIComponent(prefs.browser)}`;
         if (enabledFilters) {
-            for (let i = 0; i < enabledFilters.length; i += 1) {
+            for (let i = 0; i < enabledFilters.length; ++i) {
                 const filter = enabledFilters[i];
                 params += `&f=${encodeURIComponent(`${filter.filterId},${filter.version}`)}`;
             }
@@ -490,7 +495,7 @@ export const backend = (function () {
             Object.defineProperty(settings, 'filtersMetadataUrl', {
                 get() {
                     return filtersMetadataUrl;
-                },
+                }
             });
         }
         const { filterRulesUrl } = configuration;
@@ -498,7 +503,7 @@ export const backend = (function () {
             Object.defineProperty(settings, 'filterRulesUrl', {
                 get() {
                     return filterRulesUrl;
-                },
+                }
             });
         }
         const { localFiltersFolder } = configuration;
@@ -506,7 +511,7 @@ export const backend = (function () {
             Object.defineProperty(settings, 'localFiltersFolder', {
                 get() {
                     return localFiltersFolder;
-                },
+                }
             });
         }
 
@@ -515,7 +520,7 @@ export const backend = (function () {
             Object.defineProperty(settings, 'redirectSourcesFolder', {
                 get() {
                     return redirectSourcesFolder;
-                },
+                }
             });
         }
 
@@ -524,7 +529,7 @@ export const backend = (function () {
             Object.defineProperty(settings, 'localFilterIds', {
                 get() {
                     return localFilterIds;
-                },
+                }
             });
         }
     };
@@ -546,6 +551,6 @@ export const backend = (function () {
         sendUrlReport,
         sendHitStats,
 
-        configure,
+        configure
     };
 })();

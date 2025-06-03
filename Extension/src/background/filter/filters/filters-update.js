@@ -83,14 +83,15 @@ export const filtersUpdate = (() => {
             return lastCheckTime + filtersUpdatePeriod <= Date.now();
         };
 
-        for (let i = 0; i < filters.length; i += 1) {
+        for (let i = 0; i < filters.length; ++i) {
             const filter = filters[i];
             const group = subscriptions.getGroup(filter.groupId);
             if (filter.installed && filter.enabled && group.enabled) {
                 if (forceUpdate || needUpdate(filter)) {
                     if (filter.customUrl) {
                         customFilterIds.push(filter.filterId);
-                    } else {
+                    }
+                    else {
                         filterIds.push(filter.filterId);
                     }
                 }
@@ -99,7 +100,7 @@ export const filtersUpdate = (() => {
 
         return {
             filterIds,
-            customFilterIds,
+            customFilterIds
         };
     };
 
@@ -119,10 +120,11 @@ export const filtersUpdate = (() => {
             log.debug(
                 'Retrieved response from server for {0} filters, result: {1} metadata',
                 filterIds.length,
-                filterMetadataList.length,
+                filterMetadataList.length
             );
             return filterMetadataList;
-        } catch (e) {
+        }
+        catch (e) {
             const errorMessage = `Error retrieved response from server for filters ${filterIds}, cause: ${e.message}`;
             log.error(errorMessage);
             throw new Error(errorMessage);
@@ -148,13 +150,14 @@ export const filtersUpdate = (() => {
             filterRules = await backend.downloadFilterRules(
                 filter.filterId,
                 forceRemote,
-                settings.isUseOptimizedFiltersEnabled(),
+                settings.isUseOptimizedFiltersEnabled()
             );
-        } catch (e) {
+        }
+        catch (e) {
             log.error(
                 'Error retrieving response from the server for filter {0}, cause: {1}:',
                 filter.filterId,
-                e || '',
+                e || ''
             );
             delete filter._isDownloading;
             listeners.notifyListeners(listeners.ERROR_DOWNLOAD_FILTER, filter);
@@ -218,7 +221,7 @@ export const filtersUpdate = (() => {
 
         const filters = await Promise.all(promises);
         const updatedFilters = filters.filter(f => f);
-        if (updatedFilters.length > 0) {
+        if (updatedFilters.length !== 0) {
             const filterIdsString = updatedFilters.map(f => f.filterId).join(', ');
             log.info(`Updated custom filters with ids: ${filterIdsString}`);
         }
@@ -298,7 +301,7 @@ export const filtersUpdate = (() => {
          */
         const selectFilterMetadataListToUpdate = (filterMetadataList, forceUpdate) => {
             const filterMetadataListToUpdate = [];
-            for (let i = 0; i < filterMetadataList.length; i += 1) {
+            for (let i = 0; i < filterMetadataList.length; ++i) {
                 const filterMetadata = filterMetadataList[i];
                 const filter = subscriptions.getFilter(filterMetadata.filterId);
                 if (filter && filterMetadata) {
@@ -306,12 +309,13 @@ export const filtersUpdate = (() => {
                         || (filterMetadata.version
                             && browserUtils.isGreaterVersion(
                                 filterMetadata.version,
-                                filter.version,
+                                filter.version
                             ))) {
                         log.info(`Updating filter ${filter.filterId} to version ${filterMetadata.version}`);
                         filter.lastUpdateTime = Date.now();
                         filterMetadataListToUpdate.push(filterMetadata);
-                    } else {
+                    }
+                    else {
                         // remember that this filter version was checked
                         filter.lastCheckTime = Date.now();
                     }
@@ -332,7 +336,7 @@ export const filtersUpdate = (() => {
     // Scheduling job
     let scheduleUpdateTimeoutId;
     function scheduleUpdate() {
-        const checkTimeout = 1000 * 60 * 30;
+        const checkTimeout = 30 * 60 * 1000;
         if (scheduleUpdateTimeoutId) {
             clearTimeout(scheduleUpdateTimeoutId);
         }
@@ -345,7 +349,8 @@ export const filtersUpdate = (() => {
         scheduleUpdateTimeoutId = setTimeout(async () => {
             try {
                 await checkAntiBannerFiltersUpdate();
-            } catch (ex) {
+            }
+            catch (ex) {
                 log.error('Error update filters, cause {0}', ex);
             }
             scheduleUpdate();
@@ -371,6 +376,6 @@ export const filtersUpdate = (() => {
     return {
         checkAntiBannerFiltersUpdate,
         scheduleFiltersUpdate,
-        loadFilterRules,
+        loadFilterRules
     };
 })();

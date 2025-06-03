@@ -35,7 +35,7 @@ export const getRemoveHeaderRules = (tab, url, referrer) => {
         requestUrl: url,
         frameUrl: referrer,
         requestType: RequestTypes.DOCUMENT,
-        frameRule: frames.getFrameRule(tab),
+        frameRule: frames.getFrameRule(tab)
     });
 };
 

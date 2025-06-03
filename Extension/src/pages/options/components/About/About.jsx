@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { observer } from 'mobx-react';
-
+import { SCRIPTLETS_VERSION } from '@adguard/scriptlets';
 import { rootStore } from '../../stores/RootStore';
 import {
     CHANGELOG_URL,
@@ -8,7 +8,7 @@ import {
     GITHUB_URL,
     PRIVACY_URL,
     WEBSITE_URL,
-    DISCUSS_URL,
+    DISCUSS_URL
 } from '../../../constants';
 import { reactTranslator } from '../../../../common/translators/reactTranslator';
 
@@ -23,79 +23,78 @@ const About = observer(() => {
         return null;
     }
 
+    const versionText = `${reactTranslator.getMessage('options_about_version')}: ${version} (Scriptlets: ${SCRIPTLETS_VERSION})`;
     const currentYear = new Date().getFullYear();
-    const copyRightText = `© 2009-${currentYear} AdGuard Software Ltd.`;
+    const copyRightText = `© 2009 - ${currentYear} AdGuard Software Ltd.`;
 
     return (
         <>
-            <div className="title__container title__container--about">
-                <h2 className="title">
+            <div className='title__container title__container--about'>
+                <h2 className='title'>
                     {reactTranslator.getMessage('options_about')}
                 </h2>
             </div>
-            <div className="about">
-                <div className="about__title">
+            <div className='about'>
+                <div className='about__title'>
                     {reactTranslator.getMessage('options_about_title')}
                 </div>
-                <div className="about__version">
-                    {reactTranslator.getMessage('options_about_version')}
-                    {' '}
-                    {version}
+                <div className='about__version'>
+                    {versionText}
                 </div>
-                <div className="about__copyright">
-                    <div className="about__copyright-item">
+                <div className='about__copyright'>
+                    <div className='about__copyright-item'>
                         {copyRightText}
                     </div>
-                    <div className="about__copyright-item">
+                    <div className='about__copyright-item'>
                         {reactTranslator.getMessage('options_copyright')}
                     </div>
                 </div>
-                <div className="links-menu">
+                <div className='links-menu'>
                     <a
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        target='_blank'
+                        rel='noopener noreferrer'
                         href={CHANGELOG_URL}
-                        className="links-menu__item"
+                        className='links-menu__item'
                     >
                         {reactTranslator.getMessage('options_open_changelog')}
                     </a>
                     <a
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        target='_blank'
+                        rel='noopener noreferrer'
                         href={PRIVACY_URL}
-                        className="links-menu__item"
+                        className='links-menu__item'
                     >
                         {reactTranslator.getMessage('options_privacy_policy')}
                     </a>
                     <a
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        target='_blank'
+                        rel='noopener noreferrer'
                         href={WEBSITE_URL}
-                        className="links-menu__item"
+                        className='links-menu__item'
                     >
                         {reactTranslator.getMessage('options_site')}
                     </a>
                     <a
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        target='_blank'
+                        rel='noopener noreferrer'
                         href={DISCUSS_URL}
-                        className="links-menu__item"
+                        className='links-menu__item'
                     >
                         {reactTranslator.getMessage('options_discuss')}
                     </a>
                     <a
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        target='_blank'
+                        rel='noopener noreferrer'
                         href={ACKNOWLEDGMENTS_URL}
-                        className="links-menu__item"
+                        className='links-menu__item'
                     >
                         {reactTranslator.getMessage('options_acknowledgment')}
                     </a>
                     <a
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        target='_blank'
+                        rel='noopener noreferrer'
                         href={GITHUB_URL}
-                        className="links-menu__item"
+                        className='links-menu__item'
                     >
                         {reactTranslator.getMessage('options_github')}
                     </a>

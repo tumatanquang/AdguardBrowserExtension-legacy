@@ -15,7 +15,7 @@ class UiStore {
         this.notifications.push({
             id,
             title,
-            description,
+            description
         });
         return id;
     }

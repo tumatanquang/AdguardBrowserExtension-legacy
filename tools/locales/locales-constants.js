@@ -13,7 +13,7 @@ const {
     locales_data_format: FORMAT,
     locales_data_filename: LOCALE_DATA_FILENAME,
     required_locales: REQUIRED_LOCALES,
-    threshold_percentage: THRESHOLD_PERCENTAGE,
+    threshold_percentage: THRESHOLD_PERCENTAGE
 } = inputConfig;
 
 const twoskyPath = path.join(__dirname, TWOSKY_CONFIG_PATH);
@@ -22,7 +22,7 @@ const twoskyConfig = JSON.parse(twoskyContent)[0];
 const {
     base_locale: BASE_LOCALE,
     languages: LANGUAGES,
-    project_id: PROJECT_ID,
+    project_id: PROJECT_ID
 } = twoskyConfig;
 
 const LOCALES_ABSOLUTE_PATH = path.join(__dirname, LOCALES_RELATIVE_PATH);
@@ -40,7 +40,7 @@ const LOCALE_PAIRS = {
     /**
      * We duplicate es language for Spanish (Latin America and Caribbean)
      */
-    es_419: 'es',
+    es_419: 'es'
 };
 
 export {
@@ -58,5 +58,5 @@ export {
     FORMAT,
     LOCALE_DATA_FILENAME,
     REQUIRED_LOCALES,
-    THRESHOLD_PERCENTAGE,
+    THRESHOLD_PERCENTAGE
 };

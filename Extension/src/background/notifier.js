@@ -1,4 +1,3 @@
-/* eslint-disable no-plusplus */
 /**
  * This file is part of Adguard Browser Extension (https://github.com/AdguardTeam/AdguardBrowserExtension).
  *
@@ -83,12 +82,13 @@ export const listeners = (() => {
 
             Object.entries(this.listenersMap).forEach(([listenerId, listener]) => {
                 const events = this.listenersEventsMap[listenerId];
-                if (events && events.length > 0 && events.indexOf(event) < 0) {
+                if (events && events.length !== 0 && events.indexOf(event) < 0) {
                     return;
                 }
                 try {
                     listener.apply(listener, args);
-                } catch (ex) {
+                }
+                catch (ex) {
                     log.error('Error invoking listener for {0} cause: {1}', event, ex);
                 }
             });
@@ -103,7 +103,7 @@ export const listeners = (() => {
             setTimeout(() => {
                 EventNotifier.notifyListeners(...args);
             }, 500);
-        },
+        }
     };
 
     // Make accessible only constants without functions. They will be passed to content-page

@@ -18,7 +18,7 @@ export class SubscriptionFilter {
         tags,
         customUrl,
         trusted,
-        checksum,
+        checksum
     }) {
         this.filterId = filterId;
         this.groupId = groupId;
@@ -33,13 +33,13 @@ export class SubscriptionFilter {
         this.subscriptionUrl = subscriptionUrl;
         this.tags = tags;
         // Custom filters data
-        if (typeof customUrl !== 'undefined') {
+        if (customUrl !== undefined) {
             this.customUrl = customUrl;
         }
-        if (typeof trusted !== 'undefined') {
+        if (trusted !== undefined) {
             this.trusted = trusted;
         }
-        if (typeof checksum !== 'undefined') {
+        if (checksum !== undefined) {
             this.checksum = checksum;
         }
     }

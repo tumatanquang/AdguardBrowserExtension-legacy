@@ -68,7 +68,7 @@ export const tags = (() => {
             privacy: privacyFilters,
             security: securityFilters,
             annoyances: annoyancesFilters,
-            cookies: cookiesFilters,
+            cookies: cookiesFilters
         };
     };
 
@@ -78,6 +78,6 @@ export const tags = (() => {
         isRecommendedFilter,
         isMobileFilter,
         getFiltersByTagId,
-        getRecommendedFilters,
+        getRecommendedFilters
     };
 })();

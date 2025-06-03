@@ -7,14 +7,14 @@ export const adgSettings = JSON.stringify({
         'autodetect-filters': true,
         'safebrowsing-enabled': true,
         'filters-update-period': -1,
-        'appearance-theme': 'system',
+        'appearance-theme': 'system'
     },
     'extension-specific-settings': {
         'use-optimized-filters': false,
         'collect-hits-count': false,
         'show-context-menu': true,
         'show-info-about-adguard': true,
-        'show-app-updated-info': true,
+        'show-app-updated-info': true
     },
     'filters': {
         'enabled-groups': [1, 2, 3, 4, 5, 6, 7],
@@ -23,13 +23,13 @@ export const adgSettings = JSON.stringify({
         'user-filter': {
             'rules': '',
             'disabled-rules': '',
-            'enabled': true,
+            'enabled': true
         },
         'whitelist': {
             'inverted': false,
             'domains': [],
-            'inverted-domains': [],
-        },
+            'inverted-domains': []
+        }
     },
     'stealth': {
         'stealth_disable_stealth_mode': true,
@@ -44,7 +44,6 @@ export const adgSettings = JSON.stringify({
         'stealth-block-first-party-cookies-time': 4320,
         'block-known-trackers': true,
         'strip-tracking-parameters': true,
-        // eslint-disable-next-line max-len
-        'tracking-parameters': 'utm_source,utm_medium,utm_term,utm_campaign,utm_content,utm_name,utm_cid,utm_reader,utm_viz_id,utm_pubreferrer,utm_swu,utm_referrer,utm_social,utm_social-type,utm_place,utm_userid,utm_channel,fb_action_ids,fb_action_types,fb_ref,fb_source',
-    },
+        'tracking-parameters': 'utm_source,utm_medium,utm_term,utm_campaign,utm_content,utm_name,utm_cid,utm_reader,utm_viz_id,utm_pubreferrer,utm_swu,utm_referrer,utm_social,utm_social-type,utm_place,utm_userid,utm_channel,fb_action_ids,fb_action_types,fb_ref,fb_source'
+    }
 });

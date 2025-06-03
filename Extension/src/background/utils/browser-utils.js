@@ -38,10 +38,10 @@ export const browserUtils = (function () {
             if (Number.isNaN(part)) {
                 return 0;
             }
-            return Math.max(part - 0, 0);
+            return Math.max(part, 0);
         }
 
-        for (let i = 3; i >= 0; i -= 1) {
+        for (let i = 3; i >= 0; --i) {
             this.version[i] = parseVersionPart(parts[i]);
         }
     };
@@ -52,10 +52,11 @@ export const browserUtils = (function () {
      * @returns {number}
      */
     Version.prototype.compare = function (o) {
-        for (let i = 0; i < 4; i += 1) {
+        for (let i = 0; i < 4; ++i) {
             if (this.version[i] > o.version[i]) {
                 return 1;
-            } if (this.version[i] < o.version[i]) {
+            }
+            if (this.version[i] < o.version[i]) {
                 return -1;
             }
         }
@@ -67,9 +68,9 @@ export const browserUtils = (function () {
             let clientId = localStorage.getItem('client-id');
             if (!clientId) {
                 const result = [];
-                const suffix = (Date.now()) % 1e8;
+                const suffix = Date.now() % 1e8;
                 const symbols = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890';
-                for (let i = 0; i < 8; i += 1) {
+                for (let i = 0; i < 8; ++i) {
                     const symbol = symbols[Math.floor(Math.random() * symbols.length)];
                     result.push(symbol);
                 }
@@ -181,7 +182,7 @@ export const browserUtils = (function () {
          */
         findHeaderByName(headers, headerName) {
             if (headers) {
-                for (let i = 0; i < headers.length; i += 1) {
+                for (let i = 0; i < headers.length; ++i) {
                     const header = headers[i];
                     if (header.name.toLowerCase() === headerName.toLowerCase()) {
                         return header;
@@ -215,7 +216,8 @@ export const browserUtils = (function () {
             const header = this.findHeaderByName(headers, headerName);
             if (header) {
                 header.value = headerValue;
-            } else {
+            }
+            else {
                 headers.push({ name: headerName, value: headerValue });
             }
             return headers;
@@ -231,7 +233,7 @@ export const browserUtils = (function () {
         removeHeader(headers, headerName) {
             let removed = false;
             if (headers) {
-                for (let i = headers.length - 1; i >= 0; i -= 1) {
+                for (let i = headers.length; --i >= 0;) {
                     const header = headers[i];
                     if (header.name.toLowerCase() === headerName.toLowerCase()) {
                         headers.splice(i, 1);
@@ -268,7 +270,8 @@ export const browserUtils = (function () {
                 // get all languages if 'limit' is not specified
                 const langLimit = limit || navigator.languages.length;
                 languages = navigator.languages.slice(0, langLimit);
-            } else if (navigator.language) {
+            }
+            else if (navigator.language) {
                 languages.push(navigator.language); // .language is first in .languages
             }
             return languages;
@@ -336,7 +339,7 @@ export const browserUtils = (function () {
          */
         removePermission: (permissions) => {
             return browser.permissions.remove(permissions);
-        },
+        }
     };
 
     return browserUtils;

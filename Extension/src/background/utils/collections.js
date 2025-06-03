@@ -18,7 +18,7 @@ export const collections = (() => {
             if (!element || !collection) {
                 return;
             }
-            for (let i = collection.length - 1; i >= 0; i -= 1) {
+            for (let i = collection.length; --i >= 0;) {
                 if (collection[i] === element) {
                     collection.splice(i, 1);
                 }
@@ -34,7 +34,7 @@ export const collections = (() => {
             if (!predicate || !collection) {
                 return;
             }
-            for (let i = collection.length - 1; i >= 0; i -= 1) {
+            for (let i = collection.length; --i >= 0;) {
                 if (predicate(collection[i])) {
                     collection.splice(i, 1);
                 }
@@ -45,7 +45,7 @@ export const collections = (() => {
             if (!rule || !collection) {
                 return;
             }
-            for (let i = collection.length - 1; i >= 0; i -= 1) {
+            for (let i = collection.length; --i >= 0;) {
                 if (rule.getText() === collection[i].getText()) {
                     collection.splice(i, 1);
                 }
@@ -64,7 +64,7 @@ export const collections = (() => {
             if (!collection) {
                 return text;
             }
-            for (let i = 0; i < collection.length; i += 1) {
+            for (let i = 0; i < collection.length; ++i) {
                 text.push(collection[i].getText());
             }
             return text;
@@ -81,7 +81,7 @@ export const collections = (() => {
             if (typeof array.find === 'function') {
                 return array.find(a => a[property] === value);
             }
-            for (let i = 0; i < array.length; i += 1) {
+            for (let i = 0; i < array.length; ++i) {
                 const elem = array[i];
                 if (elem[property] === value) {
                     return elem;
@@ -107,7 +107,7 @@ export const collections = (() => {
          */
         getArraySubtraction(a, b) {
             return a.filter(i => b.indexOf(i) < 0);
-        },
+        }
     };
 
     return CollectionUtils;

@@ -1,4 +1,11 @@
 (function(source, args) {
+    const flag = "done";
+    const uniqueIdentifier = source.uniqueId + source.name + "_" + (Array.isArray(args) ? args.join("_") : "");
+    if (source.uniqueId) {
+        if (Window.prototype.toString[uniqueIdentifier] === flag) {
+            return;
+        }
+    }
     function GoogleAnalyticsGa(source) {
         function Gaq() {}
         Gaq.prototype.Na = noopFunc;
@@ -24,8 +31,8 @@
                 data[2]();
             }
         };
-        const gaq = new Gaq;
-        const asyncTrackers = window._gaq || [];
+        var gaq = new Gaq;
+        var asyncTrackers = window._gaq || [];
         if (Array.isArray(asyncTrackers)) {
             while (asyncTrackers[0]) {
                 gaq.push(asyncTrackers.shift());
@@ -33,8 +40,8 @@
         }
         window._gaq = gaq.qf = gaq;
         function Gat() {}
-        const api = [ "_addIgnoredOrganic", "_addIgnoredRef", "_addItem", "_addOrganic", "_addTrans", "_clearIgnoredOrganic", "_clearIgnoredRef", "_clearOrganic", "_cookiePathCopy", "_deleteCustomVar", "_getName", "_setAccount", "_getAccount", "_getClientInfo", "_getDetectFlash", "_getDetectTitle", "_getLinkerUrl", "_getLocalGifPath", "_getServiceMode", "_getVersion", "_getVisitorCustomVar", "_initData", "_link", "_linkByPost", "_setAllowAnchor", "_setAllowHash", "_setAllowLinker", "_setCampContentKey", "_setCampMediumKey", "_setCampNameKey", "_setCampNOKey", "_setCampSourceKey", "_setCampTermKey", "_setCampaignCookieTimeout", "_setCampaignTrack", "_setClientInfo", "_setCookiePath", "_setCookiePersistence", "_setCookieTimeout", "_setCustomVar", "_setDetectFlash", "_setDetectTitle", "_setDomainName", "_setLocalGifPath", "_setLocalRemoteServerMode", "_setLocalServerMode", "_setReferrerOverride", "_setRemoteServerMode", "_setSampleRate", "_setSessionTimeout", "_setSiteSpeedSampleRate", "_setSessionCookieTimeout", "_setVar", "_setVisitorCookieTimeout", "_trackEvent", "_trackPageLoadTime", "_trackPageview", "_trackSocial", "_trackTiming", "_trackTrans", "_visitCode" ];
-        const tracker = api.reduce((function(res, funcName) {
+        var api = [ "_addIgnoredOrganic", "_addIgnoredRef", "_addItem", "_addOrganic", "_addTrans", "_clearIgnoredOrganic", "_clearIgnoredRef", "_clearOrganic", "_cookiePathCopy", "_deleteCustomVar", "_getName", "_setAccount", "_getAccount", "_getClientInfo", "_getDetectFlash", "_getDetectTitle", "_getLinkerUrl", "_getLocalGifPath", "_getServiceMode", "_getVersion", "_getVisitorCustomVar", "_initData", "_link", "_linkByPost", "_setAllowAnchor", "_setAllowHash", "_setAllowLinker", "_setCampContentKey", "_setCampMediumKey", "_setCampNameKey", "_setCampNOKey", "_setCampSourceKey", "_setCampTermKey", "_setCampaignCookieTimeout", "_setCampaignTrack", "_setClientInfo", "_setCookiePath", "_setCookiePersistence", "_setCookieTimeout", "_setCustomVar", "_setDetectFlash", "_setDetectTitle", "_setDomainName", "_setLocalGifPath", "_setLocalRemoteServerMode", "_setLocalServerMode", "_setReferrerOverride", "_setRemoteServerMode", "_setSampleRate", "_setSessionTimeout", "_setSiteSpeedSampleRate", "_setSessionCookieTimeout", "_setVar", "_setVisitorCookieTimeout", "_trackEvent", "_trackPageLoadTime", "_trackPageview", "_trackSocial", "_trackTiming", "_trackTrans", "_visitCode" ];
+        var tracker = api.reduce((function(res, funcName) {
             res[funcName] = noopFunc;
             return res;
         }), {});
@@ -69,35 +76,33 @@
         Gat.prototype.oa = noopFunc;
         Gat.prototype.pa = noopFunc;
         Gat.prototype.u = noopFunc;
-        const gat = new Gat;
+        var gat = new Gat;
         window._gat = gat;
         hit(source);
     }
     function hit(source) {
-        if (source.verbose !== true) {
+        var ADGUARD_PREFIX = "[AdGuard]";
+        if (!source.verbose) {
             return;
         }
         try {
-            const log = console.log.bind(console);
-            const trace = console.trace.bind(console);
-            let prefix = source.ruleText || "";
-            if (source.domainName) {
-                const AG_SCRIPTLET_MARKER = "#%#//";
-                const UBO_SCRIPTLET_MARKER = "##+js";
-                let ruleStartIndex;
-                if (source.ruleText.indexOf(AG_SCRIPTLET_MARKER) > -1) {
-                    ruleStartIndex = source.ruleText.indexOf(AG_SCRIPTLET_MARKER);
-                } else if (source.ruleText.indexOf(UBO_SCRIPTLET_MARKER) > -1) {
-                    ruleStartIndex = source.ruleText.indexOf(UBO_SCRIPTLET_MARKER);
+            var trace = console.trace.bind(console);
+            var label = "".concat(ADGUARD_PREFIX, " ");
+            if (source.engine === "corelibs") {
+                label += source.ruleText;
+            } else {
+                if (source.domainName) {
+                    label += "".concat(source.domainName);
                 }
-                const rulePart = source.ruleText.slice(ruleStartIndex);
-                prefix = "".concat(source.domainName).concat(rulePart);
+                if (source.args) {
+                    label += "#%#//scriptlet('".concat(source.name, "', '").concat(source.args.join("', '"), "')");
+                } else {
+                    label += "#%#//scriptlet('".concat(source.name, "')");
+                }
             }
-            log("".concat(prefix, " trace start"));
             if (trace) {
-                trace();
+                trace(label);
             }
-            log("".concat(prefix, " trace end"));
         } catch (e) {}
         if (typeof window.__debug === "function") {
             window.__debug(source);
@@ -105,31 +110,30 @@
     }
     function noopFunc() {}
     function logMessage(source, message) {
-        let forced = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-        let convertMessageToString = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
-        const name = source.name, ruleText = source.ruleText, verbose = source.verbose;
+        var forced = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+        var convertMessageToString = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+        var name = source.name, verbose = source.verbose;
         if (!forced && !verbose) {
             return;
         }
-        const nativeConsole = console.log;
+        var nativeConsole = console.log;
         if (!convertMessageToString) {
             nativeConsole("".concat(name, ":"), message);
             return;
         }
-        let messageStr = "".concat(name, ": ").concat(message);
-        if (ruleText) {
-            const RULE_MARKER = "#%#//scriptlet";
-            const markerIdx = ruleText.indexOf(RULE_MARKER);
-            if (markerIdx > -1) {
-                const ruleWithoutDomains = ruleText.slice(markerIdx, ruleText.length);
-                messageStr += "; cannot apply rule: ".concat(ruleWithoutDomains);
-            }
-        }
-        nativeConsole(messageStr);
+        nativeConsole("".concat(name, ": ").concat(message));
     }
     const updatedArgs = args ? [].concat(source).concat(args) : [ source ];
     try {
         GoogleAnalyticsGa.apply(this, updatedArgs);
+        if (source.uniqueId) {
+            Object.defineProperty(Window.prototype.toString, uniqueIdentifier, {
+                value: flag,
+                enumerable: false,
+                writable: false,
+                configurable: false
+            });
+        }
     } catch (e) {
         console.log(e);
     }

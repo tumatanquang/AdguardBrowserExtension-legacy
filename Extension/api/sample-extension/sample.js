@@ -17,7 +17,7 @@ const configuration = {
     filtersMetadataUrl: 'https://filters.adtidy.org/extension/chromium/filters.json',
 
     // Filter file mask
-    filterRulesUrl: 'https://filters.adtidy.org/extension/chromium/filters/{filter_id}.txt',
+    filterRulesUrl: 'https://filters.adtidy.org/extension/chromium/filters/{filter_id}.txt'
 };
 
 // Add event listener for blocked requests
@@ -36,7 +36,6 @@ chrome.runtime.onMessage.addListener((message) => {
         // https://groups.google.com/a/chromium.org/g/chromium-extensions/c/0ei-UCHNm34/m/lDaXwQhzBAAJ?pli=1
         // https://bugs.chromium.org/p/chromium/issues/detail?id=982326
         if (token !== expectedToken) {
-            // eslint-disable-next-line max-len
             console.error(`Tokens for message ${message} does not not match. Expected token: ${token}. Received token: ${expectedToken}`);
             return;
         }

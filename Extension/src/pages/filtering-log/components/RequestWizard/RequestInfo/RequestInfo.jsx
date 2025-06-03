@@ -4,7 +4,7 @@ jsx-a11y/click-events-have-key-events,
 jsx-a11y/no-static-element-interactions
 */
 import React, {
-    useState, useContext, useRef, useLayoutEffect,
+    useState, useContext, useRef, useLayoutEffect
 } from 'react';
 import { observer } from 'mobx-react';
 import identity from 'lodash/identity';
@@ -34,7 +34,7 @@ const STEALTH_ACTIONS_NAMES = {
     FIRST_PARTY_COOKIES: reactTranslator.getMessage('options_modified_first_party_cookie'),
     THIRD_PARTY_COOKIES: reactTranslator.getMessage('options_modified_third_party_cookie'),
     BLOCK_CHROME_CLIENT_DATA: reactTranslator.getMessage('filtering_log_remove_client_data'),
-    STRIPPED_TRACKING_URL: reactTranslator.getMessage('options_stripped_tracking_parameters'),
+    STRIPPED_TRACKING_URL: reactTranslator.getMessage('options_stripped_tracking_parameters')
 };
 
 /**
@@ -53,7 +53,7 @@ const getStealthActionsNames = (actions) => {
         })
         .filter(identity);
 
-    return result.length > 0 ? result.join(', ') : null;
+    return result.length !== 0 ? result.join(', ') : null;
 };
 
 /**
@@ -89,7 +89,7 @@ const getRuleText = (rule) => {
  */
 const getRule = (selectedEvent) => {
     const replaceRules = selectedEvent?.replaceRules;
-    if (replaceRules && replaceRules.length > 0) {
+    if (replaceRules && replaceRules.length !== 0) {
         return replaceRules.map((rule) => getRuleText(rule)).join('\n');
     }
 
@@ -125,7 +125,7 @@ const PARTS = {
     SOURCE: 'SOURCE',
     RULE: 'RULE',
     FILTER: 'FILTER',
-    STEALTH: 'STEALTH',
+    STEALTH: 'STEALTH'
 };
 
 const RequestInfo = observer(() => {
@@ -153,37 +153,37 @@ const RequestInfo = observer(() => {
     const eventPartsMap = {
         [PARTS.URL]: {
             title: reactTranslator.getMessage('options_popup_filter_url'),
-            data: selectedEvent.requestUrl,
+            data: selectedEvent.requestUrl
         },
         [PARTS.ELEMENT]: {
             title: reactTranslator.getMessage('filtering_modal_element'),
-            data: selectedEvent.element,
+            data: selectedEvent.element
         },
         [PARTS.COOKIE]: {
             title: reactTranslator.getMessage('filtering_modal_cookie'),
-            data: getCookieData(selectedEvent),
+            data: getCookieData(selectedEvent)
         },
         [PARTS.TYPE]: {
             title: reactTranslator.getMessage('filtering_modal_type'),
-            data: getType(selectedEvent),
+            data: getType(selectedEvent)
         },
         [PARTS.SOURCE]: {
             title: reactTranslator.getMessage('filtering_modal_source'),
-            data: selectedEvent.frameDomain,
+            data: selectedEvent.frameDomain
         },
         [PARTS.RULE]: {
             title: getRuleFieldTitle(selectedEvent),
-            data: getRule(selectedEvent),
+            data: getRule(selectedEvent)
         },
         // TODO add converted rule text
         [PARTS.FILTER]: {
             title: reactTranslator.getMessage('filtering_modal_filter'),
-            data: getFilterName(selectedEvent.requestRule?.filterId, filtersMetadata),
+            data: getFilterName(selectedEvent.requestRule?.filterId, filtersMetadata)
         },
         [PARTS.STEALTH]: {
             title: reactTranslator.getMessage('filtering_modal_privacy'),
-            data: getStealthActionsNames(selectedEvent.stealthActions),
-        },
+            data: getStealthActionsNames(selectedEvent.stealthActions)
+        }
     };
 
     let infoElements = [
@@ -194,7 +194,7 @@ const RequestInfo = observer(() => {
         PARTS.SOURCE,
         PARTS.RULE,
         PARTS.FILTER,
-        PARTS.STEALTH,
+        PARTS.STEALTH
     ];
 
     if (selectedEvent.requestRule?.cookieRule) {
@@ -204,7 +204,7 @@ const RequestInfo = observer(() => {
             PARTS.SOURCE,
             PARTS.STEALTH, // FIXME determine first/third-party
             PARTS.RULE,
-            PARTS.FILTER,
+            PARTS.FILTER
         ];
     }
 
@@ -222,17 +222,15 @@ const RequestInfo = observer(() => {
         );
 
         return (
-            <>
-                {showOpenInNewTabButton && (
-                    <div
-                        className="request-modal__url-button"
-                        type="button"
-                        onClick={openInNewTabHandler}
-                    >
-                        {reactTranslator.getMessage('filtering_modal_open_in_new_tab')}
-                    </div>
-                )}
-            </>
+            showOpenInNewTabButton && (
+                <div
+                    className='request-modal__url-button'
+                    type='button'
+                    onClick={openInNewTabHandler}
+                >
+                    {reactTranslator.getMessage('filtering_modal_open_in_new_tab')}
+                </div>
+            )
         );
     };
 
@@ -249,32 +247,31 @@ const RequestInfo = observer(() => {
             const isElement = data === selectedEvent.element;
             const canCopyToClipboard = isRequestUrl || isRule || isFilterName;
 
-            let lineCountLimit = LINE_COUNT_LIMIT.REQUEST_URL;
-            if (isRule) {
-                lineCountLimit = LINE_COUNT_LIMIT.RULE;
-            }
+            const lineCountLimit = isRule ? LINE_COUNT_LIMIT.RULE : LINE_COUNT_LIMIT.REQUEST_URL;
 
             let showMessage;
             let hideMessage;
             if (isRequestUrl) {
                 showMessage = 'filtering_modal_show_full_url';
                 hideMessage = 'filtering_modal_hide_full_url';
-            } else if (isRule) {
+            }
+            else if (isRule) {
                 showMessage = 'filtering_modal_show_full_rule';
                 hideMessage = 'filtering_modal_hide_full_rule';
-            } else if (isElement) {
+            }
+            else if (isElement) {
                 showMessage = 'filtering_modal_show_full_element';
                 hideMessage = 'filtering_modal_hide_full_element';
             }
             const collapserButtonMessages = {
                 showMessage,
-                hideMessage,
+                hideMessage
             };
 
             return (
-                <div key={title} className="request-info">
-                    <div className="request-info__key">{title}</div>
-                    <div className="request-info__value">
+                <div key={title} className='request-info'>
+                    <div className='request-info__key'>{title}</div>
+                    <div className='request-info__value'>
                         <TextCollapser
                             text={data}
                             ref={isRequestUrl || isRule ? requestTextRef : null}
@@ -319,7 +316,7 @@ const RequestInfo = observer(() => {
         return (
             <button
                 className={buttonClass}
-                type="button"
+                type='button'
                 onClick={onClick}
                 title={title}
             >
@@ -335,38 +332,38 @@ const RequestInfo = observer(() => {
             BLOCK: {
                 buttonTitleKey: 'filtering_modal_block',
                 className: 'request-modal__button--red',
-                onClick: blockHandler,
+                onClick: blockHandler
             },
             UNBLOCK: {
                 buttonTitleKey: 'filtering_modal_unblock',
-                onClick: unblockHandler,
+                onClick: unblockHandler
             },
             ALLOWLIST: {
                 buttonTitleKey: 'filtering_modal_remove_allowlist',
-                onClick: removeFromAllowlistHandler,
+                onClick: removeFromAllowlistHandler
             },
             USER_FILTER: {
                 buttonTitleKey: 'filtering_modal_remove_user',
-                onClick: () => removeFromUserFilterHandler(event),
+                onClick: () => removeFromUserFilterHandler(event)
             },
             REMOVE_ADDED_BLOCK_RULE: {
                 buttonTitleKey: 'filtering_modal_remove_user',
                 onClick: () => {
                     wizardStore.removeAddedRuleFromUserFilter();
-                },
+                }
             },
             REMOVE_ADDED_UNBLOCK_RULE: {
                 buttonTitleKey: 'filtering_modal_block_again',
                 className: 'request-modal__button--red',
                 onClick: () => {
                     wizardStore.removeAddedRuleFromUserFilter();
-                },
+                }
             },
             PREVIEW: {
                 buttonTitleKey: 'filtering_modal_preview_request_button',
                 className: 'request-modal__button--white',
-                onClick: previewClickHandler,
-            },
+                onClick: previewClickHandler
+            }
         };
 
         let buttonProps = BUTTON_MAP.BLOCK;
@@ -376,7 +373,7 @@ const RequestInfo = observer(() => {
             RequestTypes.DOCUMENT,
             RequestTypes.SUBDOCUMENT,
             RequestTypes.SCRIPT,
-            RequestTypes.STYLESHEET,
+            RequestTypes.STYLESHEET
         ];
 
         const showPreviewButton = previewableTypes.includes(event.requestType)
@@ -395,7 +392,8 @@ const RequestInfo = observer(() => {
 
         if (!requestRule) {
             buttonProps = BUTTON_MAP.BLOCK;
-        } else if (requestRule.filterId === ANTIBANNER_FILTERS_ID.USER_FILTER_ID) {
+        }
+        else if (requestRule.filterId === ANTIBANNER_FILTERS_ID.USER_FILTER_ID) {
             buttonProps = BUTTON_MAP.USER_FILTER;
             if (requestRule.isStealthModeRule) {
                 buttonProps = BUTTON_MAP.UNBLOCK;
@@ -409,11 +407,14 @@ const RequestInfo = observer(() => {
                     </>
                 );
             }
-        } else if (requestRule.filterId === ANTIBANNER_FILTERS_ID.ALLOWLIST_FILTER_ID) {
+        }
+        else if (requestRule.filterId === ANTIBANNER_FILTERS_ID.ALLOWLIST_FILTER_ID) {
             buttonProps = BUTTON_MAP.ALLOWLIST;
-        } else if (!requestRule.allowlistRule) {
+        }
+        else if (!requestRule.allowlistRule) {
             buttonProps = BUTTON_MAP.UNBLOCK;
-        } else if (requestRule.allowlistRule) {
+        }
+        else if (requestRule.allowlistRule) {
             buttonProps = BUTTON_MAP.BLOCK;
         }
 
@@ -441,21 +442,21 @@ const RequestInfo = observer(() => {
         <>
             <div className={cn('request-modal__title', { 'request-modal__title_fixed': contentOverflowed })}>
                 <button
-                    type="button"
+                    type='button'
                     onClick={closeModal}
-                    className="request-modal__navigation request-modal__navigation--button"
+                    className='request-modal__navigation request-modal__navigation--button'
                     aria-label={reactTranslator.getMessage('close_button_title')}
                 >
-                    <Icon id="#cross" classname="icon--24" />
+                    <Icon id='#cross' classname='icon--24' />
                 </button>
-                <span className="request-modal__header">
+                <span className='request-modal__header'>
                     {reactTranslator.getMessage('filtering_modal_info_title')}
                 </span>
             </div>
-            <div ref={contentRef} className="request-modal__content">
+            <div ref={contentRef} className='request-modal__content'>
                 {selectedEvent.method && (
-                    <div className="request-info">
-                        <div className="request-info__key">
+                    <div className='request-info'>
+                        <div className='request-info__key'>
                             {reactTranslator.getMessage('filtering_modal_status_text_desc')}
                         </div>
                         <NetworkStatus
@@ -465,8 +466,8 @@ const RequestInfo = observer(() => {
                         />
                     </div>
                 )}
-                <div className="request-info">
-                    <div className="request-info__key">
+                <div className='request-info'>
+                    <div className='request-info__key'>
                         {reactTranslator.getMessage('filtering_modal_filtering_status_text_desc')}
                     </div>
                     <FilterStatus

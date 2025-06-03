@@ -11,14 +11,14 @@ export const StatusColor = {
     GRAY: 'gray',
     ORANGE: 'orange',
     RED: 'red',
-    GREEN: 'green',
+    GREEN: 'green'
 };
 
 export const colorMap = {
     [StatusMode.REGULAR]: StatusColor.GRAY,
     [StatusMode.MODIFIED]: StatusColor.ORANGE,
     [StatusMode.BLOCKED]: StatusColor.RED,
-    [StatusMode.ALLOWED]: StatusColor.GREEN,
+    [StatusMode.ALLOWED]: StatusColor.GREEN
 };
 
 export const getItemClassName = (color) => {

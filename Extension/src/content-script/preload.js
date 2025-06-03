@@ -31,7 +31,7 @@ export const preload = (function () {
         'object': 'OBJECT',
         'frame': 'SUBDOCUMENT',
         'iframe': 'SUBDOCUMENT',
-        'embed': 'OBJECT',
+        'embed': 'OBJECT'
     };
 
     const collapseRequests = Object.create(null);
@@ -176,12 +176,11 @@ export const preload = (function () {
      */
     const saveCollapseRequest = function (element) {
         const tagName = element.tagName.toLowerCase();
-        const requestId = collapseRequestId;
-        collapseRequestId += 1;
+        const requestId = collapseRequestId++;
         collapseRequests[requestId] = {
             element,
             src: element.src,
-            tagName,
+            tagName
         };
 
         return requestId;
@@ -239,7 +238,7 @@ export const preload = (function () {
             elementUrl,
             documentUrl: document.URL,
             requestType,
-            requestId,
+            requestId
         };
 
         const response = await contentPage.sendMessage(message);
@@ -300,7 +299,7 @@ export const preload = (function () {
         }
         /* observer, which observe protectStyleEl inner changes, without deleting styleEl */
         const innerObserver = new MutationObserver(((mutations) => {
-            for (let i = 0; i < mutations.length; i += 1) {
+            for (let i = 0; i < mutations.length; ++i) {
                 const m = mutations[i];
                 if (protectStyleEl.hasAttribute('mod') && protectStyleEl.getAttribute('mod') === 'inner') {
                     protectStyleEl.removeAttribute('mod');
@@ -315,12 +314,13 @@ export const preload = (function () {
                  * the text of protectStyleEl, either there was removes a whole child "text"
                  * element of protectStyleEl we'll process both of them
                  */
-                if (m.removedNodes.length > 0) {
-                    for (let j = 0; j < m.removedNodes.length; j += 1) {
+                if (m.removedNodes.length !== 0) {
+                    for (let j = 0; j < m.removedNodes.length; ++j) {
                         isProtectStyleElModified = true;
                         protectStyleEl.appendChild(m.removedNodes[j]);
                     }
-                } else if (m.oldValue) {
+                }
+                else if (m.oldValue) {
                     isProtectStyleElModified = true;
                     protectStyleEl.textContent = m.oldValue;
                 }
@@ -335,7 +335,7 @@ export const preload = (function () {
             'childList': true,
             'characterData': true,
             'subtree': true,
-            'characterDataOldValue': true,
+            'characterDataOldValue': true
         });
     };
 
@@ -379,7 +379,7 @@ export const preload = (function () {
             styleSheet,
             beforeStyleApplied: (cssHitsCounter
                 ? cssHitsCounter.countAffectedByExtendedCss.bind(cssHitsCounter)
-                : el => el),
+                : el => el)
         });
         extcss.apply();
     };
@@ -407,7 +407,7 @@ export const preload = (function () {
         }
 
         const { requests } = response;
-        for (let i = 0; i < requests.length; i += 1) {
+        for (let i = 0; i < requests.length; ++i) {
             const collapseRequest = requests[i];
             onProcessShouldCollapseResponse(collapseRequest);
         }
@@ -425,7 +425,7 @@ export const preload = (function () {
             const requestType = requestTypeMap[tagName];
 
             const elements = document.getElementsByTagName(tagName);
-            for (let j = 0; j < elements.length; j += 1) {
+            for (let j = 0; j < elements.length; ++j) {
                 const element = elements[j];
                 const elementUrl = getElementUrl(element);
                 if (!elementUrl) {
@@ -438,7 +438,7 @@ export const preload = (function () {
                     elementUrl,
                     requestType,
                     requestId,
-                    tagName,
+                    tagName
                 });
             }
         }
@@ -446,7 +446,7 @@ export const preload = (function () {
         const message = {
             type: MESSAGE_TYPES.PROCESS_SHOULD_COLLAPSE_MANY,
             requests,
-            documentUrl: document.URL,
+            documentUrl: document.URL
         };
 
         // Send all prepared requests in one message
@@ -464,7 +464,8 @@ export const preload = (function () {
             || document.readyState === 'loaded'
             || document.readyState === 'interactive') {
             checkBatchShouldCollapse();
-        } else {
+        }
+        else {
             document.addEventListener('DOMContentLoaded', checkBatchShouldCollapse);
         }
     };
@@ -501,7 +502,8 @@ export const preload = (function () {
             applySelectors(response.selectors);
             applyScripts(response.scripts);
             initBatchCollapse();
-        } else {
+        }
+        else {
             applySelectors(response.selectors);
             applyScripts(response.scripts);
         }
@@ -513,7 +515,7 @@ export const preload = (function () {
     const tryLoadCssAndScripts = async () => {
         const message = {
             type: MESSAGE_TYPES.GET_SELECTORS_AND_SCRIPTS,
-            documentUrl: window.location.href,
+            documentUrl: window.location.href
         };
 
         /**
@@ -530,7 +532,7 @@ export const preload = (function () {
     const initCookieController = async () => {
         const response = await contentPage.sendMessage({
             type: MESSAGE_TYPES.GET_COOKIE_RULES,
-            documentUrl: window.location.href,
+            documentUrl: window.location.href
         });
 
         if (!response) {
@@ -546,7 +548,7 @@ export const preload = (function () {
                         cookieDomain,
                         cookieRuleText,
                         thirdParty,
-                        filterId,
+                        filterId
                     }) => {
                         contentPage.sendMessage({
                             type: MESSAGE_TYPES.SAVE_COOKIE_LOG_EVENT,
@@ -556,14 +558,15 @@ export const preload = (function () {
                                 cookieDomain,
                                 ruleText: cookieRuleText,
                                 thirdParty,
-                                filterId,
-                            },
+                                filterId
+                            }
                         });
-                    },
+                    }
                 );
 
                 cookieController.apply(response.rulesData);
-            } catch (e) {
+            }
+            catch (e) {
                 // Ignore exceptions
             }
         }
@@ -585,6 +588,6 @@ export const preload = (function () {
     };
 
     return {
-        init,
+        init
     };
 })();

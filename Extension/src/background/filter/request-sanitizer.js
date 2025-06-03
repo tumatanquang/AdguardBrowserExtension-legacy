@@ -36,7 +36,7 @@ export const requestSanitizer = (function () {
             requestHeaders,
             initiator,
             tabId,
-            originUrl,
+            originUrl
         } = req;
 
         if (tabId !== BACKGROUND_TAB_ID) {
@@ -53,7 +53,7 @@ export const requestSanitizer = (function () {
 
         if (requestHeadersModified) {
             return {
-                requestHeaders,
+                requestHeaders
             };
         }
     };
@@ -71,13 +71,13 @@ export const requestSanitizer = (function () {
             safeFilter,
             {
                 urls: ['<all_urls>'],
-                tabId: BACKGROUND_TAB_ID,
+                tabId: BACKGROUND_TAB_ID
             },
-            onBeforeSendHeadersExtraInfoSpec,
+            onBeforeSendHeadersExtraInfoSpec
         );
     };
 
     return {
-        init,
+        init
     };
 })();

@@ -1,4 +1,11 @@
 (function(source, args) {
+    const flag = "done";
+    const uniqueIdentifier = source.uniqueId + source.name + "_" + (Array.isArray(args) ? args.join("_") : "");
+    if (source.uniqueId) {
+        if (Window.prototype.toString[uniqueIdentifier] === flag) {
+            return;
+        }
+    }
     function DidomiLoader(source) {
         function UserConsentStatusForVendorSubscribe() {}
         UserConsentStatusForVendorSubscribe.prototype.filter = function() {
@@ -13,7 +20,7 @@
             return new UserConsentStatusForVendorSubscribe;
         };
         UserConsentStatusForVendor.prototype.subscribe = noopFunc;
-        const DidomiWrapper = {
+        var DidomiWrapper = {
             isConsentRequired: falseFunc,
             getUserConsentStatusForPurpose: trueFunc,
             getUserConsentStatus: trueFunc,
@@ -46,7 +53,7 @@
             }
         };
         window.Didomi = DidomiWrapper;
-        const didomiStateWrapper = {
+        var didomiStateWrapper = {
             didomiExperimentId: "",
             didomiExperimentUserGroup: "",
             didomiGDPRApplies: 1,
@@ -62,7 +69,7 @@
             didomiVendorsRawConsentUnknown: ""
         };
         window.didomiState = didomiStateWrapper;
-        const tcData = {
+        var tcData = {
             eventStatus: "tcloaded",
             gdprApplies: false,
             listenerId: noopFunc,
@@ -73,19 +80,19 @@
                 consents: []
             }
         };
-        const __tcfapiWrapper = function __tcfapiWrapper(command, version, callback) {
+        var __tcfapiWrapper = function __tcfapiWrapper(command, version, callback) {
             if (typeof callback !== "function" || command === "removeEventListener") {
                 return;
             }
             callback(tcData, true);
         };
         window.__tcfapi = __tcfapiWrapper;
-        const didomiEventListenersWrapper = {
+        var didomiEventListenersWrapper = {
             stub: true,
             push: noopFunc
         };
         window.didomiEventListeners = didomiEventListenersWrapper;
-        const didomiOnReadyWrapper = {
+        var didomiOnReadyWrapper = {
             stub: true,
             push(arg) {
                 if (typeof arg !== "function") {
@@ -113,30 +120,28 @@
         hit(source);
     }
     function hit(source) {
-        if (source.verbose !== true) {
+        var ADGUARD_PREFIX = "[AdGuard]";
+        if (!source.verbose) {
             return;
         }
         try {
-            const log = console.log.bind(console);
-            const trace = console.trace.bind(console);
-            let prefix = source.ruleText || "";
-            if (source.domainName) {
-                const AG_SCRIPTLET_MARKER = "#%#//";
-                const UBO_SCRIPTLET_MARKER = "##+js";
-                let ruleStartIndex;
-                if (source.ruleText.indexOf(AG_SCRIPTLET_MARKER) > -1) {
-                    ruleStartIndex = source.ruleText.indexOf(AG_SCRIPTLET_MARKER);
-                } else if (source.ruleText.indexOf(UBO_SCRIPTLET_MARKER) > -1) {
-                    ruleStartIndex = source.ruleText.indexOf(UBO_SCRIPTLET_MARKER);
+            var trace = console.trace.bind(console);
+            var label = "".concat(ADGUARD_PREFIX, " ");
+            if (source.engine === "corelibs") {
+                label += source.ruleText;
+            } else {
+                if (source.domainName) {
+                    label += "".concat(source.domainName);
                 }
-                const rulePart = source.ruleText.slice(ruleStartIndex);
-                prefix = "".concat(source.domainName).concat(rulePart);
+                if (source.args) {
+                    label += "#%#//scriptlet('".concat(source.name, "', '").concat(source.args.join("', '"), "')");
+                } else {
+                    label += "#%#//scriptlet('".concat(source.name, "')");
+                }
             }
-            log("".concat(prefix, " trace start"));
             if (trace) {
-                trace();
+                trace(label);
             }
-            log("".concat(prefix, " trace end"));
         } catch (e) {}
         if (typeof window.__debug === "function") {
             window.__debug(source);
@@ -155,6 +160,14 @@
     const updatedArgs = args ? [].concat(source).concat(args) : [ source ];
     try {
         DidomiLoader.apply(this, updatedArgs);
+        if (source.uniqueId) {
+            Object.defineProperty(Window.prototype.toString, uniqueIdentifier, {
+                value: flag,
+                enumerable: false,
+                writable: false,
+                configurable: false
+            });
+        }
     } catch (e) {
         console.log(e);
     }

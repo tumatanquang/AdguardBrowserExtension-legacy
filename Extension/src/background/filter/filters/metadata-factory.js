@@ -23,7 +23,7 @@ export const metadataFactory = (() => {
             timeUpdated = Date.parse(timeUpdatedString.replace(/\+(\d{2})(\d{2})$/, '+$1:$2'));
         }
         if (Number.isNaN(timeUpdated)) {
-            timeUpdated = new Date().getTime();
+            timeUpdated = Date.now();
         }
         return timeUpdated;
     };
@@ -68,7 +68,7 @@ export const metadataFactory = (() => {
         const displayNumber = Number.parseInt(filter.displayNumber, 10);
 
         const {
-            name, description, homepage, version, subscriptionUrl, languages, tags, customUrl, trusted, checksum,
+            name, description, homepage, version, subscriptionUrl, languages, tags, customUrl, trusted, checksum
         } = filter;
 
         if (tags.length === 0) {
@@ -90,13 +90,13 @@ export const metadataFactory = (() => {
             tags,
             customUrl,
             trusted,
-            checksum,
+            checksum
         });
     };
 
     return {
         createFilterTagFromJSON,
         createSubscriptionGroupFromJSON,
-        createSubscriptionFilterFromJSON,
+        createSubscriptionFilterFromJSON
     };
 })();

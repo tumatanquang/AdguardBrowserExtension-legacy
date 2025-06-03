@@ -68,11 +68,11 @@ export const RequestFilter = (() => {
 
             const elemhideExtCss = [
                 ...cosmeticResult.elementHiding.genericExtCss,
-                ...cosmeticResult.elementHiding.specificExtCss,
+                ...cosmeticResult.elementHiding.specificExtCss
             ];
             const injectExtCss = [
                 ...cosmeticResult.CSS.genericExtCss,
-                ...cosmeticResult.CSS.specificExtCss,
+                ...cosmeticResult.CSS.specificExtCss
             ];
 
             const collectingCosmeticRulesHits = webRequestService.isCollectingCosmeticRulesHits();
@@ -81,7 +81,7 @@ export const RequestFilter = (() => {
                 const extStyles = !ignoreExtCss ? cssService.buildStyleSheetHits(elemhideExtCss, injectExtCss) : [];
                 return {
                     css: styles,
-                    extendedCss: extStyles,
+                    extendedCss: extStyles
                 };
             }
 
@@ -89,7 +89,7 @@ export const RequestFilter = (() => {
             const extStyles = !ignoreExtCss ? cssService.buildStyleSheet(elemhideExtCss, injectExtCss, false) : [];
             return {
                 css: styles,
-                extendedCss: extStyles,
+                extendedCss: extStyles
             };
         },
 
@@ -164,7 +164,7 @@ export const RequestFilter = (() => {
                             frameUrl: url,
                             requestType: RequestTypes.DOCUMENT,
                             rule: scriptRule,
-                            timestamp: Date.now(),
+                            timestamp: Date.now()
                         });
                     }
                 });
@@ -173,8 +173,8 @@ export const RequestFilter = (() => {
             const scripts = selectedScriptRules.map(scriptRule => scriptRule.getScript({
                 debug,
                 request: {
-                    domain: url,
-                },
+                    domain: url
+                }
             }));
 
             // remove repeating scripts
@@ -258,7 +258,6 @@ export const RequestFilter = (() => {
          * @returns CosmeticRule[] of content rules
          */
         getContentRulesForUrl(documentUrl) {
-            // eslint-disable-next-line max-len
             const cosmeticResult = engine.getCosmeticResult(documentUrl, TSUrlFilter.CosmeticOption.CosmeticOptionHtml);
 
             return cosmeticResult.Html.getRules();
@@ -295,7 +294,7 @@ export const RequestFilter = (() => {
         findCookieRules(matchQuery) {
             const result = this.getMatchingResult(matchQuery);
             return result.getCookieRules();
-        },
+        }
     };
 
     return RequestFilter;

@@ -15,8 +15,8 @@
     <a href="https://t.me/adguard_en">Telegram</a>
     <br /><br />
     </a>
-    <a href="https://github.com/AdguardTeam/AdguardBrowserExtension/releases">
-        <img src="https://img.shields.io/github/release/AdguardTeam/AdguardBrowserExtension/all.svg" alt="Latest release" />
+    <a href="https://github.com/tumatanquang/AdguardBrowserExtension-legacy/releases">
+        <img src="https://img.shields.io/github/release/tumatanquang/AdguardBrowserExtension-legacy/all.svg" alt="Latest release" />
     </a>
 </p>
 
@@ -105,9 +105,10 @@ Here is a [dedicated page](https://adguard.com/contribute.html) for those who ar
 <a id="dev-requirements"></a>
 ### Requirements
 
-- [node.js LTS](https://nodejs.org/en/download/)
+- [node.js LTS](https://nodejs.org/en/download)
 - NPM v8
-- [yarn v1.22](https://yarnpkg.com/en/docs/install/)
+- [yarn v1.22](https://yarnpkg.com/en/docs/install)
+- [Git](https://git-scm.com)
 
 Install local dependencies by running:
 ```
@@ -167,7 +168,7 @@ build/dev/adguard-api
 <a id="dev-linter"></a>
 ### Linter
 Despite our code may not currently comply with new style configuration,
-please, setup `eslint` in your editor to follow up with it `.eslintrc`
+please, setup `eslint` in your editor to follow up with it `.eslintrc.js`
 
 <a id="dev-localizations"></a>
 ### Update localizations
@@ -200,9 +201,9 @@ To show locales info run:
 <a id="minimum-supported-browser-versions"></a>
 
 ## Minimum supported browser versions
-| Browser                 	| Version 	 |
+| Browser                 	| Version 	|
 |-------------------------	|:---------:|
-| Chromium Based Browsers 	|  79   	   |
-| Firefox                 	|  78   	   |
-| Opera                   	|  66   	   |
-| Edge                    	|  79   	   |
+| Chromium Based Browsers 	|  79   	|
+| Firefox                 	|  78   	|
+| Opera                   	|  66   	|
+| Edge                    	|  79   	|

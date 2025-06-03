@@ -4,14 +4,14 @@ import { cliLog } from '../cli-log';
 
 import {
     getLocaleTranslations,
-    areArraysEqual,
+    areArraysEqual
 } from '../helpers';
 
 import {
     BASE_LOCALE,
     LANGUAGES,
     REQUIRED_LOCALES,
-    THRESHOLD_PERCENTAGE,
+    THRESHOLD_PERCENTAGE
 } from './locales-constants';
 
 const LOCALES = Object.keys(LANGUAGES);
@@ -35,21 +35,22 @@ const printTranslationsResults = (results, isMinimum = false) => {
         const record = `${r.locale} -- ${r.level}%`;
         if (r.level < THRESHOLD_PERCENTAGE) {
             cliLog.warningRed(record);
-            if (r.untranslatedStrings.length > 0) {
+            if (r.untranslatedStrings.length !== 0) {
                 cliLog.warning('  untranslated:');
                 r.untranslatedStrings.forEach((str) => {
                     cliLog.warning(`    - ${str}`);
                 });
             }
             if (!isMinimum) {
-                if (r.invalidTranslations.length > 0) {
+                if (r.invalidTranslations.length !== 0) {
                     cliLog.warning('  invalid:');
                     r.invalidTranslations.forEach((obj) => {
                         cliLog.warning(`    - ${obj.key} -- ${obj.error}`);
                     });
                 }
             }
-        } else {
+        }
+        else {
             cliLog.success(record);
         }
     });
@@ -77,7 +78,8 @@ const validateMessage = (baseKey, baseLocaleTranslations, localeTranslations) =>
         if (!isTranslationValid) {
             throw new Error('Invalid translated string');
         }
-    } catch (error) {
+    }
+    catch (error) {
         return { key: baseKey, error };
     }
 };
@@ -112,7 +114,8 @@ export const checkTranslations = async (locales, flags) => {
         baseMessages.forEach((baseKey) => {
             if (!localeMessages.includes(baseKey)) {
                 untranslatedStrings.push(baseKey);
-            } else {
+            }
+            else {
                 const validationError = validateMessage(baseKey, baseLocaleTranslations, localeTranslations);
                 if (validationError) {
                     invalidTranslations.push(validationError);
@@ -126,12 +129,12 @@ export const checkTranslations = async (locales, flags) => {
         const level = Math.round((strictLevel + Number.EPSILON) * 100) / 100;
 
         return {
-            locale, level, untranslatedStrings, invalidTranslations,
+            locale, level, untranslatedStrings, invalidTranslations
         };
     }));
 
     const filteredCriticalResults = translationResults.filter((result) => {
-        return result.invalidTranslations.length > 0;
+        return result.invalidTranslations.length !== 0;
     });
 
     const filteredReadinessResults = translationResults.filter((result) => {
@@ -142,14 +145,16 @@ export const checkTranslations = async (locales, flags) => {
 
     if (isInfo) {
         printTranslationsResults(translationResults);
-    } else {
+    }
+    else {
         // critical errors and required locales translations levels check
         if (isMinimum) {
             let isSuccess = true;
             // check for invalid strings
             if (filteredCriticalResults.length === 0) {
                 cliLog.success('No invalid translations found');
-            } else {
+            }
+            else {
                 isSuccess = false;
                 printCriticalResults(filteredCriticalResults);
                 cliLog.warningRed('Locales above should not have invalid strings');
@@ -157,7 +162,8 @@ export const checkTranslations = async (locales, flags) => {
             // check for translations readiness for required locales
             if (filteredReadinessResults.length === 0) {
                 cliLog.success('Our locales have required level of translations');
-            } else {
+            }
+            else {
                 isSuccess = false;
                 printTranslationsResults(filteredReadinessResults, isMinimum);
                 cliLog.warningRed('Our locales should be done for 100%');
@@ -174,7 +180,8 @@ export const checkTranslations = async (locales, flags) => {
                 message = 'All locales have required level of translations';
             }
             cliLog.success(message);
-        } else {
+        }
+        else {
             printTranslationsResults(filteredReadinessResults);
             throw new Error('Locales above should be done for 100%');
         }

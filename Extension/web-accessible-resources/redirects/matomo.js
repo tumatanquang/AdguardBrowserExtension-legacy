@@ -1,13 +1,20 @@
 (function(source, args) {
+    const flag = "done";
+    const uniqueIdentifier = source.uniqueId + source.name + "_" + (Array.isArray(args) ? args.join("_") : "");
+    if (source.uniqueId) {
+        if (Window.prototype.toString[uniqueIdentifier] === flag) {
+            return;
+        }
+    }
     function Matomo(source) {
-        const Tracker = function Tracker() {};
+        var Tracker = function Tracker() {};
         Tracker.prototype.setDoNotTrack = noopFunc;
         Tracker.prototype.setDomains = noopFunc;
         Tracker.prototype.setCustomDimension = noopFunc;
         Tracker.prototype.trackPageView = noopFunc;
-        const AsyncTracker = function AsyncTracker() {};
+        var AsyncTracker = function AsyncTracker() {};
         AsyncTracker.prototype.addListener = noopFunc;
-        const matomoWrapper = {
+        var matomoWrapper = {
             getTracker: Tracker,
             getAsyncTracker: AsyncTracker
         };
@@ -15,30 +22,28 @@
         hit(source);
     }
     function hit(source) {
-        if (source.verbose !== true) {
+        var ADGUARD_PREFIX = "[AdGuard]";
+        if (!source.verbose) {
             return;
         }
         try {
-            const log = console.log.bind(console);
-            const trace = console.trace.bind(console);
-            let prefix = source.ruleText || "";
-            if (source.domainName) {
-                const AG_SCRIPTLET_MARKER = "#%#//";
-                const UBO_SCRIPTLET_MARKER = "##+js";
-                let ruleStartIndex;
-                if (source.ruleText.indexOf(AG_SCRIPTLET_MARKER) > -1) {
-                    ruleStartIndex = source.ruleText.indexOf(AG_SCRIPTLET_MARKER);
-                } else if (source.ruleText.indexOf(UBO_SCRIPTLET_MARKER) > -1) {
-                    ruleStartIndex = source.ruleText.indexOf(UBO_SCRIPTLET_MARKER);
+            var trace = console.trace.bind(console);
+            var label = "".concat(ADGUARD_PREFIX, " ");
+            if (source.engine === "corelibs") {
+                label += source.ruleText;
+            } else {
+                if (source.domainName) {
+                    label += "".concat(source.domainName);
                 }
-                const rulePart = source.ruleText.slice(ruleStartIndex);
-                prefix = "".concat(source.domainName).concat(rulePart);
+                if (source.args) {
+                    label += "#%#//scriptlet('".concat(source.name, "', '").concat(source.args.join("', '"), "')");
+                } else {
+                    label += "#%#//scriptlet('".concat(source.name, "')");
+                }
             }
-            log("".concat(prefix, " trace start"));
             if (trace) {
-                trace();
+                trace(label);
             }
-            log("".concat(prefix, " trace end"));
         } catch (e) {}
         if (typeof window.__debug === "function") {
             window.__debug(source);
@@ -48,6 +53,14 @@
     const updatedArgs = args ? [].concat(source).concat(args) : [ source ];
     try {
         Matomo.apply(this, updatedArgs);
+        if (source.uniqueId) {
+            Object.defineProperty(Window.prototype.toString, uniqueIdentifier, {
+                value: flag,
+                enumerable: false,
+                writable: false,
+                configurable: false
+            });
+        }
     } catch (e) {
         console.log(e);
     }

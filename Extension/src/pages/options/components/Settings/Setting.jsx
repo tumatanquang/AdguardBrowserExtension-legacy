@@ -9,10 +9,10 @@ export const SETTINGS_TYPES = {
     CHECKBOX: 'checkbox',
     SELECT: 'select',
     INPUT: 'input',
-    TEXTAREA: 'textarea',
+    TEXTAREA: 'textarea'
 };
 
-export const Setting = (props) => {
+export function Setting(props) {
     const { type } = props;
 
     switch (type) {
@@ -24,7 +24,7 @@ export const Setting = (props) => {
                 value,
                 label,
                 className,
-                disabled,
+                disabled
             } = props;
             return (
                 <Checkbox
@@ -43,7 +43,7 @@ export const Setting = (props) => {
                 id,
                 handler,
                 options,
-                value,
+                value
             } = props;
             const changeHandler = (currentValue) => {
                 let dataValue = parseInt(currentValue, 10);
@@ -64,7 +64,7 @@ export const Setting = (props) => {
         }
         case SETTINGS_TYPES.INPUT: {
             const {
-                id, value, handler, placeholder, disabled,
+                id, value, handler, placeholder, disabled
             } = props;
             return (
                 <TextInput
@@ -82,7 +82,7 @@ export const Setting = (props) => {
                 value,
                 handler,
                 placeholder,
-                disabled,
+                disabled
             } = props;
             return (
                 <Textarea
@@ -100,4 +100,4 @@ export const Setting = (props) => {
                 Available types: ${Object.values(SETTINGS_TYPES).join(', ')}
             `);
     }
-};
+}

@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
@@ -25,28 +24,28 @@ export const genSampleApiConfig = (browserConfig) => {
         mode: config.mode,
         devtool: isDev ? 'eval-source-map' : false,
         optimization: {
-            minimize: false,
+            minimize: !isDev
         },
         entry: {
             'background': BACKGROUND_PATH,
             'popup': POPUP_PATH,
             'adguard-assistant': ADGUARD_ASSISTANT_PATH,
             'adguard-content': ADGUARD_CONTENT_PATH,
-            'adguard-api': ADGUARD_API_PATH,
+            'adguard-api': ADGUARD_API_PATH
         },
         output: {
             path: OUTPUT_PATH,
-            filename: '[name].js',
+            filename: '[name].js'
         },
         resolve: {
-            extensions: ['*', '.js', '.jsx'],
+            extensions: ['*', '.js', '.jsx']
         },
         module: {
             rules: [
                 {
                     include: [
                         path.resolve(__dirname, '../../../Extension/src/filter/request-filter.js'),
-                        path.resolve(__dirname, '../../../Extension/pages/content-script-end/index.js'),
+                        path.resolve(__dirname, '../../../Extension/pages/content-script-end/index.js')
                     ],
                     use: [{
                         loader: 'preprocess-loader',
@@ -54,21 +53,21 @@ export const genSampleApiConfig = (browserConfig) => {
                             remoteScripts: browserConfig.remoteScripts,
                             devtools: browserConfig.devtools,
                             ppOptions: {
-                                type: 'js',
-                            },
-                        },
-                    }],
+                                type: 'js'
+                            }
+                        }
+                    }]
                 },
                 {
                     test: /\.(js|jsx)$/,
                     exclude: /node_modules/,
                     use: [{
                         loader: 'babel-loader',
-                        options: { babelrc: true },
-                    }],
-                },
+                        options: { babelrc: true }
+                    }]
+                }
             ],
-            strictExportPresence: true, // set to true, to throw error if used non exported modules on build
+            strictExportPresence: true // set to true, to throw error if used non exported modules on build
         },
 
         plugins: [
@@ -77,51 +76,51 @@ export const genSampleApiConfig = (browserConfig) => {
             new HtmlWebpackPlugin({
                 template: path.join(BACKGROUND_PATH, 'index.html'),
                 filename: 'background.html',
-                chunks: ['background'],
+                chunks: ['background']
             }),
             new HtmlWebpackPlugin({
                 template: path.join(POPUP_PATH, 'index.html'),
                 filename: 'popup.html',
-                chunks: ['popup'],
+                chunks: ['popup']
             }),
             new CopyWebpackPlugin({
                 patterns: [
                     {
                         context: 'Extension/api/sample-extension',
                         from: 'adguard-api.md',
-                        to: 'adguard-api.md',
+                        to: 'adguard-api.md'
                     },
                     {
                         context: 'Extension',
                         from: 'filters/chromium/filters_i18n.json',
-                        to: 'adguard',
+                        to: 'adguard'
                     },
                     {
                         context: 'Extension',
                         from: 'filters/chromium/filters.json',
-                        to: 'adguard',
+                        to: 'adguard'
                     },
                     {
                         context: 'Extension',
                         from: 'filters/chromium/local_script_rules.json',
-                        to: 'adguard',
+                        to: 'adguard'
                     },
                     {
                         context: 'Extension',
                         from: 'assets/libs/scriptlets/redirects.yml',
-                        to: 'adguard',
+                        to: 'adguard'
                     },
                     {
                         from: path.resolve(__dirname, 'manifest.adguard-api.json'),
                         to: 'manifest.json',
-                        transform: (content) => updateManifestBuffer(process.env.BUILD_ENV, content, {}),
-                    },
-                ],
+                        transform: (content) => updateManifestBuffer(process.env.BUILD_ENV, content, {})
+                    }
+                ]
             }),
             new ZipWebpackPlugin({
                 path: '../',
-                filename: `${browserConfig.browser}.zip`,
-            }),
-        ],
+                filename: `${browserConfig.browser}.zip`
+            })
+        ]
     };
 };

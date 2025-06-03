@@ -8,7 +8,7 @@ class FullscreenUserRulesEditor {
     openPagesCount = 0;
 
     onOpenPage() {
-        this.openPagesCount += 1;
+        ++this.openPagesCount;
         this.onPagesCountChanged();
     }
 
@@ -16,7 +16,7 @@ class FullscreenUserRulesEditor {
         if (this.openPagesCount <= 0) {
             return;
         }
-        this.openPagesCount -= 1;
+        --this.openPagesCount;
         this.onPagesCountChanged();
     }
 

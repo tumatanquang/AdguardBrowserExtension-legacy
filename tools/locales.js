@@ -16,7 +16,8 @@ const download = async (locales) => {
     try {
         await downloadAndSave(locales);
         cliLog.success('Download was successful');
-    } catch (e) {
+    }
+    catch (e) {
         cliLog.error(e.message);
         process.exit(1);
     }
@@ -28,7 +29,8 @@ const upload = async () => {
         await checkUnusedMessages();
         const result = await uploadLocales();
         cliLog.success(`Upload was successful with response: ${JSON.stringify(result)}`);
-    } catch (e) {
+    }
+    catch (e) {
         cliLog.error(e.message);
         process.exit(1);
     }
@@ -37,7 +39,8 @@ const upload = async () => {
 const renew = async () => {
     try {
         await renewLocales();
-    } catch (e) {
+    }
+    catch (e) {
         cliLog.error(e.message);
         process.exit(1);
     }
@@ -46,7 +49,8 @@ const renew = async () => {
 const validate = async (locales, isMinimum) => {
     try {
         await checkTranslations(locales, { isMinimum });
-    } catch (e) {
+    }
+    catch (e) {
         cliLog.error(e.message);
         process.exit(1);
     }
@@ -55,7 +59,8 @@ const validate = async (locales, isMinimum) => {
 const summary = async (isInfo) => {
     try {
         await checkTranslations(LOCALES, { isInfo });
-    } catch (e) {
+    }
+    catch (e) {
         cliLog.error(e.message);
         process.exit(1);
     }
@@ -64,7 +69,8 @@ const summary = async (isInfo) => {
 const unused = async () => {
     try {
         await checkUnusedMessages();
-    } catch (e) {
+    }
+    catch (e) {
         cliLog.error(e.message);
         process.exit(1);
     }
@@ -80,7 +86,7 @@ program
         let locales = LOCALES;
         let isMinimum = true;
         // but if list_of_locales is specified, use them for download and validation
-        if (opts.locales && opts.locales.length > 0) {
+        if (opts.locales && opts.locales.length !== 0) {
             locales = opts.locales;
             isMinimum = false;
         }
@@ -105,14 +111,8 @@ program
     .option('-l,--locales [list...]', 'for specific list of space-separated locales')
     .action((opts) => {
         // defaults to validate all locales
-        let locales = LOCALES;
-        let isMinimum;
-        if (opts.min) {
-            isMinimum = true;
-        } else if (opts.locales && opts.locales.length > 0) {
-            locales = opts.locales;
-        }
-        validate(locales, isMinimum);
+        const locales = opts.locales && opts.locales.length !== 0 ? opts.locales : LOCALES;
+        validate(locales, opts.min);
     });
 
 program
@@ -124,9 +124,11 @@ program
         const IS_INFO = true;
         if (opts.summary) {
             summary(IS_INFO);
-        } else if (opts.unused) {
+        }
+        else if (opts.unused) {
             unused();
-        } else if (!opts.summary && !opts.unused) {
+        }
+        else if (!opts.summary && !opts.unused) {
             summary(IS_INFO);
             unused();
         }

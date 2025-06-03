@@ -4,7 +4,7 @@ import cn from 'classnames';
 
 import './checkbox.pcss';
 
-const Checkbox = (props) => {
+function Checkbox(props) {
     const {
         id,
         handler,
@@ -12,7 +12,7 @@ const Checkbox = (props) => {
         label,
         value,
         className,
-        disabled,
+        disabled
     } = props;
 
     const computedValue = inverted ? !value : value;
@@ -30,16 +30,16 @@ const Checkbox = (props) => {
 
     return (
         <div
-            className="checkbox"
+            className='checkbox'
         >
             <input
-                type="checkbox"
+                type='checkbox'
                 name={id}
                 checked={state}
                 onChange={changeHandler}
                 id={id}
-                className="checkbox__in"
-                tabIndex="0"
+                className='checkbox__in'
+                tabIndex='0'
                 disabled={disabled}
             />
             <label
@@ -50,12 +50,12 @@ const Checkbox = (props) => {
             </label>
         </div>
     );
-};
+}
 
 Checkbox.defaultProps = {
     value: false,
     inverted: false,
-    label: '',
+    label: ''
 };
 
 Checkbox.propTypes = {
@@ -63,7 +63,7 @@ Checkbox.propTypes = {
     value: PropTypes.bool,
     inverted: PropTypes.bool,
     handler: PropTypes.func.isRequired,
-    label: PropTypes.string,
+    label: PropTypes.string
 };
 
 export { Checkbox };

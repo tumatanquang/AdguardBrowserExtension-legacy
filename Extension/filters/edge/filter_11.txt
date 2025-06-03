@@ -37,7 +37,7 @@
 ! @param property property or properties chain
 ! @param debug optional, if true - we will print warning when script is aborted.
 !
-#%#var AG_abortOnPropertyWrite=function(a,b){var c=Math.random().toString(36).substr(2,8);AG_defineProperty(a,{beforeSet:function(){b&&console.warn("AdGuard aborted property write: "+a);throw new ReferenceError(c);}});var d=window.onerror;window.onerror=function(e){if("string"===typeof e&&-1!==e.indexOf(c))return b&&console.warn("AdGuard has caught window.onerror: "+a),!0;if(d instanceof Function)return d.apply(this,arguments)}};
+#%#var AG_abortOnPropertyWrite=function(a,b){var c=Math.random().toString(36).substr(2,8);AG_defineProperty(a,{beforeSet:function(){b&&console.warn("AdGuard aborted property write: "+a);throw new ReferenceError(c);}});var d=window.onerror;window.onerror=function(e){if("string"===typeof e&&e.indexOf(c) >= 0)return b&&console.warn("AdGuard has caught window.onerror: "+a),!0;if(d instanceof Function)return d.apply(this,arguments)}};
 !
 ! AG_abortOnPropertyRead(property, debug)
 ! Aborts execution of a script when it attempts to read the specified property.
@@ -49,7 +49,7 @@
 ! @param property property or properties chain
 ! @param debug optional, if true - we will print warning when script is aborted.
 !
-#%#var AG_abortOnPropertyRead=function(a,b){var c=Math.random().toString(36).substr(2,8);AG_defineProperty(a,{beforeGet:function(){b&&console.warn("AdGuard aborted property read: "+a);throw new ReferenceError(c);}});var d=window.onerror;window.onerror=function(e){if("string"===typeof e&&-1!==e.indexOf(c))return b&&console.warn("AdGuard has caught window.onerror: "+a),!0;if(d instanceof Function)return d.apply(this,arguments)}};
+#%#var AG_abortOnPropertyRead=function(a,b){var c=Math.random().toString(36).substr(2,8);AG_defineProperty(a,{beforeGet:function(){b&&console.warn("AdGuard aborted property read: "+a);throw new ReferenceError(c);}});var d=window.onerror;window.onerror=function(e){if("string"===typeof e&&e.indexOf(c) >= 0)return b&&console.warn("AdGuard has caught window.onerror: "+a),!0;if(d instanceof Function)return d.apply(this,arguments)}};
 !
 ! AG_abortInlineScript(regex, property, debug)
 ! Aborts execution of an inline script when it attempts to access the specified property
@@ -63,7 +63,7 @@
 ! @param property property or properties chain
 ! @param debug optional, if true - we will print warning when script is aborted.
 !
-#%#var AG_abortInlineScript=function(g,b,c){var d=function(){if("currentScript"in document)return document.currentScript;var a=document.getElementsByTagName("script");return a[a.length-1]},e=Math.random().toString(36).substr(2,8),h=d();AG_defineProperty(b,{beforeGet:function(){var a=d();if(a instanceof HTMLScriptElement&&a!==h&&""===a.src&&g.test(a.textContent))throw c&&console.warn("AdGuard aborted execution of an inline script"),new ReferenceError(e);}});var f=window.onerror;window.onerror=function(a){if("string"===typeof a&&-1!==a.indexOf(e))return c&&console.warn("AdGuard has caught window.onerror: "+b),!0;if(f instanceof Function)return f.apply(this,arguments)}};
+#%#var AG_abortInlineScript=function(g,b,c){var d=function(){if("currentScript"in document)return document.currentScript;var a=document.getElementsByTagName("script");return a[a.length-1]},e=Math.random().toString(36).substr(2,8),h=d();AG_defineProperty(b,{beforeGet:function(){var a=d();if(a instanceof HTMLScriptElement&&a!==h&&""===a.src&&g.test(a.textContent))throw c&&console.warn("AdGuard aborted execution of an inline script"),new ReferenceError(e);}});var f=window.onerror;window.onerror=function(a){if("string"===typeof a&&a.indexOf(e) >= 0)return c&&console.warn("AdGuard has caught window.onerror: "+b),!0;if(f instanceof Function)return f.apply(this,arguments)}};
 !
 ! AG_setConstant('property.chain', 'true') // defines boolean (true), same for false;
 ! AG_setConstant('property.chain', '123') // defines Number 123;
@@ -1641,7 +1641,7 @@ m.spankbang.com#%#document.cookie = "bbm_pp_mobile=1; path=/";
 ! https://github.com/AdguardTeam/AdguardFilters/issues/42640
 pornhd.com#%#document.cookie = "mrpop=1; path=/";
 ! https://github.com/AdguardTeam/AdguardFilters/issues/38730
-tube8.com#%#AG_onLoad(function() { if(window.location.href.indexOf("/interstitial/") != -1){ var el = document.querySelector('a[href].continue-to-video');if(el){el.click();} } });
+tube8.com#%#AG_onLoad(function() { if(window.location.href.indexOf("/interstitial/") >= 0){ var el = document.querySelector('a[href].continue-to-video');if(el){el.click();} } });
 ! https://github.com/AdguardTeam/AdguardFilters/issues/30369
 m.hd21.com#%#document.cookie = "adv_show=3";
 ! https://github.com/AdguardTeam/AdguardFilters/issues/22801
@@ -1649,7 +1649,7 @@ iqiyi.com#%#document.cookie = "i18nGuideApp=true";
 ! https://github.com/AdguardTeam/AdguardFilters/issues/24463
 hanime.tv#%#document.cookie = "in_m=1";
 ! https://github.com/AdguardTeam/AdguardFilters/issues/16498
-m.cricbuzz.com#%#AG_onLoad(function() { if(window.location.href.indexOf("/cricbuzz-roadblock/dfp?url=") != -1) { var el = document.querySelector('.cbz-grid-table-fix  > a.btn-default'); if(el) el.click(); } });
+m.cricbuzz.com#%#AG_onLoad(function() { if(window.location.href.indexOf("/cricbuzz-roadblock/dfp?url=") >= 0) { var el = document.querySelector('.cbz-grid-table-fix  > a.btn-default'); if(el) el.click(); } });
 m.cricbuzz.com#%#document.cookie = "us_ads=1"; document.cookie = "in_ads=1"; document.cookie = "pk_ads=1"; document.cookie = "gcc_ads=1"; document.cookie = "gb_ads=1"; document.cookie = "eu_ads=1"; document.cookie = "oc_ads=1";
 ! https://github.com/AdguardTeam/AdguardFilters/issues/15643
 m.timesofindia.com#%#Object.defineProperty(window,'trev',{get:function(){return function(){var a=document.currentScript;if(!a){var c=document.getElementsByTagName('script');a=c[c.length-1]}if(a&&/typeof\sotab\s==\s'function'/.test(a.textContent)){var d=a.previousSibling,b=d;while(b=b.previousSibling)if(b.nodeType==Node.COMMENT_NODE&&/\d{5,}\s\d{1,2}/.test(b.data)){d.style.setProperty('display','none','important');return}}}},set:function(){}});

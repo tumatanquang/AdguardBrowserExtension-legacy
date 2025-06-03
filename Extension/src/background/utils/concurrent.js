@@ -58,32 +58,32 @@ export const concurrent = (function () {
             let ctx;
             let args;
             let rtn;
-            let
-                timeoutID; // caching
+            let timeoutID; // caching
             let last = 0;
 
             function call() {
                 timeoutID = 0;
-                last = +new Date();
+                last = Date.now();
                 rtn = func.apply(ctx, args);
                 ctx = null;
                 args = null;
             }
 
-            return function throttled() {
+            return function () {
                 ctx = this;
                 args = arguments;
-                const delta = new Date() - last;
+                const delta = Date.now() - last;
                 if (!timeoutID) {
                     if (delta >= wait) {
                         call();
-                    } else {
+                    }
+                    else {
                         timeoutID = setTimeout(call, wait - delta);
                     }
                 }
                 return rtn;
             };
-        },
+        }
     };
 
     return ConcurrentUtils;

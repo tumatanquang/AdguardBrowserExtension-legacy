@@ -1,0 +1,30 @@
+root = true
+
+[*]
+tab_width = 4
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = false
+# https://github.com/prettier/prettier/blob/main/src/config/editorconfig/editorconfig-to-prettier.js#L48
+max_line_length = off
+
+[*.{css,pcss,htm,html,shtml,xml}]
+indent_style = tab
+indent_size = 4
+# https://developers.google.com/closure/compiler/faq#linefeeds
+max_line_length = 500
+
+[*.{js,jsx}]
+indent_style = space
+indent_size = 4
+max_line_length = 120
+
+[*.json]
+indent_style = space
+indent_size = 4
+max_line_length = 9999
+
+[{package.json,*.{yml,yaml}}]
+indent_style = space
+indent_size = 2

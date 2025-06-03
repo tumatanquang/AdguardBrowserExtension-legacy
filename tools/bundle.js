@@ -57,7 +57,7 @@ const devPlan = [
     bundleEdge,
     bundleOpera,
     bundleAdguardApi,
-    buildInfo,
+    buildInfo
 ];
 
 const betaPlan = [
@@ -69,17 +69,18 @@ const betaPlan = [
     bundleFirefoxXpi,
     bundleEdge,
     bundleAdguardApi,
-    buildInfo,
+    buildInfo
 ];
 
 const releasePlan = [
     genValidators,
     copyExternals,
     bundleChrome,
+    bundleChromeCrx,
     bundleFirefoxAmo,
     bundleEdge,
     bundleOpera,
-    buildInfo,
+    buildInfo
 ];
 
 const runBuild = async (tasks) => {
@@ -110,7 +111,8 @@ const mainBuild = async () => {
 const main = async () => {
     try {
         await mainBuild();
-    } catch (e) {
+    }
+    catch (e) {
         console.error(e);
         process.exit(1);
     }
@@ -119,7 +121,8 @@ const main = async () => {
 const adguardApi = async (watch) => {
     try {
         await bundleAdguardApi(watch);
-    } catch (e) {
+    }
+    catch (e) {
         console.error(e);
         process.exit(1);
     }
@@ -128,7 +131,11 @@ const adguardApi = async (watch) => {
 const chrome = async (watch) => {
     try {
         await bundleChrome(watch);
-    } catch (e) {
+        if (process.env.BUILD_ENV !== ENVS.DEV) {
+            await bundleChromeCrx();
+        }
+    }
+    catch (e) {
         console.error(e);
         process.exit(1);
     }
@@ -137,7 +144,8 @@ const chrome = async (watch) => {
 const firefox = async (watch) => {
     try {
         await bundleFirefoxAmo(watch);
-    } catch (e) {
+    }
+    catch (e) {
         console.error(e);
         process.exit(1);
     }

@@ -1,8 +1,3 @@
-/*
-eslint-disable jsx-a11y/anchor-is-valid,
-jsx-a11y/click-events-have-key-events,
-jsx-a11y/no-static-element-interactions
-*/
 import React, { useContext, useState } from 'react';
 import { observer } from 'mobx-react';
 import cn from 'classnames';
@@ -25,7 +20,7 @@ const formatDate = (date) => {
         month: 'long',
         day: 'numeric',
         hour: '2-digit',
-        minute: '2-digit',
+        minute: '2-digit'
     };
     return dateObj.toLocaleDateString('default', formatOptions);
 };
@@ -65,7 +60,7 @@ const Filter = observer(({ filter }) => {
         trusted,
         customUrl,
         enabled,
-        tagsDetails = [],
+        tagsDetails = []
     } = filter;
 
     // Trusted tag can be only on custom filters,
@@ -73,7 +68,7 @@ const Filter = observer(({ filter }) => {
         ? [...tagsDetails, {
             tagId: TRUSTED_TAG,
             keyword: TRUSTED_TAG,
-            description: reactTranslator.getMessage('options_filters_filter_trusted_tag_desc'),
+            description: reactTranslator.getMessage('options_filters_filter_trusted_tag_desc')
         }]
         : [...tagsDetails];
 
@@ -108,10 +103,10 @@ const Filter = observer(({ filter }) => {
                         />
                     )}
                     <a
-                        className="filter__remove"
+                        className='filter__remove'
                         onClick={handleRemoveFilterClick}
                     >
-                        <Icon id="#trash" classname="icon--trash" />
+                        <Icon id='#trash' classname='icon--trash' />
                     </a>
                 </>
             );
@@ -120,31 +115,31 @@ const Filter = observer(({ filter }) => {
     };
 
     const filterClassName = cn('filter', {
-        'filter--disabled': !enabled,
+        'filter--disabled': !enabled
     });
 
     // We add prefix to avoid id collisions with group ids
     const prefixedFilterId = addPrefix(filterId);
 
     return (
-        <label htmlFor={prefixedFilterId} className="setting-checkbox">
-            <div className={filterClassName} role="presentation">
-                <div className="filter__info">
-                    <div className="setting__container setting__container--horizontal">
-                        <div className="setting__inner">
-                            <div className="filter__title">
-                                <span className="filter__title-in">
+        <label htmlFor={prefixedFilterId} className='setting-checkbox'>
+            <div className={filterClassName} role='presentation'>
+                <div className='filter__info'>
+                    <div className='setting__container setting__container--horizontal'>
+                        <div className='setting__inner'>
+                            <div className='filter__title'>
+                                <span className='filter__title-in'>
                                     <HighlightSearch string={name} />
                                 </span>
-                                <span className="filter__controls">
+                                <span className='filter__controls'>
                                     {renderRemoveButton()}
                                 </span>
                             </div>
-                            <div className="filter__desc">
-                                <div className="filter__desc-item">
+                            <div className='filter__desc'>
+                                <div className='filter__desc-item'>
                                     {description}
                                 </div>
-                                <div className="filter__desc-item">
+                                <div className='filter__desc-item'>
                                     {
                                         version
                                             ? `${reactTranslator.getMessage('options_filters_filter_version')} ${version} `
@@ -159,17 +154,17 @@ const Filter = observer(({ filter }) => {
                             </div>
                             <div>
                                 <a
-                                    className="filter__link"
+                                    className='filter__link'
                                     href={homepage || customUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                    target='_blank'
+                                    rel='noopener noreferrer'
                                 >
                                     {reactTranslator.getMessage('options_filters_filter_link')}
                                 </a>
                             </div>
                             <FilterTags tags={tags} />
                         </div>
-                        <div className="setting__inline-control">
+                        <div className='setting__inline-control'>
                             <Setting
                                 id={prefixedFilterId}
                                 type={SETTINGS_TYPES.CHECKBOX}

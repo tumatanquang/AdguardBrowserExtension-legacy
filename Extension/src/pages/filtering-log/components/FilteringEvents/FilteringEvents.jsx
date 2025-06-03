@@ -8,7 +8,7 @@ import React, {
     useEffect,
     useState,
     useRef,
-    forwardRef,
+    forwardRef
 } from 'react';
 import { observer } from 'mobx-react';
 import cn from 'classnames';
@@ -34,7 +34,7 @@ const filterNameAccessor = (props) => {
     const {
         requestRule,
         filterName,
-        stealthActions,
+        stealthActions
     } = props;
 
     if (requestRule && requestRule.isStealthModeRule) {
@@ -57,14 +57,14 @@ const filterNameAccessor = (props) => {
 const RowClassName = {
     YELLOW: 'yellow',
     RED: 'red',
-    GREEN: 'green',
+    GREEN: 'green'
 };
 
 const rowClassNameMap = {
     [StatusMode.REGULAR]: null,
     [StatusMode.MODIFIED]: RowClassName.YELLOW,
     [StatusMode.BLOCKED]: RowClassName.RED,
-    [StatusMode.ALLOWED]: RowClassName.GREEN,
+    [StatusMode.ALLOWED]: RowClassName.GREEN
 };
 
 const getRowClassName = (event) => {
@@ -77,7 +77,7 @@ const urlAccessor = (props) => {
         requestUrl,
         cookieName,
         cookieValue,
-        element,
+        element
     } = props;
 
     if (cookieName && cookieValue) {
@@ -102,14 +102,15 @@ const typeAccessor = (props) => {
 const ruleAccessor = (props) => {
     const {
         requestRule,
-        replaceRules,
+        replaceRules
     } = props;
 
     let ruleText = '';
     if (requestRule) {
         if (requestRule.filterId === ANTIBANNER_FILTERS_ID.ALLOWLIST_FILTER_ID) {
             ruleText = reactTranslator.getMessage('filtering_log_in_allowlist');
-        } else {
+        }
+        else {
             ruleText = requestRule.ruleText;
         }
     }
@@ -132,25 +133,25 @@ const Row = observer(({
     event,
     columns,
     onClick,
-    style,
+    style
 }) => {
     const { logStore } = useContext(rootStore);
 
     const className = cn(
         'tr tr--tbody',
         { 'tr--active': event.eventId === logStore.selectedEvent?.eventId },
-        getRowClassName(event),
+        getRowClassName(event)
     );
 
     return (
         <button
             style={{
                 ...style,
-                top: `${parseFloat(style.top) + ITEM_HEIGHT_PX}px`,
+                top: `${parseFloat(style.top) + ITEM_HEIGHT_PX}px`
             }}
             id={event.eventId}
             onClick={onClick}
-            type="button"
+            type='button'
             className={className}
         >
             {
@@ -159,13 +160,14 @@ const Row = observer(({
                     let cellContent;
                     if (typeof accessor === 'string') {
                         cellContent = event[accessor];
-                    } else {
+                    }
+                    else {
                         cellContent = accessor(event);
                     }
 
                     return (
                         <div
-                            className="td"
+                            className='td'
                             key={column.id}
                             style={{ width: column.getWidth() }}
                         >
@@ -178,11 +180,11 @@ const Row = observer(({
     );
 });
 
-const VirtualizedRow = ({
+function VirtualizedRow({
     index,
     style,
-    data,
-}) => {
+    data
+}) {
     const { events, columns, handleRowClick } = data;
     const event = events[index];
 
@@ -194,32 +196,32 @@ const VirtualizedRow = ({
             style={style}
         />
     );
-};
+}
 
 const ColumnsContext = React.createContext({});
 
 const ColumnsProvider = ColumnsContext.Provider;
 
-const TableHeader = ({ style }) => {
+function TableHeader({ style }) {
     const { columns } = useContext(ColumnsContext);
 
     return (
         <div
-            className="thead"
+            className='thead'
             style={style}
         >
-            <div className="tr">
+            <div className='tr'>
                 {
                     columns.map((column) => (
                         <div
-                            className="th"
+                            className='th'
                             key={column.id}
                             style={{ width: column.getWidth() }}
                         >
                             {column.Header}
                             <div
-                                role="separator"
-                                className="resizer"
+                                role='separator'
+                                className='resizer'
                                 key={column.id}
                                 style={{ cursor: 'col-resize' }}
                                 {...column.getResizerProps()}
@@ -230,7 +232,7 @@ const TableHeader = ({ style }) => {
             </div>
         </div>
     );
-};
+}
 
 const TableInnerWrapper = forwardRef(({ children, ...rest }, ref) => {
     return (
@@ -239,7 +241,7 @@ const TableInnerWrapper = forwardRef(({ children, ...rest }, ref) => {
                 index={0}
                 key={0}
                 style={{
-                    top: 0, left: 0, width: '100%', height: 30,
+                    top: 0, left: 0, width: '100%', height: 30
                 }}
             />
 
@@ -251,7 +253,7 @@ const TableInnerWrapper = forwardRef(({ children, ...rest }, ref) => {
 const FilteringEventsRows = observer(({
     logStore,
     columns,
-    handleRowClick,
+    handleRowClick
 }) => {
     const { events } = logStore;
 
@@ -265,17 +267,17 @@ const FilteringEventsRows = observer(({
         <ColumnsProvider value={{ columns }}>
             <AutoSizer>
                 {({
-                    height,
+                    height
                 }) => {
                     return (
                         <FixedSizeList
-                            className="list"
+                            className='list'
                             height={height}
                             itemCount={events.length}
                             itemData={{
                                 events,
                                 columns,
-                                handleRowClick,
+                                handleRowClick
                             }}
                             innerElementType={TableInnerWrapper}
                             itemSize={ITEM_HEIGHT_PX}
@@ -306,37 +308,37 @@ const FilteringEvents = observer(() => {
         {
             id: 'status',
             Header: `${reactTranslator.getMessage('filtering_table_status')}`,
-            accessor: statusAccessor,
+            accessor: statusAccessor
         },
         {
             id: 'url',
             Header: 'URL',
-            accessor: urlAccessor,
+            accessor: urlAccessor
         },
         {
             id: 'type',
             Header: `${reactTranslator.getMessage('filtering_table_type')}`,
-            accessor: typeAccessor,
+            accessor: typeAccessor
         },
         {
             id: 'rule',
             Header: `${reactTranslator.getMessage('filtering_table_rule')}`,
-            accessor: ruleAccessor,
+            accessor: ruleAccessor
         },
         {
             id: 'filter',
             Header: `${reactTranslator.getMessage('filtering_table_filter')}`,
-            accessor: filterNameAccessor,
+            accessor: filterNameAccessor
         },
         {
             id: 'source',
             Header: `${reactTranslator.getMessage('filtering_table_source')}`,
-            accessor: 'frameDomain',
-        },
+            accessor: 'frameDomain'
+        }
     ];
 
     const [columnsRenderData, setColumnsRenderData] = useState(
-        optionsStorage.getItem(optionsStorage.KEYS.COLUMNS_DATA),
+        optionsStorage.getItem(optionsStorage.KEYS.COLUMNS_DATA)
     );
 
     useEffect(() => {
@@ -368,8 +370,8 @@ const FilteringEvents = observer(() => {
             ...columnsRenderData,
             [columnId]: {
                 ...columnsRenderData[columnId],
-                width: newColumnWidth,
-            },
+                width: newColumnWidth
+            }
         });
     }, 20);
 
@@ -406,14 +408,14 @@ const FilteringEvents = observer(() => {
                 upHandler: () => {
                     document.removeEventListener(
                         'mousemove',
-                        handlersAndEvents.mouse.moveHandler,
+                        handlersAndEvents.mouse.moveHandler
                     );
                     document.removeEventListener(
                         'mouseup',
-                        handlersAndEvents.mouse.upHandler,
+                        handlersAndEvents.mouse.upHandler
                     );
                     dispatchEnd();
-                },
+                }
             },
             touch: {
                 moveEvent: 'touchmove',
@@ -430,15 +432,15 @@ const FilteringEvents = observer(() => {
                 upHandler: () => {
                     document.removeEventListener(
                         handlersAndEvents.touch.moveEvent,
-                        handlersAndEvents.touch.moveHandler,
+                        handlersAndEvents.touch.moveHandler
                     );
                     document.removeEventListener(
                         handlersAndEvents.touch.upEvent,
-                        handlersAndEvents.touch.moveHandler,
+                        handlersAndEvents.touch.moveHandler
                     );
                     dispatchEnd();
-                },
-            },
+                }
+            }
         };
 
         const events = isTouchEvent
@@ -450,12 +452,12 @@ const FilteringEvents = observer(() => {
         document.addEventListener(
             events.moveEvent,
             events.moveHandler,
-            passiveIfSupported,
+            passiveIfSupported
         );
         document.addEventListener(
             events.upEvent,
             events.upHandler,
-            passiveIfSupported,
+            passiveIfSupported
         );
 
         dispatchMovingStarted(clientX);
@@ -464,7 +466,7 @@ const FilteringEvents = observer(() => {
     const getResizerProps = (columnId) => {
         return {
             onMouseDown: (e) => onResizeStart(e, columnId),
-            onTouchStart: (e) => onResizeStart(e, columnId),
+            onTouchStart: (e) => onResizeStart(e, columnId)
         };
     };
 
@@ -477,7 +479,7 @@ const FilteringEvents = observer(() => {
                 },
                 getResizerProps: () => {
                     return getResizerProps(column.id);
-                },
+                }
             };
         });
     };
@@ -488,13 +490,13 @@ const FilteringEvents = observer(() => {
     const columns = addMethods(columnsData);
 
     return (
-        <div className="filtering-log">
+        <div className='filtering-log'>
             <div
                 style={{ minWidth: `${minTableWidth}px` }}
-                className="table filtering-log__inner"
+                className='table filtering-log__inner'
                 ref={tableRef}
             >
-                <div className="tbody" style={{ height: '100%' }}>
+                <div className='tbody' style={{ height: '100%' }}>
                     <FilteringEventsRows
                         logStore={logStore}
                         handleRowClick={handleRowClick}

@@ -41,7 +41,8 @@ export function LruCache(storagePropertyName, size) {
                 const data = JSON.parse(json);
                 entries = data.map(x => [x.key, x.value]);
             }
-        } catch (ex) {
+        }
+        catch (ex) {
             // ignore
             log.error('Error read from {0} cache, cause: {1}', storagePropertyName, ex);
             localStorage.removeItem(storagePropertyName);
@@ -53,7 +54,8 @@ export function LruCache(storagePropertyName, size) {
     function saveCacheToLocalStorage() {
         try {
             localStorage.setItem(storagePropertyName, JSON.stringify(cache.toJSON()));
-        } catch (ex) {
+        }
+        catch (ex) {
             log.error('Error save to {0} cache, cause: {1}', storagePropertyName, ex);
         }
     }
@@ -73,7 +75,7 @@ export function LruCache(storagePropertyName, size) {
         }
 
         cache.set(key, data);
-        cacheSize += 1;
+        ++cacheSize;
 
         if (cacheSize % 20 === 0) {
             saveCacheToLocalStorage();
@@ -96,6 +98,6 @@ export function LruCache(storagePropertyName, size) {
     return {
         getValue,
         saveValue,
-        clear,
+        clear
     };
 }

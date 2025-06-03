@@ -13,7 +13,7 @@ import {
     LOCALE_DATA_FILENAME,
     SRC_RELATIVE_PATH,
     SRC_FILENAME_EXTENSIONS,
-    PERSISTENT_MESSAGES,
+    PERSISTENT_MESSAGES
 } from './locales-constants';
 
 const LOCALES_DIR = path.resolve(__dirname, LOCALES_RELATIVE_PATH);
@@ -28,7 +28,7 @@ const configuration = {
     output: path.join(LOCALES_DIR, `${BASE_LOCALE}/${LOCALE_DATA_FILENAME}`), // Place to put result
     filesReg: `(${SRC_FILENAME_EXTENSIONS.join('|')})$`,
     // messages used in extensions localisations e.g. __MSG_short_name__
-    persistedMessages: PERSISTENT_MESSAGES,
+    persistedMessages: PERSISTENT_MESSAGES
 };
 
 /**
@@ -61,7 +61,8 @@ const findFilesPaths = async (dir, filesReg) => {
 
             if (stat.isDirectory()) {
                 filePaths = await walk(filePath, filePaths);
-            } else if (filePath.match(filterRegexp)) {
+            }
+            else if (filePath.match(filterRegexp)) {
                 filePaths.push(filePath);
             }
         }
@@ -85,7 +86,7 @@ const getFilesPathsList = async (targets, filesReg) => {
 
 const filterMessages = (messages, content) => {
     return messages.filter((message) => {
-        return content.indexOf(message) > -1;
+        return content.indexOf(message) >= 0;
     });
 };
 
@@ -113,7 +114,7 @@ export const renewLocales = async () => {
         src,
         output = 'result.json',
         filesReg = '.html$',
-        persistedMessages = [],
+        persistedMessages = []
     } = configuration;
 
     if (!src) {
@@ -141,7 +142,8 @@ export const renewLocales = async () => {
             const removedKeys = xor(resultMessages, oldKeys);
             if (removedKeys.length === 0) {
                 cliLog.info('There is nothing to renew');
-            } else {
+            }
+            else {
                 cliLog.info(`existing keys number: ${resultMessages.length}`);
                 cliLog.info(`old keys number: ${oldKeys.length}`);
                 cliLog.warningRed(`${removedKeys.length} keys have been removed:`);

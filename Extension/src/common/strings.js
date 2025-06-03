@@ -60,7 +60,7 @@ export const strings = (() => {
                 return '';
             }
             const buf = [];
-            for (let i = startIndex; i < endIndex; i += 1) {
+            for (let i = startIndex; i < endIndex; ++i) {
                 buf.push(array[i]);
             }
             return buf.join(separator);
@@ -91,9 +91,9 @@ export const strings = (() => {
                 return -1;
             }
 
-            for (let i = start; i < str.length; i += 1) {
+            for (let i = start; i < str.length; ++i) {
                 const c = str.charAt(i);
-                if (chars.indexOf(c) > -1) {
+                if (chars.indexOf(c) >= 0) {
                     return i;
                 }
             }
@@ -116,26 +116,29 @@ export const strings = (() => {
             }
 
             let sb = [];
-            for (let i = 0; i < str.length; i += 1) {
+            for (let i = 0; i < str.length; ++i) {
                 const c = str.charAt(i);
 
                 if (c === delimiter) {
                     if (i === 0) {
                         // Ignore
-                    } else if (str.charAt(i - 1) === escapeCharacter) {
+                    }
+                    else if (str.charAt(i - 1) === escapeCharacter) {
                         sb.splice(sb.length - 1, 1);
                         sb.push(c);
-                    } else if (preserveAllTokens || sb.length > 0) {
+                    }
+                    else if (preserveAllTokens || sb.length !== 0) {
                         const part = sb.join('');
                         parts.push(part);
                         sb = [];
                     }
-                } else {
+                }
+                else {
                     sb.push(c);
                 }
             }
 
-            if (preserveAllTokens || sb.length > 0) {
+            if (preserveAllTokens || sb.length !== 0) {
                 parts.push(sb.join(''));
             }
 
@@ -151,7 +154,7 @@ export const strings = (() => {
             s.push('<');
             s.push(element.localName);
             const { attributes } = element;
-            for (let i = 0; i < attributes.length; i += 1) {
+            for (let i = 0; i < attributes.length; ++i) {
                 const attr = attributes[i];
                 s.push(' ');
                 s.push(attr.name);
@@ -176,7 +179,7 @@ export const strings = (() => {
                 return false;
             }
 
-            for (let i = 0; i < substr.length; i += 1) {
+            for (let i = 0; i < substr.length; ++i) {
                 if (str.charAt(startIndex + i) !== substr.charAt(i)) {
                     return false;
                 }
@@ -194,7 +197,7 @@ export const strings = (() => {
             const quotes = ['"', "'", '/'];
 
             const stack = [];
-            for (let i = 0; i < str.length; i += 1) {
+            for (let i = 0; i < str.length; ++i) {
                 const cursor = str[i];
 
                 if (stack.length === 0) {
@@ -208,7 +211,8 @@ export const strings = (() => {
                     const last = stack.pop();
                     if (!last) {
                         stack.push(cursor);
-                    } else if (last !== cursor) {
+                    }
+                    else if (last !== cursor) {
                         stack.push(last);
                         stack.push(cursor);
                     }
@@ -216,7 +220,7 @@ export const strings = (() => {
             }
 
             return false;
-        },
+        }
     };
 
     return StringUtils;

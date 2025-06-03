@@ -47,7 +47,8 @@ export const applicationUpdateService = (function () {
                 // eslint-disable-next-line no-await-in-loop
                 await method();
             }
-        } catch (e) {
+        }
+        catch (e) {
             // if catch error while updating, reset settings and reload extension
             await settingsProvider.applyDefaultSettings();
             backgroundPage.runtime.reload();
@@ -68,7 +69,7 @@ export const applicationUpdateService = (function () {
 
         enabledFilters.forEach((filter) => {
             const { groupId } = filter;
-            if (typeof groupState[groupId] === 'undefined') {
+            if (groupState[groupId] === undefined) {
                 application.enableGroup(filter.groupId);
             }
         });
@@ -171,7 +172,7 @@ export const applicationUpdateService = (function () {
             isFirstRun,
             isUpdate,
             currentVersion,
-            prevVersion,
+            prevVersion
         });
     };
 
@@ -207,6 +208,6 @@ export const applicationUpdateService = (function () {
 
     return {
         getRunInfo,
-        onUpdate,
+        onUpdate
     };
 })();

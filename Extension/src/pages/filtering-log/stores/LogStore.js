@@ -4,11 +4,12 @@ import {
     makeObservable,
     action,
     computed,
-    runInAction,
+    runInAction
 } from 'mobx';
 import find from 'lodash/find';
 import truncate from 'lodash/truncate';
 
+import { BACKGROUND_TAB_ID } from '../../../background/utils/common';
 import { reactTranslator } from '../../../common/translators/reactTranslator';
 import { RequestTypes } from '../../../background/utils/request-types';
 import { messenger } from '../../services/messenger';
@@ -20,12 +21,12 @@ const MISCELLANEOUS_FILTERS = {
     ALLOWLISTED: 'allowlisted',
     BLOCKED: 'blocked',
     MODIFIED: 'modified',
-    USER_FILTER: 'user_filter',
+    USER_FILTER: 'user_filter'
 };
 
 const REQUEST_SOURCE_FILTERS = {
     FIRST_PARTY: 'first_party',
-    THIRD_PARTY: 'third_party',
+    THIRD_PARTY: 'third_party'
 };
 
 const EVENT_TYPE_FILTERS = {
@@ -35,7 +36,7 @@ const EVENT_TYPE_FILTERS = {
     XHR: 'xmlhttprequest',
     IMAGE: 'image',
     MEDIA: 'media',
-    OTHER: 'other',
+    OTHER: 'other'
 };
 
 const initMiscellaneousFilters = {
@@ -45,33 +46,33 @@ const initMiscellaneousFilters = {
             id: MISCELLANEOUS_FILTERS.REGULAR,
             enabled: true,
             title: reactTranslator.getMessage('filtering_log_filter_regular'),
-            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_regular'),
+            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_regular')
         },
         {
             id: MISCELLANEOUS_FILTERS.ALLOWLISTED,
             enabled: true,
             title: reactTranslator.getMessage('filtering_log_filter_allowed'),
-            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_allowed'),
+            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_allowed')
         },
         {
             id: MISCELLANEOUS_FILTERS.BLOCKED,
             enabled: true,
             title: reactTranslator.getMessage('filtering_log_filter_blocked'),
-            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_blocked'),
+            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_blocked')
         },
         {
             id: MISCELLANEOUS_FILTERS.MODIFIED,
             enabled: true,
             title: reactTranslator.getMessage('filtering_log_filter_modified'),
-            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_modified'),
+            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_modified')
         },
         {
             id: MISCELLANEOUS_FILTERS.USER_FILTER,
             enabled: true,
             title: reactTranslator.getMessage('filtering_log_filter_user_rules'),
-            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_user_rules'),
-        },
-    ],
+            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_user_rules')
+        }
+    ]
 };
 
 const initRequestSourceFilters = {
@@ -81,15 +82,15 @@ const initRequestSourceFilters = {
             id: REQUEST_SOURCE_FILTERS.FIRST_PARTY,
             title: '1P',
             enabled: true,
-            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_first_party'),
+            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_first_party')
         },
         {
             id: REQUEST_SOURCE_FILTERS.THIRD_PARTY,
             title: '3P',
             enabled: true,
-            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_third_party'),
-        },
-    ],
+            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_third_party')
+        }
+    ]
 };
 
 const initEventTypesFilters = {
@@ -100,42 +101,42 @@ const initEventTypesFilters = {
             title: 'HTML',
             types: [RequestTypes.DOCUMENT, RequestTypes.SUBDOCUMENT],
             enabled: true,
-            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_html'),
+            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_html')
         },
         {
             id: EVENT_TYPE_FILTERS.CSS,
             title: 'CSS',
             types: [RequestTypes.STYLESHEET],
             enabled: true,
-            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_css'),
+            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_css')
         },
         {
             id: EVENT_TYPE_FILTERS.JAVA_SCRIPT,
             title: 'JS',
             types: [RequestTypes.SCRIPT],
             enabled: true,
-            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_js'),
+            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_js')
         },
         {
             id: EVENT_TYPE_FILTERS.XHR,
             title: 'XHR',
             types: [RequestTypes.XMLHTTPREQUEST],
             enabled: true,
-            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_xhr'),
+            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_xhr')
         },
         {
             id: EVENT_TYPE_FILTERS.IMAGE,
             title: 'Img',
             types: [RequestTypes.IMAGE],
             enabled: true,
-            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_img'),
+            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_img')
         },
         {
             id: EVENT_TYPE_FILTERS.MEDIA,
             title: 'Media',
             types: [RequestTypes.OBJECT, RequestTypes.MEDIA],
             enabled: true,
-            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_media'),
+            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_media')
         },
         {
             id: EVENT_TYPE_FILTERS.OTHER,
@@ -148,12 +149,12 @@ const initEventTypesFilters = {
                 RequestTypes.COOKIE,
                 RequestTypes.PING,
                 RequestTypes.WEBRTC,
-                RequestTypes.CSP_REPORT,
+                RequestTypes.CSP_REPORT
             ],
             enabled: true,
-            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_other'),
-        },
-    ],
+            tooltip: reactTranslator.getMessage('filtering_log_tag_tooltip_other')
+        }
+    ]
 };
 
 const matchesFilter = ({ filters }, filterId, check) => {
@@ -183,7 +184,7 @@ class LogStore {
     @observable eventTypesFilters = initEventTypesFilters;
 
     @observable
-    selectIsOpen = false;
+        selectIsOpen = false;
 
     constructor(rootStore) {
         this.rootStore = rootStore;
@@ -191,29 +192,29 @@ class LogStore {
     }
 
     @action
-    setMiscellaneousFilters = (payload) => {
-        this.miscellaneousFilters = payload;
-    };
+        setMiscellaneousFilters = (payload) => {
+            this.miscellaneousFilters = payload;
+        };
 
     @action
-    setRequestSourceFilters = (payload) => {
-        this.requestSourceFilters = payload;
-    };
+        setRequestSourceFilters = (payload) => {
+            this.requestSourceFilters = payload;
+        };
 
     @action
-    setEventTypesFilters = (payload) => {
-        this.eventTypesFilters = payload;
-    };
+        setEventTypesFilters = (payload) => {
+            this.eventTypesFilters = payload;
+        };
 
     @action
-    resetAllFilters = () => {
+        resetAllFilters = () => {
         // enable all eventTypesFilters
-        this.eventTypesFilters = initEventTypesFilters;
-        // disable all miscellaneousFilters
-        this.miscellaneousFilters = initMiscellaneousFilters;
-        // disable all requestSourceFilters
-        this.requestSourceFilters = initRequestSourceFilters;
-    };
+            this.eventTypesFilters = initEventTypesFilters;
+            // disable all miscellaneousFilters
+            this.miscellaneousFilters = initMiscellaneousFilters;
+            // disable all requestSourceFilters
+            this.requestSourceFilters = initRequestSourceFilters;
+        };
 
     @action
     onTabUpdate(tabInfo) {
@@ -274,9 +275,9 @@ class LogStore {
     };
 
     @action
-    setSelectIsOpenState = (value) => {
-        this.selectIsOpen = value;
-    };
+        setSelectIsOpenState = (value) => {
+            this.selectIsOpen = value;
+        };
 
     @computed
     get tabs() {
@@ -296,58 +297,58 @@ class LogStore {
     }
 
     @action
-    getEventsByTabId = async (tabId) => {
-        const filteringInfo = await messenger.getFilteringInfoByTabId(tabId);
-        runInAction(() => {
-            const filteringEvents = filteringInfo?.filteringEvents;
-            if (filteringEvents) {
-                this.filteringEvents = filteringEvents
-                    .map((filteringEvent) => this.formatEvent(filteringEvent));
-            } else {
-                this.filteringEvents = [];
-            }
-        });
-    };
-
-    @action
-    setSelectedTabId = async (tabId) => {
-        this.selectedTabId = Number.parseInt(tabId, 10);
-        await this.getEventsByTabId(tabId);
-    };
-
-    @action
-    synchronizeOpenTabs = async () => {
-        const tabsInfo = await messenger.synchronizeOpenTabs();
-        runInAction(() => {
-            tabsInfo.forEach((tabInfo) => {
-                this.tabsMap[tabInfo.tabId] = tabInfo;
+        getEventsByTabId = async (tabId) => {
+            const filteringInfo = await messenger.getFilteringInfoByTabId(tabId);
+            runInAction(() => {
+                const filteringEvents = filteringInfo?.filteringEvents;
+                if (filteringEvents) {
+                    this.filteringEvents = filteringEvents
+                        .map((filteringEvent) => this.formatEvent(filteringEvent));
+                }
+                else {
+                    this.filteringEvents = [];
+                }
             });
-        });
-    };
+        };
 
     @action
-    getFilteringLogData = async () => {
-        const {
-            filtersMetadata,
-            settings,
-            preserveLogEnabled,
-        } = await messenger.getFilteringLogData();
-
-        runInAction(() => {
-            this.filtersMetadata = filtersMetadata;
-            this.settings = settings;
-            this.preserveLogEnabled = preserveLogEnabled;
-        });
-    };
+        setSelectedTabId = async (tabId) => {
+            this.selectedTabId = Number.parseInt(tabId, 10);
+            await this.getEventsByTabId(tabId);
+        };
 
     @action
-    getFilteringLogEvents = async () => {
-        await this.getEventsByTabId(this.selectedTabId);
-    };
+        synchronizeOpenTabs = async () => {
+            const tabsInfo = await messenger.synchronizeOpenTabs();
+            runInAction(() => {
+                tabsInfo.forEach((tabInfo) => {
+                    this.tabsMap[tabInfo.tabId] = tabInfo;
+                });
+            });
+        };
+
+    @action
+        getFilteringLogData = async () => {
+            const {
+                filtersMetadata,
+                settings,
+                preserveLogEnabled
+            } = await messenger.getFilteringLogData();
+
+            runInAction(() => {
+                this.filtersMetadata = filtersMetadata;
+                this.settings = settings;
+                this.preserveLogEnabled = preserveLogEnabled;
+            });
+        };
+
+    @action
+        getFilteringLogEvents = async () => {
+            await this.getEventsByTabId(this.selectedTabId);
+        };
 
     @computed
     get events() {
-        /* eslint-disable max-len */
         const filteredEvents = this.filteringEvents.filter((filteringEvent) => {
             const show = matchesSearch(filteringEvent, this.eventsSearchValue);
 
@@ -417,7 +418,6 @@ class LogStore {
         });
 
         return filteredEvents;
-        /* eslint-enable max-len */
     }
 
     /**
@@ -425,35 +425,35 @@ class LogStore {
      * @return {Promise<void>}
      */
     @action
-    clearFilteringEvents = async () => {
-        const ignorePreserveLog = true;
-        await messenger.clearEventsByTabId(this.selectedTabId, ignorePreserveLog);
-        runInAction(() => {
-            this.filteringEvents = [];
-        });
-    };
+        clearFilteringEvents = async () => {
+            const ignorePreserveLog = true;
+            await messenger.clearEventsByTabId(this.selectedTabId, ignorePreserveLog);
+            runInAction(() => {
+                this.filteringEvents = [];
+            });
+        };
 
     @action
-    setEventsSearchValue = (value) => {
-        this.eventsSearchValue = value;
-    };
+        setEventsSearchValue = (value) => {
+            this.eventsSearchValue = value;
+        };
 
     @action
-    refreshPage = async () => {
-        if (this.selectedTabId === -1) {
-            await messenger.clearEventsByTabId(this.selectedTabId);
-            return;
-        }
-        await messenger.refreshPage(this.selectedTabId, this.preserveLogEnabled);
-    };
+        refreshPage = async () => {
+            if (this.selectedTabId === BACKGROUND_TAB_ID) {
+                await messenger.clearEventsByTabId(this.selectedTabId);
+                return;
+            }
+            await messenger.refreshPage(this.selectedTabId, this.preserveLogEnabled);
+        };
 
     @action
-    setPreserveLog = async (state) => {
-        await messenger.setPreserveLogState(state);
-        runInAction(() => {
-            this.preserveLogEnabled = state;
-        });
-    };
+        setPreserveLog = async (state) => {
+            await messenger.setPreserveLogState(state);
+            runInAction(() => {
+                this.preserveLogEnabled = state;
+            });
+        };
 
     toNumberOrString = (dirtyString) => {
         const num = Number.parseInt(dirtyString, 10);
@@ -464,31 +464,31 @@ class LogStore {
     };
 
     @action
-    handleSelectEvent = (eventIdString) => {
-        const eventId = this.toNumberOrString(eventIdString);
+        handleSelectEvent = (eventIdString) => {
+            const eventId = this.toNumberOrString(eventIdString);
 
-        if (this.selectedEvent
+            if (this.selectedEvent
             && this.rootStore.wizardStore.isModalOpen
             && eventId === this.selectedEvent.eventId) {
+                this.selectedEvent = null;
+                this.rootStore.wizardStore.closeModal();
+                return;
+            }
+
+            this.rootStore.wizardStore.setAddedRuleState(false);
+            this.setSelectedEventById(eventId);
+            this.rootStore.wizardStore.openModal();
+        };
+
+    @action
+        setSelectedEventById = (eventId) => {
+            this.selectedEvent = find(this.filteringEvents, { eventId });
+        };
+
+    @action
+        removeSelectedEvent = () => {
             this.selectedEvent = null;
-            this.rootStore.wizardStore.closeModal();
-            return;
-        }
-
-        this.rootStore.wizardStore.setAddedRuleState(false);
-        this.setSelectedEventById(eventId);
-        this.rootStore.wizardStore.openModal();
-    }
-
-    @action
-    setSelectedEventById = (eventId) => {
-        this.selectedEvent = find(this.filteringEvents, { eventId });
-    };
-
-    @action
-    removeSelectedEvent = () => {
-        this.selectedEvent = null;
-    };
+        };
 
     @computed
     get appearanceTheme() {

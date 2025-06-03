@@ -44,7 +44,9 @@ import { prefs } from './prefs';
 import { allowlist } from './filter/allowlist';
 import { documentFilterService } from './filter/services/document-filter';
 import { antiBannerService } from './filter/antibanner';
-import { FILTERING_LOG, FULLSCREEN_USER_RULES_EDITOR, MESSAGE_TYPES } from '../common/constants';
+import {
+    FILTERING_LOG, FULLSCREEN_USER_RULES_EDITOR, MESSAGE_TYPES, ANTIBANNER_GROUPS_ID
+} from '../common/constants';
 import { getCookieRulesDataForContentScript } from './filter/services/cookie-service';
 import { log } from '../common/log';
 import { fullscreenUserRulesEditor } from './fullscreen-user-rules-editor';
@@ -103,7 +105,8 @@ const longLivedMessageHandler = (port) => {
                 const type = MESSAGE_TYPES.NOTIFY_LISTENERS;
                 try {
                     port.postMessage({ type, data });
-                } catch (e) {
+                }
+                catch (e) {
                     log.error(e.message);
                 }
             });
@@ -134,7 +137,7 @@ const createMessageHandler = () => {
             if (sender) {
                 tabsApi.sendMessage(sender.tab.tabId, {
                     type: MESSAGE_TYPES.NOTIFY_LISTENERS,
-                    data: args,
+                    data: args
                 });
             }
         });
@@ -151,9 +154,7 @@ const createMessageHandler = () => {
         const enabledFilters = {};
         Object.values(AntiBannerFiltersId).forEach((filterId) => {
             const enabled = application.isFilterEnabled(filterId);
-            if (enabled) {
-                enabledFilters[filterId] = true;
-            }
+            enabledFilters[filterId] = !!enabled;
         });
 
         return {
@@ -167,14 +168,14 @@ const createMessageHandler = () => {
                 isChrome: browserUtils.isChromeBrowser(),
                 Prefs: {
                     locale: backgroundPage.app.getLocale(),
-                    mobile: prefs.mobile || false,
+                    mobile: !!prefs.mobile
                 },
-                appVersion: backgroundPage.app.getVersion(),
+                appVersion: backgroundPage.app.getVersion()
             },
             constants: {
                 AntiBannerFiltersId: utils.filters.ids,
-                EventNotifierTypes: listeners.events,
-            },
+                EventNotifierTypes: listeners.events
+            }
         };
     }
 
@@ -189,7 +190,7 @@ const createMessageHandler = () => {
             return;
         }
         const frameUrl = frames.getMainFrameUrl(tab);
-        for (let i = 0; i < stats.length; i += 1) {
+        for (let i = 0; i < stats.length; ++i) {
             const stat = stats[i];
             const rule = new TSUrlFilter.CosmeticRule(stat.ruleText, stat.filterId);
             webRequestService.recordRuleHit(tab, rule, frameUrl);
@@ -199,7 +200,7 @@ const createMessageHandler = () => {
                 frameUrl: tab.url,
                 requestType: RequestTypes.DOCUMENT,
                 requestRule: rule,
-                timestamp: Date.now(),
+                timestamp: Date.now()
             });
         }
     }
@@ -211,12 +212,12 @@ const createMessageHandler = () => {
             filtersMetadata: categories.getFiltersMetadata(),
             filtersInfo: antiBannerService.getRequestFilterInfo(),
             environmentOptions: {
-                isChrome: browserUtils.isChromeBrowser(),
+                isChrome: browserUtils.isChromeBrowser()
             },
             constants: {
-                AntiBannerFiltersId: utils.filters.ids,
+                AntiBannerFiltersId: utils.filters.ids
             },
-            fullscreenUserRulesEditorIsOpen: fullscreenUserRulesEditor.isOpen(),
+            fullscreenUserRulesEditorIsOpen: fullscreenUserRulesEditor.isOpen()
         };
     };
 
@@ -232,7 +233,7 @@ const createMessageHandler = () => {
             MESSAGE_TYPES.SAVE_USER_RULES,
             MESSAGE_TYPES.APPLY_SETTINGS_JSON,
             MESSAGE_TYPES.FILTERING_LOG_ADD_USER_RULE,
-            MESSAGE_TYPES.DEVTOOLS_ADD_USER_RULE,
+            MESSAGE_TYPES.DEVTOOLS_ADD_USER_RULE
         ];
 
         // Dangerous messages are allowed only from own pages (popup, options, filtering log, devtools)
@@ -299,6 +300,14 @@ const createMessageHandler = () => {
             case MESSAGE_TYPES.CHANGE_USER_SETTING:
                 settings.setProperty(message.key, message.value);
                 break;
+            case MESSAGE_TYPES.INITIALIZE_ONINSTALL_DEFAULT_FILTERS: {
+                // Retrieve filters and install them
+                const filterIds = application.offerFilters();
+                await application.addAndEnableFilters(filterIds);
+                // enable language-specific group by default
+                await application.enableGroup(ANTIBANNER_GROUPS_ID.LANGUAGE_FILTERS_GROUP_ID);
+                break;
+            }
             case MESSAGE_TYPES.CHECK_REQUEST_FILTER_READY:
                 return { ready: filteringApi.isReady() };
             case MESSAGE_TYPES.ADD_AND_ENABLE_FILTER: {
@@ -309,7 +318,8 @@ const createMessageHandler = () => {
                 const { filterId, remove } = data;
                 if (remove) {
                     application.uninstallFilters([filterId]);
-                } else {
+                }
+                else {
                     application.disableFilters([filterId]);
                 }
                 break;
@@ -334,14 +344,14 @@ const createMessageHandler = () => {
                 const appVersion = backgroundPage.app.getVersion();
                 return {
                     content: allowlistDomains.join('\r\n'),
-                    appVersion,
+                    appVersion
                 };
             }
             case MESSAGE_TYPES.SAVE_ALLOWLIST_DOMAINS: {
                 const { value } = data;
                 const domains = value.split(/[\r\n]+/)
                     .map(string => string.trim())
-                    .filter(string => string.length > 0);
+                    .filter(string => string.length !== 0);
                 allowlist.updateAllowlistDomains(domains);
                 break;
             }
@@ -381,12 +391,13 @@ const createMessageHandler = () => {
                 // https://bugs.chromium.org/p/chromium/issues/detail?id=982326
                 if (token === expectedToken) {
                     userrules.addRules([ruleText]);
-                } else {
+                }
+                else {
                     log.error(
                         'Tokens for message {0} does not not match. Expected token: {1}. Received token: {2}',
                         message,
                         token,
-                        expectedToken,
+                        expectedToken
                     );
                 }
                 break;
@@ -404,7 +415,8 @@ const createMessageHandler = () => {
                 try {
                     const { url, title } = data;
                     return application.loadCustomFilterInfo(url, { title });
-                } catch (e) {
+                }
+                catch (e) {
                     return {};
                 }
             case MESSAGE_TYPES.SUBSCRIBE_TO_CUSTOM_FILTER: {
@@ -413,7 +425,8 @@ const createMessageHandler = () => {
                     const filter = await application.loadCustomFilter(customUrl, { title: name, trusted });
                     await application.addAndEnableFilters([filter.filterId]);
                     return filter;
-                } catch (e) {
+                }
+                catch (e) {
                     // do nothing
                 }
                 break;
@@ -440,7 +453,7 @@ const createMessageHandler = () => {
                 return {
                     filtersMetadata: subscriptions.getFilters(),
                     settings: settings.getAllSettings(),
-                    preserveLogEnabled: filteringLog.isPreserveLogEnabled(),
+                    preserveLogEnabled: filteringLog.isPreserveLogEnabled()
                 };
             }
             case MESSAGE_TYPES.OPEN_SAFEBROWSING_TRUSTED: {
@@ -467,7 +480,8 @@ const createMessageHandler = () => {
                 // when document url for iframe is about:blank then we use tab url
                 if (!utils.url.isHttpOrWsRequest(message.documentUrl) && sender.frameId !== 0) {
                     urlForSelectors = sender.tab.url;
-                } else {
+                }
+                else {
                     urlForSelectors = message.documentUrl;
                 }
 
@@ -475,7 +489,7 @@ const createMessageHandler = () => {
                 const response = webRequestService.processGetSelectorsAndScripts(
                     sender.tab,
                     urlForSelectors,
-                    filteringApi.shouldCollapseAllElements(),
+                    filteringApi.shouldCollapseAllElements()
                 );
 
                 return response || {};
@@ -486,7 +500,7 @@ const createMessageHandler = () => {
                 }
 
                 return {
-                    rulesData: getCookieRulesDataForContentScript(sender.tab, message.documentUrl, sender.tab.url),
+                    rulesData: getCookieRulesDataForContentScript(sender.tab, message.documentUrl, sender.tab.url)
                 };
             }
             case MESSAGE_TYPES.SAVE_COOKIE_LOG_EVENT: {
@@ -497,7 +511,7 @@ const createMessageHandler = () => {
                     cookieRule: new TSUrlFilter.NetworkRule(data.ruleText, data.filterId),
                     isModifyingCookieRule: false,
                     thirdParty: data.thirdParty,
-                    timestamp: Date.now(),
+                    timestamp: Date.now()
                 });
                 break;
             }
@@ -506,11 +520,11 @@ const createMessageHandler = () => {
                     sender.tab,
                     message.elementUrl,
                     message.documentUrl,
-                    message.requestType,
+                    message.requestType
                 );
                 return {
                     block,
-                    requestId: message.requestId,
+                    requestId: message.requestId
                 };
             }
             case MESSAGE_TYPES.PROCESS_SHOULD_COLLAPSE: {
@@ -518,18 +532,18 @@ const createMessageHandler = () => {
                     sender.tab,
                     message.elementUrl,
                     message.documentUrl,
-                    message.requestType,
+                    message.requestType
                 );
                 return {
                     collapse,
-                    requestId: message.requestId,
+                    requestId: message.requestId
                 };
             }
             case MESSAGE_TYPES.PROCESS_SHOULD_COLLAPSE_MANY: {
                 const requests = webRequestService.processShouldCollapseMany(
                     sender.tab,
                     message.documentUrl,
-                    message.requests,
+                    message.requests
                 );
                 return { requests };
             }
@@ -628,9 +642,9 @@ const createMessageHandler = () => {
                                 || browserUtils.isEdgeChromiumBrowser(),
                             notification: notifications.getCurrentNotification(),
                             isDisableShowAdguardPromoInfo: settings.isDisableShowAdguardPromoInfo(),
-                            hasCustomRulesToReset: await userrules.hasRulesForUrl(frameInfo.url),
+                            hasCustomRulesToReset: await userrules.hasRulesForUrl(frameInfo.url)
                         },
-                        settings: settings.getAllSettings(),
+                        settings: settings.getAllSettings()
                     };
                 }
                 break;
@@ -644,7 +658,7 @@ const createMessageHandler = () => {
                     return {};
                 }
                 return {
-                    stats: pageStats.getStatisticsData(),
+                    stats: pageStats.getStatisticsData()
                 };
             case MESSAGE_TYPES.SAVE_CSS_HITS_STATS:
                 processSaveCssHitStats(sender.tab, message.stats);
@@ -654,7 +668,7 @@ const createMessageHandler = () => {
                 const json = await settingsProvider.loadSettingsBackup();
                 return {
                     content: json,
-                    appVersion,
+                    appVersion
                 };
             }
             case MESSAGE_TYPES.APPLY_SETTINGS_JSON: {
@@ -690,7 +704,7 @@ const createMessageHandler = () => {
             case MESSAGE_TYPES.GET_USER_RULES_EDITOR_DATA: {
                 return {
                     userRules: await userrules.getUserRulesText(),
-                    settings: settings.getAllSettings(),
+                    settings: settings.getAllSettings()
                 };
             }
             case MESSAGE_TYPES.GET_EDITOR_STORAGE_CONTENT: {
@@ -726,5 +740,5 @@ const init = () => {
 };
 
 export const messageHandler = {
-    init,
+    init
 };

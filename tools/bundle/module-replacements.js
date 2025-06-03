@@ -16,7 +16,8 @@ export const getModuleReplacements = (browserConfig) => {
         const from = resource.request;
         if (browserConfig.browser === BROWSERS.ADGUARD_API) {
             resource.request = resource.request.replace(apiRegexp, '$1adguard-api$2');
-        } else {
+        }
+        else {
             resource.request = resource.request.replace(apiRegexp, '$1browsers$2');
         }
         const to = resource.request;
@@ -28,7 +29,8 @@ export const getModuleReplacements = (browserConfig) => {
         if (browserConfig.browser === BROWSERS.FIREFOX_STANDALONE
                 || browserConfig.browser === BROWSERS.FIREFOX_AMO) {
             resource.request = resource.request.replace(browsersRegexp, '$1firefox$2');
-        } else {
+        }
+        else {
             resource.request = resource.request.replace(browsersRegexp, '$1chrome$2');
         }
         const to = resource.request;

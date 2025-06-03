@@ -5,72 +5,72 @@ import { reactTranslator } from '../../../../common/translators/reactTranslator'
 
 import './nav.pcss';
 
-const Nav = ({ closeSidebar }) => {
+function Nav({ closeSidebar }) {
     const onClick = () => {
         closeSidebar();
     };
 
     return (
-        <div className="nav">
+        <div className='nav'>
             <NavLink
-                className="nav__item"
+                className='nav__item'
                 exact
-                activeClassName="nav__item--active"
-                to="/"
+                activeClassName='nav__item--active'
+                to='/'
                 onClick={onClick}
             >
                 {reactTranslator.getMessage('options_general_settings')}
             </NavLink>
             <NavLink
-                className="nav__item"
-                activeClassName="nav__item--active"
-                to="/filters"
+                className='nav__item'
+                activeClassName='nav__item--active'
+                to='/filters'
                 onClick={onClick}
             >
                 {reactTranslator.getMessage('options_filters')}
             </NavLink>
             <NavLink
-                className="nav__item"
-                activeClassName="nav__item--active"
-                to="/stealth"
+                className='nav__item'
+                activeClassName='nav__item--active'
+                to='/stealth'
                 onClick={onClick}
             >
                 {reactTranslator.getMessage('options_privacy')}
             </NavLink>
             <NavLink
-                className="nav__item"
-                activeClassName="nav__item--active"
-                to="/allowlist"
+                className='nav__item'
+                activeClassName='nav__item--active'
+                to='/allowlist'
                 onClick={onClick}
             >
                 {reactTranslator.getMessage('options_allowlist')}
             </NavLink>
             <NavLink
-                className="nav__item"
-                activeClassName="nav__item--active"
-                to="/user-filter"
+                className='nav__item'
+                activeClassName='nav__item--active'
+                to='/user-filter'
                 onClick={onClick}
             >
                 {reactTranslator.getMessage('options_userfilter')}
             </NavLink>
             <NavLink
-                className="nav__item"
-                activeClassName="nav__item--active"
-                to="/miscellaneous"
+                className='nav__item'
+                activeClassName='nav__item--active'
+                to='/miscellaneous'
                 onClick={onClick}
             >
                 {reactTranslator.getMessage('options_miscellaneous_settings')}
             </NavLink>
             <NavLink
-                className="nav__item"
-                activeClassName="nav__item--active"
-                to="/about"
+                className='nav__item'
+                activeClassName='nav__item--active'
+                to='/about'
                 onClick={onClick}
             >
                 {reactTranslator.getMessage('options_about')}
             </NavLink>
         </div>
     );
-};
+}
 
 export { Nav };

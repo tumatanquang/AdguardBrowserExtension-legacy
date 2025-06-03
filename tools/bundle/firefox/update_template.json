@@ -4,7 +4,7 @@
       "updates": [
         {
           "version": "%VERSION%",
-          "update_link": "https://static.adtidy.org/extensions/adguardadblocker/beta/firefox.xpi",
+          "update_link": "https://raw.githubusercontent.com/tumatanquang/AdguardBrowserExtension-legacy/refs/heads/main/dist/firefox.xpi",
           "browser_specific_settings": {
             "gecko": {
               "strict_min_version": "78.0"

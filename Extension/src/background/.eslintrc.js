@@ -1,7 +1,7 @@
 module.exports = {
-    extends: '../../../.eslintrc',
-    rules: {
+    'extends': '../../../.eslintrc.js',
+    'rules': {
         'react/no-this-in-sfc': 'off',
-        'react/destructuring-assignment': 'off',
-    },
+        'react/destructuring-assignment': 'off'
+    }
 };

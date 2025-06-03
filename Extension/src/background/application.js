@@ -56,7 +56,7 @@ export const application = (() => {
         // These filters are enabled by default
         const filterIds = [
             utils.filters.ENGLISH_FILTER_ID,
-            utils.filters.SEARCH_AND_SELF_PROMO_FILTER_ID,
+            utils.filters.SEARCH_AND_SELF_PROMO_FILTER_ID
         ];
 
         if (prefs.mobile) {
@@ -121,25 +121,29 @@ export const application = (() => {
                 // but always check for updates for custom filters
                 || f.groupId === ANTIBANNER_GROUPS_ID.CUSTOM_FILTERS_GROUP_ID);
 
-            if (outdatedFilters.length > 0) {
+            if (outdatedFilters.length !== 0) {
                 try {
                     const filters = await filtersUpdate.checkAntiBannerFiltersUpdate({
                         forceUpdate: true,
-                        filters: outdatedFilters,
+                        filters: outdatedFilters
                     });
                     return filters;
-                } catch (e) {
+                }
+                catch (e) {
                     log.error(e.message);
                     throw e;
                 }
-            } else {
+            }
+            else {
                 return [];
             }
-        } else {
+        }
+        else {
             try {
                 const filters = await filtersUpdate.checkAntiBannerFiltersUpdate({ forceUpdate: true });
                 return filters;
-            } catch (e) {
+            }
+            catch (e) {
                 log.error(e.message);
                 throw e;
             }
@@ -217,7 +221,7 @@ export const application = (() => {
 
         filterIds = utils.collections.removeDuplicates(filterIds.slice(0));
 
-        for (let i = 0; i < filterIds.length; i += 1) {
+        for (let i = 0; i < filterIds.length; ++i) {
             const filterId = filterIds[i];
             // eslint-disable-next-line no-await-in-loop
             const success = await antiBannerService.addAntiBannerFilter(filterId, options && options.forceRemote);
@@ -242,7 +246,7 @@ export const application = (() => {
     const disableFilters = function (filterIds) {
         // Copy array to prevent parameter mutation
         filterIds = utils.collections.removeDuplicates(filterIds.slice(0));
-        for (let i = 0; i < filterIds.length; i += 1) {
+        for (let i = 0; i < filterIds.length; ++i) {
             const filterId = filterIds[i];
             const filter = subscriptions.getFilter(filterId);
             if (!filter || !filter.enabled || !filter.installed) {
@@ -263,7 +267,7 @@ export const application = (() => {
         // Copy array to prevent parameter mutation
         filterIds = utils.collections.removeDuplicates(filterIds.slice(0));
 
-        for (let i = 0; i < filterIds.length; i += 1) {
+        for (let i = 0; i < filterIds.length; ++i) {
             const filterId = filterIds[i];
             const filter = subscriptions.getFilter(filterId);
             if (!filter || !filter.installed) {
@@ -348,7 +352,7 @@ export const application = (() => {
         if (res?.errorAlreadyExists) {
             log.error('Custom filter already exists');
             return {
-                error: translator.getMessage('options_antibanner_custom_filter_already_exists'),
+                error: translator.getMessage('options_antibanner_custom_filter_already_exists')
             };
         }
         if (res?.error) {
@@ -384,6 +388,6 @@ export const application = (() => {
 
         loadCustomFilter,
         loadCustomFilterInfo,
-        getEnabledFiltersFromEnabledGroups,
+        getEnabledFiltersFromEnabledGroups
     };
 })();

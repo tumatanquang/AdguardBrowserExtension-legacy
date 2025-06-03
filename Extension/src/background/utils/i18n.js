@@ -31,7 +31,8 @@ export const i18n = (function () {
 
             if (collections.isArray(locales)) {
                 search = isArrayElement;
-            } else {
+            }
+            else {
                 search = isObjectKey;
             }
 
@@ -47,6 +48,6 @@ export const i18n = (function () {
             }
 
             return null;
-        },
+        }
     };
 })();

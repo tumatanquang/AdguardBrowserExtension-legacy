@@ -33,7 +33,7 @@ export const pageStats = (function () {
 
     const TOTAL_GROUP = {
         groupId: 'total',
-        groupName: translator.getMessage('popup_statistics_total'),
+        groupName: translator.getMessage('popup_statistics_total')
     };
 
     const pageStatisticProperty = 'page-statistic';
@@ -53,7 +53,8 @@ export const pageStats = (function () {
                     if (json) {
                         stats = JSON.parse(json);
                     }
-                } catch (ex) {
+                }
+                catch (ex) {
                     log.error('Error retrieve page statistic from storage, cause {0}', ex);
                 }
                 return stats || Object.create(null);
@@ -67,7 +68,7 @@ export const pageStats = (function () {
         clear() {
             localStorage.removeItem(pageStatisticProperty);
             lazyGetClear(pageStatsHolder, 'stats');
-        },
+        }
     };
 
     /**
@@ -157,17 +158,17 @@ export const pageStats = (function () {
         result.days = [];
         result.months = [];
 
-        for (let i = 1; i < MAX_HOURS_HISTORY; i += 1) {
+        for (let i = 1; i < MAX_HOURS_HISTORY; ++i) {
             result.hours.push(createStatsDataItem(null, 0));
         }
         result.hours.push(createStatsDataItem(type, blocked));
 
-        for (let j = 1; j < MAX_DAYS_HISTORY; j += 1) {
+        for (let j = 1; j < MAX_DAYS_HISTORY; ++j) {
             result.days.push(createStatsDataItem(null, 0));
         }
         result.days.push(createStatsDataItem(type, blocked));
 
-        for (let k = 1; k < MAX_MONTHS_HISTORY; k += 1) {
+        for (let k = 1; k < MAX_MONTHS_HISTORY; ++k) {
             result.months.push(createStatsDataItem(null, 0));
         }
         result.months.push(createStatsDataItem(type, blocked));
@@ -189,18 +190,18 @@ export const pageStats = (function () {
 
         const result = current;
 
-        if (utils.dates.isSameHour(now, currentDate) && result.hours.length > 0) {
+        if (utils.dates.isSameHour(now, currentDate) && result.hours.length !== 0) {
             result.hours[result.hours.length - 1] = updateStatsDataItem(
                 type,
                 blocked,
-                result.hours[result.hours.length - 1],
+                result.hours[result.hours.length - 1]
             );
-        } else {
-            let diffHours = utils.dates.getDifferenceInHours(now, currentDate);
-
-            while (diffHours >= 2) {
+        }
+        else {
+            for (let diffHours = utils.dates.getDifferenceInHours(now, currentDate);
+                diffHours >= 2;) {
                 result.hours.push(createStatsDataItem(null, 0));
-                diffHours -= 1;
+                --diffHours;
             }
 
             result.hours.push(createStatsDataItem(type, blocked));
@@ -209,18 +210,18 @@ export const pageStats = (function () {
             }
         }
 
-        if (utils.dates.isSameDay(now, currentDate) && result.days.length > 0) {
+        if (utils.dates.isSameDay(now, currentDate) && result.days.length !== 0) {
             result.days[result.days.length - 1] = updateStatsDataItem(
                 type,
                 blocked,
-                result.days[result.days.length - 1],
+                result.days[result.days.length - 1]
             );
-        } else {
-            let diffDays = utils.dates.getDifferenceInDays(now, currentDate);
-
-            while (diffDays >= 2) {
+        }
+        else {
+            for (let diffDays = utils.dates.getDifferenceInDays(now, currentDate);
+                diffDays >= 2;) {
                 result.days.push(createStatsDataItem(null, 0));
-                diffDays -= 1;
+                --diffDays;
             }
 
             result.days.push(createStatsDataItem(type, blocked));
@@ -229,17 +230,18 @@ export const pageStats = (function () {
             }
         }
 
-        if (utils.dates.isSameMonth(now, currentDate) && result.months.length > 0) {
+        if (utils.dates.isSameMonth(now, currentDate) && result.months.length !== 0) {
             result.months[result.months.length - 1] = updateStatsDataItem(
                 type,
                 blocked,
-                result.months[result.months.length - 1],
+                result.months[result.months.length - 1]
             );
-        } else {
-            let diffMonths = utils.dates.getDifferenceInMonths(now, currentDate);
-            while (diffMonths >= 2) {
+        }
+        else {
+            for (let diffMonths = utils.dates.getDifferenceInMonths(now, currentDate);
+                diffMonths >= 2;) {
                 result.months.push(createStatsDataItem(null, 0));
-                diffMonths -= 1;
+                --diffMonths;
             }
 
             result.months.push(createStatsDataItem(type, blocked));
@@ -286,7 +288,8 @@ export const pageStats = (function () {
 
         if (!stats.data) {
             updated = createStatsData(now, groupId, blocked);
-        } else {
+        }
+        else {
             updated = updateStatsData(now, groupId, blocked, stats.data);
         }
 
@@ -300,7 +303,7 @@ export const pageStats = (function () {
                 return {
                     groupId: group.groupId,
                     groupName: group.groupName,
-                    displayNumber: group.displayNumber,
+                    displayNumber: group.displayNumber
                 };
             });
 
@@ -331,7 +334,7 @@ export const pageStats = (function () {
             lastMonth: stats.data.days,
             lastYear: stats.data.months.slice(-12),
             overall: stats.data.months,
-            blockedGroups: getBlockedGroups(),
+            blockedGroups: getBlockedGroups()
         };
     };
 
@@ -340,6 +343,6 @@ export const pageStats = (function () {
         updateTotalBlocked,
         updateStats,
         getTotalBlocked,
-        getStatisticsData,
+        getStatisticsData
     };
 })();

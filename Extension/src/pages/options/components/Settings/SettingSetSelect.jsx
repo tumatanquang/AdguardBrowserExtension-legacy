@@ -3,11 +3,11 @@ import { SettingsSet } from './SettingsSet';
 import { Setting, SETTINGS_TYPES } from './Setting';
 import { useSelect } from '../../../common/components/ui/Select/SelectProvider';
 
-export const SettingSetSelect = ({
+export function SettingSetSelect({
     title,
     description,
     ...props
-}) => {
+}) {
     const [hidden, setHidden] = useSelect(props.id);
 
     const handleSettingClick = (e) => {
@@ -19,10 +19,8 @@ export const SettingSetSelect = ({
         // Interaction with the keyboard creates problems,
         // leaving the possibility of interaction through
         // the keyboard only with the internal selector
-        // eslint-disable-next-line max-len
-        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
         <div
-            className="setting-checkbox setting-checkbox--button"
+            className='setting-checkbox setting-checkbox--button'
             onClick={handleSettingClick}
         >
             <SettingsSet
@@ -37,4 +35,4 @@ export const SettingSetSelect = ({
             />
         </div>
     );
-};
+}

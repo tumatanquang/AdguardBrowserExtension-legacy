@@ -11,7 +11,7 @@ import './filters.pcss';
 
 const RESIZE_OBSERVER_THROTTLE_MS = 500;
 
-const Filters = () => {
+function Filters() {
     const [leftArrow, setLeftArrow] = useState(false);
     const [rightArrow, setRightArrow] = useState(true);
     const ref = useRef();
@@ -55,42 +55,42 @@ const Filters = () => {
     };
 
     return (
-        <div className="filters">
-            <div className="filters__nav">
+        <div className='filters'>
+            <div className='filters__nav'>
                 <Actions />
             </div>
 
-            <div className="filters__events-tags">
+            <div className='filters__events-tags'>
                 <div
                     ref={ref}
                     onScroll={scrollTags}
                     onWheel={handleWheel}
-                    className="filters__events-filters"
+                    className='filters__events-filters'
                 >
                     {leftArrow && (
                         <button
-                            type="button"
+                            type='button'
                             onClick={scrollLeft}
-                            className="filters__arrow filters__arrow--left"
+                            className='filters__arrow filters__arrow--left'
                         >
-                            <Icon classname="filters__arrow__icon" id="#arrow-scrollbar" />
+                            <Icon classname='filters__arrow__icon' id='#arrow-scrollbar' />
                         </button>
                     )}
                     <MiscellaneousFilters />
                     <EventsTypeFilter />
                     {rightArrow && (
                         <button
-                            type="button"
+                            type='button'
                             onClick={scrollRight}
-                            className="filters__arrow filters__arrow--right"
+                            className='filters__arrow filters__arrow--right'
                         >
-                            <Icon classname="filters__arrow__icon" id="#arrow-scrollbar" />
+                            <Icon classname='filters__arrow__icon' id='#arrow-scrollbar' />
                         </button>
                     )}
                 </div>
             </div>
         </div>
     );
-};
+}
 
 export { Filters };

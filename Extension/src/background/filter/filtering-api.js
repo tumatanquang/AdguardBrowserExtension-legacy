@@ -48,7 +48,7 @@ export const filteringApi = (function () {
         // We assume that if content script is requesting CSS in first 5 seconds after request filter init,
         // then it is possible, that we've missed some elements and now we should collapse these elements
         const requestFilterInitTime = antiBannerService.getRequestFilterInitTime();
-        return (requestFilterInitTime > 0) && (requestFilterInitTime + 5000 > new Date().getTime());
+        return (requestFilterInitTime > 0) && (requestFilterInitTime + 5000 > Date.now());
     };
 
     /**
@@ -154,6 +154,6 @@ export const filteringApi = (function () {
         findStealthAllowlistRule,
         getCosmeticOption,
 
-        getRequestFilterInfo,
+        getRequestFilterInfo
     };
 })();

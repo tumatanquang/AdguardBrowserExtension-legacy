@@ -13,13 +13,13 @@ export const MainContainer = observer(() => {
 
     const contentMap = {
         [VIEW_STATES.ACTIONS]: Main,
-        [VIEW_STATES.STATS]: StatsChart,
+        [VIEW_STATES.STATS]: StatsChart
     };
 
     const Content = contentMap[store.viewState];
 
     return (
-        <div className="main-container">
+        <div className='main-container'>
             <Content />
         </div>
     );

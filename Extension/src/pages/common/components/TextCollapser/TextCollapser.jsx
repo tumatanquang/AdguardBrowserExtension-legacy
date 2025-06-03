@@ -13,12 +13,12 @@ export const TextCollapser = forwardRef(({
     lineCountLimit,
     collapserButtonMessages,
     canCopy,
-    children,
+    children
 }, ref) => {
     const [
         isCollapsed,
         isOverflown,
-        toggleCollapsed,
+        toggleCollapsed
     ] = useTextCollapse(text, width, lineCountLimit, true);
 
     const handleClick = () => {
@@ -37,7 +37,7 @@ export const TextCollapser = forwardRef(({
     // Pick required collapser button text
     const {
         showMessage = DEFAULT_SHOW_MESSAGE,
-        hideMessage = DEFAULT_HIDE_MESSAGE,
+        hideMessage = DEFAULT_HIDE_MESSAGE
     } = collapserButtonMessages;
 
     const collapserButtonText = isCollapsed
@@ -52,7 +52,7 @@ export const TextCollapser = forwardRef(({
         : 'text-collapser__text-full';
 
     const collapsedProps = hasCollapsedStyle && {
-        style: { WebkitLineClamp: lineCountLimit },
+        style: { WebkitLineClamp: lineCountLimit }
     };
 
     return (
@@ -60,10 +60,10 @@ export const TextCollapser = forwardRef(({
             {canCopy ? (
                 <CopyToClipboard
                     ref={ref}
-                    wrapperClassName="text-collapser__copy-to-clipboard-wrapper"
+                    wrapperClassName='text-collapser__copy-to-clipboard-wrapper'
                     className={cn(
                         'text-collapser__copy-to-clipboard',
-                        collapserClassName,
+                        collapserClassName
                     )}
                     {...collapsedProps}
                 >
@@ -80,10 +80,10 @@ export const TextCollapser = forwardRef(({
 
             {isOverflown && (
                 <div
-                    role="button"
-                    className="request-modal__url-button"
-                    type="button"
-                    tabIndex="0"
+                    role='button'
+                    className='request-modal__url-button'
+                    type='button'
+                    tabIndex='0'
                     onClick={handleClick}
                     onKeyUp={handleKeyUp}
                 >

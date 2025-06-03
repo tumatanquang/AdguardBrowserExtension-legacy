@@ -39,7 +39,7 @@ const localScriptRulesService = (function () {
         LOCAL_SCRIPT_RULES = Object.create(null);
 
         const { rules } = json;
-        for (let i = 0; i < rules.length; i += 1) {
+        for (let i = 0; i < rules.length; ++i) {
             const rule = rules[i];
             const { domains, script } = rule;
             let ruleText = '';
@@ -62,7 +62,7 @@ const localScriptRulesService = (function () {
 
     return {
         setLocalScriptRules,
-        isLocal,
+        isLocal
     };
 })();
 

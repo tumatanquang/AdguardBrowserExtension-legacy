@@ -76,14 +76,15 @@ const firefoxRulesStorageImpl = (function (initialAPI) {
 
             const request = table.put({
                 key,
-                value: value.join('\n'),
+                value: value.join('\n')
             });
 
             const eventHandler = (event) => {
                 const request = event.target;
                 if (request.error) {
                     reject(request.error);
-                } else {
+                }
+                else {
                     resolve();
                 }
             };
@@ -107,7 +108,8 @@ const firefoxRulesStorageImpl = (function (initialAPI) {
                 const request = event.target;
                 if (request.error) {
                     reject(request.error);
-                } else {
+                }
+                else {
                     resolve();
                 }
             };
@@ -186,7 +188,7 @@ const firefoxRulesStorageImpl = (function (initialAPI) {
          * In this case we should switch implementation to the browser.storage (see init method)
          * This flag helps us to understand which implementation is used now (see update-service.js for example)
          */
-        isIndexedDB: true,
+        isIndexedDB: true
     };
 
     return api;

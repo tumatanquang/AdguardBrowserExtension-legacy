@@ -12,6 +12,6 @@ export const redirectsCache = (function () {
 
     return {
         add,
-        hasUrl,
+        hasUrl
     };
 })();

@@ -12,7 +12,8 @@ export const UrlUtils = {
         try {
             const urlObject = new URL(url);
             return urlObject.protocol;
-        } catch (e) {
+        }
+        catch (e) {
             return '';
         }
     },
@@ -26,7 +27,8 @@ export const UrlUtils = {
         const protocol = this.getProtocol(url);
         if (this.isHierarchicUrl(url)) {
             resultUrl = url.replace(`${protocol}//`, '');
-        } else {
+        }
+        else {
             resultUrl = url.replace(protocol, '');
         }
 
@@ -39,7 +41,7 @@ export const UrlUtils = {
      * @returns {boolean}
      */
     isHierarchicUrl(url) {
-        return url.indexOf('//') !== -1;
+        return url.indexOf('//') >= 0;
     },
 
     /**
@@ -51,7 +53,7 @@ export const UrlUtils = {
         return frameDomain[0] === '.'
             ? frameDomain.substring(1)
             : frameDomain;
-    },
+    }
 };
 
 /**
@@ -87,7 +89,7 @@ export const getRequestEventType = (event) => {
         requestRule,
         cspReportBlocked,
         removeHeader,
-        removeParam,
+        removeParam
     } = event;
 
     let requestEventType = requestType;
@@ -95,14 +97,17 @@ export const getRequestEventType = (event) => {
     if (requestRule?.cookieRule
         || requestRule?.isModifyingCookieRule) {
         requestEventType = RequestTypes.COOKIE;
-    } else if (cspReportBlocked) {
+    }
+    else if (cspReportBlocked) {
         // By default csp requests in firefox have other request type,
         // but if event cspReportBlocked is true
         // we consider such request to have "CSP report" type
         requestEventType = RequestTypes.CSP_REPORT;
-    } else if (removeHeader) {
+    }
+    else if (removeHeader) {
         return 'REMOVEHEADER';
-    } else if (removeParam) {
+    }
+    else if (removeParam) {
         return 'REMOVEPARAM';
     }
 

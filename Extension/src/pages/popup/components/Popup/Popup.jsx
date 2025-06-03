@@ -18,7 +18,7 @@ export const Popup = observer(() => {
     const {
         appearanceTheme,
         getPopupData,
-        updateBlockedStats,
+        updateBlockedStats
     } = useContext(popupStore);
 
     useAppearanceTheme(appearanceTheme);
@@ -52,7 +52,7 @@ export const Popup = observer(() => {
     }, [updateBlockedStats]);
 
     return (
-        <div className="popup">
+        <div className='popup'>
             <Icons />
             <Header />
             <MainContainer />

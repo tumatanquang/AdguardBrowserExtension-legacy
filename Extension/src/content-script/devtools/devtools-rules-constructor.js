@@ -71,7 +71,7 @@ export const DevToolsRulesConstructor = (function () {
                     el,
                     classList,
                     excludeTagNameOverride ? excludeTagName : false,
-                    excludeId,
+                    excludeId
                 );
                 path.unshift(bodySelector);
                 break;
@@ -89,34 +89,44 @@ export const DevToolsRulesConstructor = (function () {
                         el,
                         classList || [],
                         excludeTagNameOverride ? excludeTagName : true,
-                        excludeIdOverride ? excludeId : false,
+                        excludeIdOverride ? excludeId : false
                     );
-                } else {
+                }
+                else {
                     cssSelector = makeDefaultCssFilter(el, [], true, false);
                 }
                 path.unshift(cssSelector);
                 break;
-            } else {
+            }
+            else {
                 let c = 1;
                 for (let e = el; e.previousSibling; e = e.previousSibling) {
                     if (e.previousSibling.nodeType === 1) {
-                        c += 1;
+                        ++c;
                     }
                 }
 
                 let cldCount = 0;
-                for (let i = 0; el.parentNode && i < el.parentNode.childNodes.length; i += 1) {
-                    cldCount += el.parentNode.childNodes[i].nodeType === 1 ? 1 : 0;
+                if (el.parentNode) {
+                    const elChildNodes = el.parentNode.childNodes;
+                    for (let i = 0; i < elChildNodes.length; ++i) {
+                        if (elChildNodes[i].nodeType === 1) {
+                            ++cldCount;
+                        }
+                    }
                 }
 
                 let ch;
                 if (cldCount === 0 || cldCount === 1) {
                     ch = '';
-                } else if (c === 1) {
+                }
+                else if (c === 1) {
                     ch = ':first-child';
-                } else if (c === cldCount) {
+                }
+                else if (c === cldCount) {
                     ch = ':last-child';
-                } else {
+                }
+                else {
                     ch = `:nth-child(${c})`;
                 }
 
@@ -128,11 +138,12 @@ export const DevToolsRulesConstructor = (function () {
                         el,
                         classList,
                         excludeTagNameOverride ? excludeTagName : false,
-                        excludeId,
+                        excludeId
                     );
                     p += ch;
                     path.unshift(p);
-                } else {
+                }
+                else {
                     path.unshift(makeDefaultCssFilter(el, el.classList, false, false) + ch);
                 }
 
@@ -150,7 +161,7 @@ export const DevToolsRulesConstructor = (function () {
     const constructClassCssSelectorByAND = function (classList) {
         const selectors = [];
         if (classList) {
-            for (let i = 0; i < classList.length; i += 1) {
+            for (let i = 0; i < classList.length; ++i) {
                 selectors.push(`.${CSS.escape(classList[i])}`);
             }
         }
@@ -165,7 +176,7 @@ export const DevToolsRulesConstructor = (function () {
     const constructClassCssSelectorByOR = function (classList) {
         const selectors = [];
         if (classList) {
-            for (let i = 0; i < classList.length; i += 1) {
+            for (let i = 0; i < classList.length; ++i) {
                 selectors.push(`.${CSS.escape(classList[i])}`);
             }
         }
@@ -234,7 +245,7 @@ export const DevToolsRulesConstructor = (function () {
     };
 
     const haveClassAttribute = function (element) {
-        return element.classList && element.classList.length > 0;
+        return element.classList && element.classList.length !== 0;
     };
 
     const haveIdAttribute = function (element) {
@@ -253,7 +264,7 @@ export const DevToolsRulesConstructor = (function () {
 
         return {
             host: parts[4] || '',
-            path: parts[7] || '',
+            path: parts[7] || ''
         };
     };
 
@@ -279,7 +290,7 @@ export const DevToolsRulesConstructor = (function () {
             return null;
         }
 
-        for (let i = 0; i < URLBLOCK_ATTRIBUTES.length; i += 1) {
+        for (let i = 0; i < URLBLOCK_ATTRIBUTES.length; ++i) {
             const attr = URLBLOCK_ATTRIBUTES[i];
             const value = element.getAttribute(attr);
             if (isValidUrl(value)) {
@@ -300,11 +311,11 @@ export const DevToolsRulesConstructor = (function () {
         const attributes = [];
         const elementAttributes = element.attributes;
         if (elementAttributes) {
-            for (let i = 0; i < elementAttributes.length; i += 1) {
+            for (let i = 0; i < elementAttributes.length; ++i) {
                 const attr = elementAttributes[i];
                 attributes.push({
                     name: attr.name,
-                    value: attr.value,
+                    value: attr.value
                 });
             }
         }
@@ -315,7 +326,7 @@ export const DevToolsRulesConstructor = (function () {
             urlBlockAttributeValue: getUrlBlockAttribute(element),
             haveUrlBlockParameter: haveUrlBlockParameter(element),
             haveClassAttribute: haveClassAttribute(element),
-            haveIdAttribute: haveIdAttribute(element),
+            haveIdAttribute: haveIdAttribute(element)
         };
     };
 
@@ -376,7 +387,7 @@ export const DevToolsRulesConstructor = (function () {
                 element,
                 options.urlMask,
                 options.isBlockOneDomain,
-                croppedDomain,
+                croppedDomain
             );
             if (blockUrlRuleText) {
                 return blockUrlRuleText;
@@ -404,6 +415,6 @@ export const DevToolsRulesConstructor = (function () {
     return {
         getElementInfo,
         constructRuleCssSelector,
-        constructRuleText,
+        constructRuleText
     };
 })();

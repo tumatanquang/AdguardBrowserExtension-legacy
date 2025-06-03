@@ -32,7 +32,7 @@ const abstractSafebrowsing = {
     extractHosts: errorFunction,
     createHashesMap: errorFunction,
     processSbResponse: errorFunction,
-    clearCache: errorFunction,
+    clearCache: errorFunction
 };
 
 export default abstractSafebrowsing;

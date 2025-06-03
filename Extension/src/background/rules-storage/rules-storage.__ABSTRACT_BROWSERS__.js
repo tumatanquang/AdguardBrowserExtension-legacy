@@ -49,7 +49,7 @@ const abstractRulesStorageImpl = (() => {
         /**
          * Optional
          */
-        isIndexedDB: errorFunction,
+        isIndexedDB: errorFunction
     };
 })();
 

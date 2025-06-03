@@ -24,15 +24,15 @@ export const bundleRunner = (webpackConfig, watch = false) => {
                     all: false,
                     errors: true,
                     moduleTrace: true,
-                    logging: 'error',
+                    logging: 'error'
                 }));
                 reject();
                 return;
             }
 
             console.log(stats.toString({
-                chunks: false,  // Makes the build much quieter
-                colors: true,    // Shows colors in the console
+                chunks: false, // Makes the build much quieter
+                colors: true // Shows colors in the console
             }));
             resolve();
         });

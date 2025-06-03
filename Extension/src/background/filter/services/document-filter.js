@@ -30,9 +30,9 @@ export const documentFilterService = (function () {
             return lazyGet(
                 trustedCache,
                 'cache',
-                () => new ExpiringCache('document-block-cache'),
+                () => new ExpiringCache('document-block-cache')
             );
-        },
+        }
     };
 
     function documentFilterService() {
@@ -102,7 +102,8 @@ export const documentFilterService = (function () {
                 uiService.openTab(url).then(() => {
                     tabsApi.remove(tabId);
                 });
-            } else {
+            }
+            else {
                 tabsApi.updateUrl(tabId, url);
             }
         };
@@ -110,7 +111,7 @@ export const documentFilterService = (function () {
         return {
             getDocumentBlockPageUrl,
             addToTrusted,
-            showDocumentBlockPage,
+            showDocumentBlockPage
         };
     }
 

@@ -17,7 +17,7 @@ import {
     LOCALES_RELATIVE_PATH,
     FORMAT,
     LOCALE_DATA_FILENAME,
-    PERSISTENT_MESSAGES,
+    PERSISTENT_MESSAGES
 } from './locales-constants';
 
 const LOCALES_DOWNLOAD_URL = `${API_URL}/download`;
@@ -31,12 +31,14 @@ const downloadMessagesByUrl = async (url) => {
         cliLog.info(`Downloading url: ${url}...`);
         response = await axios.get(url, { responseType: 'arraybuffer' });
         cliLog.info(`Downloaded: ${url}`);
-    } catch (e) {
+    }
+    catch (e) {
         let errorMessage;
         if (e.response && e.response.data) {
             const decoder = new TextDecoder();
             errorMessage = decoder.decode(e.response.data);
-        } else {
+        }
+        else {
             errorMessage = e.message;
         }
         cliLog.error(`Error occurred: ${errorMessage}, while downloading: ${url}`);
@@ -49,7 +51,7 @@ const getQueryString = (lang) => {
         project: PROJECT_ID,
         language: lang,
         format: FORMAT,
-        filename: LOCALE_DATA_FILENAME,
+        filename: LOCALE_DATA_FILENAME
     };
     return querystring.stringify(options);
 };
@@ -91,7 +93,8 @@ const downloadLocales = async (locales) => {
 const saveFile = async (path, data) => {
     try {
         await fs.promises.writeFile(path, data);
-    } catch (e) {
+    }
+    catch (e) {
         cliLog.error(`Was unable do save data in path: ${path}. Error: ${e.message}`);
     }
 };

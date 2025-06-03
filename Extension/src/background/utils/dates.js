@@ -33,7 +33,7 @@ export const dates = (function () {
         },
         getDifferenceInMonths(a, b) {
             return this.getDifferenceInDays(a, b) / 30;
-        },
+        }
     };
 
     return DateUtils;

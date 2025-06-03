@@ -7,7 +7,7 @@ import { log } from '../../../common/log';
 import {
     ANTIBANNER_GROUPS_ID,
     CUSTOM_FILTERS_GROUP_DISPLAY_NUMBER,
-    CUSTOM_FILTERS_START_ID,
+    CUSTOM_FILTERS_START_ID
 } from '../../../common/constants';
 import { SubscriptionFilter } from './metadata';
 import { listeners } from '../../notifier';
@@ -76,7 +76,7 @@ export const customFilters = (() => {
 
             // Look up no more than 50 first lines
             const maxLines = Math.min(AMOUNT_OF_LINES_TO_PARSE, rules.length);
-            for (let i = 0; i < maxLines; i += 1) {
+            for (let i = 0; i < maxLines; ++i) {
                 const rule = rules[i];
                 const search = `! ${tagName}: `;
                 const indexOfSearch = rule.indexOf(search);
@@ -98,7 +98,7 @@ export const customFilters = (() => {
             homepage: parseTag('Homepage'),
             version: parseTag('Version'),
             expires: parseTag('Expires'),
-            timeUpdated: parseTag('TimeUpdated'),
+            timeUpdated: parseTag('TimeUpdated')
         };
     };
 
@@ -167,9 +167,7 @@ export const customFilters = (() => {
      * @returns Boolean
      */
     const isFilterUpdated = (newVersion, newChecksum, oldFilter) => {
-        if (browserUtils.isSemver(oldFilter.version)
-            && browserUtils.isSemver(newVersion)
-        ) {
+        if (browserUtils.isSemver(oldFilter.version) && browserUtils.isSemver(newVersion)) {
             return !browserUtils.isGreaterOrEqualsVersion(oldFilter.version, newVersion);
         }
 
@@ -201,7 +199,7 @@ export const customFilters = (() => {
             version,
             timeUpdated,
             lastCheckTime,
-            expires,
+            expires
         } = info;
 
         filter.checksum = checksum || filter.checksum;
@@ -230,7 +228,8 @@ export const customFilters = (() => {
         try {
             rules = await backend.downloadFilterRulesBySubscriptionUrl(url);
             return rules;
-        } catch (e) {
+        }
+        catch (e) {
             log.error(`Error download filter by url ${url}, cause: ${e || ''}`);
             return null;
         }
@@ -246,7 +245,7 @@ export const customFilters = (() => {
             downloadRules(url),
             new Promise((_, reject) => {
                 setTimeout(() => reject(new Error('Fetch timeout is over')), DOWNLOAD_LIMIT_MS);
-            }),
+            })
         ]);
     };
 
@@ -270,7 +269,7 @@ export const customFilters = (() => {
             homepage,
             version,
             expires,
-            timeUpdated = new Date().toISOString(),
+            timeUpdated = new Date().toISOString()
         } = parsedData;
 
         const checksum = !version || !browserUtils.isSemver(version) ? getChecksum(rules) : null;
@@ -279,7 +278,7 @@ export const customFilters = (() => {
         if (filter) {
             if (!isFilterUpdated(version, checksum, filter)) {
                 updateCustomFilterInfo(filter, {
-                    lastCheckTime: Date.now(),
+                    lastCheckTime: Date.now()
                 });
                 return null;
             }
@@ -289,9 +288,10 @@ export const customFilters = (() => {
                 checksum,
                 timeUpdated,
                 expires,
-                lastCheckTime: Date.now(),
+                lastCheckTime: Date.now()
             });
-        } else {
+        }
+        else {
             filter = new SubscriptionFilter({
                 filterId: addCustomFilterId(),
                 groupId: ANTIBANNER_GROUPS_ID.CUSTOM_FILTERS_GROUP_ID,
@@ -305,7 +305,7 @@ export const customFilters = (() => {
                 tags: [0],
                 customUrl: url,
                 checksum,
-                trusted,
+                trusted
             });
 
             filter.lastCheckTime = Date.now();
@@ -346,7 +346,7 @@ export const customFilters = (() => {
             homepage,
             version,
             expires,
-            timeUpdated = new Date().toISOString(),
+            timeUpdated = new Date().toISOString()
         } = parsedData;
 
         const filter = new SubscriptionFilter({
@@ -359,7 +359,7 @@ export const customFilters = (() => {
             expires,
             subscriptionUrl: url,
             tags: [0],
-            customUrl: url,
+            customUrl: url
         });
 
         filter.loaded = true;
@@ -404,6 +404,6 @@ export const customFilters = (() => {
         updateCustomFilter,
         getCustomFilterInfo,
         CUSTOM_FILTERS_START_ID,
-        CUSTOM_FILTERS_GROUP_DISPLAY_NUMBER,
+        CUSTOM_FILTERS_GROUP_DISPLAY_NUMBER
     };
 })();

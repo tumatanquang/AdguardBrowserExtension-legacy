@@ -30,7 +30,8 @@ export const localStorage = (function (localStorageImpl) {
     const setItem = function (key, value) {
         try {
             localStorageImpl.setItem(key, value);
-        } catch (ex) {
+        }
+        catch (ex) {
             log.error(`Error while saving item ${key} to the localStorage: ${ex}`);
         }
     };
@@ -63,7 +64,7 @@ export const localStorage = (function (localStorageImpl) {
         removeItem,
         hasItem,
         init,
-        isInitialized,
+        isInitialized
     };
 })(localStorageImpl);
 
@@ -85,7 +86,8 @@ export const rulesStorage = (rulesStorageImpl => {
         let rules;
         try {
             rules = await rulesStorageImpl.read(filePath);
-        } catch (e) {
+        }
+        catch (e) {
             log.error(`Error while reading rules from file ${filePath} cause: ${e}`);
         }
         return rules;
@@ -102,7 +104,8 @@ export const rulesStorage = (rulesStorageImpl => {
 
         try {
             await rulesStorageImpl.write(filePath, filterRules);
-        } catch (e) {
+        }
+        catch (e) {
             log.error(`Error writing filters to file ${filePath}. Cause: ${e}`);
         }
     };
@@ -115,7 +118,8 @@ export const rulesStorage = (rulesStorageImpl => {
         const filePath = getFilePath(filterId);
         try {
             await rulesStorageImpl.remove(filePath);
-        } catch (e) {
+        }
+        catch (e) {
             log.error(`Error removing filter ${filePath}. Cause: ${e}`);
         }
     };
@@ -136,6 +140,6 @@ export const rulesStorage = (rulesStorageImpl => {
         read,
         write,
         remove,
-        init,
+        init
     };
 })(rulesStorageImpl);

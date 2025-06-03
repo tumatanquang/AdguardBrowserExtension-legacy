@@ -14,7 +14,7 @@ export const optionsPage = {
             <SelectProvider>
                 <Options />
             </SelectProvider>,
-            document.getElementById('root'),
+            document.getElementById('root')
         );
-    },
+    }
 };

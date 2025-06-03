@@ -113,25 +113,26 @@ export const webRequestService = (function () {
             requestUrl: documentUrl,
             frameUrl: documentUrl,
             requestType: RequestTypes.DOCUMENT,
-            frameRule: frames.getFrameRule(tab),
+            frameRule: frames.getFrameRule(tab)
         });
 
         if (force || !prefs.features.canUseInsertCSSAndExecuteScript) {
             // Retrieve ExtendedCss selectors only if canUseInsertCSSAndExecuteScript is unavailable
             result.selectors = filteringApi.getSelectorsForUrl(
-                documentUrl, cosmeticOptions, true, !prefs.features.canUseInsertCSSAndExecuteScript,
+                documentUrl, cosmeticOptions, true, !prefs.features.canUseInsertCSSAndExecuteScript
             );
             // grep "localScriptRulesService" for details about script source
             result.scripts = filteringApi.getScriptsStringForUrl(documentUrl, tab, cosmeticOptions);
 
             // add stealth dom signal script
             result.scripts += stealthService.getSetDomSignalScript();
-        } else {
+        }
+        else {
             // In preload content script only ExtendedCss selectors are necessary.
             // Traditional css selectors would be injected via tabs.injectCss.
             // Except when browser starts with open tabs
             result.selectors = filteringApi.getSelectorsForUrl(
-                documentUrl, cosmeticOptions, false, true,
+                documentUrl, cosmeticOptions, false, true
             );
         }
 
@@ -165,7 +166,7 @@ export const webRequestService = (function () {
             referrerUrl,
             requestType,
             tab,
-            requestRule,
+            requestRule
         });
 
         return isRequestBlockedByRule(requestRule);
@@ -203,7 +204,7 @@ export const webRequestService = (function () {
             return collapseRequests;
         }
 
-        for (let i = 0; i < collapseRequests.length; i += 1) {
+        for (let i = 0; i < collapseRequests.length; ++i) {
             const request = collapseRequests[i];
             const requestRule = getRuleForRequest(tab, request.elementUrl, referrerUrl, request.requestType);
             request.collapse = isRequestBlockedByRule(requestRule);
@@ -263,7 +264,7 @@ export const webRequestService = (function () {
             if (isDocumentLevel && isDocumentBlockingRule(requestRule)) {
                 const documentBlockedPage = documentFilterService.getDocumentBlockPageUrl(
                     requestUrl,
-                    requestRule.getText(),
+                    requestRule.getText()
                 );
 
                 if (documentBlockedPage) {
@@ -278,11 +279,12 @@ export const webRequestService = (function () {
                 return { cancel: true };
             }
         // check if request rule is blocked by rule and is redirect rule
-        } else if (requestRule && !requestRule.isAllowlist()) {
+        }
+        else if (requestRule && !requestRule.isAllowlist()) {
             if (requestRule.isOptionEnabled(TSUrlFilter.NetworkRuleOption.Redirect)) {
                 const redirectUrl = redirectService.createRedirectUrl(
                     requestRule.getAdvancedModifierValue(),
-                    requestUrl,
+                    requestUrl
                 );
                 if (redirectUrl) {
                     return { redirectUrl };
@@ -315,7 +317,8 @@ export const webRequestService = (function () {
          */
         if (tab.tabId === BACKGROUND_TAB_ID) {
             allowlistRule = allowlist.findAllowlistRule(referrerUrl);
-        } else {
+        }
+        else {
             allowlistRule = frames.getFrameRule(tab);
         }
 
@@ -330,7 +333,7 @@ export const webRequestService = (function () {
             allowlistRule = filteringApi.findAllowlistRule({
                 requestUrl,
                 frameUrl: referrerUrl,
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             });
         }
 
@@ -338,7 +341,7 @@ export const webRequestService = (function () {
             requestUrl,
             frameUrl: referrerUrl,
             requestType,
-            frameRule: allowlistRule,
+            frameRule: allowlistRule
         });
     };
 
@@ -358,7 +361,7 @@ export const webRequestService = (function () {
             requestUrl: documentUrl,
             frameUrl: documentUrl,
             requestType: RequestTypes.DOCUMENT,
-            frameRule: frames.getFrameRule(tab),
+            frameRule: frames.getFrameRule(tab)
         });
 
         if (allowlistRule && allowlistRule.isOptionEnabled(TSUrlFilter.NetworkRuleOption.Content)) {
@@ -386,12 +389,11 @@ export const webRequestService = (function () {
 
         // @@||example.org^$document or @@||example.org^$urlblock —
         // disables all the $csp rules on all the pages matching the rule pattern.
-        // eslint-disable-next-line max-len
         const allowlistRule = filteringApi.findAllowlistRule({
             requestUrl,
             frameUrl: referrerUrl,
             requestType: RequestTypes.DOCUMENT,
-            frameRule,
+            frameRule
         });
 
         if (allowlistRule && allowlistRule.isOptionEnabled(TSUrlFilter.NetworkRuleOption.Urlblock)) {
@@ -402,7 +404,7 @@ export const webRequestService = (function () {
             requestUrl,
             frameUrl: referrerUrl,
             requestType,
-            frameRule,
+            frameRule
         });
     };
 
@@ -426,7 +428,7 @@ export const webRequestService = (function () {
             requestUrl,
             frameUrl: referrerUrl,
             requestType: RequestTypes.DOCUMENT,
-            frameRule,
+            frameRule
         });
 
         if (allowlistRule && allowlistRule.isDocumentAllowlistRule()) {
@@ -439,7 +441,7 @@ export const webRequestService = (function () {
             requestUrl,
             frameUrl: referrerUrl,
             requestType,
-            frameRule,
+            frameRule
         });
     };
 
@@ -463,7 +465,7 @@ export const webRequestService = (function () {
             requestUrl,
             frameUrl: referrerUrl,
             requestType: RequestTypes.DOCUMENT,
-            frameRule,
+            frameRule
         });
 
         if (allowlistRule && allowlistRule.isOptionEnabled(TSUrlFilter.NetworkRuleOption.Content)) {
@@ -474,7 +476,7 @@ export const webRequestService = (function () {
             requestUrl,
             frameUrl: referrerUrl,
             requestType,
-            frameRule,
+            frameRule
         });
     };
 
@@ -505,7 +507,7 @@ export const webRequestService = (function () {
             requestUrl,
             frameUrl: referrerUrl,
             requestType: RequestTypes.DOCUMENT,
-            frameRule,
+            frameRule
         });
 
         if (allowlistRule && allowlistRule.isOptionEnabled(TSUrlFilter.NetworkRuleOption.RemoveParam)) {
@@ -516,7 +518,7 @@ export const webRequestService = (function () {
             requestUrl,
             frameUrl: referrerUrl,
             requestType,
-            frameRule,
+            frameRule
         });
 
         let result = requestUrl;
@@ -529,7 +531,7 @@ export const webRequestService = (function () {
                         frameUrl: requestUrl,
                         requestType,
                         rule: r,
-                        timestamp: Date.now(),
+                        timestamp: Date.now()
                     });
                 }
 
@@ -603,7 +605,7 @@ export const webRequestService = (function () {
                     tabId: tab.tabId,
                     requestUrl,
                     referrerUrl,
-                    requestType,
+                    requestType
                 };
                 details.rule = requestRule.getText();
                 details.filterId = requestRule.getFilterListId();
@@ -646,6 +648,6 @@ export const webRequestService = (function () {
         postProcessRequest,
         recordRuleHit,
         onRequestBlocked: onRequestBlockedChannel,
-        isCollectingCosmeticRulesHits,
+        isCollectingCosmeticRulesHits
     };
 })();

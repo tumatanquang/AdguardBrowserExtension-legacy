@@ -20,7 +20,7 @@ import { browser } from '../background/extension-api/browser';
 export const runtimeImpl = (() => {
     return {
         onMessage: browser.runtime.onMessage,
-        sendMessage: browser.runtime.sendMessage,
+        sendMessage: browser.runtime.sendMessage
     };
 })();
 
@@ -63,7 +63,8 @@ export const addMinDurationTime = (fn, minDurationMs) => {
             const response = await fn(...args);
             await sleepIfNecessary(start, minDurationMs);
             return response;
-        } catch (e) {
+        }
+        catch (e) {
             await sleepIfNecessary(start, minDurationMs);
             throw e;
         }

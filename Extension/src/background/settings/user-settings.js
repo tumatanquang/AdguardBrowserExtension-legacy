@@ -15,8 +15,6 @@
  * along with Adguard Browser Extension. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* eslint-disable max-len */
-
 import { utils } from '../utils/common';
 import { prefs } from '../prefs';
 import { listeners } from '../notifier';
@@ -27,7 +25,7 @@ import { lazyGet } from '../utils/lazy';
 import {
     APPEARANCE_THEMES,
     DEFAULT_FIRST_PARTY_COOKIES_SELF_DESTRUCT_MIN,
-    DEFAULT_THIRD_PARTY_COOKIES_SELF_DESTRUCT_MIN,
+    DEFAULT_THIRD_PARTY_COOKIES_SELF_DESTRUCT_MIN
 } from '../../pages/constants';
 
 /**
@@ -36,6 +34,7 @@ import {
  */
 export const settings = (() => {
     const DEFAULT_FILTERS_UPDATE_PERIOD = -1;
+    const DISABLE_FILTERS_UPDATE_PERIOD = 0;
 
     const settings = {
         DISABLE_DETECT_FILTERS: 'detect-filters-disabled',
@@ -72,11 +71,12 @@ export const settings = (() => {
 
         /* UI misc */
         HIDE_RATE_BLOCK: 'hide-rate-block',
-        USER_RULES_EDITOR_WRAP: 'user-rules-editor-wrap',
+        USER_RULES_EDITOR_WRAP: 'user-rules-editor-wrap'
     };
 
     const properties = Object.create(null);
     const propertyUpdateChannel = utils.channels.newChannel();
+    const isUseDefaultSettings = !!localStorage.getItem('useDefaultSettings');
 
     /**
      * Lazy default properties
@@ -87,32 +87,39 @@ export const settings = (() => {
                 // Initialize default properties
                 const defaults = Object.fromEntries(Object.keys(settings).map(name => ([name, false])));
 
-                defaults[settings.DISABLE_SHOW_ADGUARD_PROMO_INFO] = (!browserUtils.isWindowsOs() && !browserUtils.isMacOs()) || browserUtils.isEdgeBrowser();
-                defaults[settings.DISABLE_SAFEBROWSING] = true;
-                defaults[settings.DISABLE_COLLECT_HITS] = true;
+                defaults[settings.DISABLE_SHOW_ADGUARD_PROMO_INFO] = isUseDefaultSettings
+                    ? (!browserUtils.isWindowsOs() && !browserUtils.isMacOs()) || browserUtils.isEdgeBrowser()
+                    : false;
+                defaults[settings.DISABLE_SAFEBROWSING] = isUseDefaultSettings;
+                defaults[settings.DISABLE_COLLECT_HITS] = isUseDefaultSettings;
                 defaults[settings.DEFAULT_ALLOWLIST_MODE] = true;
                 defaults[settings.ALLOWLIST_ENABLED] = true;
                 defaults[settings.USE_OPTIMIZED_FILTERS] = prefs.mobile;
                 defaults[settings.DISABLE_DETECT_FILTERS] = false;
                 defaults[settings.DISABLE_SHOW_APP_UPDATED_NOTIFICATION] = false;
-                defaults[settings.FILTERS_UPDATE_PERIOD] = DEFAULT_FILTERS_UPDATE_PERIOD;
+                defaults[settings.FILTERS_UPDATE_PERIOD] = isUseDefaultSettings
+                    ? DEFAULT_FILTERS_UPDATE_PERIOD : DISABLE_FILTERS_UPDATE_PERIOD;
                 defaults[settings.DISABLE_STEALTH_MODE] = true;
-                defaults[settings.HIDE_REFERRER] = true;
-                defaults[settings.HIDE_SEARCH_QUERIES] = true;
-                defaults[settings.SEND_DO_NOT_TRACK] = true;
-                defaults[settings.BLOCK_CHROME_CLIENT_DATA] = !!browserUtils.isChromeBrowser();
+                defaults[settings.HIDE_REFERRER] = isUseDefaultSettings;
+                defaults[settings.HIDE_SEARCH_QUERIES] = isUseDefaultSettings;
+                defaults[settings.SEND_DO_NOT_TRACK] = isUseDefaultSettings;
+                defaults[settings.BLOCK_CHROME_CLIENT_DATA] = isUseDefaultSettings
+                    ? !!browserUtils.isChromeBrowser() : false;
                 defaults[settings.BLOCK_WEBRTC] = false;
-                defaults[settings.SELF_DESTRUCT_THIRD_PARTY_COOKIES] = true;
-                defaults[settings.SELF_DESTRUCT_THIRD_PARTY_COOKIES_TIME] = DEFAULT_THIRD_PARTY_COOKIES_SELF_DESTRUCT_MIN;
+                defaults[settings.SELF_DESTRUCT_THIRD_PARTY_COOKIES] = isUseDefaultSettings;
+                defaults[settings.SELF_DESTRUCT_THIRD_PARTY_COOKIES_TIME] = isUseDefaultSettings
+                    ? DEFAULT_THIRD_PARTY_COOKIES_SELF_DESTRUCT_MIN : 0;
                 defaults[settings.SELF_DESTRUCT_FIRST_PARTY_COOKIES] = false;
-                defaults[settings.SELF_DESTRUCT_FIRST_PARTY_COOKIES_TIME] = DEFAULT_FIRST_PARTY_COOKIES_SELF_DESTRUCT_MIN;
-                defaults[settings.APPEARANCE_THEME] = APPEARANCE_THEMES.SYSTEM;
+                defaults[settings.SELF_DESTRUCT_FIRST_PARTY_COOKIES_TIME] = isUseDefaultSettings
+                    ? DEFAULT_FIRST_PARTY_COOKIES_SELF_DESTRUCT_MIN : 0;
+                defaults[settings.APPEARANCE_THEME] = isUseDefaultSettings
+                    ? APPEARANCE_THEMES.SYSTEM : APPEARANCE_THEMES.DARK;
                 defaults[settings.USER_FILTER_ENABLED] = true;
-                defaults[settings.HIDE_RATE_BLOCK] = false;
+                defaults[settings.HIDE_RATE_BLOCK] = !isUseDefaultSettings;
                 defaults[settings.USER_RULES_EDITOR_WRAP] = false;
                 return defaults;
             });
-        },
+        }
     };
 
     const getProperty = function (propertyName) {
@@ -132,10 +139,12 @@ export const settings = (() => {
         if (localStorage.hasItem(propertyName)) {
             try {
                 propertyValue = JSON.parse(localStorage.getItem(propertyName));
-            } catch (ex) {
+            }
+            catch (ex) {
                 log.error('Error get property {0}, cause: {1}', propertyName, ex);
             }
-        } else if (propertyName in defaultProperties.defaults) {
+        }
+        else if (propertyName in defaultProperties.defaults) {
             propertyValue = defaultProperties.defaults[propertyName];
         }
 
@@ -155,7 +164,7 @@ export const settings = (() => {
         const result = {
             names: Object.create(null),
             values: Object.create(null),
-            defaultValues: Object.create(null),
+            defaultValues: Object.create(null)
         };
 
         Object.entries(settings).forEach(([key, value]) => {
@@ -284,7 +293,7 @@ export const settings = (() => {
     const setFiltersUpdatePeriod = function (period) {
         let parsed = Number.parseInt(period, 10);
         if (Number.isNaN(parsed)) {
-            parsed = DEFAULT_FILTERS_UPDATE_PERIOD;
+            parsed = isUseDefaultSettings ? DEFAULT_FILTERS_UPDATE_PERIOD : DISABLE_FILTERS_UPDATE_PERIOD;
         }
         setProperty(settings.FILTERS_UPDATE_PERIOD, parsed);
     };
@@ -297,7 +306,7 @@ export const settings = (() => {
         const value = getProperty(settings.FILTERS_UPDATE_PERIOD);
         let parsed = Number.parseInt(value, 10);
         if (Number.isNaN(parsed)) {
-            parsed = DEFAULT_FILTERS_UPDATE_PERIOD;
+            parsed = isUseDefaultSettings ? DEFAULT_FILTERS_UPDATE_PERIOD : DISABLE_FILTERS_UPDATE_PERIOD;
         }
         return parsed;
     };
@@ -357,7 +366,8 @@ export const settings = (() => {
 
         if (!isExistingTheme) {
             setProperty(settings.APPEARANCE_THEME, defaultProperties.defaults[settings.APPEARANCE_THEME]);
-        } else {
+        }
+        else {
             setProperty(settings.APPEARANCE_THEME, theme);
         }
     };
@@ -408,7 +418,8 @@ export const settings = (() => {
     api.setFiltersUpdatePeriod = setFiltersUpdatePeriod;
     api.disableShowAdguardPromoInfo = disableShowAdguardPromoInfo;
     api.isDisableShowAdguardPromoInfo = isDisableShowAdguardPromoInfo;
-    api.DEFAULT_FILTERS_UPDATE_PERIOD = DEFAULT_FILTERS_UPDATE_PERIOD;
+    api.DEFAULT_FILTERS_UPDATE_PERIOD = isUseDefaultSettings
+        ? DEFAULT_FILTERS_UPDATE_PERIOD : DISABLE_FILTERS_UPDATE_PERIOD;
 
     api.getDisableStealthMode = getDisableStealthMode;
     api.getSelfDestructThirdPartyCookies = getSelfDestructThirdPartyCookies;

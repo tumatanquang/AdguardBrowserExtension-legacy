@@ -37,8 +37,7 @@ import { uiService } from '../../src/background/ui-service';
  * @type {{start, stop, configure}}
  */
 export const adguardApi = (function () {
-    function noopFunc() {
-    }
+    function noopFunc() {}
 
     /**
      * Validates filters identifiers
@@ -48,7 +47,7 @@ export const adguardApi = (function () {
         if (!filters || filters.length === 0) {
             return;
         }
-        for (let i = 0; i < filters.length; i += 1) {
+        for (let i = 0; i < filters.length; ++i) {
             const filterId = filters[i];
             if (typeof filterId !== 'number') {
                 throw new Error(`${filterId} is not a number`);
@@ -65,7 +64,7 @@ export const adguardApi = (function () {
         if (!domains || domains.length === 0) {
             return;
         }
-        for (let i = 0; i < domains.length; i += 1) {
+        for (let i = 0; i < domains.length; ++i) {
             const domain = domains[i];
             if (typeof domain !== 'string') {
                 throw new Error(`Domain ${domain} at position ${i} in ${prop} is not a string`);
@@ -100,7 +99,8 @@ export const adguardApi = (function () {
         if (configuration.blacklist) {
             allowlist.changeDefaultAllowlistMode(false);
             domains = configuration.blacklist;
-        } else {
+        }
+        else {
             allowlist.changeDefaultAllowlistMode(true);
             domains = configuration.whitelist;
         }
@@ -122,7 +122,7 @@ export const adguardApi = (function () {
         }
 
         const filterIds = (configuration.filters || []).slice(0);
-        for (let i = filterIds.length - 1; i >= 0; i -= 1) {
+        for (let i = filterIds.length; --i >= 0;) {
             const filterId = filterIds[i];
             const filter = subscriptions.getFilter(filterId);
             if (!filter) {
@@ -135,7 +135,7 @@ export const adguardApi = (function () {
 
         const enabledFilters = application.getEnabledFilters();
 
-        for (let i = 0; i < enabledFilters.length; i += 1) {
+        for (let i = 0; i < enabledFilters.length; ++i) {
             const filter = enabledFilters[i];
             if (filterIds.indexOf(filter.filterId) < 0) {
                 application.disableFilters([filter.filterId]);
@@ -173,7 +173,7 @@ export const adguardApi = (function () {
         }
         backend.configure({
             filtersMetadataUrl: configuration.filtersMetadataUrl,
-            filterRulesUrl: configuration.filterRulesUrl,
+            filterRulesUrl: configuration.filterRulesUrl
         });
     }
 
@@ -231,12 +231,12 @@ export const adguardApi = (function () {
     const initAssistant = function (tabId) {
         const assistantOptions = {
             addRuleCallbackName: 'assistant-create-rule',
-            token: uiService.getAssistantToken(),
+            token: uiService.getAssistantToken()
         };
 
         tabsApi.sendMessage(tabId, {
             type: 'initAssistant',
-            options: assistantOptions,
+            options: assistantOptions
         });
     };
 
@@ -249,7 +249,8 @@ export const adguardApi = (function () {
             // Load Assistant code to the active tab immediately
             await tabsApi.executeScriptFile(null, { file: '/adguard-assistant.js' });
             initAssistant(tabId);
-        } else {
+        }
+        else {
             // Manually start assistant
             initAssistant(tabId);
         }
@@ -261,14 +262,14 @@ export const adguardApi = (function () {
      */
     const closeAssistant = function (tabId) {
         tabsApi.sendMessage(tabId, {
-            type: 'destroyAssistant',
+            type: 'destroyAssistant'
         });
     };
 
     backend.configure({
         localFiltersFolder: 'adguard',
         redirectSourcesFolder: 'adguard',
-        localFilterIds: [],
+        localFilterIds: []
     });
 
     // Modules needed to be initiated
@@ -308,7 +309,7 @@ export const adguardApi = (function () {
         onRequestBlocked: webRequestService.onRequestBlocked,
         openAssistant,
         closeAssistant,
-        getAssistantToken: uiService.getAssistantToken,
+        getAssistantToken: uiService.getAssistantToken
     };
 })();
 

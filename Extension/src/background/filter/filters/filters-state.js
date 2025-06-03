@@ -38,7 +38,8 @@ export const filtersState = (function () {
             if (json) {
                 filters = JSON.parse(json);
             }
-        } catch (ex) {
+        }
+        catch (ex) {
             log.error('Error retrieve filters version info, cause {0}', ex);
         }
         return filters;
@@ -55,7 +56,8 @@ export const filtersState = (function () {
             if (json) {
                 filters = JSON.parse(json);
             }
-        } catch (ex) {
+        }
+        catch (ex) {
             log.error('Error retrieve filters state info, cause {0}', ex);
         }
         return filters;
@@ -72,7 +74,8 @@ export const filtersState = (function () {
             if (json) {
                 groups = JSON.parse(json);
             }
-        } catch (e) {
+        }
+        catch (e) {
             log.error('Error retrieve groups state info, cause {0}', e);
         }
         return groups;
@@ -89,7 +92,7 @@ export const filtersState = (function () {
             version: filter.version,
             lastCheckTime: filter.lastCheckTime,
             lastUpdateTime: filter.lastUpdateTime,
-            expires: filter.expires,
+            expires: filter.expires
         };
 
         localStorage.setItem(FILTERS_VERSION_PROP, JSON.stringify(filters));
@@ -105,7 +108,7 @@ export const filtersState = (function () {
         filters[filter.filterId] = {
             loaded: filter.loaded,
             enabled: filter.enabled,
-            installed: filter.installed,
+            installed: filter.installed
         };
         localStorage.setItem(FILTERS_STATE_PROP, JSON.stringify(filters));
     };
@@ -126,9 +129,10 @@ export const filtersState = (function () {
 
         if (typeof group.enabled === 'undefined') {
             delete groups[group.groupId].enabled;
-        } else {
+        }
+        else {
             groups[group.groupId] = {
-                enabled: group.enabled,
+                enabled: group.enabled
             };
         }
 
@@ -161,6 +165,6 @@ export const filtersState = (function () {
         // These methods are used only for migrate from old versions
         updateFilterVersion,
         updateFilterState,
-        removeFilter,
+        removeFilter
     };
 })();

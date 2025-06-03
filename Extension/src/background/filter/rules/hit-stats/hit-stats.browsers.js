@@ -46,7 +46,8 @@ const browsersHitStats = (function () {
             if (json) {
                 stats = JSON.parse(json);
             }
-        } catch (ex) {
+        }
+        catch (ex) {
             log.error('Error retrieve hit count statistic, cause {0}', ex);
         }
         return stats;
@@ -58,7 +59,7 @@ const browsersHitStats = (function () {
     const hitStatsHolder = {
         get hitStats() {
             return lazyGet(hitStatsHolder, 'hitStats', getHitCountStats);
-        },
+        }
     };
 
     /**
@@ -94,7 +95,8 @@ const browsersHitStats = (function () {
         throttleTimeoutId = setTimeout(() => {
             try {
                 localStorage.setItem(HITS_COUNT_PROP, JSON.stringify(stats));
-            } catch (ex) {
+            }
+            catch (ex) {
                 log.error('Error save hit count statistic to storage, cause {0}', ex);
             }
             sendStats();
@@ -122,7 +124,7 @@ const browsersHitStats = (function () {
             domains[domain] = domainInfo;
             domainInfo.views = 0;
         }
-        domainInfo.views += 1;
+        ++domainInfo.views;
         hitStatsHolder.hitStats.views = (hitStatsHolder.hitStats.views || 0) + 1;
 
         saveHitsCountStats(hitStatsHolder.hitStats);
@@ -172,7 +174,8 @@ const browsersHitStats = (function () {
             // Domain hits
             const domainHits = ruleInfo[requestDomain] || 0;
             ruleInfo[requestDomain] = domainHits + 1;
-        } else {
+        }
+        else {
             // Css hits
             const hits = ruleInfo[HITS_PROP] || 0;
             ruleInfo[HITS_PROP] = hits + 1;
@@ -201,7 +204,7 @@ const browsersHitStats = (function () {
         addRuleHit,
         addDomainView,
         cleanup,
-        getStats,
+        getStats
     };
 })();
 

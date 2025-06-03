@@ -16,7 +16,7 @@ class Messenger {
 
         const response = await browser.runtime.sendMessage({
             type,
-            data,
+            data
         });
 
         if (response) {
@@ -77,9 +77,7 @@ class Messenger {
             callback(...args);
         };
 
-        let { listenerId } = await this.sendMessage(
-            MESSAGE_TYPES.CREATE_EVENT_LISTENER, { events },
-        );
+        let { listenerId } = await this.sendMessage(MESSAGE_TYPES.CREATE_EVENT_LISTENER, { events });
 
         browser.runtime.onMessage.addListener((message) => {
             if (message.type === MESSAGE_TYPES.NOTIFY_LISTENERS) {
@@ -115,7 +113,7 @@ class Messenger {
         await browser.runtime.sendMessage({
             type: MESSAGE_TYPES.CHANGE_USER_SETTING,
             key: settingId,
-            value,
+            value
         });
     }
 
@@ -179,8 +177,7 @@ class Messenger {
         const type = data
             ? MESSAGE_TYPES.ENABLE_FILTERS_GROUP
             : MESSAGE_TYPES.DISABLE_FILTERS_GROUP;
-        const groupId = id - 0;
-        await this.sendMessage(type, { groupId });
+        await this.sendMessage(type, { id });
     }
 
     async updateFilterStatus(filterId, data) {
@@ -230,7 +227,7 @@ class Messenger {
         const [currentTab] = await browser.tabs.query({ active: true, currentWindow: true });
         return this.sendMessage(
             MESSAGE_TYPES.RESET_CUSTOM_RULES_FOR_PAGE,
-            { url, tabId: currentTab?.id },
+            { url, tabId: currentTab?.id }
         );
     }
 

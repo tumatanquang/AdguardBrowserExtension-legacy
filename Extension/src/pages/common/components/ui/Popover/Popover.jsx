@@ -8,15 +8,15 @@ const TOOLTIP_SHOW_DELAY_MS = 1000;
 /*
     Wrap child container for handle tooltips rendering in overlay on hover
 */
-export const Popover = ({
+export function Popover({
     text,
     delay,
     children,
     ...props
-}) => {
+}) {
     const [tooltip, setTooltip] = useState({
         visible: false,
-        position: null,
+        position: null
     });
 
     const timer = useRef();
@@ -36,8 +36,8 @@ export const Popover = ({
                 visible: true,
                 position: {
                     x: rect.left + window.scrollX,
-                    y: rect.bottom + window.scrollY,
-                },
+                    y: rect.bottom + window.scrollY
+                }
             });
         }, delay || TOOLTIP_SHOW_DELAY_MS);
     };
@@ -46,23 +46,23 @@ export const Popover = ({
         clearTimeout(timer.current);
         setTooltip({
             visible: false,
-            position: null,
+            position: null
         });
     };
 
     return (
         <div
-            className="popover"
+            className='popover'
             {...props}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
             {tooltip.visible && (
-                <AttachmentPortal rootId="root-portal" position={tooltip.position}>
+                <AttachmentPortal rootId='root-portal' position={tooltip.position}>
                     <Tooltip text={text} />
                 </AttachmentPortal>
             )}
             {children}
         </div>
     );
-};
+}

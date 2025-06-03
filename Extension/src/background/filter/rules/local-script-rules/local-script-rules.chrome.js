@@ -30,7 +30,7 @@ const localScriptRulesService = (function () {
 
     return {
         setLocalScriptRules,
-        isLocal,
+        isLocal
     };
 })();
 

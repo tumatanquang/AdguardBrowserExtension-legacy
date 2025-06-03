@@ -1,3 +1,5 @@
+export const SAFEBROWSING_LOOKUP_URL = 'https://sb.adtidy.org/safebrowsing-lookup-short-hash.html';
+export const LOCAL_FILTER_IDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 /**
  * Filter ids used in the code on the background page and filtering log page
  */
@@ -9,14 +11,19 @@ export const ANTIBANNER_FILTERS_ID = {
     TRACKING_FILTER_ID: 3,
     SOCIAL_FILTER_ID: 4,
     SEARCH_AND_SELF_PROMO_FILTER_ID: 10,
+    MOBILE_ADS_FILTER_ID: 11,
     URL_TRACKING_FILTER_ID: 17,
     ALLOWLIST_FILTER_ID: 100,
     EASY_PRIVACY: 118,
     FANBOY_ANNOYANCES: 122,
     FANBOY_SOCIAL: 123,
-    FANBOY_ENHANCED: 215,
-    MOBILE_ADS_FILTER_ID: 11,
+    FANBOY_ENHANCED: 215
 };
+
+export const DEFAULT_ANTIBANNER_FILTERS_ID = [
+    ANTIBANNER_FILTERS_ID.ENGLISH_FILTER_ID,
+    ANTIBANNER_FILTERS_ID.SEARCH_AND_SELF_PROMO_FILTER_ID
+];
 
 /**
  * Group ids used in the code on the multiple entry points
@@ -28,8 +35,14 @@ export const ANTIBANNER_GROUPS_ID = {
     // other filters group identifier
     OTHER_FILTERS_GROUP_ID: 6,
     // language-specific group identifier
-    LANGUAGE_FILTERS_GROUP_ID: 7,
+    LANGUAGE_FILTERS_GROUP_ID: 7
 };
+
+export const DEFAULT_ANTIBANNER_GROUPS_ID = [
+    ANTIBANNER_GROUPS_ID.CUSTOM_FILTERS_GROUP_ID,
+    ANTIBANNER_GROUPS_ID.OTHER_FILTERS_GROUP_ID,
+    ANTIBANNER_GROUPS_ID.LANGUAGE_FILTERS_GROUP_ID
+];
 
 /**
  * Stealth action bitwise masks used o the background page and on the filtering log page
@@ -41,7 +54,7 @@ export const STEALTH_ACTIONS = {
     SEND_DO_NOT_TRACK: 1 << 3,
     STRIPPED_TRACKING_URL: 1 << 4,
     FIRST_PARTY_COOKIES: 1 << 5,
-    THIRD_PARTY_COOKIES: 1 << 6,
+    THIRD_PARTY_COOKIES: 1 << 6
 };
 
 /**
@@ -101,6 +114,7 @@ export const MESSAGE_TYPES = {
     ADD_LONG_LIVED_CONNECTION: 'addLongLivedConnection',
     GET_OPTIONS_DATA: 'getOptionsData',
     CHANGE_USER_SETTING: 'changeUserSetting',
+    INITIALIZE_ONINSTALL_DEFAULT_FILTERS: 'initializeOnInstallDefaultFilters',
     CHECK_REQUEST_FILTER_READY: 'checkRequestFilterReady',
     OPEN_THANKYOU_PAGE: 'openThankYouPage',
     OPEN_SAFEBROWSING_TRUSTED: 'openSafebrowsingTrusted',
@@ -119,7 +133,7 @@ export const MESSAGE_TYPES = {
     GET_USER_RULES_EDITOR_DATA: 'getUserRulesEditorData',
     GET_EDITOR_STORAGE_CONTENT: 'getEditorStorageContent',
     SET_EDITOR_STORAGE_CONTENT: 'setEditorStorageContent',
-    CONVERT_RULES_TEXT: 'convertRulesText',
+    CONVERT_RULES_TEXT: 'convertRulesText'
 };
 
 export const NOTIFIER_TYPES = {
@@ -154,7 +168,7 @@ export const NOTIFIER_TYPES = {
     // Sync events
     SETTINGS_UPDATED: 'event.sync.finished',
     // Fullscreen user rules events
-    FULLSCREEN_USER_RULES_EDITOR_UPDATED: 'event.user.rules.editor.updated',
+    FULLSCREEN_USER_RULES_EDITOR_UPDATED: 'event.user.rules.editor.updated'
 };
 
 export const FULLSCREEN_USER_RULES_EDITOR = 'fullscreen_user_rules_editor';
@@ -162,7 +176,7 @@ export const FILTERING_LOG = 'filtering-log';
 
 export const NAVIGATION_TAGS = {
     REGULAR: 'regular',
-    PARTY: 'party',
+    PARTY: 'party'
 };
 
 /**

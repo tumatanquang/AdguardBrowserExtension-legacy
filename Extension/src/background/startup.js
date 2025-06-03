@@ -24,7 +24,7 @@ import { uiService } from './ui-service';
 import { application } from './application';
 import { browser } from './extension-api/browser';
 import { stealthService } from './filter/services/stealth-service';
-import { ANTIBANNER_GROUPS_ID } from '../common/constants';
+import { ADGUARD_UNINSTALL_URL } from '../pages/constants';
 
 /**
  * Extension initialize logic. Called from start.js
@@ -34,20 +34,19 @@ export const startup = async function () {
         log.info(
             'Starting adguard... Version: {0}. Id: {1}',
             backgroundPage.app.getVersion(),
-            backgroundPage.app.getId(),
+            backgroundPage.app.getId()
         );
 
         // Initialize popup button
         backgroundPage.browserAction.setPopup({
-            popup: backgroundPage.getURL('pages/popup.html'),
+            popup: backgroundPage.getURL('pages/popup.html')
         });
 
         // Set uninstall page url
-        // eslint-disable-next-line max-len
-        const uninstallUrl = 'https://link.adtidy.org/forward.html?action=adguard_uninstal_ext&from=background&app=browser_extension';
         try {
-            await browser.runtime.setUninstallURL(uninstallUrl);
-        } catch (e) {
+            await browser.runtime.setUninstallURL(ADGUARD_UNINSTALL_URL);
+        }
+        catch (e) {
             log.error(e);
         }
 
@@ -60,19 +59,13 @@ export const startup = async function () {
          * Start application
          */
         application.start({
+            // Process installation
             async onInstall() {
-                // Process installation
                 /**
                  * Show UI installation page
                  */
                 uiService.openFiltersDownloadPage();
-
-                // Retrieve filters and install them
-                const filterIds = application.offerFilters();
-                await application.addAndEnableFilters(filterIds);
-                // enable language-specific group by default
-                await application.enableGroup(ANTIBANNER_GROUPS_ID.LANGUAGE_FILTERS_GROUP_ID);
-            },
+            }
         });
     }
 

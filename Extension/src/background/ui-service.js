@@ -15,8 +15,6 @@
  * along with Adguard Browser Extension. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* eslint-disable max-len */
-
 import { nanoid } from 'nanoid';
 
 import { application } from './application';
@@ -37,7 +35,14 @@ import { log } from '../common/log';
 import { runtimeImpl } from '../common/common-script';
 import { MESSAGE_TYPES, ANTIBANNER_FILTERS_ID } from '../common/constants';
 import { translator } from '../common/translators/translator';
-import { COMPARE_URL } from '../pages/constants';
+import {
+    ADGUARD_EXTENSION_STORE_URL,
+    ADGUARD_OPEN_SITE_REPORT_URL,
+    ADGUARD_OFFER_BUTTON_URL,
+    ADGUARD_CHANGELOG_URL,
+    THANKYOU_PAGE_URL,
+    COMPARE_URL
+} from '../pages/constants';
 
 /**
  * UI service
@@ -102,25 +107,28 @@ export const uiService = (function () {
         },
         'context_update_antibanner_filters': function () {
             checkFiltersUpdates();
-        },
+        }
     };
 
     const extensionStoreLink = (function () {
-        let browser = 'chrome';
+        let browser;
         if (browserUtils.isOperaBrowser()) {
             browser = 'opera';
-        } else if (browserUtils.isFirefoxBrowser()) {
+        }
+        else if (browserUtils.isFirefoxBrowser()) {
             browser = 'firefox';
-        } else if (browserUtils.isEdgeChromiumBrowser()) {
+        }
+        else if (browserUtils.isEdgeChromiumBrowser()) {
             browser = 'edge';
         }
+        else {
+            browser = 'chrome';
+        }
 
-        const action = `${browser}_store`;
+        browser = `${browser}_store`;
 
-        return `https://link.adtidy.org/forward.html?action=${action}&from=options_screen&app=browser_extension`;
+        return ADGUARD_EXTENSION_STORE_URL(browser);
     })();
-
-    const THANKYOU_PAGE_URL = 'https://link.adtidy.org/forward.html?action=thank_you_page&from=background&app=browser_extension';
 
     /**
      * Update icon for tab
@@ -128,35 +136,34 @@ export const uiService = (function () {
      * @param options Options for icon or badge values
      */
     async function updateTabIcon(tab, options) {
-        let icon;
-        let badge;
-        let badgeColor = '#555';
-
         if (tab.tabId === BACKGROUND_TAB_ID) {
             return;
         }
 
         try {
+            let icon;
+            let badge;
+            let badgeColor = '#555';
             if (options) {
                 icon = options.icon;
                 badge = options.badge;
-            } else {
-                let blocked;
-                let disabled;
-
+            }
+            else {
                 const tabInfo = frames.getFrameInfo(tab);
-                disabled = tabInfo.applicationFilteringDisabled;
-                disabled = disabled || tabInfo.documentAllowlisted;
+                const disabled = tabInfo.applicationFilteringDisabled || tabInfo.documentAllowlisted;
 
+                let blocked;
                 if (!disabled && settings.showPageStatistic()) {
                     blocked = tabInfo.totalBlockedTab.toString();
-                } else {
+                }
+                else {
                     blocked = '0';
                 }
 
                 if (disabled) {
                     icon = prefs.ICONS.ICON_GRAY;
-                } else {
+                }
+                else {
                     icon = prefs.ICONS.ICON_GREEN;
                 }
 
@@ -173,7 +180,8 @@ export const uiService = (function () {
                     if (hasSpecialIcons) {
                         if (disabled) {
                             icon = notification.icons.ICON_GRAY;
-                        } else {
+                        }
+                        else {
                             icon = notification.icons.ICON_GREEN;
                         }
                     }
@@ -181,7 +189,8 @@ export const uiService = (function () {
             }
 
             await backgroundPage.browserAction.setBrowserAction(tab, icon, badge, badgeColor, browserActionTitle);
-        } catch (ex) {
+        }
+        catch (ex) {
             log.error('Error while updating icon for tab {0}: {1}', tab.tabId, new Error(ex));
         }
     }
@@ -217,7 +226,7 @@ export const uiService = (function () {
 
         runtimeImpl.sendMessage({
             type: 'updateTotalBlocked',
-            tabInfo,
+            tabInfo
         }).catch(() => {
             // throws errors if popup is closed, ignore them
         });
@@ -235,7 +244,7 @@ export const uiService = (function () {
     function addMenu(title, options) {
         const createProperties = {
             contexts: ['all'],
-            title: translator.getMessage(title),
+            title: translator.getMessage(title)
         };
         if (options) {
             if (options.id) {
@@ -263,7 +272,8 @@ export const uiService = (function () {
         let callback;
         if (options && options.action) {
             callback = contextMenuCallbackMappings[options.action];
-        } else {
+        }
+        else {
             callback = contextMenuCallbackMappings[title];
         }
         if (typeof callback === 'function') {
@@ -276,7 +286,7 @@ export const uiService = (function () {
         function addSeparator() {
             backgroundPage.contextMenus.create({
                 type: 'separator',
-                contexts: ['all'],
+                contexts: ['all']
             });
         }
 
@@ -288,19 +298,23 @@ export const uiService = (function () {
             addMenu('context_open_log');
             addMenu('context_open_settings');
             addMenu('context_enable_protection');
-        } else if (tabInfo.urlFilteringDisabled) {
+        }
+        else if (tabInfo.urlFilteringDisabled) {
             addMenu('context_site_filtering_disabled');
             addSeparator();
             addMenu('context_open_log');
             addMenu('context_open_settings');
             addMenu('context_update_antibanner_filters');
-        } else {
+        }
+        else {
             if (tabInfo.documentAllowlisted && !tabInfo.userAllowlisted) {
                 addMenu('context_site_exception');
-            } else if (tabInfo.canAddRemoveRule) {
+            }
+            else if (tabInfo.canAddRemoveRule) {
                 if (tabInfo.documentAllowlisted) {
                     addMenu('context_site_filtering_on');
-                } else {
+                }
+                else {
                     addMenu('context_site_filtering_off');
                 }
             }
@@ -328,35 +342,39 @@ export const uiService = (function () {
             addMenu('popup_site_protection_disabled_android', {
                 action: 'context_enable_protection',
                 checked: true,
-                checkable: true,
+                checkable: true
             });
             addMenu('popup_open_log_android', { action: 'context_open_log' });
             addMenu('popup_open_settings', { action: 'context_open_settings' });
-        } else if (tabInfo.urlFilteringDisabled) {
+        }
+        else if (tabInfo.urlFilteringDisabled) {
             addMenu('context_site_filtering_disabled');
             addMenu('popup_open_log_android', { action: 'context_open_log' });
             addMenu('popup_open_settings', { action: 'context_open_settings' });
             addMenu('context_update_antibanner_filters');
-        } else {
+        }
+        else {
             addMenu('popup_site_protection_disabled_android', {
                 action: 'context_disable_protection',
                 checked: false,
-                checkable: true,
+                checkable: true
             });
             if (tabInfo.documentAllowlisted && !tabInfo.userAllowlisted) {
                 addMenu('popup_in_allowlist_android');
-            } else if (tabInfo.canAddRemoveRule) {
+            }
+            else if (tabInfo.canAddRemoveRule) {
                 if (tabInfo.documentAllowlisted) {
                     addMenu('popup_site_filtering_state', {
                         action: 'context_site_filtering_on',
                         checkable: true,
-                        checked: false,
+                        checked: false
                     });
-                } else {
+                }
+                else {
                     addMenu('popup_site_filtering_state', {
                         action: 'context_site_filtering_off',
                         checkable: true,
-                        checked: true,
+                        checked: true
                     });
                 }
             }
@@ -384,7 +402,8 @@ export const uiService = (function () {
         if (settings.showContextMenu()) {
             if (prefs.mobile) {
                 customizeMobileContextMenu(tab);
-            } else {
+            }
+            else {
                 customizeContextMenu(tab);
             }
             if (typeof backgroundPage.contextMenus.render === 'function') {
@@ -411,12 +430,13 @@ export const uiService = (function () {
         let parsedUrl;
         try {
             parsedUrl = new URL(url);
-        } catch (e) {
+        }
+        catch (e) {
             log.error(e);
             return false;
         }
         const schemeUrl = backgroundPage.app.getUrlScheme();
-        return parsedUrl.protocol.indexOf(schemeUrl) > -1;
+        return parsedUrl.protocol.indexOf(schemeUrl) >= 0;
     };
 
     const showAlertMessagePopup = async (title, text, alertStyles) => {
@@ -430,7 +450,7 @@ export const uiService = (function () {
                 title,
                 text,
                 alertStyles,
-                alertContainerStyles,
+                alertContainerStyles
             });
         }
     };
@@ -469,7 +489,7 @@ export const uiService = (function () {
 
         let offer = translator.getMessage('options_popup_version_update_offer');
         let offerDesc = '';
-        let offerButtonHref = 'https://link.adtidy.org/forward.html?action=learn_about_adguard&from=version_popup&app=browser_extension';
+        let offerButtonHref;
         let offerButtonText = translator.getMessage('options_popup_version_update_offer_button_text');
 
         if (promoNotification) {
@@ -478,12 +498,15 @@ export const uiService = (function () {
             offerButtonText = promoNotification.text.btn;
             offerButtonHref = `${promoNotification.url}&from=version_popup`;
         }
+        else {
+            offerButtonHref = ADGUARD_OFFER_BUTTON_URL;
+        }
 
         const message = {
             type: 'show-version-updated-popup',
             title: translator.getMessage('options_popup_version_update_title_text', { current_version: currentVersion }),
             description: getUpdateDescriptionMessage(currentVersion, previousVersion),
-            changelogHref: 'https://link.adtidy.org/forward.html?action=github_version_popup&from=version_popup&app=browser_extension',
+            changelogHref: ADGUARD_CHANGELOG_URL,
             changelogText: translator.getMessage('options_popup_version_update_changelog_text'),
             showPromoNotification: !!promoNotification,
             offer,
@@ -492,7 +515,7 @@ export const uiService = (function () {
             offerButtonHref,
             disableNotificationText: translator.getMessage('options_popup_version_update_disable_notification'),
             alertStyles,
-            updateIframeStyles,
+            updateIframeStyles
         };
 
         await sendMessageToActiveTab(message);
@@ -515,8 +538,7 @@ export const uiService = (function () {
             return;
         }
 
-        sendMessageTries += 1;
-        if (sendMessageTries > MAX_TRIES) {
+        if (++sendMessageTries > MAX_TRIES) {
             // Give up trying
             log.warn('Reached max tries on attempts to show application popup');
             return;
@@ -543,13 +565,14 @@ export const uiService = (function () {
     };
 
     function getFiltersUpdateResultMessage(success, updatedFilters) {
-        let title = '';
-        let text = '';
+        let title;
+        let text;
         if (success && updatedFilters) {
             if (updatedFilters.length === 0) {
                 title = '';
                 text = translator.getMessage('options_popup_update_not_found');
-            } else {
+            }
+            else {
                 title = '';
                 text = updatedFilters
                     .sort((a, b) => {
@@ -562,18 +585,20 @@ export const uiService = (function () {
                     .join(', ');
                 if (updatedFilters.length > 1) {
                     text += ` ${translator.getMessage('options_popup_update_filters')}`;
-                } else {
+                }
+                else {
                     text += ` ${translator.getMessage('options_popup_update_filter')}`;
                 }
             }
-        } else {
+        }
+        else {
             title = translator.getMessage('options_popup_update_title_error');
             text = translator.getMessage('options_popup_update_error');
         }
 
         return {
             title,
-            text,
+            text
         };
     }
 
@@ -581,16 +606,16 @@ export const uiService = (function () {
         const title = translator.getMessage('alert_popup_filter_enabled_title');
         const text = [];
         enabledFilters.sort((a, b) => a.displayNumber - b.displayNumber);
-        for (let i = 0; i < enabledFilters.length; i += 1) {
+        for (let i = 0; i < enabledFilters.length; ++i) {
             const filter = enabledFilters[i];
             text.push(translator.getMessage(
                 'alert_popup_filter_enabled_desc',
-                { filter_name: filter.name },
+                { filter_name: filter.name }
             ));
         }
         return {
             title,
-            text,
+            text
         };
     }
 
@@ -627,7 +652,7 @@ export const uiService = (function () {
 
         const options = {
             activateSameTab: true,
-            hashParameters,
+            hashParameters
         };
 
         openTab(getPageUrl('options.html'), options);
@@ -636,7 +661,7 @@ export const uiService = (function () {
     const openSiteReportTab = function (url) {
         const domain = utils.url.toPunyCode(utils.url.getDomainName(url));
         if (domain) {
-            openTab(`https://link.adtidy.org/forward.html?action=site_report_page&domain=${encodeURIComponent(domain)}&from=context_menu&app=browser_extension`);
+            openTab(ADGUARD_OPEN_SITE_REPORT_URL(encodeURIComponent(domain), 'context_menu'));
         }
     };
 
@@ -654,13 +679,13 @@ export const uiService = (function () {
             {
                 queryKey: 'third_party_cookies',
                 settingKey: settings.SELF_DESTRUCT_THIRD_PARTY_COOKIES,
-                settingValueKey: settings.SELF_DESTRUCT_THIRD_PARTY_COOKIES_TIME,
+                settingValueKey: settings.SELF_DESTRUCT_THIRD_PARTY_COOKIES_TIME
             },
             {
                 queryKey: 'first_party_cookies',
                 settingKey: settings.SELF_DESTRUCT_FIRST_PARTY_COOKIES,
-                settingValueKey: settings.SELF_DESTRUCT_FIRST_PARTY_COOKIES_TIME,
-            },
+                settingValueKey: settings.SELF_DESTRUCT_FIRST_PARTY_COOKIES_TIME
+            }
         ];
 
         const stealthEnabled = !settings.getProperty(settings.DISABLE_STEALTH_MODE);
@@ -672,23 +697,23 @@ export const uiService = (function () {
         let stealthOptionsString = stealthOptions.map((option) => {
             const { queryKey, settingKey, settingValueKey } = option;
             const setting = settings.getProperty(settingKey);
-            let settingString;
             if (!setting) {
                 return '';
             }
+            let settingString;
             if (!settingValueKey) {
                 settingString = setting;
-            } else {
+            }
+            else {
                 settingString = settings.getProperty(settingValueKey);
             }
             return `stealth.${queryKey}=${encodeURIComponent(settingString)}`;
         })
-            .filter(string => string.length > 0)
+            .filter(string => string.length !== 0)
             .join('&');
 
         // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1937
-        const isRemoveUrlParamsEnabled = filterIds.includes(ANTIBANNER_FILTERS_ID.URL_TRACKING_FILTER_ID);
-        if (isRemoveUrlParamsEnabled) {
+        if (filterIds.includes(ANTIBANNER_FILTERS_ID.URL_TRACKING_FILTER_ID)) {
             stealthOptionsString = `${stealthOptionsString}&stealth.strip_url=true`;
         }
 
@@ -715,12 +740,11 @@ export const uiService = (function () {
             return rowUrl;
         }
 
-        if (rowUrl.indexOf('#') > -1) {
+        if (rowUrl.indexOf('#') >= 0) {
             log.warn(`Hash parameters can't be applied to the url with hash: '${rowUrl}'`);
             return rowUrl;
         }
 
-        let hashPart;
         const { anchor } = hashParameters;
 
         if (anchor) {
@@ -731,12 +755,13 @@ export const uiService = (function () {
             .map(key => `${key}=${hashParameters[key]}`)
             .join('&');
 
-        if (hashString.length <= 0) {
-            hashPart = anchor && anchor.length > 0 ? `#${anchor}` : '';
+        let hashPart;
+        if (hashString.length === 0) {
+            hashPart = anchor && anchor.length !== 0 ? `#${anchor}` : '';
             return rowUrl + hashPart;
         }
 
-        hashPart = anchor && anchor.length > 0 ? `replacement=${anchor}&${hashString}` : hashString;
+        hashPart = anchor && anchor.length !== 0 ? `replacement=${anchor}&${hashString}` : hashString;
         hashPart = encodeURIComponent(hashPart);
         return `${rowUrl}#${hashPart}`;
     };
@@ -752,7 +777,7 @@ export const uiService = (function () {
             height,
             top,
             left,
-            isFullscreen,
+            isFullscreen
         } = options;
 
         url = appendHashParameters(url, hashParameters);
@@ -771,7 +796,7 @@ export const uiService = (function () {
         const tabs = await tabsApi.getAll();
         // try to find between opened tabs
         if (activateSameTab) {
-            for (let i = 0; i < tabs.length; i += 1) {
+            for (let i = 0; i < tabs.length; ++i) {
                 const tab = tabs[i];
                 if (utils.url.urlEquals(tab.url, url)) {
                     return onTabFound(tab);
@@ -788,7 +813,7 @@ export const uiService = (function () {
             height,
             top,
             left,
-            isFullscreen,
+            isFullscreen
         });
 
         return tab;
@@ -806,7 +831,8 @@ export const uiService = (function () {
         const supportedBrowsers = ['Chrome', 'Firefox', 'Opera', 'Safari', 'IE', 'Edge'];
         if (supportedBrowsers.includes(prefs.browser)) {
             browser = prefs.browser;
-        } else {
+        }
+        else {
             browser = 'Other';
             browserDetails = prefs.browser;
         }
@@ -814,13 +840,13 @@ export const uiService = (function () {
         const filterIds = application.getEnabledFiltersFromEnabledGroups()
             .map(filter => filter.filterId);
 
-        openTab(`https://link.adtidy.org/forward.html?action=report&from=${from}&app=browser_extension&product_type=Ext&product_version=${encodeURIComponent(backgroundPage.app.getVersion())
-        }&browser=${encodeURIComponent(browser)
-        }${browserDetails ? `&browser_detail=${encodeURIComponent(browserDetails)}` : ''
-        }&url=${encodeURIComponent(url)
-        }&filters=${encodeURIComponent(filterIds.join('.'))
-        }${getStealthString(filterIds)
-        }${getBrowserSecurityString()}`);
+        openTab(`https://link.adtidy.org/forward.html?action=report&from=${from}&app=browser_extension
+        &product_type=Ext&product_version=${encodeURIComponent(backgroundPage.app.getVersion())}
+        &browser=${encodeURIComponent(browser)}
+        ${browserDetails ? `&browser_detail=${encodeURIComponent(browserDetails)}` : ''}
+        &url=${encodeURIComponent(url)}
+        &filters=${encodeURIComponent(filterIds.join('.'))}
+        ${getStealthString(filterIds)}${getBrowserSecurityString()}`);
     };
 
     const openFilteringLog = async function (tabId) {
@@ -829,7 +855,7 @@ export const uiService = (function () {
         const options = {
             activateSameTab: true,
             type: 'popup',
-            ...windowState,
+            ...windowState
         };
 
         if (!tabId) {
@@ -866,7 +892,7 @@ export const uiService = (function () {
         const tabs = await tabsApi.getAll();
 
         // Finds the filter-download page and reload it within the thank-you page URL
-        for (let i = 0; i < tabs.length; i += 1) {
+        for (let i = 0; i < tabs.length; ++i) {
             const tab = tabs[i];
             if (tab.url === filtersDownloadUrl) {
                 tabsApi.activate(tab.tabId);
@@ -939,12 +965,14 @@ export const uiService = (function () {
             if (showPopup) {
                 listeners.notifyListeners(showPopupEvent, true, updatedFilters);
                 listeners.notifyListeners(listeners.FILTERS_UPDATE_CHECK_READY, updatedFilters);
-            } else if (updatedFilters && updatedFilters.length > 0) {
+            }
+            else if (updatedFilters && updatedFilters.length !== 0) {
                 const updatedFilterStr = updatedFilters.map(f => `Filter ID: ${f.filterId}`).join(', ');
                 log.info(`Filters were auto updated: ${updatedFilterStr}`);
             }
             return updatedFilters;
-        } catch (e) {
+        }
+        catch (e) {
             if (showPopup) {
                 listeners.notifyListeners(showPopupEvent, false);
                 listeners.notifyListeners(listeners.FILTERS_UPDATE_CHECK_READY);
@@ -965,7 +993,7 @@ export const uiService = (function () {
         const options = {
             addRuleCallbackName: MESSAGE_TYPES.CONTENT_SCRIPT_ADD_USER_RULE,
             selectElement,
-            token: getAssistantToken(),
+            token: getAssistantToken()
         };
 
         // init assistant
@@ -973,7 +1001,7 @@ export const uiService = (function () {
         if (tab) {
             tabsApi.sendMessage(tab.tabId, {
                 type: 'initAssistant',
-                options,
+                options
             });
         }
     };
@@ -1148,6 +1176,6 @@ export const uiService = (function () {
 
         showAlertMessagePopup,
 
-        getAssistantToken,
+        getAssistantToken
     };
 })();

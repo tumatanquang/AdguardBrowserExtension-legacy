@@ -20,7 +20,7 @@ export class OptionsStorage {
         /**
          * Request modal width
          */
-        REQUEST_INFO_MODAL_WIDTH: 'request-info-modal-width',
+        REQUEST_INFO_MODAL_WIDTH: 'request-info-modal-width'
     };
 
     DEFAULTS = {
@@ -32,8 +32,8 @@ export class OptionsStorage {
             type: { width: 100 },
             rule: { width: 260 },
             filter: { width: 260 },
-            source: { width: 200 },
-        },
+            source: { width: 200 }
+        }
     };
 
     constructor() {
@@ -43,7 +43,8 @@ export class OptionsStorage {
     setItem(key, value) {
         try {
             this.storage.setItem(key, JSON.stringify(value));
-        } catch (e) {
+        }
+        catch (e) {
             log.debug(e);
         }
     }
@@ -52,7 +53,8 @@ export class OptionsStorage {
         let storedValue;
         try {
             storedValue = JSON.parse(this.storage.getItem(key));
-        } catch (e) {
+        }
+        catch (e) {
             log.debug(e);
             storedValue = null;
         }

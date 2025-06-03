@@ -6,8 +6,44 @@ import { isMacOs } from '../../../../common/user-agent-utils';
 
 import './search.pcss';
 
+function SearchControl({
+    value, select, onOpenSelect, onClear
+}) {
+    if (value && !select) {
+        return (
+            <button
+                type='button'
+                className='search__clear'
+                aria-label={reactTranslator.getMessage('close_button_title')}
+                onClick={onClear}
+            >
+                <Icon id='#cross' classname='search__cross' />
+            </button>
+        );
+    }
+
+    if (select) {
+        return (
+            <button
+                type='button'
+                className='search__btn'
+            >
+                <Icon
+                    id='#arrow-bottom'
+                    classname={cn(
+                        'search__ico',
+                        onOpenSelect ? 'search__arrow-up' : 'search__arrow-down'
+                    )}
+                />
+            </button>
+        );
+    }
+
+    return <Icon id='#magnifying' classname='search__ico' />;
+}
+
 const Search = forwardRef(({
-    changeHandler, handleClear, onFocus, value, placeholder, select, onOpenSelect,
+    changeHandler, handleClear, onFocus, value, placeholder, select, onOpenSelect
 }, passedRef) => {
     const localSearchInputRef = useRef(null);
 
@@ -43,57 +79,28 @@ const Search = forwardRef(({
         }
     };
 
-    const Control = () => {
-        if (value && !select) {
-            return (
-                <button
-                    type="button"
-                    className="search__clear"
-                    aria-label={reactTranslator.getMessage('close_button_title')}
-                    onClick={onClear}
-                >
-                    <Icon id="#cross" classname="search__cross" />
-                </button>
-            );
-        }
-
-        if (select) {
-            return (
-                <button
-                    type="button"
-                    className="search__btn"
-                >
-                    <Icon
-                        id="#arrow-bottom"
-                        classname={cn(
-                            'search__ico',
-                            onOpenSelect ? 'search__arrow-up' : 'search__arrow-down',
-                        )}
-                    />
-                </button>
-            );
-        }
-
-        return <Icon id="#magnifying" classname="search__ico" />;
-    };
-
     return (
         <form
-            className="search"
+            className='search'
             onSubmit={onSubmit}
         >
-            <Control />
+            <SearchControl
+                value={value}
+                select={select}
+                onOpenSelect={onOpenSelect}
+                onClear={onClear}
+            />
             <input
-                type="text"
-                id="log-search"
-                name="log-search"
-                className="search__input"
+                type='text'
+                id='log-search'
+                name='log-search'
+                className='search__input'
                 placeholder={placeholder}
                 ref={passedRef || localSearchInputRef}
                 onChange={onChange}
                 onFocus={onFocus}
                 value={value}
-                autoComplete="off"
+                autoComplete='off'
             />
         </form>
     );

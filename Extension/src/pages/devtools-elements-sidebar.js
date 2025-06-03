@@ -29,7 +29,7 @@ export const devtoolsElementsSidebar = (() => {
 
         const onElementSelected = function () {
             browser.devtools.inspectedWindow.eval('DevToolsRulesConstructor.getElementInfo($0)', {
-                useContentScriptContext: true,
+                useContentScriptContext: true
             }, (info) => {
                 if (!info) {
                     return;
@@ -47,7 +47,7 @@ export const devtoolsElementsSidebar = (() => {
                 updateRule();
                 handleShowBlockSettings(
                     info.haveUrlBlockParameter,
-                    info.haveClassAttribute && !info.haveIdAttribute,
+                    info.haveClassAttribute && !info.haveIdAttribute
                 );
                 setupAttributesInfo(info);
             });
@@ -79,8 +79,8 @@ export const devtoolsElementsSidebar = (() => {
         document.querySelector('#one-domain-checkbox').checked = true;
         document.querySelector('#filter-rule-text').value = '';
 
-        const placeholder = document.getElementById('attributes-block');
-        while (placeholder.firstChild) {
+        for (const placeholder = document.getElementById('attributes-block');
+            placeholder.firstChild;) {
             placeholder.removeChild(placeholder.firstChild);
         }
     };
@@ -155,7 +155,8 @@ export const devtoolsElementsSidebar = (() => {
             checkboxes.forEach((checkbox) => {
                 checkbox.setAttribute('disabled', 'disabled');
             });
-        } else {
+        }
+        else {
             checkboxes.forEach((checkbox) => {
                 checkbox.removeAttribute('disabled');
             });
@@ -165,14 +166,16 @@ export const devtoolsElementsSidebar = (() => {
     const handleShowBlockSettings = function (showBlockByUrl, createFullCssPath) {
         if (showBlockByUrl) {
             document.querySelector('#block-by-url-checkbox-block').style.display = 'block';
-        } else {
+        }
+        else {
             document.querySelector('#block-by-url-checkbox').checked = false;
             document.querySelector('#block-by-url-checkbox-block').style.display = 'none';
         }
         if (createFullCssPath) {
             document.querySelector('#create-full-css-path-block').style.display = 'block';
             document.querySelector('#create-full-css-path').checked = false;
-        } else {
+        }
+        else {
             document.querySelector('#create-full-css-path').checked = true;
             document.querySelector('#create-full-css-path-block').style.display = 'none';
         }
@@ -205,27 +208,29 @@ export const devtoolsElementsSidebar = (() => {
             placeholder.appendChild(createAttributeElement('tag', info.tagName.toLowerCase(), true));
         }
 
-        for (let i = 0; i < info.attributes.length; i += 1) {
+        for (let i = 0; i < info.attributes.length; ++i) {
             const attribute = info.attributes[i];
 
             if (attribute.name === 'class' && attribute.value) {
                 const split = attribute.value.split(' ');
-                for (let j = 0; j < split.length; j += 1) {
+                for (let j = 0; j < split.length; ++j) {
                     const value = split[j];
                     if (value) { // Skip empty values. Like 'class1 class2   '
                         placeholder.appendChild(
-                            createAttributeElement(attribute.name, value, true),
+                            createAttributeElement(attribute.name, value, true)
                         );
                     }
                 }
-            } else {
+            }
+            else {
                 placeholder.appendChild(createAttributeElement(attribute.name, attribute.value, attribute.name === 'id'));
             }
         }
 
         if (placeholder.childNodes.length > 2) {
             document.querySelector('#select-attributes-checkbox').style.display = 'inline';
-        } else {
+        }
+        else {
             document.querySelector('#select-attributes-checkbox').style.display = 'none';
         }
     };
@@ -250,13 +255,16 @@ export const devtoolsElementsSidebar = (() => {
                 const attrName = el.id.substring('attribute-check-box-'.length);
                 if (attrName === 'tag') {
                     includeTagName = el.checked;
-                } else if (attrName === 'id') {
+                }
+                else if (attrName === 'id') {
                     includeElementId = el.checked;
-                } else if (el.checked) {
+                }
+                else if (el.checked) {
                     const attrValue = el.parentNode.querySelector('.attribute-check-box-value').innerText;
                     if (attrName === 'class') {
                         selectedClasses.push(attrValue);
-                    } else {
+                    }
+                    else {
                         attributesSelector += `[${attrName}="${attrValue}"]`;
                     }
                 }
@@ -272,12 +280,12 @@ export const devtoolsElementsSidebar = (() => {
             attributes: attributesSelector,
             excludeTagName: !includeTagName,
             excludeId: !includeElementId,
-            classList: selectedClasses,
+            classList: selectedClasses
         };
 
         const func = `DevToolsRulesConstructor.constructRuleText($0, ${JSON.stringify(options)});`;
         browser.devtools.inspectedWindow.eval(func, {
-            useContentScriptContext: true,
+            useContentScriptContext: true
         }, (result) => {
             if (result) {
                 document.getElementById('filter-rule-text').value = result;
@@ -305,7 +313,7 @@ export const devtoolsElementsSidebar = (() => {
     const addRule = async (ruleText) => {
         browser.runtime.sendMessage({
             type: MESSAGE_TYPES.DEVTOOLS_ADD_USER_RULE,
-            data: { ruleText },
+            data: { ruleText }
         });
     };
 
@@ -334,6 +342,6 @@ export const devtoolsElementsSidebar = (() => {
     };
 
     return {
-        init,
+        init
     };
 })();

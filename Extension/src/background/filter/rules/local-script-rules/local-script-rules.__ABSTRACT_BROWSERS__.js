@@ -26,7 +26,7 @@ const errorFunction = () => {
 const localScriptRulesService = (function () {
     return {
         setLocalScriptRules: errorFunction,
-        isLocal: errorFunction,
+        isLocal: errorFunction
     };
 })();
 

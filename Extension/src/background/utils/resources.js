@@ -45,8 +45,8 @@ export const resources = (function () {
         // eslint-disable-next-line consistent-return
         const guard = function (details) {
             const { url } = details;
-            const pos = secrets.findIndex(secret => url.lastIndexOf(`?secret=${secret}`) !== -1);
-            if (pos === -1) {
+            const pos = secrets.findIndex(secret => url.lastIndexOf(`?secret=${secret}`) >= 0);
+            if (pos < 0) {
                 return { redirectUrl: root };
             }
             secrets.splice(pos, 1);
@@ -55,16 +55,17 @@ export const resources = (function () {
         browser.webRequest.onBeforeRequest.addListener(
             guard,
             {
-                urls: [`${root}${WEB_ACCESSIBLE_RESOURCES}/*`],
+                urls: [`${root}${WEB_ACCESSIBLE_RESOURCES}/*`]
             },
-            ['blocking'],
+            ['blocking']
         );
 
         return () => {
             if (secrets.length !== 0) {
-                if ((Date.now() - lastSecretTime) > 5000) {
+                if (Date.now() - lastSecretTime > 5000) {
                     secrets.splice(0);
-                } else if (secrets.length > 256) {
+                }
+                else if (secrets.length > 256) {
                     secrets.splice(0, secrets.length - 192);
                 }
             }
@@ -107,6 +108,6 @@ export const resources = (function () {
     // EXPOSE
     return {
         loadResource,
-        createRedirectFileUrl,
+        createRedirectFileUrl
     };
 })();

@@ -114,6 +114,6 @@ export const redirectService = (function () {
         init,
         hasRedirect,
         createRedirectUrl,
-        getBlockingRedirects,
+        getBlockingRedirects
     };
 })();

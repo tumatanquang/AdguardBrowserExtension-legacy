@@ -39,7 +39,7 @@ const apiFilteringLog = {
     onCloseFilteringLogPage: notImplemented,
 
     isPreserveLogEnabled: notImplemented,
-    setPreserveLogState: notImplemented,
+    setPreserveLogState: notImplemented
 };
 
 export default apiFilteringLog;

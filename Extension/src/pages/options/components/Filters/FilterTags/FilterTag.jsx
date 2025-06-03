@@ -18,7 +18,7 @@ export const FilterTag = observer(({ tag }) => {
 
     return (
         <div
-            className="filter__tag"
+            className='filter__tag'
             onClick={handleClick}
         >
             <HighlightSearch string={tagString} />

@@ -22,7 +22,6 @@ describe('safebrowsing', () => {
         const hosts = safebrowsing.extractHosts(host);
         const hashes = safebrowsing.createHashesMap(hosts);
 
-        // eslint-disable-next-line max-len
         const sbList = safebrowsing.processSbResponse('adguard-phishing-shavar:37654:B8DC93970348F0A3E6856C32AC5C04D5655E5EE17D4169EC51A2102FB6D5E12A\nadguard-malware-shavar:35176:AE617C8343E1C79E27515B3F6D6D26413FCE47AE32A73488F9D033B4D2A46B3D\nadguard-phishing-shavar:35071:AE617C8343E1C79E27515B3F6D6D26413FCE47AE32A73488F9D033B4D2A46B3D', hashes);
 
         expect(sbList).toBe('adguard-phishing-shavar');
@@ -32,7 +31,7 @@ describe('safebrowsing', () => {
         let counter = 0;
         // Mock backend request
         jest.spyOn(backend, 'lookupSafebrowsing').mockImplementation(() => {
-            counter += 1;
+            ++counter;
 
             return Promise.resolve({ status: 204 });
         });
@@ -54,11 +53,11 @@ describe('safebrowsing', () => {
 
         // Mock backend request
         jest.spyOn(backend, 'lookupSafebrowsing').mockImplementation((shortHashes) => {
-            counter += 1;
+            ++counter;
             hashesChecked = shortHashes;
 
             return Promise.resolve({
-                status: 204,
+                status: 204
             });
         });
 
@@ -99,23 +98,22 @@ describe('safebrowsing', () => {
         jest.spyOn(backend, 'lookupSafebrowsing').mockImplementation(() => {
             // eslint-disable-next-line prefer-promise-reject-errors
             return Promise.reject({
-                status: 500,
+                status: 500
             });
         });
 
         await safebrowsing.lookupUrl('https://example.org');
 
-        // eslint-disable-next-line max-len
         expect(logSpy).toHaveBeenCalledWith(
             'Error response from safebrowsing lookup server for {0}',
-            'example.org',
+            'example.org'
         );
 
         // 5xx status code
 
         jest.spyOn(backend, 'lookupSafebrowsing').mockImplementation(() => {
             return Promise.resolve({
-                status: 500,
+                status: 500
             });
         });
 
@@ -123,7 +121,7 @@ describe('safebrowsing', () => {
 
         expect(logSpy).toHaveBeenCalledWith(
             'Error response status {0} received from safebrowsing lookup server.',
-            500,
+            500
         );
 
         // request resolve without response

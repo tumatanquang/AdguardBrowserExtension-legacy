@@ -97,7 +97,7 @@ export const localeDetect = (function () {
         // Indonesian
         'id': 'id',
         // Turkish
-        'tr': 'tr',
+        'tr': 'tr'
     };
 
     /**
@@ -113,7 +113,7 @@ export const localeDetect = (function () {
 
         const enabledFilters = await application.addAndEnableFilters(filterIds, { forceGroupEnable: true });
 
-        if (enabledFilters.length > 0) {
+        if (enabledFilters.length !== 0) {
             listeners.notifyListeners(listeners.ENABLE_FILTER_SHOW_POPUP, enabledFilters);
         }
     }
@@ -137,7 +137,7 @@ export const localeDetect = (function () {
 
         browsingLanguages.push({
             language,
-            time: Date.now(),
+            time: Date.now()
         });
         if (browsingLanguages.length > MAX_HISTORY_LENGTH) {
             browsingLanguages.shift();
@@ -176,7 +176,8 @@ export const localeDetect = (function () {
                 try {
                     const language = await browser.tabs.detectLanguage(tab.tabId);
                     detectLanguage(language);
-                } catch (e) {
+                }
+                catch (e) {
                     // do nothing
                 }
                 return;
@@ -205,6 +206,6 @@ export const localeDetect = (function () {
     };
 
     return {
-        init,
+        init
     };
 })();

@@ -22,7 +22,8 @@ export const I18nHelper = {
             }
 
             this.processString(message, element);
-        } catch (ex) {
+        }
+        catch (ex) {
             // Ignore exceptions
         }
     },
@@ -41,14 +42,16 @@ export const I18nHelper = {
             element.appendChild(el);
 
             this.processString(match1[5], element);
-        } else if (match2) {
+        }
+        else if (match2) {
             this.processString(match2[1], element);
 
             el = this.createElement(match2[2], match2[3]);
             element.appendChild(el);
 
             this.processString(match2[4], element);
-        } else {
+        }
+        else {
             element.appendChild(document.createTextNode(str.replace(/&nbsp;/g, '\u00A0')));
         }
     },
@@ -60,7 +63,7 @@ export const I18nHelper = {
         }
 
         const attrs = attributes.split(/([a-z]+='[^']+')/);
-        for (let i = 0; i < attrs.length; i += 1) {
+        for (let i = 0; i < attrs.length; ++i) {
             const attr = attrs[i].trim();
             if (!attr) {
                 continue;
@@ -78,5 +81,5 @@ export const I18nHelper = {
         }
 
         return el;
-    },
+    }
 };

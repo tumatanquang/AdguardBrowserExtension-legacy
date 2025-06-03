@@ -25,7 +25,7 @@ import {
     isEdge,
     isEdgeChromium,
     chromeVersion,
-    firefoxVersion,
+    firefoxVersion
 } from '../common/user-agent-utils';
 /**
  * Extension global preferences.
@@ -46,15 +46,20 @@ export const prefs = (() => {
                 let browser;
                 if (isYaBrowser) {
                     browser = 'YaBrowser';
-                } else if (isEdge) {
+                }
+                else if (isEdge) {
                     browser = 'Edge';
-                } else if (isEdgeChromium) {
+                }
+                else if (isEdgeChromium) {
                     browser = 'EdgeChromium';
-                } else if (isOpera) {
+                }
+                else if (isOpera) {
                     browser = 'Opera';
-                } else if (isFirefox) {
+                }
+                else if (isFirefox) {
                     browser = 'Firefox';
-                } else {
+                }
+                else {
                     browser = 'Chrome';
                 }
                 return browser;
@@ -81,14 +86,14 @@ export const prefs = (() => {
                     if (i < 0) {
                         return {
                             rev: 0,
-                            build: 0,
+                            build: 0
                         };
                     }
                     const version = userAgent.substring(i + 'Edge/'.length);
                     const parts = version.split('.');
                     return {
                         rev: Number.parseInt(parts[0], 10),
-                        build: Number.parseInt(parts[1], 10),
+                        build: Number.parseInt(parts[1], 10)
                     };
                 }
             });
@@ -105,20 +110,20 @@ export const prefs = (() => {
             return lazyGet(Prefs, 'ICONS', () => ({
                 ICON_GREEN: {
                     '19': browser.runtime.getURL('assets/icons/green-19.png'),
-                    '38': browser.runtime.getURL('assets/icons/green-38.png'),
+                    '38': browser.runtime.getURL('assets/icons/green-38.png')
                 },
                 ICON_GRAY: {
                     '19': browser.runtime.getURL('assets/icons/gray-19.png'),
-                    '38': browser.runtime.getURL('assets/icons/gray-38.png'),
-                },
+                    '38': browser.runtime.getURL('assets/icons/gray-38.png')
+                }
             }));
         },
 
         // interval 60 seconds in Firefox is set so big due to excessive IO operations on every storage save
         // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1006
         get statsSaveInterval() {
-            return this.browser === 'Firefox' ? 1000 * 60 : 1000;
-        },
+            return this.browser === 'Firefox' ? 60 * 1000 : 1000;
+        }
     };
 
     /**
@@ -128,17 +133,17 @@ export const prefs = (() => {
         // Get the global extension object (browser for FF, chrome for Chromium)
         const browser = window.browser || window.chrome;
 
-        const responseContentFilteringSupported = (typeof browser !== 'undefined'
-            && typeof browser.webRequest !== 'undefined'
-            && typeof browser.webRequest.filterResponseData !== 'undefined');
+        const responseContentFilteringSupported = (browser !== undefined
+            && browser.webRequest !== undefined
+            && browser.webRequest.filterResponseData !== undefined);
 
-        const canUseInsertCSSAndExecuteScript = typeof browser.tabs?.insertCSS !== 'undefined'
-            && typeof browser.tabs?.executeScript !== 'undefined';
+        const canUseInsertCSSAndExecuteScript = browser.tabs?.insertCSS !== undefined
+            && browser.tabs?.executeScript !== undefined;
 
         return {
             responseContentFilteringSupported,
             canUseInsertCSSAndExecuteScript,
-            hasBackgroundTab: typeof browser !== 'undefined', // Background requests have sense only in case of webext
+            hasBackgroundTab: browser !== undefined // Background requests have sense only in case of webext
         };
     })();
 

@@ -2,11 +2,12 @@ import path from 'path';
 import { promises as fs } from 'fs';
 import webExt from 'web-ext';
 import {
+    DIST_PATH,
     BUILD_PATH,
     ENVS,
     FIREFOX_CREDENTIALS,
     FIREFOX_UPDATE_TEMPLATE,
-    FIREFOX_WEBEXT_UPDATE_URL,
+    FIREFOX_WEBEXT_UPDATE_URL
 } from '../constants';
 import { getBrowserConf, getEnvConf } from '../helpers';
 import { version } from '../../package.json';
@@ -16,8 +17,8 @@ import { version } from '../../package.json';
 // We sign only beta build, because we do not publish it the AMO store
 export const xpi = async (browser) => {
     const buildEnv = process.env.BUILD_ENV;
-    if (buildEnv !== ENVS.BETA) {
-        throw new Error('Xpi is build only for beta');
+    if (buildEnv === ENVS.DEV) {
+        throw new Error('XPI is not build for dev');
     }
 
     const envConf = getEnvConf(buildEnv);
@@ -44,9 +45,9 @@ export const xpi = async (browser) => {
         apiSecret,
         sourceDir,
         artifactsDir: buildDir,
-        timeout: 15 * 60 * 1000, // 15 minutes
+        timeout: 15 * 60 * 1000 // 15 minutes
     }, {
-        shouldExitProgram: false,
+        shouldExitProgram: false
     });
 
     if (!downloadedFiles) {
@@ -55,8 +56,8 @@ export const xpi = async (browser) => {
 
     const [downloadedXpi] = downloadedFiles;
     // Rename
-    const basePath = path.dirname(downloadedXpi);
-    const xpiPath = path.join(basePath, 'firefox.xpi');
+    await fs.mkdir(DIST_PATH, { recursive: true });
+    const xpiPath = path.join(DIST_PATH, 'firefox.xpi');
     await fs.rename(downloadedXpi, xpiPath);
 
     // Revert manifest to prev state
@@ -65,5 +66,5 @@ export const xpi = async (browser) => {
     // create update.json
     let updateJsonTemplate = (await fs.readFile(FIREFOX_UPDATE_TEMPLATE)).toString();
     updateJsonTemplate = updateJsonTemplate.replace(/\%VERSION\%/g, version);
-    await fs.writeFile(path.join(buildDir, 'update.json'), updateJsonTemplate);
+    await fs.writeFile(path.join(DIST_PATH, 'update.json'), updateJsonTemplate);
 };

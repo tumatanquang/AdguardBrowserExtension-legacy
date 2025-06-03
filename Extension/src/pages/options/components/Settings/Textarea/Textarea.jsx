@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import './textarea.pcss';
 
-const Textarea = (props) => {
+function Textarea(props) {
     const {
-        id, value, handler, placeholder, disabled,
+        id, value, handler, placeholder, disabled
     } = props;
 
     const changeHandler = (e) => {
@@ -20,22 +20,22 @@ const Textarea = (props) => {
             name={id}
             onChange={changeHandler}
             aria-label={id}
-            className="textarea"
+            className='textarea'
             defaultValue={value}
             placeholder={placeholder}
         />
     );
-};
+}
 
 Textarea.defaultProps = {
-    placeholder: '',
+    placeholder: ''
 };
 
 Textarea.propTypes = {
     id: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
     handler: PropTypes.func.isRequired,
-    placeholder: PropTypes.string,
+    placeholder: PropTypes.string
 };
 
 export { Textarea };

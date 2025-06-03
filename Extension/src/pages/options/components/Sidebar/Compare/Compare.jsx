@@ -3,27 +3,27 @@ import { reactTranslator } from '../../../../../common/translators/reactTranslat
 import { Icon } from '../../../../common/components/ui/Icon';
 import './compare.pcss';
 
-export const Compare = ({ click, hide }) => {
+export function Compare({ click, hide }) {
     return (
-        <div className="compare">
-            <div className="compare__message">
+        <div className='compare'>
+            <div className='compare__message'>
                 {reactTranslator.getMessage('options_nav_better_than_extension')}
             </div>
             <button
-                type="button"
-                className="button button--green button--m button--compare"
+                type='button'
+                className='button button--green button--m button--compare'
                 onClick={click}
             >
                 {reactTranslator.getMessage('options_nav_compare')}
             </button>
             <button
-                type="button"
-                className="compare__close"
+                type='button'
+                className='compare__close'
                 aria-label={reactTranslator.getMessage('close_button_title')}
                 onClick={hide}
             >
-                <Icon id="#cross" />
+                <Icon id='#cross' />
             </button>
         </div>
     );
-};
+}

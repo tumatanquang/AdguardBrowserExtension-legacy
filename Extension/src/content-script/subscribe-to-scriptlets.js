@@ -30,7 +30,7 @@ export const subscribeToScriptlets = (function () {
     const subscribeToCloseWindow = async () => {
         const closeWindowHandler = () => {
             contentPage.sendMessage({
-                type: 'scriptletCloseWindow',
+                type: 'scriptletCloseWindow'
             });
         };
         // Events may be passed differently in MV3
@@ -50,6 +50,6 @@ export const subscribeToScriptlets = (function () {
     };
 
     return {
-        init,
+        init
     };
 })();

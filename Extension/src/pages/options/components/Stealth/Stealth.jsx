@@ -11,7 +11,7 @@ import {
     GLOBAL_PRIVACY_CONTROL_URL,
     DO_NOT_TRACK_URL,
     DEFAULT_FIRST_PARTY_COOKIES_SELF_DESTRUCT_MIN,
-    DEFAULT_THIRD_PARTY_COOKIES_SELF_DESTRUCT_MIN,
+    DEFAULT_THIRD_PARTY_COOKIES_SELF_DESTRUCT_MIN
 } from '../../../constants';
 
 const BLOCK_KNOWN_TRACKERS = 'blockKnownTrackers';
@@ -48,7 +48,7 @@ const Stealth = observer(() => {
         HIDE_SEARCH_QUERIES,
         SEND_DO_NOT_TRACK,
         BLOCK_WEBRTC,
-        BLOCK_CHROME_CLIENT_DATA,
+        BLOCK_CHROME_CLIENT_DATA
     } = settings.names;
 
     const isStealthModeDisabled = settings.values[DISABLE_STEALTH_MODE];
@@ -60,7 +60,7 @@ const Stealth = observer(() => {
             <SettingsSection
                 title={reactTranslator.getMessage('options_privacy_title')}
                 description={reactTranslator.getMessage('options_privacy_desc')}
-                mode="smallContainer"
+                mode='smallContainer'
                 id={DISABLE_STEALTH_MODE}
                 inlineControl={(
                     <Setting
@@ -76,7 +76,7 @@ const Stealth = observer(() => {
 
             <SettingsSection
                 title={reactTranslator.getMessage('options_stealth_general_title')}
-                mode="subTitle"
+                mode='subTitle'
                 disabled={isStealthModeDisabled}
             >
                 <SettingsSetCheckbox
@@ -118,24 +118,24 @@ const Stealth = observer(() => {
                     description={reactTranslator.getMessage('options_send_not_track_desc', {
                         gpc: (chunks) => (
                             <a
-                                className="desc--link"
+                                className='desc--link'
                                 href={GLOBAL_PRIVACY_CONTROL_URL}
-                                target="_blank"
-                                rel="noreferrer"
+                                target='_blank'
+                                rel='noreferrer'
                             >
                                 {chunks}
                             </a>
                         ),
                         dnt: (chunks) => (
                             <a
-                                className="desc--link"
+                                className='desc--link'
                                 href={DO_NOT_TRACK_URL}
-                                target="_blank"
-                                rel="noreferrer"
+                                target='_blank'
+                                rel='noreferrer'
                             >
                                 {chunks}
                             </a>
-                        ),
+                        )
                     })}
                     disabled={!settings.values[SEND_DO_NOT_TRACK]}
                     sectionDisabled={isStealthModeDisabled}
@@ -149,7 +149,7 @@ const Stealth = observer(() => {
 
             <SettingsSection
                 title={reactTranslator.getMessage('options_stealth_cookies_title')}
-                mode="subTitle"
+                mode='subTitle'
                 disabled={isStealthModeDisabled}
             >
                 <SettingsSetCheckbox
@@ -197,7 +197,7 @@ const Stealth = observer(() => {
 
             <SettingsSection
                 title={reactTranslator.getMessage('options_stealth_miscellaneous_title')}
-                mode="subTitle"
+                mode='subTitle'
                 disabled={isStealthModeDisabled}
             >
                 <SettingsSetCheckbox

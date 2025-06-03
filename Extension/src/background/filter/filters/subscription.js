@@ -57,7 +57,7 @@ export const subscriptions = (() => {
         const filtersStateInfo = filtersState.getFiltersState();
 
         const filters = metadataCache.getFilters();
-        for (let i = 0; i < filters.length; i += 1) {
+        for (let i = 0; i < filters.length; ++i) {
             const filter = filters[i];
             const { filterId } = filter;
             const versionInfo = filtersVersionInfo[filterId];
@@ -90,7 +90,7 @@ export const subscriptions = (() => {
         const groupsStateInfo = filtersState.getGroupsState();
         const groups = metadataCache.getGroups();
 
-        for (let i = 0; i < groups.length; i += 1) {
+        for (let i = 0; i < groups.length; ++i) {
             const group = groups[i];
             const { groupId } = group;
             const stateInfo = groupsStateInfo[groupId];
@@ -113,17 +113,17 @@ export const subscriptions = (() => {
         const filters = [];
         const filtersMap = {};
 
-        for (let i = 0; i < metadata.tags.length; i += 1) {
+        for (let i = 0; i < metadata.tags.length; ++i) {
             tags.push(metadataFactory.createFilterTagFromJSON(metadata.tags[i]));
         }
 
-        for (let j = 0; j < metadata.filters.length; j += 1) {
+        for (let j = 0; j < metadata.filters.length; ++j) {
             const filter = metadataFactory.createSubscriptionFilterFromJSON(metadata.filters[j]);
             filters.push(filter);
             filtersMap[filter.filterId] = filter;
         }
 
-        for (let k = 0; k < metadata.groups.length; k += 1) {
+        for (let k = 0; k < metadata.groups.length; ++k) {
             const group = metadataFactory.createSubscriptionGroupFromJSON(metadata.groups[k]);
             groups.push(group);
             groupsMap[group.groupId] = group;
@@ -132,7 +132,7 @@ export const subscriptions = (() => {
         const customFiltersGroup = new SubscriptionGroup(
             ANTIBANNER_GROUPS_ID.CUSTOM_FILTERS_GROUP_ID,
             translator.getMessage('options_antibanner_custom_group'),
-            customFilters.CUSTOM_FILTERS_GROUP_DISPLAY_NUMBER,
+            customFilters.CUSTOM_FILTERS_GROUP_DISPLAY_NUMBER
         );
         groups.push(customFiltersGroup);
         groupsMap[customFiltersGroup.groupId] = customFiltersGroup;
@@ -150,7 +150,7 @@ export const subscriptions = (() => {
         groups.sort((f1, f2) => f1.displayNumber - f2.displayNumber);
 
         metadataCache.setData({
-            tags, groups, groupsMap, filters, filtersMap,
+            tags, groups, groupsMap, filters, filtersMap
         });
     };
 
@@ -165,7 +165,8 @@ export const subscriptions = (() => {
         const data = localStorage.getItem(METADATA_STORAGE_KEY);
         if (data) {
             metadata = JSON.parse(data);
-        } else {
+        }
+        else {
             metadata = await backend.getLocalFiltersMetadata();
         }
 
@@ -183,10 +184,8 @@ export const subscriptions = (() => {
         localStorage.setItem(METADATA_STORAGE_KEY, JSON.stringify(metadata));
 
         saveMetadata(metadata);
-
         loadFiltersVersionAndStateInfo();
         loadGroupsStateInfo();
-
         log.info('Filters metadata reloaded from backend');
     };
 
@@ -201,9 +200,8 @@ export const subscriptions = (() => {
         }
 
         const metadata = await backend.downloadMetadataFromBackend();
-
         const filterMetadataList = [];
-        for (let i = 0; i < filterIds.length; i += 1) {
+        for (let i = 0; i < filterIds.length; ++i) {
             const filter = utils.collections.find(metadata.filters, 'filterId', filterIds[i]);
             if (filter) {
                 filterMetadataList.push(metadataFactory.createSubscriptionFilterFromJSON(filter));
@@ -280,15 +278,15 @@ export const subscriptions = (() => {
 
         const { tags, groups, filters } = metadataCache.getData();
 
-        for (let i = 0; i < tags.length; i += 1) {
+        for (let i = 0; i < tags.length; ++i) {
             applyFilterTagLocalization(tags[i], tagsI18n);
         }
 
-        for (let j = 0; j < filters.length; j += 1) {
+        for (let j = 0; j < filters.length; ++j) {
             applyFilterLocalization(filters[j], filtersI18n);
         }
 
-        for (let k = 0; k < groups.length; k += 1) {
+        for (let k = 0; k < groups.length; ++k) {
             applyGroupLocalization(groups[k], groupsI18n);
         }
 
@@ -308,7 +306,8 @@ export const subscriptions = (() => {
         const data = localStorage.getItem(I18N_METADATA_STORAGE_KEY);
         if (data) {
             metadata = JSON.parse(data);
-        } else {
+        }
+        else {
             metadata = await backend.getLocalFiltersI18Metadata();
         }
 
@@ -364,7 +363,8 @@ export const subscriptions = (() => {
             await loadMetadataI18n();
             await loadLocalScriptRules();
             await loadRedirectSources();
-        } catch (e) {
+        }
+        catch (e) {
             log.error(`Error loading metadata, cause: ${e.message}`);
         }
     };
@@ -415,7 +415,7 @@ export const subscriptions = (() => {
      */
     const groupHasEnabledStatus = (groupId) => {
         const group = metadataCache.getGroup(groupId);
-        return typeof group.enabled !== 'undefined';
+        return group.enabled !== undefined;
     };
 
     /**
@@ -431,10 +431,10 @@ export const subscriptions = (() => {
 
         const filters = metadataCache.getFilters();
         const filterIds = [];
-        for (let i = 0; i < filters.length; i += 1) {
+        for (let i = 0; i < filters.length; ++i) {
             const filter = filters[i];
             const { languages } = filter;
-            if (languages && languages.length > 0) {
+            if (languages && languages.length !== 0) {
                 const language = utils.i18n.normalize(languages, locale);
                 if (language) {
                     filterIds.push(filter.filterId);
@@ -457,7 +457,7 @@ export const subscriptions = (() => {
         // Get language-specific filters by navigator languages
         // Get all used languages
         const languages = browserUtils.getNavigatorLanguages();
-        for (let i = 0; i < languages.length; i += 1) {
+        for (let i = 0; i < languages.length; ++i) {
             localeFilterIds = getFilterIdsForLanguage(languages[i]);
             filterIds = filterIds.concat(localeFilterIds);
         }
@@ -482,6 +482,6 @@ export const subscriptions = (() => {
         getFilter,
 
         isTrustedFilter,
-        groupHasEnabledStatus,
+        groupHasEnabledStatus
     };
 })();

@@ -14,12 +14,12 @@ import './editor.pcss';
 
 const DEFAULT_EDITOR_SIZE = {
     width: '610px',
-    height: '300px',
+    height: '300px'
 };
 
 const EDITOR_PADDING = 26;
 
-const Editor = ({
+function Editor({
     name,
     value,
     editorRef,
@@ -27,8 +27,8 @@ const Editor = ({
     onChange,
     fullscreen,
     highlightRules,
-    shouldResetSize,
-}) => {
+    shouldResetSize
+}) {
     const SIZE_STORAGE_KEY = `${name}_editor-size`;
     const editorStorageSize = localStorage.getItem(SIZE_STORAGE_KEY);
     const [size, setSize] = useState(JSON.parse(editorStorageSize) || DEFAULT_EDITOR_SIZE);
@@ -37,7 +37,8 @@ const Editor = ({
         if (editorStorageSize) {
             try {
                 setSize(JSON.parse(editorStorageSize));
-            } catch (e) {
+            }
+            catch (e) {
                 setSize(DEFAULT_EDITOR_SIZE);
                 log.debug(e.message);
             }
@@ -53,7 +54,7 @@ const Editor = ({
 
     const editorStyles = {
         width: size.width,
-        height: size.height,
+        height: size.height
     };
 
     // On fullscreen ignore size change
@@ -61,14 +62,14 @@ const Editor = ({
         ? () => { }
         : (width, height) => {
             localStorage.setItem(SIZE_STORAGE_KEY, JSON.stringify({
-                width: width + EDITOR_PADDING, height,
+                width: width + EDITOR_PADDING, height
             }));
             editorRef.current.editor.resize();
         };
 
     const editorClassName = cn(
         'editor',
-        { 'editor--full-screen': fullscreen },
+        { 'editor--full-screen': fullscreen }
     );
 
     // highlight rules syntax only for user rules
@@ -78,10 +79,10 @@ const Editor = ({
         <div style={editorStyles} className={editorClassName}>
             <AceEditor
                 ref={editorRef}
-                width="100%"
-                height="100%"
+                width='100%'
+                height='100%'
                 mode={editorMode}
-                theme="textmate"
+                theme='textmate'
                 name={name}
                 showPrintMargin={false}
                 editorProps={{ $blockScrolling: true }}
@@ -98,6 +99,6 @@ const Editor = ({
             />
         </div>
     );
-};
+}
 
 export { Editor };

@@ -7,5 +7,5 @@ const init = () => {
 };
 
 export const devtools = {
-    init,
+    init
 };

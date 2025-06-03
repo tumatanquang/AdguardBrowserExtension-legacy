@@ -3,7 +3,7 @@ eslint-disable jsx-a11y/click-events-have-key-events,
 jsx-a11y/no-noninteractive-element-interactions
 */
 import React, {
-    useContext, useEffect, useState, useRef,
+    useContext, useEffect, useState, useRef
 } from 'react';
 import cn from 'classnames';
 import { observer } from 'mobx-react';
@@ -42,7 +42,7 @@ const TabSelector = observer(() => {
     useEffect(() => {
         if (resultItems) {
             resultItems.forEach(
-                (el) => el.classList.remove(SELECTED_CLASS_NAME),
+                (el) => el.classList.remove(SELECTED_CLASS_NAME)
             );
 
             const currentEl = resultItems[currentStep];
@@ -68,7 +68,8 @@ const TabSelector = observer(() => {
     useKeyDown(refResult, 'Escape', () => {
         if (searchValue.length === 0) {
             quitTabSearch();
-        } else {
+        }
+        else {
             setSearchValue('');
         }
     });
@@ -76,11 +77,11 @@ const TabSelector = observer(() => {
     useKeyDown(refResult, 'Enter', () => {
         // Selected with the arrow buttons
         const targetElem = resultItems?.find(
-            (el) => el.classList.contains(SELECTED_CLASS_NAME),
+            (el) => el.classList.contains(SELECTED_CLASS_NAME)
         );
         // Selected with the tab button
         const activeElem = resultItems?.find(
-            (el) => el === document.activeElement,
+            (el) => el === document.activeElement
         );
 
         if (activeElem || targetElem) {
@@ -135,7 +136,7 @@ const TabSelector = observer(() => {
 
             const itemClassName = cn(
                 'tab-selector__result-item',
-                { 'tab-selector__result-item--active': tabId === selectedTabId },
+                { 'tab-selector__result-item--active': tabId === selectedTabId }
             );
 
             if (title.match(searchQuery)) {
@@ -143,9 +144,9 @@ const TabSelector = observer(() => {
                     <button
                         key={tabId}
                         id={tabId}
-                        type="button"
+                        type='button'
                         className={itemClassName}
-                        onClick={() => { selectionHandlerSearch(tabId); }}
+                        onClick={() => { selectionHandlerSearch(tabId) }}
                     >
                         {title}
                     </button>
@@ -170,15 +171,16 @@ const TabSelector = observer(() => {
     const onTabSelectorFocus = () => {
         if (selectIsOpen) {
             quitTabSearch();
-        } else {
+        }
+        else {
             searchInputRef.current.focus();
         }
     };
 
     return (
         <div
-            id="tab-selector"
-            className="tab-selector"
+            id='tab-selector'
+            className='tab-selector'
             ref={refSelector}
         >
             <div onFocus={onTabSelectorFocus}>
@@ -194,7 +196,7 @@ const TabSelector = observer(() => {
                 />
             </div>
             {selectIsOpen && (
-                <div className="tab-selector__result" ref={refResult}>
+                <div className='tab-selector__result' ref={refResult}>
                     {renderSearchResult()}
                 </div>
             )}

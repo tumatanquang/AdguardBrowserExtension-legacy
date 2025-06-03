@@ -8,7 +8,7 @@ import { Icon } from '../ui/Icon';
 const renderSavingState = (savingRulesState) => {
     const indicatorTextMap = {
         [SAVING_STATES.SAVED]: reactTranslator.getMessage('options_editor_indicator_saved'),
-        [SAVING_STATES.SAVING]: reactTranslator.getMessage('options_editor_indicator_saving'),
+        [SAVING_STATES.SAVING]: reactTranslator.getMessage('options_editor_indicator_saving')
     };
 
     const indicatorText = indicatorTextMap[savingRulesState] || '';
@@ -18,24 +18,24 @@ const renderSavingState = (savingRulesState) => {
     }
 
     const indicatorClassnames = classnames('editor__label', {
-        'editor__label--saved': savingRulesState === SAVING_STATES.SAVED,
+        'editor__label--saved': savingRulesState === SAVING_STATES.SAVED
     });
 
     return (
         <div className={indicatorClassnames}>
-            <Icon id="#tick" classname="icon--checked editor__icon" />
+            <Icon id='#tick' classname='icon--checked editor__icon' />
             {indicatorText}
         </div>
     );
 };
 
-export const SavingButton = ({ onClick, savingState, contentChanged }) => {
+export function SavingButton({ onClick, savingState, contentChanged }) {
     return (
-        <div className="actions__saving">
+        <div className='actions__saving'>
             {renderSavingState(savingState)}
             <button
-                type="button"
-                className="button button--m button--green actions__btn"
+                type='button'
+                className='button button--m button--green actions__btn'
                 onClick={onClick}
                 disabled={!contentChanged}
             >
@@ -43,4 +43,4 @@ export const SavingButton = ({ onClick, savingState, contentChanged }) => {
             </button>
         </div>
     );
-};
+}

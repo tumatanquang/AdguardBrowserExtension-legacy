@@ -11,13 +11,13 @@ import { getStatusTitle } from './statusTitles';
 
 import './status.pcss';
 
-export const Status = (props) => {
+export function Status(props) {
     const {
         statusCode,
         timestamp,
         method,
         requestUrl,
-        requestThirdParty,
+        requestThirdParty
     } = props;
 
     const timeString = format(timestamp, 'HH:mm:ss');
@@ -31,25 +31,25 @@ export const Status = (props) => {
     const statusTooltipText = getStatusTitle(mode);
 
     return (
-        <div className="status-wrapper">
-            <div className="status">
+        <div className='status-wrapper'>
+            <div className='status'>
                 {/* Time string may have different width
                     Preventing layout shift with fixed value
                 */}
-                <div className="status__item status__item_width60">
+                <div className='status__item status__item_width60'>
                     {timeString}
                 </div>
                 {areNetworkBadgesVisible && (
                     <>
                         <div className={itemClassNames}>
                             <Popover text={statusTooltipText}>
-                                <Icon id={statusCode ? '#transfer-status' : '#arrow-status'} classname="status__icon" />
+                                <Icon id={statusCode ? '#transfer-status' : '#arrow-status'} classname='status__icon' />
                             </Popover>
                         </div>
                         <div className={cn(itemClassNames, 'status__item_centered')}>
                             {isBlocked ? (
                                 <Popover text={reactTranslator.getMessage('filtering_log_status_blocked')}>
-                                    <Icon id="#ban" classname="status__icon" />
+                                    <Icon id='#ban' classname='status__icon' />
                                 </Popover>
                             ) : (
                                 <Popover text={reactTranslator.getMessage('filtering_log_badge_tooltip_http_status_code')}>
@@ -62,18 +62,18 @@ export const Status = (props) => {
                     </>
                 )}
                 {method && (
-                    <div className="status__item">
+                    <div className='status__item'>
                         <Popover text={reactTranslator.getMessage('filtering_log_badge_tooltip_http_req_method')}>
-                            <div className="status__badge status__badge--transparent">
+                            <div className='status__badge status__badge--transparent'>
                                 {method}
                             </div>
                         </Popover>
                     </div>
                 )}
                 {requestThirdParty && (
-                    <div className="status__item">
+                    <div className='status__item'>
                         <Popover text={reactTranslator.getMessage('filtering_log_badge_tooltip_third_party')}>
-                            <div className="tag tag--third_party tag--party">
+                            <div className='tag tag--third_party tag--party'>
                                 3P
                             </div>
                         </Popover>
@@ -82,4 +82,4 @@ export const Status = (props) => {
             </div>
         </div>
     );
-};
+}

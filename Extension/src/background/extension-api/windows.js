@@ -8,13 +8,13 @@ export const patchWindows = function (browser) {
         browser.windows = (function () {
             const defaultWindow = {
                 id: 1,
-                type: 'normal',
+                type: 'normal'
             };
 
             const emptyListener = {
                 addListener() {
                     // Doing nothing
-                },
+                }
             };
 
             const create = function (createData) {
@@ -40,7 +40,7 @@ export const patchWindows = function (browser) {
                 create,
                 update,
                 getAll,
-                getLastFocused,
+                getLastFocused
             };
         })();
     }

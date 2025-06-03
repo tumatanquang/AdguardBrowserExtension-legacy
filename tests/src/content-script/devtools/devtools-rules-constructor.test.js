@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { promises as fsp } from 'fs';
 import path from 'path';
 import { DevToolsRulesConstructor } from '../../../../Extension/src/content-script/devtools/devtools-rules-constructor';
@@ -18,7 +17,7 @@ describe('DevToolsRulesConstructor', () => {
             urlMask: 'test.com/page',
             cssSelectorType: 'STRICT_FULL',
             isBlockOneDomain: false,
-            url: 'http://example.org/test-page.html?param=p1',
+            url: 'http://example.org/test-page.html?param=p1'
         };
 
         let ruleText = DevToolsRulesConstructor.constructRuleText(element, options);
@@ -58,7 +57,7 @@ describe('DevToolsRulesConstructor', () => {
             isBlockOneDomain: false,
             url: 'http://example.org/test-page.html?param=p1',
             attributes: '',
-            excludeId: false,
+            excludeId: false
         };
 
         let ruleText = DevToolsRulesConstructor.constructRuleText(element, options);
@@ -121,7 +120,7 @@ describe('DevToolsRulesConstructor', () => {
             isBlockOneDomain: false,
             url: 'http://example.org/test-page.html?param=p1',
             attributes: '',
-            excludeId: false,
+            excludeId: false
         };
 
         let ruleText = DevToolsRulesConstructor.constructRuleText(element, options);
@@ -159,7 +158,7 @@ describe('DevToolsRulesConstructor', () => {
             url: 'https://lenta.ru/',
             attributes: '',
             excludeTagName: false,
-            classList: null,
+            classList: null
         };
 
         let ruleText = DevToolsRulesConstructor.constructRuleText(elementHref, options);
@@ -175,7 +174,7 @@ describe('DevToolsRulesConstructor', () => {
             attributes: '',
             excludeTagName: true,
             classList: null,
-            excludeId: false,
+            excludeId: false
         };
 
         ruleText = DevToolsRulesConstructor.constructRuleText(elementDivId, options);
@@ -232,7 +231,7 @@ describe('DevToolsRulesConstructor', () => {
             url: 'https://lenta.ru/',
             attributes: '',
             excludeTagName: false,
-            classList: null,
+            classList: null
         };
 
         const ruleText = DevToolsRulesConstructor.constructRuleText(element, options);
@@ -249,7 +248,7 @@ describe('DevToolsRulesConstructor', () => {
             url: 'https://lenta.ru/',
             attributes: '',
             excludeTagName: false,
-            classList: null,
+            classList: null
         };
 
         const ruleText = DevToolsRulesConstructor.constructRuleText(element, options);
@@ -272,7 +271,7 @@ describe('DevToolsRulesConstructor', () => {
             url: 'https://lenta.ru/',
             attributes: '',
             excludeTagName: false,
-            classList: null,
+            classList: null
         };
 
         const ruleText = DevToolsRulesConstructor.constructRuleText(element, options);

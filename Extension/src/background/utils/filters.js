@@ -12,7 +12,7 @@ export const filters = (() => {
 
         isAllowlistFilterRule(rule) {
             return rule.getFilterListId() === ANTIBANNER_FILTERS_ID.ALLOWLIST_FILTER_ID;
-        },
+        }
     };
 
     // Make accessible only constants without functions. They will be passed to content-page

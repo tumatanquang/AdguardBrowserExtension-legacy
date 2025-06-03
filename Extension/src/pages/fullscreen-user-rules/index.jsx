@@ -11,7 +11,7 @@ export const fullscreenUserRulesPage = {
 
         ReactDOM.render(
             <FullscreenUserRules />,
-            document.getElementById('root'),
+            document.getElementById('root')
         );
-    },
+    }
 };

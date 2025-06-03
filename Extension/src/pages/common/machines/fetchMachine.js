@@ -4,12 +4,12 @@ export const FetchStates = {
     IDLE: 'idle',
     LOADING: 'loading',
     SUCCESS: 'success',
-    FAILURE: 'failure',
+    FAILURE: 'failure'
 };
 
 export const FetchEvents = {
     FETCH: 'FETCH',
-    RETRY: 'RETRY',
+    RETRY: 'RETRY'
 };
 
 const fetchMachineConfig = {
@@ -17,47 +17,47 @@ const fetchMachineConfig = {
     initial: FetchStates.IDLE,
     context: {
         data: null,
-        error: null,
+        error: null
     },
     states: {
         [FetchStates.IDLE]: {
             on: {
-                [FetchEvents.FETCH]: FetchStates.LOADING,
-            },
+                [FetchEvents.FETCH]: FetchStates.LOADING
+            }
         },
         [FetchStates.LOADING]: {
             invoke: {
                 src: 'fetchData',
                 onDone: {
                     target: FetchStates.SUCCESS,
-                    actions: ['setData'],
+                    actions: ['setData']
                 },
                 onError: {
                     target: FetchStates.FAILURE,
-                    actions: ['setError'],
-                },
-            },
+                    actions: ['setError']
+                }
+            }
         },
         [FetchStates.SUCCESS]: {
-            type: 'final',
+            type: 'final'
         },
         [FetchStates.FAILURE]: {
             on: {
-                [FetchEvents.RETRY]: FetchStates.LOADING,
-            },
-        },
-    },
+                [FetchEvents.RETRY]: FetchStates.LOADING
+            }
+        }
+    }
 };
 
 const fetchMachineOptions = {
     actions: {
         setData: assign((ctx, event) => ({
-            data: event.data,
+            data: event.data
         })),
         setError: assign((ctx, event) => ({
-            error: event.data,
-        })),
-    },
+            error: event.data
+        }))
+    }
 };
 
 export const fetchMachine = createMachine(fetchMachineConfig, fetchMachineOptions);

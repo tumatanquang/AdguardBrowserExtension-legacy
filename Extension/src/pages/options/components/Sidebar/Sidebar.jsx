@@ -28,7 +28,7 @@ const Sidebar = observer(() => {
 
     const className = classNames('sidebar', {
         /* styles only for mobile markup */
-        'sidebar--open': isOpen,
+        'sidebar--open': isOpen
     });
 
     return (
@@ -36,22 +36,22 @@ const Sidebar = observer(() => {
             {isOpen
                 ? (
                     <div
-                        role="menu"
+                        role='menu'
                         tabIndex={0}
                         onClick={closeSidebar}
                         onKeyUp={closeSidebar}
-                        className="sidebar__overlay"
+                        className='sidebar__overlay'
                     />
                 )
                 : (
-                    <div className="sidebar__menu" role="menu">
-                        <button onClick={openSidebar} className="sidebar__open-button" type="button">
-                            <Icon id="#menu" classname="icon--menu" />
+                    <div className='sidebar__menu' role='menu'>
+                        <button onClick={openSidebar} className='sidebar__open-button' type='button'>
+                            <Icon id='#menu' classname='icon--menu' />
                         </button>
                     </div>
                 )}
             <div className={className}>
-                <Icon id="#logo" classname="icon--logo sidebar__logo" />
+                <Icon id='#logo' classname='icon--logo sidebar__logo' />
                 <Nav closeSidebar={closeSidebar} />
                 {settingsStore.showAdguardPromoInfo && (
                     <Compare

@@ -2,11 +2,11 @@ import {
     action,
     computed,
     observable,
-    makeObservable,
+    makeObservable
 } from 'mobx';
 import {
     NETWORK_RULE_OPTIONS,
-    OPTIONS_DELIMITER,
+    OPTIONS_DELIMITER
 } from '@adguard/tsurlfilter/dist/es/network-rule-options';
 
 import { RULE_OPTIONS } from '../components/RequestWizard/constants';
@@ -18,7 +18,7 @@ import {
     createExceptionRemoveHeaderRules,
     createExceptionScriptRule,
     createBlockingCookieRule,
-    splitToPatterns,
+    splitToPatterns
 } from '../components/RequestWizard/ruleCreators';
 import { messenger } from '../../services/messenger';
 
@@ -26,12 +26,12 @@ export const WIZARD_STATES = {
     VIEW_REQUEST: 'view.request',
     BLOCK_REQUEST: 'block.request',
     UNBLOCK_REQUEST: 'unblock.request',
-    PREVIEW_REQUEST: 'preview.request',
+    PREVIEW_REQUEST: 'preview.request'
 };
 
 export const ADDED_RULE_STATES = {
     BLOCK: 'block',
-    UNBLOCK: 'unblock',
+    UNBLOCK: 'unblock'
 };
 
 const MODIFIERS_DELIMITER = ',';
@@ -39,7 +39,7 @@ const MODIFIERS_DELIMITER = ',';
 const defaultRuleOptions = {
     [RULE_OPTIONS.RULE_DOMAIN]: { checked: false },
     [RULE_OPTIONS.RULE_THIRD_PARTY]: { checked: false },
-    [RULE_OPTIONS.RULE_IMPORTANT]: { checked: false },
+    [RULE_OPTIONS.RULE_IMPORTANT]: { checked: false }
 };
 class WizardStore {
     constructor(rootStore) {
@@ -48,22 +48,22 @@ class WizardStore {
     }
 
     @observable
-    isModalOpen = false;
+        isModalOpen = false;
 
     @observable
-    requestModalState = WIZARD_STATES.VIEW_REQUEST;
+        requestModalState = WIZARD_STATES.VIEW_REQUEST;
 
     @observable
-    ruleText = null;
+        ruleText = null;
 
     @observable
-    rulePattern = '';
+        rulePattern = '';
 
     @observable
-    ruleOptions = defaultRuleOptions;
+        ruleOptions = defaultRuleOptions;
 
     @observable
-    addedRuleState = null;
+        addedRuleState = null;
 
     @computed
     get requestModalStateEnum() {
@@ -71,7 +71,7 @@ class WizardStore {
         return {
             isBlock: this.requestModalState === WIZARD_STATES.BLOCK_REQUEST,
             isUnblock: this.requestModalState === WIZARD_STATES.UNBLOCK_REQUEST,
-            isView: this.requestModalState === WIZARD_STATES.VIEW_REQUEST,
+            isView: this.requestModalState === WIZARD_STATES.VIEW_REQUEST
         };
     }
 
@@ -79,7 +79,7 @@ class WizardStore {
     updateRuleOptions() {
         const { selectedEvent } = this.rootStore.logStore;
         const {
-            requestRule,
+            requestRule
         } = selectedEvent;
 
         const isImportant = requestRule
@@ -90,7 +90,7 @@ class WizardStore {
             [RULE_OPTIONS.RULE_DOMAIN]: { checked: false },
             [RULE_OPTIONS.RULE_THIRD_PARTY]: { checked: false },
             [RULE_OPTIONS.RULE_IMPORTANT]: { checked: isImportant },
-            [RULE_OPTIONS.RULE_REMOVE_PARAM]: { checked: false },
+            [RULE_OPTIONS.RULE_REMOVE_PARAM]: { checked: false }
         };
     }
 
@@ -102,12 +102,12 @@ class WizardStore {
     }
 
     @action
-    closeModal = () => {
-        this.isModalOpen = false;
-        this.addedRuleState = null;
-        this.requestModalState = WIZARD_STATES.VIEW_REQUEST;
-        this.rootStore.logStore.removeSelectedEvent();
-    };
+        closeModal = () => {
+            this.isModalOpen = false;
+            this.addedRuleState = null;
+            this.requestModalState = WIZARD_STATES.VIEW_REQUEST;
+            this.rootStore.logStore.removeSelectedEvent();
+        };
 
     @action
     setBlockState() {
@@ -131,33 +131,33 @@ class WizardStore {
     }
 
     @action
-    removeFromAllowlistHandler = async () => {
-        const { selectedTabId } = this.rootStore.logStore;
-        const { frameInfo } = await messenger.getTabFrameInfoById(selectedTabId);
+        removeFromAllowlistHandler = async () => {
+            const { selectedTabId } = this.rootStore.logStore;
+            const { frameInfo } = await messenger.getTabFrameInfoById(selectedTabId);
 
-        if (!frameInfo) {
-            return;
-        }
+            if (!frameInfo) {
+                return;
+            }
 
-        await messenger.unAllowlistFrame(frameInfo);
+            await messenger.unAllowlistFrame(frameInfo);
 
-        this.closeModal();
-    };
-
-    @action
-    removeFromUserFilterHandler = async (filteringEvent) => {
-        const { requestRule } = filteringEvent;
-
-        await messenger.removeUserRule(requestRule.ruleText);
-
-        this.closeModal();
-    };
+            this.closeModal();
+        };
 
     @action
-    removeAddedRuleFromUserFilter = async () => {
-        await messenger.removeUserRule(this.rule);
-        this.closeModal();
-    }
+        removeFromUserFilterHandler = async (filteringEvent) => {
+            const { requestRule } = filteringEvent;
+
+            await messenger.removeUserRule(requestRule.ruleText);
+
+            this.closeModal();
+        };
+
+    @action
+        removeAddedRuleFromUserFilter = async () => {
+            await messenger.removeUserRule(this.rule);
+            this.closeModal();
+        };
 
     @action
     setViewState() {
@@ -182,7 +182,7 @@ class WizardStore {
         thirdParty,
         important,
         mandatoryOptions,
-        removeParam,
+        removeParam
     }) => {
         let ruleText = urlPattern;
 
@@ -207,7 +207,7 @@ class WizardStore {
         if (mandatoryOptions) {
             options = options.concat(mandatoryOptions);
         }
-        if (options.length > 0) {
+        if (options.length !== 0) {
             ruleText += OPTIONS_DELIMITER + options.join(MODIFIERS_DELIMITER);
         }
 
@@ -226,7 +226,7 @@ class WizardStore {
     createCookieRuleFromParams = ({
         rulePattern,
         thirdParty,
-        important,
+        important
     }) => {
         let ruleText = rulePattern;
 
@@ -240,7 +240,7 @@ class WizardStore {
         if (thirdParty) {
             options.push(NETWORK_RULE_OPTIONS.THIRD_PARTY);
         }
-        if (options.length > 0) {
+        if (options.length !== 0) {
             ruleText += MODIFIERS_DELIMITER + options.join(MODIFIERS_DELIMITER);
         }
 
@@ -257,7 +257,7 @@ class WizardStore {
             ruleDomain,
             ruleImportant,
             ruleThirdParty,
-            ruleRemoveParam,
+            ruleRemoveParam
         } = ruleOptions;
 
         const permitDomain = !ruleDomain.checked;
@@ -282,22 +282,25 @@ class WizardStore {
         let ruleText;
         if (selectedEvent.element) {
             ruleText = this.createCssRuleFromParams(rulePattern, permitDomain);
-        } else if (selectedEvent.cookieName) {
+        }
+        else if (selectedEvent.cookieName) {
             ruleText = this.createCookieRuleFromParams({
                 rulePattern,
                 thirdParty,
-                important,
+                important
             });
-        } else if (selectedEvent.script || selectedEvent?.requestRule?.documentLevelRule) {
+        }
+        else if (selectedEvent.script || selectedEvent?.requestRule?.documentLevelRule) {
             ruleText = this.createRuleFromParams({ urlPattern: rulePattern });
-        } else {
+        }
+        else {
             ruleText = this.createRuleFromParams({
                 urlPattern: rulePattern,
                 urlDomain: domain,
                 thirdParty,
                 important,
                 mandatoryOptions,
-                removeParam,
+                removeParam
             });
         }
 
@@ -319,7 +322,7 @@ class WizardStore {
                 patterns = splitToPatterns(
                     selectedEvent.requestUrl,
                     selectedEvent.requestDomain,
-                    true,
+                    true
                 );
             }
 
@@ -353,9 +356,10 @@ class WizardStore {
             patterns = splitToPatterns(
                 selectedEvent.requestUrl,
                 selectedEvent.requestDomain,
-                false,
+                false
             );
-        } else if (selectedEvent.cookieName) {
+        }
+        else if (selectedEvent.cookieName) {
             patterns = createBlockingCookieRule(selectedEvent);
         }
 

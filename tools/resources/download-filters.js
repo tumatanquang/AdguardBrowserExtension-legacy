@@ -13,7 +13,7 @@ import {
     METADATA_I18N_DOWNLOAD_URL_FORMAT,
     FILTER_DOWNLOAD_URL_FORMAT,
     OPTIMIZED_FILTER_DOWNLOAD_URL_FORMAT,
-    ADGUARD_FILTERS_IDS,
+    ADGUARD_DOWNLOAD_UPDATE_FILTERS_IDS
 } from '../constants';
 
 const CHECKSUM_PATTERN = /^\s*!\s*checksum[\s-:]+([\w\+/=]+).*[\r\n]+/i;
@@ -31,33 +31,33 @@ const getUrlsOfFiltersResources = (browser) => {
 
     meta.push({
         url: METADATA_DOWNLOAD_URL_FORMAT.replace('%browser', browser),
-        file: 'filters.json',
+        file: 'filters.json'
     });
 
     meta.push({
         url: METADATA_I18N_DOWNLOAD_URL_FORMAT.replace('%browser', browser),
-        file: 'filters_i18n.json',
+        file: 'filters_i18n.json'
     });
 
     // eslint-disable-next-line no-restricted-syntax
-    for (const filterId of ADGUARD_FILTERS_IDS) {
+    for (const filterId of ADGUARD_DOWNLOAD_UPDATE_FILTERS_IDS) {
         filters.push({
             url: FILTER_DOWNLOAD_URL_FORMAT.replace('%browser', browser).replace('%filter', filterId),
             file: `filter_${filterId}.txt`,
-            validate: true,
+            validate: true
         });
 
         filtersMobile.push({
             url: OPTIMIZED_FILTER_DOWNLOAD_URL_FORMAT.replace('%browser', browser).replace('%s', filterId),
             file: `filter_mobile_${filterId}.txt`,
-            validate: true,
+            validate: true
         });
     }
 
     return [
         ...meta,
         ...filters,
-        ...filtersMobile,
+        ...filtersMobile
     ];
 };
 
@@ -124,7 +124,7 @@ const downloadFilter = async (url, browser) => {
  */
 const startDownload = async (browser) => {
     const urls = getUrlsOfFiltersResources(browser);
-    for (let i = 0; i < urls.length; i += 1) {
+    for (let i = 0; i < urls.length; ++i) {
         const url = urls[i];
         // eslint-disable-next-line no-await-in-loop
         await downloadFilter(url, browser);

@@ -4,7 +4,8 @@ import chalk from 'chalk';
 const info = (text) => {
     if (text) {
         console.log(text);
-    } else {
+    }
+    else {
         console.log('Unknown info');
     }
 };
@@ -12,7 +13,8 @@ const info = (text) => {
 const success = (text) => {
     if (text) {
         console.log(chalk.green.bgBlack(text));
-    } else {
+    }
+    else {
         info();
     }
 };
@@ -20,7 +22,8 @@ const success = (text) => {
 const warning = (text) => {
     if (text) {
         console.log(chalk.black.bgYellowBright(text));
-    } else {
+    }
+    else {
         info();
     }
 };
@@ -28,7 +31,8 @@ const warning = (text) => {
 const warningRed = (text) => {
     if (text) {
         console.log(chalk.bold.yellow.bgRed(text));
-    } else {
+    }
+    else {
         info();
     }
 };
@@ -37,7 +41,8 @@ const error = (text) => {
     if (text) {
         console.log(chalk.bold.yellow.bgRed(text));
         throw new Error(text);
-    } else {
+    }
+    else {
         throw new Error('Unknown error');
     }
 };
@@ -47,5 +52,5 @@ export const cliLog = {
     success,
     warning,
     warningRed,
-    error,
+    error
 };

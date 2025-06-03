@@ -72,10 +72,12 @@
 }
 
 .sidebar-pane-title::before {
+    mask-position: -4px -96px;
     -webkit-mask-position: -4px -96px;
 }
 
 .sidebar-pane-title.expanded::before {
+    mask-position: -20px -96px;
     -webkit-mask-position: -20px -96px;
 }
 

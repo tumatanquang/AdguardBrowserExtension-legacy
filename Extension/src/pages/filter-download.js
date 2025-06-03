@@ -16,16 +16,19 @@
  */
 
 import Nanobar from 'nanobar';
+import Swal from 'sweetalert2';
 
 import { contentPage } from '../content-script/content-script';
 import { MESSAGE_TYPES } from '../common/constants';
 
 import '../common/i18n'; // !!! DO NOT REMOVE, THIS MODULE HANDLES TRANSLATIONS
+import { localStorage } from '../background/storage';
+import { i18n } from '../common/common-script';
 
 export const init = () => {
     document.addEventListener('DOMContentLoaded', () => {
         const nanobar = new Nanobar({
-            classname: 'adg-progress-bar',
+            classname: 'adg-progress-bar'
         });
 
         nanobar.go(15);
@@ -36,24 +39,53 @@ export const init = () => {
                 if (window) {
                     contentPage.sendMessage({ type: MESSAGE_TYPES.OPEN_THANKYOU_PAGE });
                 }
-            }, 1000);
+            }, 500);
         }
 
         async function checkRequestFilterReady() {
             const response = await contentPage.sendMessage({
-                type: MESSAGE_TYPES.CHECK_REQUEST_FILTER_READY,
+                type: MESSAGE_TYPES.CHECK_REQUEST_FILTER_READY
             });
             if (response.ready) {
                 onLoaded();
-            } else {
+            }
+            else {
                 setTimeout(checkRequestFilterReady, 500);
             }
         }
 
-        checkRequestFilterReady();
+        Swal.fire({
+            titleText: i18n.getMessage('filters_download_confirm_title'),
+            text: i18n.getMessage('filters_download_confirm_text'),
+            icon: 'question',
+            theme: 'auto',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: true,
+            showDenyButton: true,
+            confirmButtonText: i18n.getMessage('yes_button_title'),
+            denyButtonText: i18n.getMessage('no_button_title'),
+            confirmButtonColor: '#68bc86',
+            denyButtonColor: '#bf4829',
+            showLoaderOnConfirm: true,
+            preConfirm: async () => {
+                nanobar.go(50);
+            }
+        }).then((result) => {
+            localStorage.setItem('useDefaultSettings', result.isConfirmed);
+            if (result.isConfirmed) {
+                contentPage.sendMessage({
+                    type: MESSAGE_TYPES.INITIALIZE_ONINSTALL_DEFAULT_FILTERS
+                });
+                checkRequestFilterReady();
+            }
+            else {
+                onLoaded();
+            }
+        });
     });
 };
 
 export const filterDownload = {
-    init,
+    init
 };

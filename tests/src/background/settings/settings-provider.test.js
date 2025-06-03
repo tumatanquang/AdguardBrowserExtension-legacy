@@ -15,15 +15,15 @@ jest.mock('../../../../Extension/src/background/application', () => {
                 { filterId: 1 },
                 {
                     filterId: 100,
-                    customUrl: 'https://example.org/custom_url',
-                },
+                    customUrl: 'https://example.org/custom_url'
+                }
             ],
             addAndEnableFilters: async () => {},
             removeFilter: () => {},
             disableFilters: () => {},
             enableGroup: () => {},
-            disableGroup: () => {},
-        },
+            disableGroup: () => {}
+        }
     };
 });
 
@@ -36,7 +36,7 @@ jest.mock('../../../../Extension/src/background/filter/filters/subscription', ()
         5: { groupId: 5, groupName: 'Security', displayNumber: 5 },
         6: { groupId: 6, groupName: 'Other', displayNumber: 6 },
         7: { groupId: 7, groupName: 'Language-specific', displayNumber: 7 },
-        0: { groupId: 0, groupName: 'Custom', displayNumber: 99 },
+        0: { groupId: 0, groupName: 'Custom', displayNumber: 99 }
     };
 
     const filtersMap = {
@@ -46,7 +46,7 @@ jest.mock('../../../../Extension/src/background/filter/filters/subscription', ()
         4: { filterId: 4, groupId: 3 },
         5: { filterId: 5, groupId: 5 },
         10: { filterId: 10, groupId: 1 },
-        6: { filterId: 1001, groupId: 0, customUrl: 'https://example.org/custom_url' },
+        6: { filterId: 1001, groupId: 0, customUrl: 'https://example.org/custom_url' }
     };
 
     return {
@@ -56,8 +56,8 @@ jest.mock('../../../../Extension/src/background/filter/filters/subscription', ()
             getFilter: filterId => filtersMap[filterId],
             getFilters: () => Object.keys(filtersMap).map(key => filtersMap[key]),
             getGroups: () => Object.keys(groupsMap).map(key => groupsMap[key]),
-            getGroup: groupId => groupsMap[groupId],
-        },
+            getGroup: groupId => groupsMap[groupId]
+        }
     };
 });
 
@@ -66,8 +66,8 @@ jest.mock('../../../../Extension/src/background/filter/userrules', () => {
         __esModule: true,
         userrules: {
             getUserRulesText: async () => '',
-            updateUserRulesText: () => {},
-        },
+            updateUserRulesText: () => {}
+        }
     };
 });
 

@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 /**
  * This file is part of Adguard Browser Extension (https://github.com/AdguardTeam/AdguardBrowserExtension).
  *
@@ -96,7 +95,7 @@ export const contentUtils = (function () {
      */
     const genAlertHtml = (title, text) => {
         let descBlock = '';
-        if (text && text.length > 0) {
+        if (text && text.length !== 0) {
             descBlock = `<div class="adguard-popup-alert__desc">
                             ${text}
                         </div>`;
@@ -108,7 +107,7 @@ export const contentUtils = (function () {
         }
 
         let titleBlock = '';
-        if (title && title.length > 0) {
+        if (title && title.length !== 0) {
             titleBlock = `<div class="adguard-popup-alert__title">
                             ${title}
                         </div>`;
@@ -132,7 +131,7 @@ export const contentUtils = (function () {
             title,
             isAdguardTab,
             alertStyles,
-            alertContainerStyles,
+            alertContainerStyles
         } = message;
 
         if (!title && !text) {
@@ -142,12 +141,13 @@ export const contentUtils = (function () {
         let messages = [];
         if (Array.isArray(text)) {
             messages = text;
-        } else {
+        }
+        else {
             messages = [text];
         }
 
         let fullText = '';
-        for (let i = 0; i < messages.length; i += 1) {
+        for (let i = 0; i < messages.length; ++i) {
             if (i > 0) {
                 fullText += ', ';
             }
@@ -169,7 +169,7 @@ export const contentUtils = (function () {
                     alertDivHtml,
                     isAdguardTab,
                     alertStyles,
-                    alertContainerStyles,
+                    alertContainerStyles
                 );
                 alertElement.classList.add('adguard-alert-iframe');
                 alertElement.onload = () => {
@@ -179,8 +179,9 @@ export const contentUtils = (function () {
                     if (alertElement && alertElement.parentNode) {
                         alertElement.parentNode.removeChild(alertElement);
                     }
-                }, 4000);
-            } else {
+                }, 4 * 1000);
+            }
+            else {
                 setTimeout(() => {
                     appendPopup(count + 1);
                 }, 500);
@@ -209,7 +210,7 @@ export const contentUtils = (function () {
             showPromoNotification,
             disableNotificationText,
             alertStyles,
-            updateIframeStyles,
+            updateIframeStyles
         } = message;
 
         const updateIframeHtml = `
@@ -248,7 +249,7 @@ export const contentUtils = (function () {
         const handleCloseIframe = (iframe) => {
             const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
             const closeElements = iframeDocument.querySelectorAll('.close-iframe');
-            if (closeElements.length > 0) {
+            if (closeElements.length !== 0) {
                 closeElements.forEach((element) => {
                     element.addEventListener('click', () => {
                         if (element.classList.contains('disable-notifications')) {
@@ -256,14 +257,14 @@ export const contentUtils = (function () {
                             contentPage.sendMessage({
                                 type: MESSAGE_TYPES.CHANGE_USER_SETTING,
                                 key: 'show-app-updated-disabled',
-                                value: true,
+                                value: true
                             });
                         }
                         if (showPromoNotification
                             && element.classList.contains('set-notification-viewed')) {
                             contentPage.sendMessage({
                                 type: 'setNotificationViewed',
-                                withDelay: false,
+                                withDelay: false
                             });
                             const promoNotification = iframeDocument.querySelector('.adguard-update-popup__offer');
                             if (promoNotification) {
@@ -274,10 +275,9 @@ export const contentUtils = (function () {
                         // Remove iframe after click event fire on link
                         // NOTICE: if here is used value equal to 0,
                         // then iframe is closed early than link is clicked
-                        const REMOVE_FRAMEWORK_TIMEOUT_MS = 10;
                         setTimeout(() => {
                             iframe.parentNode.removeChild(iframe);
-                        }, REMOVE_FRAMEWORK_TIMEOUT_MS);
+                        }, 10);
                     });
                 });
                 return true;
@@ -302,7 +302,8 @@ export const contentUtils = (function () {
                         handleCloseIframe(iframe);
                     });
                 }
-            } else {
+            }
+            else {
                 setTimeout(() => {
                     appendPopup(count + 1);
                 }, 500);
@@ -351,18 +352,21 @@ export const contentUtils = (function () {
         contentPage.onMessage.addListener((message, sender, sendResponse) => {
             if (message.type === 'show-alert-popup') {
                 showAlertPopup(message);
-            } else if (message.type === 'show-version-updated-popup') {
+            }
+            else if (message.type === 'show-version-updated-popup') {
                 showVersionUpdatedPopup(message);
                 sendResponse(true);
-            } else if (message.type === 'no-cache-reload') {
+            }
+            else if (message.type === 'no-cache-reload') {
                 noCacheReload();
-            } else if (message.type === 'update-tab-url') {
+            }
+            else if (message.type === 'update-tab-url') {
                 window.location = message.url;
             }
         });
     };
 
     return {
-        init,
+        init
     };
 })();

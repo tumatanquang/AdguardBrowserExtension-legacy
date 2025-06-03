@@ -9,7 +9,7 @@ if (!chrome.runtime.id) {
 }
 
 chrome.runtime.getManifest.returns({
-    version,
+    version
 });
 
 global.chrome = chrome;

@@ -6,11 +6,11 @@ import {
     ENVS,
     ENV_CONF,
     BROWSERS,
-    BROWSERS_CONF,
+    BROWSERS_CONF
 } from './constants';
 import {
     LOCALES_ABSOLUTE_PATH,
-    LOCALE_DATA_FILENAME,
+    LOCALE_DATA_FILENAME
 } from './locales/locales-constants';
 import packageJson from '../package.json';
 
@@ -51,7 +51,7 @@ const getClickToLoadSha = () => {
     const rawYaml = fs.readFileSync(redirectsYamlPath);
     const redirects = new Redirects(rawYaml);
     const click2loadSource = redirects.getRedirect('click2load.html');
-    return click2loadSource.sha;
+    return click2loadSource.sha; // click2loadSource.sha
 };
 
 /**
@@ -73,7 +73,7 @@ export const updateManifest = (env, targetPart, addedPart) => {
     const result = {
         version: packageJson.version,
         ...union,
-        ...devPolicy,
+        ...devPolicy
     };
 
     return result;
@@ -140,7 +140,8 @@ export const updateLocalesMSGName = (content, env, browser) => {
 export const chunkArray = (arr, size) => arr.reduce((chunks, el, idx) => {
     if (idx % size === 0) {
         chunks.push([el]);
-    } else {
+    }
+    else {
         chunks[chunks.length - 1].push(el);
     }
     return chunks;
@@ -170,7 +171,7 @@ export const areArraysEqual = (arr1, arr2) => {
     if (arr1.length !== arr2.length) {
         return false;
     }
-    for (let i = 0; i < arr1.length; i += 1) {
+    for (let i = 0; i < arr1.length; ++i) {
         if (arr1[i] !== arr2[i]) {
             return false;
         }

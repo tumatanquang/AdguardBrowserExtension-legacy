@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { rootStore } from '../../stores/RootStore';
 import { Icon } from '../../../common/components/ui/Icon';
 
-export const Notification = (props) => {
+export function Notification(props) {
     const [notificationOnClose, setNotificationOnClose] = useState(false);
 
     const { id, title, description } = props;
@@ -31,7 +31,7 @@ export const Notification = (props) => {
     }, [id, uiStore]);
 
     const notificationClassnames = classnames('notification', {
-        'notification--close': notificationOnClose,
+        'notification--close': notificationOnClose
     });
 
     const close = () => {
@@ -43,25 +43,25 @@ export const Notification = (props) => {
 
     return (
         <div className={notificationClassnames}>
-            <Icon id="#info" classname="notification__icon notification__icon--info" />
-            <div className="notification__message">
-                {title.length > 0
-                    && <div className="notification__title">{title}</div>}
-                <div className="notification__description">{description}</div>
+            <Icon id='#info' classname='notification__icon notification__icon--info' />
+            <div className='notification__message'>
+                {title.length !== 0
+                    && <div className='notification__title'>{title}</div>}
+                <div className='notification__description'>{description}</div>
             </div>
             <button
-                type="button"
-                className="button notification__close"
+                type='button'
+                className='button notification__close'
                 onClick={close}
             >
-                <Icon id="#cross" classname="notification__icon notification__icon--close" />
+                <Icon id='#cross' classname='notification__icon notification__icon--close' />
             </button>
         </div>
     );
-};
+}
 
 Notification.propTypes = {
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired
 };

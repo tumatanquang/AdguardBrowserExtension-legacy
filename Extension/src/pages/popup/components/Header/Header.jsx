@@ -19,7 +19,7 @@ export const Header = observer(() => {
 
     const updateFiltersWithMinDuration = addMinDurationTime(
         messenger.updateFilters.bind(messenger),
-        MIN_FILTERS_UPDATE_DISPLAY_DURATION,
+        MIN_FILTERS_UPDATE_DISPLAY_DURATION
     );
 
     const refUpdatingBtn = useRef(null);
@@ -46,68 +46,68 @@ export const Header = observer(() => {
     };
 
     return (
-        <div className="popup-header">
-            <div className="popup-header__logo">
+        <div className='popup-header'>
+            <div className='popup-header__logo'>
                 <Icon
-                    id="#logo"
-                    classname="icon--logo"
+                    id='#logo'
+                    classname='icon--logo'
                 />
             </div>
-            <div className="popup-header__buttons">
+            <div className='popup-header__buttons'>
                 <button
                     className={cn(
                         'button',
                         'popup-header__button',
-                        { 'updating-filters': filtersUpdating },
+                        { 'updating-filters': filtersUpdating }
                     )}
                     ref={refUpdatingBtn}
                     disabled={filtersUpdating}
-                    type="button"
+                    type='button'
                     onClick={handleUpdateFiltersClick}
                     title={reactTranslator.getMessage('popup_header_update_filters')}
                 >
                     <Icon
-                        id="#update-filters"
-                        classname="icon--update-filters"
+                        id='#update-filters'
+                        classname='icon--update-filters'
                     />
                 </button>
                 {!applicationFilteringDisabled
                     && (
                         <button
-                            className="button popup-header__button"
-                            type="button"
+                            className='button popup-header__button'
+                            type='button'
                             onClick={handlePauseClick}
                             title={reactTranslator.getMessage('context_disable_protection')}
                         >
                             <Icon
-                                id="#pause"
-                                classname="icon--pause"
+                                id='#pause'
+                                classname='icon--pause'
                             />
                         </button>
                     )}
                 {applicationFilteringDisabled
                     && (
                         <button
-                            className="button popup-header__button"
-                            type="button"
+                            className='button popup-header__button'
+                            type='button'
                             onClick={handleEnableClick}
                             title={reactTranslator.getMessage('context_enable_protection')}
                         >
                             <Icon
-                                id="#start"
-                                classname="icon--button icon--start"
+                                id='#start'
+                                classname='icon--button icon--start'
                             />
                         </button>
                     )}
                 <button
-                    className="button popup-header__button"
-                    type="button"
+                    className='button popup-header__button'
+                    type='button'
                     onClick={handleSettingsClick}
                     title={reactTranslator.getMessage('options_settings')}
                 >
                     <Icon
-                        id="#settings"
-                        classname="icon--settings"
+                        id='#settings'
+                        classname='icon--settings'
                     />
                 </button>
             </div>

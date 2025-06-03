@@ -16,7 +16,7 @@ export const Notifications = observer(() => {
     }
 
     return (
-        <div className="notifications">
+        <div className='notifications'>
             {notifications.map((notification) => {
                 const { id, description, title } = notification;
                 return (

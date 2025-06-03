@@ -13,75 +13,82 @@ import { exportData, ExportTypes } from '../../../common/utils/export';
 import {
     isFirefox,
     isEdgeChromium,
-    isOpera,
+    isOpera
 } from '../../../../common/user-agent-utils';
 import {
+    ACCEPTABLE_ADS_LEARN_MORE_URL,
+    SAFEBROWSING_LEARN_MORE_URL,
     APPEARANCE_THEMES,
     GITHUB_URL,
-    BROWSER_ADDON_STORE_LINKS,
+    BROWSER_ADDON_STORE_LINKS
 } from '../../../constants';
 
 const filtersUpdatePeriodOptions = [
     {
         value: -1,
-        title: reactTranslator.getMessage('options_select_update_period_default'),
+        title: reactTranslator.getMessage('options_select_update_period_default')
     },
     {
         value: hoursToMs(48),
-        title: reactTranslator.getMessage('options_select_update_period_48h'),
+        title: reactTranslator.getMessage('options_select_update_period_48h')
     },
     {
         value: hoursToMs(24),
-        title: reactTranslator.getMessage('options_select_update_period_24h'),
+        title: reactTranslator.getMessage('options_select_update_period_24h')
     },
     {
         value: hoursToMs(12),
-        title: reactTranslator.getMessage('options_select_update_period_12h'),
+        title: reactTranslator.getMessage('options_select_update_period_12h')
     },
     {
         value: hoursToMs(6),
-        title: reactTranslator.getMessage('options_select_update_period_6h'),
+        title: reactTranslator.getMessage('options_select_update_period_6h')
     },
     {
         value: hoursToMs(1),
-        title: reactTranslator.getMessage('options_select_update_period_1h'),
+        title: reactTranslator.getMessage('options_select_update_period_1h')
     },
     {
         value: 0,
-        title: reactTranslator.getMessage('options_select_update_period_disabled'),
-    },
+        title: reactTranslator.getMessage('options_select_update_period_disabled')
+    }
 ];
 
 const APPEARANCE_THEMES_OPTIONS = [
     {
         value: APPEARANCE_THEMES.SYSTEM,
-        title: reactTranslator.getMessage('options_theme_selector_system'),
+        title: reactTranslator.getMessage('options_theme_selector_system')
     },
     {
         value: APPEARANCE_THEMES.LIGHT,
-        title: reactTranslator.getMessage('options_theme_selector_light'),
+        title: reactTranslator.getMessage('options_theme_selector_light')
     },
     {
         value: APPEARANCE_THEMES.DARK,
-        title: reactTranslator.getMessage('options_theme_selector_dark'),
-    },
+        title: reactTranslator.getMessage('options_theme_selector_dark')
+    }
 ];
 
 const ALLOW_ACCEPTABLE_ADS = 'allowAcceptableAds';
 
-let currentBrowserAddonStoreUrl = BROWSER_ADDON_STORE_LINKS.CHROME;
+let currentBrowserAddonStoreUrl;
 if (isFirefox) {
     currentBrowserAddonStoreUrl = BROWSER_ADDON_STORE_LINKS.FIREFOX;
-} else if (isEdgeChromium) {
+}
+else if (isEdgeChromium) {
     currentBrowserAddonStoreUrl = BROWSER_ADDON_STORE_LINKS.EDGE;
-} else if (isOpera) {
+}
+else if (isOpera) {
     currentBrowserAddonStoreUrl = BROWSER_ADDON_STORE_LINKS.OPERA;
+}
+else {
+    currentBrowserAddonStoreUrl = BROWSER_ADDON_STORE_LINKS.CHROME;
 }
 
 const General = observer(() => {
     const {
         settingsStore,
-        uiStore,
+        uiStore
     } = useContext(rootStore);
 
     const { settings, allowAcceptableAds } = settingsStore;
@@ -104,11 +111,13 @@ const General = observer(() => {
             if (result) {
                 const successMessage = reactTranslator.getMessage('options_popup_import_success_title');
                 uiStore.addNotification({ description: successMessage });
-            } else {
+            }
+            else {
                 const errorMessage = reactTranslator.getMessage('options_popup_import_error_file_description');
                 uiStore.addNotification({ description: errorMessage });
             }
-        } catch (e) {
+        }
+        catch (e) {
             const message = e.message || reactTranslator.getMessage('options_popup_import_error_title');
             uiStore.addNotification({ description: message });
         }
@@ -129,14 +138,8 @@ const General = observer(() => {
         DISABLE_DETECT_FILTERS,
         FILTERS_UPDATE_PERIOD,
         DISABLE_SAFEBROWSING,
-        APPEARANCE_THEME,
+        APPEARANCE_THEME
     } = settings.names;
-
-    // eslint-disable-next-line max-len
-    const ACCEPTABLE_ADS_LEARN_MORE_URL = 'https://link.adtidy.org/forward.html?action=self_promotion&from=options_screen&app=browser_extension';
-
-    // eslint-disable-next-line max-len
-    const SAFEBROWSING_LEARN_MORE_URL = 'https://link.adtidy.org/forward.html?action=protection_works&from=options_screen&app=browser_extension';
 
     return (
         <>
@@ -154,12 +157,12 @@ const General = observer(() => {
                         a: (chunks) => (
                             <a
                                 href={ACCEPTABLE_ADS_LEARN_MORE_URL}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                target='_blank'
+                                rel='noopener noreferrer'
                             >
                                 {chunks}
                             </a>
-                        ),
+                        )
                     })}
                     disabled={allowAcceptableAds}
                     id={ALLOW_ACCEPTABLE_ADS}
@@ -174,12 +177,12 @@ const General = observer(() => {
                         a: (chunks) => (
                             <a
                                 href={SAFEBROWSING_LEARN_MORE_URL}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                target='_blank'
+                                rel='noopener noreferrer'
                             >
                                 {chunks}
                             </a>
-                        ),
+                        )
                     })}
                     disabled={settings.values[DISABLE_SAFEBROWSING]}
                     id={DISABLE_SAFEBROWSING}
@@ -210,42 +213,42 @@ const General = observer(() => {
                 />
             </SettingsSection>
             <div
-                className="links-menu"
+                className='links-menu'
                 style={{ marginLeft: '16px' }}
             >
                 <button
-                    type="button"
-                    className="links-menu__item"
+                    type='button'
+                    className='links-menu__item'
                     onClick={handleExportSettings}
                 >
                     {reactTranslator.getMessage('options_export_settings')}
                 </button>
                 <input
-                    id="inputEl"
-                    type="file"
-                    accept="application/json"
+                    id='inputEl'
+                    type='file'
+                    accept='application/json'
                     onChange={inputChangeHandler}
-                    className="actions__input-file"
+                    className='actions__input-file'
                 />
                 <label
-                    htmlFor="inputEl"
-                    className="links-menu__item"
+                    htmlFor='inputEl'
+                    className='links-menu__item'
                 >
                     {reactTranslator.getMessage('options_import_settings')}
                 </label>
                 <a
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target='_blank'
+                    rel='noopener noreferrer'
                     href={GITHUB_URL}
-                    className="links-menu__item"
+                    className='links-menu__item'
                 >
                     {reactTranslator.getMessage('options_report_bug')}
                 </a>
                 <a
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target='_blank'
+                    rel='noopener noreferrer'
                     href={currentBrowserAddonStoreUrl}
-                    className="links-menu__item"
+                    className='links-menu__item'
                 >
                     {reactTranslator.getMessage('options_leave_feedback')}
                 </a>

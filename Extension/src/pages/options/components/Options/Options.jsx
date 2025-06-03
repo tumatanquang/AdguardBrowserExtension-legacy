@@ -1,6 +1,6 @@
 import React, {
     useContext,
-    useEffect,
+    useEffect
 } from 'react';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import { observer } from 'mobx-react';
@@ -41,7 +41,7 @@ const Options = observer(() => {
                 NOTIFIER_TYPES.UPDATE_ALLOWLIST_FILTER_RULES,
                 NOTIFIER_TYPES.FILTERS_UPDATE_CHECK_READY,
                 NOTIFIER_TYPES.SETTING_UPDATED,
-                NOTIFIER_TYPES.FULLSCREEN_USER_RULES_EDITOR_UPDATED,
+                NOTIFIER_TYPES.FULLSCREEN_USER_RULES_EDITOR_UPDATED
             ];
 
             removeListenerCallback = await messenger.createEventListener(
@@ -78,7 +78,7 @@ const Options = observer(() => {
                             break;
                         }
                     }
-                },
+                }
             );
         })();
 
@@ -92,21 +92,21 @@ const Options = observer(() => {
     }
 
     return (
-        <HashRouter hashType="noslash">
+        <HashRouter hashType='noslash'>
             <Icons />
-            <div className="page">
+            <div className='page'>
                 <Sidebar />
-                <div className="inner">
-                    <div className="content">
+                <div className='inner'>
+                    <div className='content'>
                         <Notifications />
                         <Switch>
-                            <Route path="/" exact component={General} />
-                            <Route path="/filters" component={Filters} />
-                            <Route path="/stealth" component={Stealth} />
-                            <Route path="/allowlist" component={Allowlist} />
-                            <Route path="/user-filter" component={UserRules} />
-                            <Route path="/miscellaneous" component={Miscellaneous} />
-                            <Route path="/about" component={About} />
+                            <Route path='/' exact component={General} />
+                            <Route path='/filters' component={Filters} />
+                            <Route path='/stealth' component={Stealth} />
+                            <Route path='/allowlist' component={Allowlist} />
+                            <Route path='/user-filter' component={UserRules} />
+                            <Route path='/miscellaneous' component={Miscellaneous} />
+                            <Route path='/about' component={About} />
                             <Route component={General} />
                         </Switch>
                     </div>

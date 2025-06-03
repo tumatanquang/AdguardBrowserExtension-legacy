@@ -407,6 +407,12 @@
     "alert_popup_filter_enabled_desc": {
         "message": "%filter_name% đã được tự động kích hoạt."
     },
+    "filters_download_confirm_title": {
+        "message": "Sử dụng các thiết đặt và bộ lọc mặc định"
+    },
+    "filters_download_confirm_text": {
+        "message": "Bạn có muốn sử dụng các thiết đặt và bộ lọc mặc định?"
+    },
     "filters_download_title": {
         "message": "Dữ liệu bộ lọc đang tải..."
     },
@@ -1042,6 +1048,12 @@
     },
     "text_collapser_hide_default": {
         "message": "Ẩn toàn bộ ký tự"
+    },
+    "yes_button_title": {
+        "message": "Có"
+    },
+    "no_button_title": {
+        "message": "Không"
     },
     "close_button_title": {
         "message": "Đóng"

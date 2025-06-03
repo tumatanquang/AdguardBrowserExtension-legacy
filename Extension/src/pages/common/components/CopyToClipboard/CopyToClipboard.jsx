@@ -3,7 +3,7 @@ import React, {
     useState,
     useRef,
     useEffect,
-    forwardRef,
+    forwardRef
 } from 'react';
 import { observer } from 'mobx-react';
 import cn from 'classnames';
@@ -22,7 +22,7 @@ export const CopyToClipboard = observer(forwardRef(({
     children,
     className,
     style,
-    wrapperClassName,
+    wrapperClassName
 }, ref) => {
     const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
     const { currentContainerId, copyText, resetTooltipId } = useContext(copyToClipboardStore);
@@ -50,7 +50,7 @@ export const CopyToClipboard = observer(forwardRef(({
             // shifting position for prevent cursor flashing on tooltip render
             setTooltipPosition({
                 x: e.clientX + TOOLTIP_MOUSE_PADDING_PX,
-                y: e.clientY + TOOLTIP_MOUSE_PADDING_PX,
+                y: e.clientY + TOOLTIP_MOUSE_PADDING_PX
             });
         }
     };
@@ -67,7 +67,7 @@ export const CopyToClipboard = observer(forwardRef(({
     return (
         <div className={cn('copy-to-clipboard-wrapper', wrapperClassName)}>
             {(containerRef.current === currentContainerId) && (
-                <AttachmentPortal rootId="root-portal" position={tooltipPosition}>
+                <AttachmentPortal rootId='root-portal' position={tooltipPosition}>
                     <Tooltip text={reactTranslator.getMessage('filtering_modal_copied')} />
                 </AttachmentPortal>
             )}
@@ -75,8 +75,8 @@ export const CopyToClipboard = observer(forwardRef(({
                 ref={ref}
                 className={cn('copy-to-clipboard', className)}
                 style={style}
-                role="button"
-                tabIndex="0"
+                role='button'
+                tabIndex='0'
                 title={reactTranslator.getMessage('filtering_modal_copy_to_clipboard')}
                 onClick={handleClick}
                 onKeyUp={handleKeyUp}

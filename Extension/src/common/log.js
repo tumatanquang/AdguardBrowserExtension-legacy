@@ -28,7 +28,7 @@ export const log = (() => {
         ERROR: 1,
         WARN: 2,
         INFO: 3,
-        DEBUG: 4,
+        DEBUG: 4
     };
 
     /**
@@ -64,9 +64,11 @@ export const log = (() => {
                 let value = args[number];
                 if (value instanceof Error) {
                     value = errorToString(value);
-                } else if (value && value.message) {
+                }
+                else if (value && value.message) {
                     value = value.message;
-                } else if (typeof value === 'object') {
+                }
+                else if (typeof value === 'object') {
                     value = JSON.stringify(value);
                 }
                 return value;
@@ -97,6 +99,6 @@ export const log = (() => {
 
         error(...args) {
             print('ERROR', 'error', args);
-        },
+        }
     };
 })();

@@ -4,12 +4,13 @@ import React, { useCallback } from 'react';
 import { reactTranslator } from '../../../../common/translators/reactTranslator';
 
 import { MESSAGE_TYPES } from '../../../../common/constants';
+import { ADGUARD_ADBLOCKED_URL } from '../../../constants';
 import { getParams } from '../../getParams';
 import { messenger } from '../../../services/messenger';
 
 import '../../styles/index.pcss';
 
-export const AdBlocked = () => {
+export function AdBlocked() {
     const { rule, url } = getParams();
 
     const handleGoBack = useCallback((e) => {
@@ -23,33 +24,33 @@ export const AdBlocked = () => {
     }, [url]);
 
     return (
-        <div className="alert alert--gold" id="app">
-            <div className="alert__in">
-                <div className="alert__header alert__header--gold">
-                    <div className="alert__header-title">
+        <div className='alert alert--gold' id='app'>
+            <div className='alert__in'>
+                <div className='alert__header alert__header--gold'>
+                    <div className='alert__header-title'>
                         {reactTranslator.getMessage('blocking_pages_rule_header_title')}
                     </div>
                 </div>
-                <div className="alert__body">
-                    <a href="https://link.adtidy.org/forward.html?action=adguard_site&from=adblocked&app=browser_extension" className="alert__logo" />
-                    <div className="hero hero--green" />
-                    <div className="alert__body-title">
+                <div className='alert__body'>
+                    <a href={ADGUARD_ADBLOCKED_URL} className='alert__logo' />
+                    <div className='hero hero--green' />
+                    <div className='alert__body-title'>
                         <span>
                             {reactTranslator.getMessage('blocking_pages_rule_content_title')}
                         </span>
                     </div>
-                    <div className="alert__rule">
+                    <div className='alert__rule'>
                         {rule}
                     </div>
-                    <div className="alert__btns">
+                    <div className='alert__btns'>
                         <button
-                            type="button"
+                            type='button'
                             onClick={handleGoBack}
-                            className="button button--green alert__btn"
+                            className='button button--green alert__btn'
                         >
                             {reactTranslator.getMessage('blocking_pages_btn_go_back')}
                         </button>
-                        <button type="button" onClick={handleProceed} className="button button--white alert__btn">
+                        <button type='button' onClick={handleProceed} className='button button--white alert__btn'>
                             {reactTranslator.getMessage('blocking_pages_btn_proceed')}
                         </button>
                     </div>
@@ -57,4 +58,4 @@ export const AdBlocked = () => {
             </div>
         </div>
     );
-};
+}

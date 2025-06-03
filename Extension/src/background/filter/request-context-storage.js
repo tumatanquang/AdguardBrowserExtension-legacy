@@ -15,8 +15,6 @@
  * along with Adguard Browser Extension. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* eslint-disable max-len */
-
 import { RequestTypes } from '../utils/request-types';
 import { filteringLog } from './filtering-log';
 import { webRequestService } from './request-blocking';
@@ -74,7 +72,7 @@ export const requestContextStorage = (function () {
     const States = {
         NONE: 1,
         PROCESSING: 2,
-        DONE: 3,
+        DONE: 3
     };
 
     /**
@@ -115,8 +113,7 @@ export const requestContextStorage = (function () {
      * @returns {number}
      */
     const getNextEventId = () => {
-        nextEventId += 1;
-        return nextEventId;
+        return ++nextEventId;
     };
 
     /**
@@ -147,7 +144,7 @@ export const requestContextStorage = (function () {
         requestType,
         engineRequestType,
         tab,
-        method,
+        method
     }) => {
         const eventId = getNextEventId();
 
@@ -170,7 +167,7 @@ export const requestContextStorage = (function () {
             requestState: States.PROCESSING,
             contentModifyingState: States.NONE,
             timestamp,
-            method,
+            method
         };
         contexts.set(String(requestId), context);
 
@@ -181,7 +178,7 @@ export const requestContextStorage = (function () {
             requestType,
             timestamp,
             eventId,
-            method,
+            method
         });
 
         return context;
@@ -202,7 +199,7 @@ export const requestContextStorage = (function () {
         referrerUrl,
         requestType,
         tab,
-        requestRule,
+        requestRule
     }) => {
         filteringLog.addHttpRequestEvent({
             tab,
@@ -210,7 +207,7 @@ export const requestContextStorage = (function () {
             frameUrl: referrerUrl,
             requestType,
             requestRule,
-            timestamp: Date.now(),
+            timestamp: Date.now()
         });
         webRequestService.recordRuleHit(tab, requestRule, requestUrl);
     };
@@ -324,7 +321,7 @@ export const requestContextStorage = (function () {
         const {
             tab,
             requestUrl,
-            referrerUrl,
+            referrerUrl
         } = context;
 
         let ruleHitsRecords = [];
@@ -336,7 +333,7 @@ export const requestContextStorage = (function () {
                 requestRule,
                 cspRules,
                 stealthActions,
-                cspReportBlocked,
+                cspReportBlocked
             } = context;
 
             if (requestRule) {
@@ -352,7 +349,7 @@ export const requestContextStorage = (function () {
                         frameUrl: referrerUrl,
                         requestType: RequestTypes.CSP,
                         requestRule: cspRule,
-                        timestamp: Date.now(),
+                        timestamp: Date.now()
                     });
                 });
 
@@ -389,7 +386,7 @@ export const requestContextStorage = (function () {
                             frameUrl: requestUrl,
                             requestType: context.requestType,
                             requestRule: contentRule,
-                            timestamp: Date.now(),
+                            timestamp: Date.now()
                         });
                     });
                     context.elements.delete(contentRule);
@@ -398,7 +395,7 @@ export const requestContextStorage = (function () {
             }
         }
 
-        for (let i = 0; i < ruleHitsRecords.length; i += 1) {
+        for (let i = 0; i < ruleHitsRecords.length; ++i) {
             webRequestService.recordRuleHit(tab, ruleHitsRecords[i], requestUrl);
         }
 
@@ -448,6 +445,6 @@ export const requestContextStorage = (function () {
         bindContentRule,
         onRequestCompleted,
         onContentModificationStarted,
-        onContentModificationFinished,
+        onContentModificationFinished
     };
 })();

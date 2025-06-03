@@ -9,7 +9,7 @@ export const popupPage = {
 
         ReactDOM.render(
             <Popup />,
-            document.getElementById('root'),
+            document.getElementById('root')
         );
-    },
+    }
 };

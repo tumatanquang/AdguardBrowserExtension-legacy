@@ -15,8 +15,6 @@
  * along with Adguard Browser Extension. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* eslint-disable max-len */
-
 import * as TSUrlFilter from '@adguard/tsurlfilter';
 import { requestContextStorage } from './filter/request-context-storage';
 import { tabsApi } from './tabs/tabs-api';
@@ -46,7 +44,7 @@ const webrequestInit = function () {
      */
     const REQUEST_TYPE_COLLAPSE_TAG_NAMES = {
         [RequestTypes.SUBDOCUMENT]: ['frame', 'iframe'],
-        [RequestTypes.IMAGE]: ['img'],
+        [RequestTypes.IMAGE]: ['img']
     };
 
     /**
@@ -90,7 +88,7 @@ const webrequestInit = function () {
             requestType,
             frameId,
             requestFrameId = 0,
-            method,
+            method
         } = requestDetails;
 
         const { tabId } = tab;
@@ -130,7 +128,7 @@ const webrequestInit = function () {
 
         // truncate too long urls
         // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1493
-        const MAX_URL_LENGTH = 1024 * 16;
+        const MAX_URL_LENGTH = 16 * 1024;
         if (requestUrl.length > MAX_URL_LENGTH) {
             requestUrl = requestUrl.slice(0, MAX_URL_LENGTH);
         }
@@ -145,14 +143,14 @@ const webrequestInit = function () {
             requestType,
             engineRequestType: RequestTypes.transformRequestType(requestType),
             tab,
-            method,
+            method
         });
 
         let requestRule = webRequestService.getRuleForRequest(
             tab,
             requestUrl,
             referrerUrl,
-            requestType,
+            requestType
         );
 
         if (!requestRule?.isDocumentAllowlistRule()) {
@@ -164,7 +162,7 @@ const webrequestInit = function () {
             requestUrl,
             referrerUrl,
             requestType,
-            requestRule,
+            requestRule
         );
 
         if (requestRule) {
@@ -185,7 +183,7 @@ const webrequestInit = function () {
         const response = webRequestService.getBlockedResponseByRule(
             requestRule,
             requestType,
-            requestUrl,
+            requestUrl
         );
 
         if (!response) {
@@ -217,14 +215,14 @@ const webrequestInit = function () {
             const replaceRules = webRequestService.getReplaceRules(tab, requestUrl, referrerUrl, requestType) || [];
             const htmlRules = webRequestService.getContentRules(tab, referrerUrl) || [];
 
-            if (replaceRules.length > 0 || htmlRules.length > 0) {
+            if (replaceRules.length !== 0 || htmlRules.length !== 0) {
                 const supportedStreamFilterRequestTypes = [
                     RequestTypes.DOCUMENT,
                     RequestTypes.SUBDOCUMENT,
                     RequestTypes.STYLESHEET,
                     RequestTypes.SCRIPT,
                     RequestTypes.XMLHTTPREQUEST,
-                    RequestTypes.OTHER,
+                    RequestTypes.OTHER
                 ];
 
                 if (supportedStreamFilterRequestTypes.includes(requestType)) {
@@ -232,7 +230,7 @@ const webrequestInit = function () {
                         backgroundPage.webRequest.filterResponseData(requestId),
                         context,
                         replaceRules || [],
-                        htmlRules || [],
+                        htmlRules || []
                     );
                 }
             }
@@ -269,7 +267,7 @@ const webrequestInit = function () {
         }
 
         // Collapsing is not supported for the requests which happen out of the tabs, e.g. other extensions
-        if (tabId === -1) {
+        if (tabId === BACKGROUND_TAB_ID) {
             return;
         }
 
@@ -283,10 +281,7 @@ const webrequestInit = function () {
 
         const collapseStyle = '{ display: none!important; visibility: hidden!important; height: 0px!important; min-height: 0px!important; }';
         let css = '';
-        let iTagNames = tagNames.length;
-
-        while (iTagNames) {
-            iTagNames -= 1;
+        for (let iTagNames = tagNames.length; --iTagNames >= 0;) {
             css += `${tagNames[iTagNames]}[src$="${srcUrl}"] ${collapseStyle}\n`;
         }
 
@@ -307,7 +302,7 @@ const webrequestInit = function () {
             requestId,
             requestUrl,
             requestType,
-            requestHeaders,
+            requestHeaders
         } = requestDetails;
 
         requestContextStorage.update(requestId, { requestHeaders });
@@ -367,7 +362,8 @@ const webrequestInit = function () {
             uiService.openTab(safebrowsingUrl).then(() => {
                 tabsApi.remove(tab.tabId);
             });
-        } else {
+        }
+        else {
             tabsApi.reload(tab.tabId, safebrowsingUrl);
         }
     }
@@ -387,7 +383,7 @@ const webrequestInit = function () {
             requestUrl,
             requestType,
             requestId,
-            statusCode,
+            statusCode
         } = requestDetails;
 
         let responseHeaders = requestDetails.responseHeaders || [];
@@ -413,7 +409,7 @@ const webrequestInit = function () {
 
         if (requestType === RequestTypes.DOCUMENT || requestType === RequestTypes.SUBDOCUMENT) {
             const cspHeaders = getCSPHeaders(requestDetails);
-            if (cspHeaders && cspHeaders.length > 0) {
+            if (cspHeaders && cspHeaders.length !== 0) {
                 responseHeaders = responseHeaders.concat(cspHeaders);
                 responseHeadersModified = true;
             }
@@ -460,17 +456,17 @@ const webrequestInit = function () {
          */
         const cspRules = webRequestService.getCspRules(tab, requestUrl, frameUrl, requestType);
         if (cspRules) {
-            for (let i = 0; i < cspRules.length; i += 1) {
+            for (let i = 0; i < cspRules.length; ++i) {
                 const rule = cspRules[i];
                 // Don't forget: getCspRules returns all $csp rules, we must directly check that the rule is blocking.
                 if (webRequestService.isRequestBlockedByRule(rule)) {
                     cspHeaders.push({
                         name: CSP_HEADER_NAME,
-                        value: rule.getAdvancedModifierValue(),
+                        value: rule.getAdvancedModifierValue()
                     });
                 }
             }
-            if (cspRules.length > 0) {
+            if (cspRules.length !== 0) {
                 requestContextStorage.update(requestId, { cspRules });
             }
         }
@@ -510,7 +506,7 @@ const webrequestInit = function () {
             requestId,
             referrerUrl,
             requestType,
-            tab,
+            tab
         } = details;
 
         const requestContext = requestContextStorage.get(requestId);
@@ -522,7 +518,7 @@ const webrequestInit = function () {
                 referrerUrl,
                 originUrl,
                 requestType,
-                tab,
+                tab
             });
         }
 
@@ -543,11 +539,12 @@ const webrequestInit = function () {
             try {
                 const extensionUrl = backgroundPage.app.getExtensionUrl();
                 const report = String.fromCharCode.apply(null, new Uint8Array(requestBody.raw[0].bytes));
-                if (report.indexOf(extensionUrl) !== -1) {
+                if (report.indexOf(extensionUrl) >= 0) {
                     requestContextStorage.update(requestId, { cspReportBlocked: true });
                     return { cancel: true };
                 }
-            } catch (e) {
+            }
+            catch (e) {
                 log.debug('Unable to parse CSP report request body content', details.url);
             }
         }
@@ -564,7 +561,7 @@ const webrequestInit = function () {
         handleCspReportRequests,
         ['<all_urls>'],
         ['csp_report'],
-        ['requestBody'],
+        ['requestBody']
     );
 
     backgroundPage.webRequest.onBeforeSendHeaders.addListener(onBeforeSendHeaders, ['<all_urls>']);
@@ -582,7 +579,7 @@ const webrequestInit = function () {
             tab,
             requestType,
             frameId,
-            requestUrl,
+            requestUrl
         } = details;
 
         if (requestType !== RequestTypes.DOCUMENT
@@ -609,7 +606,7 @@ const webrequestInit = function () {
                 handlerBehaviorTimeout = setTimeout(() => {
                     handlerBehaviorTimeout = null;
                     backgroundPage.webRequest.handlerBehaviorChanged();
-                }, 3000);
+                }, 3 * 1000);
                 break;
             default:
                 // do noting
@@ -765,7 +762,7 @@ const webrequestInit = function () {
                  */
                 removeTabInjection(tabId) {
                     delete this[tabId];
-                },
+                }
             };
             /**
              * Taken from
@@ -783,7 +780,7 @@ const webrequestInit = function () {
                         return '\\n\\\n'; // Line continuation character for ease
                     // of reading inlined resource.
                     case '\r':
-                        return '';        // Carriage returns won't have
+                        return ''; // Carriage returns won't have
                     // any semantic meaning in JS
                     case '\u2028':
                         return '\\u2028';
@@ -824,7 +821,7 @@ const webrequestInit = function () {
                     var FRAME_REQUESTS_LIMIT = 500;\
                     var frameRequests = 0;\
                     function waitParent () {\
-                        frameRequests += 1;\
+                        ++frameRequests;\
                         var parent = document.head || document.documentElement;\
                         if (parent) {\
                             try {\
@@ -905,19 +902,20 @@ const webrequestInit = function () {
                 const result = webRequestService.processGetSelectorsAndScripts(
                     { tabId },
                     url,
-                    true,
+                    true
                 );
 
                 if (result.requestFilterReady === false) {
                     injections.set(tabId, frameId, {
-                        ready: false,
+                        ready: false
                     });
-                } else {
+                }
+                else {
                     injections.set(tabId, frameId, {
                         ready: true,
                         jsScriptText: buildScriptText(result.scripts),
                         cssText: buildCssText(result.selectors),
-                        url,
+                        url
                     });
                 }
             }
@@ -1052,7 +1050,7 @@ const webrequestInit = function () {
                         || frameUrl === 'about:blank'
                         || frameUrl === 'about:srcdoc'
                         // eslint-disable-next-line no-script-url
-                        || frameUrl.indexOf('javascript:') > -1)
+                        || frameUrl.indexOf('javascript:') >= 0)
                     && frameId !== MAIN_FRAME_ID;
             }
 
@@ -1073,7 +1071,7 @@ const webrequestInit = function () {
                 const mainFrameUrl = frames.getMainFrameUrl({ tabId });
                 if (mainFrameUrl && isIframeWithoutSrc(frameUrl, frameId, mainFrameUrl)) {
                     const result = webRequestService.processGetSelectorsAndScripts(
-                        { tabId }, mainFrameUrl, true,
+                        { tabId }, mainFrameUrl, true
                     );
                     if (result.requestFilterReady === false) {
                         setTimeout((details) => {
@@ -1106,7 +1104,7 @@ const webrequestInit = function () {
             // This is true only for SUBDOCUMENTS i.e. iframes
             // so we inject code when onCompleted event fires
             if (browserUtils.isFirefoxBrowser()) {
-                backgroundPage.webRequest.onCompleted.addListener((details) => { tryInject(details, 'onCompleted'); }, ['<all_urls>']);
+                backgroundPage.webRequest.onCompleted.addListener((details) => { tryInject(details, 'onCompleted') }, ['<all_urls>']);
             }
             // Remove injections when tab is closed
             tabsApi.onRemoved.addListener(injections.removeTabInjection);
@@ -1119,14 +1117,15 @@ const webrequestInit = function () {
     backgroundPage.webRequest.onCompleted.addListener((requestDetails) => {
         const {
             requestId,
-            statusCode,
+            statusCode
         } = requestDetails;
 
         cookieService.onCompleted(requestDetails);
 
         if (statusCode) {
             requestContextStorage.onRequestCompleted(requestId, statusCode);
-        } else {
+        }
+        else {
             requestContextStorage.onRequestCompleted(requestId);
         }
     }, ['<all_urls>']);
@@ -1165,5 +1164,5 @@ const webrequestInit = function () {
 };
 
 export const webrequest = {
-    init: webrequestInit,
+    init: webrequestInit
 };

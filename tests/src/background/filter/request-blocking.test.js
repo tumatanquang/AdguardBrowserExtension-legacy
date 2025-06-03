@@ -12,7 +12,7 @@ describe('webRequestService', () => {
             requestUrl,
             '',
             requestType,
-            requestRule,
+            requestRule
         );
 
         expect(rule).toBe(requestRule);
@@ -20,7 +20,7 @@ describe('webRequestService', () => {
         const response = webRequestService.getBlockedResponseByRule(
             rule,
             requestType,
-            requestUrl,
+            requestUrl
         );
 
         expect(response.documentBlockedPage)

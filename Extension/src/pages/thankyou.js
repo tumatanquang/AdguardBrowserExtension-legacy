@@ -23,7 +23,7 @@ const PageController = (response) => {
     const {
         userSettings,
         enabledFilters,
-        constants: { AntiBannerFiltersId },
+        constants: { AntiBannerFiltersId }
     } = response;
 
     let safebrowsingEnabledCheckbox;
@@ -37,7 +37,7 @@ const PageController = (response) => {
         contentPage.sendMessage({
             type: MESSAGE_TYPES.CHANGE_USER_SETTING,
             key: userSettings.names.DISABLE_SAFEBROWSING,
-            value: !checkbox.checked,
+            value: !checkbox.checked
         });
     };
 
@@ -47,16 +47,17 @@ const PageController = (response) => {
             contentPage.sendMessage({
                 type: MESSAGE_TYPES.ADD_AND_ENABLE_FILTER,
                 data: {
-                    filterId: AntiBannerFiltersId.TRACKING_FILTER_ID,
-                },
+                    filterId: AntiBannerFiltersId.TRACKING_FILTER_ID
+                }
             });
-        } else {
+        }
+        else {
             contentPage.sendMessage({
                 type: MESSAGE_TYPES.DISABLE_ANTIBANNER_FILTER,
                 data: {
                     filterId: AntiBannerFiltersId.TRACKING_FILTER_ID,
-                    remove: true,
-                },
+                    remove: true
+                }
             });
         }
     };
@@ -67,16 +68,17 @@ const PageController = (response) => {
             contentPage.sendMessage({
                 type: MESSAGE_TYPES.ADD_AND_ENABLE_FILTER,
                 data: {
-                    filterId: AntiBannerFiltersId.SOCIAL_FILTER_ID,
-                },
+                    filterId: AntiBannerFiltersId.SOCIAL_FILTER_ID
+                }
             });
-        } else {
+        }
+        else {
             contentPage.sendMessage({
                 type: MESSAGE_TYPES.DISABLE_ANTIBANNER_FILTER,
                 data: {
                     filterId: AntiBannerFiltersId.SOCIAL_FILTER_ID,
-                    remove: true,
-                },
+                    remove: true
+                }
             });
         }
     };
@@ -86,7 +88,7 @@ const PageController = (response) => {
         contentPage.sendMessage({
             type: MESSAGE_TYPES.CHANGE_USER_SETTING,
             key: userSettings.names.DISABLE_COLLECT_HITS,
-            value: !checkbox.checked,
+            value: !checkbox.checked
         });
     };
 
@@ -96,16 +98,17 @@ const PageController = (response) => {
             contentPage.sendMessage({
                 type: MESSAGE_TYPES.ADD_AND_ENABLE_FILTER,
                 data: {
-                    filterId: AntiBannerFiltersId.SEARCH_AND_SELF_PROMO_FILTER_ID,
-                },
+                    filterId: AntiBannerFiltersId.SEARCH_AND_SELF_PROMO_FILTER_ID
+                }
             });
-        } else {
+        }
+        else {
             contentPage.sendMessage({
                 type: MESSAGE_TYPES.DISABLE_ANTIBANNER_FILTER,
                 data: {
                     filterId: AntiBannerFiltersId.SEARCH_AND_SELF_PROMO_FILTER_ID,
-                    remove: true,
-                },
+                    remove: true
+                }
             });
         }
     };
@@ -150,7 +153,8 @@ const PageController = (response) => {
         }
         if (enabled) {
             checkbox.setAttribute('checked', 'checked');
-        } else {
+        }
+        else {
             checkbox.removeAttribute('checked');
         }
     };
@@ -165,7 +169,6 @@ const PageController = (response) => {
         const collectHitsCount = !userSettings.values[userSettings.names.DISABLE_COLLECT_HITS];
         const trackingFilterEnabled = AntiBannerFiltersId.TRACKING_FILTER_ID in enabledFilters;
         const socialFilterEnabled = AntiBannerFiltersId.SOCIAL_FILTER_ID in enabledFilters;
-        // eslint-disable-next-line max-len
         const allowAcceptableAdsEnabled = AntiBannerFiltersId.SEARCH_AND_SELF_PROMO_FILTER_ID in enabledFilters;
 
         renderSafebrowsingSection(safebrowsingEnabled, collectHitsCount);
@@ -180,26 +183,24 @@ const PageController = (response) => {
     };
 
     return {
-        init,
+        init
     };
 };
 
-let timeoutId;
+let initTimer;
 let counter = 0;
-const MAX_WAIT_RETRY = 10;
-const RETRY_TIMEOUT_MS = 100;
 const init = async () => {
-    if (typeof contentPage === 'undefined') {
-        if (counter > MAX_WAIT_RETRY) {
-            clearTimeout(timeoutId);
+    if (contentPage === undefined) {
+        if (counter > 10) {
+            clearTimeout(initTimer);
             return;
         }
-        timeoutId = setTimeout(init, RETRY_TIMEOUT_MS);
-        counter += 1;
+        initTimer = setTimeout(init, 100);
+        ++counter;
         return;
     }
 
-    clearTimeout(timeoutId);
+    clearTimeout(initTimer);
 
     const response = await contentPage.sendMessage({ type: MESSAGE_TYPES.INITIALIZE_FRAME_SCRIPT });
     const controller = PageController(response);
@@ -207,11 +208,12 @@ const init = async () => {
         document.addEventListener('DOMContentLoaded', () => {
             controller.init();
         });
-    } else {
+    }
+    else {
         controller.init();
     }
 };
 
 export const thankyou = {
-    init,
+    init
 };

@@ -12,14 +12,14 @@ const StatusTitle = {
     PROCESSED: 'filtering_log_status_processed',
     BLOCKED: 'filtering_log_status_blocked',
     MODIFIED: 'filtering_log_status_modified',
-    UNBLOCKED: 'filtering_log_status_allowed',
+    UNBLOCKED: 'filtering_log_status_allowed'
 };
 
 const titleMap = {
     [StatusMode.REGULAR]: StatusTitle.PROCESSED,
     [StatusMode.MODIFIED]: StatusTitle.MODIFIED,
     [StatusMode.BLOCKED]: StatusTitle.BLOCKED,
-    [StatusMode.ALLOWED]: StatusTitle.UNBLOCKED,
+    [StatusMode.ALLOWED]: StatusTitle.UNBLOCKED
 };
 
 export const getStatusTitle = (mode) => {

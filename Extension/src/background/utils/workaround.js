@@ -1,3 +1,5 @@
+import { CUSTOM_FILTERS_GROUP_DISPLAY_NUMBER } from '../../common/constants';
+
 /**
  * We collect here all workarounds and ugly hacks:)
  */
@@ -7,16 +9,17 @@ export const workaround = (function () {
          * Converts blocked counter to the badge text.
          * Workaround for FF - make 99 max.
          *
-         * @param blocked Blocked requests count
+         * @param {string} blocked Blocked requests count
          */
         getBlockedCountText(blocked) {
-            let blockedText = blocked === '0' ? '' : blocked;
-            if (blocked - 0 > 99) {
-                blockedText = '\u221E';
+            if (blocked === '0') {
+                return '';
             }
-
-            return blockedText;
-        },
+            if (blocked > CUSTOM_FILTERS_GROUP_DISPLAY_NUMBER) {
+                return '\u221E';
+            }
+            return blocked;
+        }
     };
 
     return WorkaroundUtils;

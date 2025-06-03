@@ -4,12 +4,13 @@ import React, { useCallback, useState } from 'react';
 import { reactTranslator } from '../../../../common/translators/reactTranslator';
 
 import { MESSAGE_TYPES } from '../../../../common/constants';
+import { ADGUARD_OPEN_SITE_REPORT_URL, ADGUARD_SAFEBROWSING_URL } from '../../../constants';
 import { getParams } from '../../getParams';
 import { messenger } from '../../../services/messenger';
 
 import '../../styles/index.pcss';
 
-export const SafeBrowsing = () => {
+export function SafeBrowsing() {
     const [advanced, setAdvanced] = useState(false);
 
     const { host, url, malware } = getParams();
@@ -30,70 +31,67 @@ export const SafeBrowsing = () => {
     }, [url]);
 
     return (
-        <div className="alert alert--red" id="app">
-            <div className="alert__in">
-                <div className="alert__header alert__header--red">
-                    <div className="alert__header-title">
+        <div className='alert alert--red' id='app'>
+            <div className='alert__in'>
+                <div className='alert__header alert__header--red'>
+                    <div className='alert__header-title'>
                         {reactTranslator.getMessage('blocking_pages_safe_header_title')}
                     </div>
                 </div>
-                <div className="alert__body">
-                    <a href="https://link.adtidy.org/forward.html?action=adguard_site&from=safebrowsing&app=browser_extension" className="alert__logo" />
-                    <div className="hero hero--red" />
-                    <div className="alert__body-title">
+                <div className='alert__body'>
+                    <a href={ADGUARD_SAFEBROWSING_URL} className='alert__logo' />
+                    <div className='hero hero--red' />
+                    <div className='alert__body-title'>
                         {malware === 'true' ? ( // query param is string
-                            <p className="malware">
+                            <p className='malware'>
                                 {reactTranslator.getMessage('blocking_pages_malware', {
-                                    host,
+                                    host
                                 })}
                             </p>
                         ) : (
-                            <p className="phishing">
+                            <p className='phishing'>
                                 {reactTranslator.getMessage('blocking_pages_phishing', {
-                                    host,
+                                    host
                                 })}
                             </p>
                         )}
-
                     </div>
-                    <div className="alert__btns">
+                    <div className='alert__btns'>
                         <button
-                            type="button"
+                            type='button'
                             onClick={handleGoBack}
-                            className="button button--green alert__btn"
+                            className='button button--green alert__btn'
                         >
                             {reactTranslator.getMessage('blocking_pages_btn_go_back')}
                         </button>
                         {advanced ? (
                             <>
                                 <a
-                                    href={`https://link.adtidy.org/forward.html?action=site_report_page&domain=${host}&from=safebrowsing&app=browser_extension`}
-                                    className="button button--white alert__btn"
+                                    href={ADGUARD_OPEN_SITE_REPORT_URL(host, 'safebrowsing')}
+                                    className='button button--white alert__btn'
                                 >
                                     {reactTranslator.getMessage('blocking_pages_more_info_button')}
                                 </a>
                                 <button
-                                    type="button"
+                                    type='button'
                                     onClick={handleProceed}
-                                    className="button button--white alert__btn"
+                                    className='button button--white alert__btn'
                                 >
                                     {reactTranslator.getMessage('blocking_pages_btn_proceed')}
                                 </button>
                             </>
                         ) : (
-                            <>
-                                <button
-                                    type="button"
-                                    onClick={handleEnableAdvanced}
-                                    className="button button--white alert__btn"
-                                >
-                                    {reactTranslator.getMessage('blocking_pages_advanced_button')}
-                                </button>
-                            </>
+                            <button
+                                type='button'
+                                onClick={handleEnableAdvanced}
+                                className='button button--white alert__btn'
+                            >
+                                {reactTranslator.getMessage('blocking_pages_advanced_button')}
+                            </button>
                         )}
                     </div>
                 </div>
             </div>
         </div>
     );
-};
+}

@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+import TerserPlugin from 'terser-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
@@ -11,7 +11,7 @@ import {
     MOBX_VENDOR_OUTPUT,
     XSTATE_VENDOR_OUTPUT,
     LODASH_VENDOR_OUTPUT,
-    TSURLFILTER_VENDOR_OUTPUT,
+    TSURLFILTER_VENDOR_OUTPUT
 } from '../constants';
 import { getEnvConf, updateLocalesMSGName } from '../helpers';
 import { getModuleReplacements } from './module-replacements';
@@ -36,7 +36,7 @@ const OUTPUT_PATH = config.outputPath;
 
 const htmlTemplatePluginCommonOptions = {
     cache: false,
-    scriptLoading: 'blocking',
+    scriptLoading: 'blocking'
 };
 
 export const genCommonConfig = (browserConfig) => {
@@ -44,8 +44,18 @@ export const genCommonConfig = (browserConfig) => {
     return {
         mode: config.mode,
         optimization: {
-            minimize: false,
-            runtimeChunk: 'single',
+            minimize: !isDev,
+            minimizer: [
+                new TerserPlugin({
+                    terserOptions: {
+                        compress: {
+                            lhs_constants: false,
+                            passes: 2
+                        }
+                    }
+                })
+            ],
+            runtimeChunk: 'single'
         },
         cache: false,
         devtool: isDev ? 'eval-source-map' : false,
@@ -53,8 +63,8 @@ export const genCommonConfig = (browserConfig) => {
             'pages/background': {
                 import: BACKGROUND_PATH,
                 dependOn: [
-                    TSURLFILTER_VENDOR_OUTPUT,
-                ],
+                    TSURLFILTER_VENDOR_OUTPUT
+                ]
             },
             'pages/options': {
                 import: OPTIONS_PATH,
@@ -63,15 +73,15 @@ export const genCommonConfig = (browserConfig) => {
                     MOBX_VENDOR_OUTPUT,
                     XSTATE_VENDOR_OUTPUT,
                     LODASH_VENDOR_OUTPUT,
-                    'shared/editor',
-                ],
+                    'shared/editor'
+                ]
             },
             'pages/popup': {
                 import: POPUP_PATH,
                 dependOn: [
                     REACT_VENDOR_OUTPUT,
-                    MOBX_VENDOR_OUTPUT,
-                ],
+                    MOBX_VENDOR_OUTPUT
+                ]
             },
             'pages/filtering-log': {
                 import: FILTERING_LOG_PATH,
@@ -79,28 +89,28 @@ export const genCommonConfig = (browserConfig) => {
                     REACT_VENDOR_OUTPUT,
                     MOBX_VENDOR_OUTPUT,
                     XSTATE_VENDOR_OUTPUT,
-                    LODASH_VENDOR_OUTPUT,
-                ],
+                    LODASH_VENDOR_OUTPUT
+                ]
             },
             'pages/filter-download': {
                 import: FILTER_DOWNLOAD_PATH,
-                runtime: false,
+                runtime: false
             },
             'pages/content-script-start': {
                 import: CONTENT_SCRIPT_START_PATH,
-                runtime: false,
+                runtime: false
             },
             'pages/content-script-end': {
                 import: CONTENT_SCRIPT_END_PATH,
-                runtime: false,
+                runtime: false
             },
             'pages/thankyou': {
                 import: THANKYOU_PATH,
-                runtime: false,
+                runtime: false
             },
             'pages/assistant': {
                 import: ASSISTANT_PATH,
-                runtime: false,
+                runtime: false
             },
             'pages/fullscreen-user-rules': {
                 import: FULLSCREEN_USER_RULES_PATH,
@@ -108,26 +118,26 @@ export const genCommonConfig = (browserConfig) => {
                     REACT_VENDOR_OUTPUT,
                     MOBX_VENDOR_OUTPUT,
                     XSTATE_VENDOR_OUTPUT,
-                    'shared/editor',
-                ],
+                    'shared/editor'
+                ]
             },
             'pages/safebrowsing': {
                 import: SAFEBROWSING_PATH,
                 dependOn: [
-                    REACT_VENDOR_OUTPUT,
-                ],
+                    REACT_VENDOR_OUTPUT
+                ]
             },
             'pages/ad-blocked': {
                 import: AD_BLOCKED_PATH,
                 dependOn: [
-                    REACT_VENDOR_OUTPUT,
-                ],
+                    REACT_VENDOR_OUTPUT
+                ]
             },
             'shared/editor': {
                 import: EDITOR_PATH,
                 dependOn: [
-                    REACT_VENDOR_OUTPUT,
-                ],
+                    REACT_VENDOR_OUTPUT
+                ]
             },
             [REACT_VENDOR_OUTPUT]: ['react', 'react-dom'],
             [MOBX_VENDOR_OUTPUT]: ['mobx'],
@@ -138,13 +148,13 @@ export const genCommonConfig = (browserConfig) => {
                 'lodash/identity',
                 'lodash/find',
                 'lodash/truncate',
-                'lodash/sortBy',
+                'lodash/sortBy'
             ],
-            [TSURLFILTER_VENDOR_OUTPUT]: ['@adguard/tsurlfilter'],
+            [TSURLFILTER_VENDOR_OUTPUT]: ['@adguard/tsurlfilter']
         },
         output: {
             path: path.join(BUILD_PATH, OUTPUT_PATH),
-            filename: '[name].js',
+            filename: '[name].js'
         },
         resolve: {
             extensions: ['*', '.js', '.jsx'],
@@ -153,15 +163,15 @@ export const genCommonConfig = (browserConfig) => {
             fallback: {
                 url: require.resolve('url'),
                 crypto: require.resolve('crypto-browserify'),
-                stream: require.resolve('stream-browserify'),
-            },
+                stream: require.resolve('stream-browserify')
+            }
         },
         module: {
             rules: [
                 {
                     include: [
                         path.resolve(__dirname, '../../Extension/src/background/filter/request-filter.js'),
-                        path.resolve(__dirname, '../../Extension/pages/content-script-end/index.js'),
+                        path.resolve(__dirname, '../../Extension/pages/content-script-end/index.js')
                     ],
                     use: [{
                         loader: 'preprocess-loader',
@@ -169,10 +179,10 @@ export const genCommonConfig = (browserConfig) => {
                             remoteScripts: browserConfig.remoteScripts,
                             devtools: browserConfig.devtools,
                             ppOptions: {
-                                type: 'js',
-                            },
-                        },
-                    }],
+                                type: 'js'
+                            }
+                        }
+                    }]
                 },
                 /*
                  * Prevent browser console warnings with source map issue
@@ -185,18 +195,18 @@ export const genCommonConfig = (browserConfig) => {
                         {
                             loader: 'source-map-loader',
                             options: {
-                                filterSourceMappingUrl: () => (isDev ? 'skip' : 'remove'),
-                            },
-                        },
-                    ],
+                                filterSourceMappingUrl: () => (isDev ? 'skip' : 'remove')
+                            }
+                        }
+                    ]
                 },
                 {
                     test: /\.(js|jsx)$/,
                     exclude: /node_modules/,
                     use: [{
                         loader: 'babel-loader',
-                        options: { babelrc: true },
-                    }],
+                        options: { babelrc: true }
+                    }]
                 },
                 {
                     test: /\.(css|pcss)$/,
@@ -206,18 +216,18 @@ export const genCommonConfig = (browserConfig) => {
                             loader: 'css-loader',
                             options: {
                                 importLoaders: 1,
-                                url: false,
-                            },
+                                url: false
+                            }
                         },
-                        'postcss-loader',
-                    ],
+                        'postcss-loader'
+                    ]
                 },
                 {
                     test: /\.(woff|woff2|eot|ttf|otf)$/,
-                    type: 'asset/resource',
-                },
+                    type: 'asset/resource'
+                }
             ],
-            strictExportPresence: true, // throw error if used non exported module
+            strictExportPresence: true // throw error if used non exported module
         },
 
         plugins: [
@@ -227,13 +237,13 @@ export const genCommonConfig = (browserConfig) => {
                 ...htmlTemplatePluginCommonOptions,
                 template: path.join(BACKGROUND_PATH, 'index.html'),
                 templateParameters: {
-                    browser: process.env.BROWSER,
+                    browser: process.env.BROWSER
                 },
                 filename: 'pages/background.html',
                 chunks: [
                     TSURLFILTER_VENDOR_OUTPUT,
-                    'pages/background',
-                ],
+                    'pages/background'
+                ]
             }),
             new HtmlWebpackPlugin({
                 ...htmlTemplatePluginCommonOptions,
@@ -245,8 +255,8 @@ export const genCommonConfig = (browserConfig) => {
                     XSTATE_VENDOR_OUTPUT,
                     LODASH_VENDOR_OUTPUT,
                     'shared/editor',
-                    'pages/options',
-                ],
+                    'pages/options'
+                ]
             }),
             new HtmlWebpackPlugin({
                 ...htmlTemplatePluginCommonOptions,
@@ -255,8 +265,8 @@ export const genCommonConfig = (browserConfig) => {
                 chunks: [
                     REACT_VENDOR_OUTPUT,
                     MOBX_VENDOR_OUTPUT,
-                    'pages/popup',
-                ],
+                    'pages/popup'
+                ]
             }),
             new HtmlWebpackPlugin({
                 ...htmlTemplatePluginCommonOptions,
@@ -267,14 +277,14 @@ export const genCommonConfig = (browserConfig) => {
                     MOBX_VENDOR_OUTPUT,
                     XSTATE_VENDOR_OUTPUT,
                     LODASH_VENDOR_OUTPUT,
-                    'pages/filtering-log',
-                ],
+                    'pages/filtering-log'
+                ]
             }),
             new HtmlWebpackPlugin({
                 ...htmlTemplatePluginCommonOptions,
                 template: path.join(FILTER_DOWNLOAD_PATH, 'index.html'),
                 filename: 'pages/filter-download.html',
-                chunks: ['pages/filter-download'],
+                chunks: ['pages/filter-download']
             }),
             new HtmlWebpackPlugin({
                 ...htmlTemplatePluginCommonOptions,
@@ -285,27 +295,27 @@ export const genCommonConfig = (browserConfig) => {
                     MOBX_VENDOR_OUTPUT,
                     XSTATE_VENDOR_OUTPUT,
                     'shared/editor',
-                    'pages/fullscreen-user-rules',
-                ],
+                    'pages/fullscreen-user-rules'
+                ]
             }),
             new HtmlWebpackPlugin({
                 ...htmlTemplatePluginCommonOptions,
                 template: path.join(AD_BLOCKED_PATH, 'index.html'),
                 filename: 'pages/ad-blocked.html',
-                chunks: [REACT_VENDOR_OUTPUT, 'pages/ad-blocked'],
+                chunks: [REACT_VENDOR_OUTPUT, 'pages/ad-blocked']
             }),
             new HtmlWebpackPlugin({
                 ...htmlTemplatePluginCommonOptions,
                 template: path.join(SAFEBROWSING_PATH, 'index.html'),
                 filename: 'pages/safebrowsing.html',
-                chunks: [REACT_VENDOR_OUTPUT, 'pages/safebrowsing'],
+                chunks: [REACT_VENDOR_OUTPUT, 'pages/safebrowsing']
             }),
             new CopyWebpackPlugin({
                 patterns: [
                     {
                         context: 'Extension',
                         from: 'assets',
-                        to: 'assets',
+                        to: 'assets'
                     },
                     {
                         context: 'Extension',
@@ -313,20 +323,20 @@ export const genCommonConfig = (browserConfig) => {
                         to: '_locales',
                         transform: (content) => {
                             return updateLocalesMSGName(content, process.env.BUILD_ENV, browserConfig.browser);
-                        },
+                        }
                     },
                     {
                         context: 'Extension',
                         from: 'web-accessible-resources',
-                        to: 'web-accessible-resources',
+                        to: 'web-accessible-resources'
                     },
                     {
                         context: 'Extension',
                         from: 'src/content-script/subscribe.js',
-                        to: 'content-script/subscribe.js',
-                    },
-                ],
-            }),
-        ],
+                        to: 'content-script/subscribe.js'
+                    }
+                ]
+            })
+        ]
     };
 };

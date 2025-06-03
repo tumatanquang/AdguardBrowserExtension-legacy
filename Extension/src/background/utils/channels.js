@@ -21,7 +21,8 @@ export const channels = (() => {
                     listeners.push(listenerCallback);
                     listeners.push(callback);
                     listenerCallback = null;
-                } else {
+                }
+                else {
                     listenerCallback = callback;
                 }
             };
@@ -29,7 +30,8 @@ export const channels = (() => {
             const removeListener = function (callback) {
                 if (listenerCallback !== null) {
                     listenerCallback = null;
-                } else {
+                }
+                else {
                     const index = listeners.indexOf(callback);
                     if (index >= 0) {
                         listeners.splice(index, 1);
@@ -42,7 +44,7 @@ export const channels = (() => {
                     return listenerCallback.apply(listenerCallback, arguments);
                 }
                 if (listeners !== null) {
-                    for (let i = 0; i < listeners.length; i += 1) {
+                    for (let i = 0; i < listeners.length; ++i) {
                         const listener = listeners[i];
                         listener.apply(listener, arguments);
                     }
@@ -54,7 +56,7 @@ export const channels = (() => {
                     return listenerCallback.apply(listenerCallback, arguments);
                 }
                 if (listeners !== null) {
-                    for (let i = listeners.length - 1; i >= 0; i -= 1) {
+                    for (let i = listeners.length; --i >= 0;) {
                         const listener = listeners[i];
                         listener.apply(listener, arguments);
                     }
@@ -65,7 +67,7 @@ export const channels = (() => {
                 addListener,
                 removeListener,
                 notify,
-                notifyInReverseOrder,
+                notifyInReverseOrder
             };
         };
 
@@ -88,7 +90,7 @@ export const channels = (() => {
         return {
             newChannel,
             newNamedChannel,
-            getNamedChannel,
+            getNamedChannel
         };
     })();
 

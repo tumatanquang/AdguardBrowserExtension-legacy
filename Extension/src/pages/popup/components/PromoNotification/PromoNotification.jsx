@@ -12,7 +12,7 @@ export const PromoNotification = observer(() => {
     const {
         promoNotification,
         closePromoNotification,
-        openPromoNotificationUrl,
+        openPromoNotificationUrl
     } = useContext(popupStore);
 
     const [notificationOnClose, setNotificationOnClose] = useState(false);
@@ -46,28 +46,28 @@ export const PromoNotification = observer(() => {
     const { title, btn } = promoNotification.text;
 
     const notificationClassnames = classnames('promo-notification', {
-        'promo-notification--close': notificationOnClose,
+        'promo-notification--close': notificationOnClose
     });
 
     return (
         <div className={notificationClassnames}>
             <button
-                aria-label="close"
-                type="button"
-                className="promo-notification__close"
+                aria-label='close'
+                type='button'
+                className='promo-notification__close'
                 onClick={handleNotificationClose}
             >
-                <svg className="icon icon--button">
-                    <use xlinkHref="#cross-gray" />
+                <svg className='icon icon--button'>
+                    <use xlinkHref='#cross-gray' />
                 </svg>
             </button>
-            <div className="promo-notification__content">
-                <div className="promo-notification__title">
+            <div className='promo-notification__content'>
+                <div className='promo-notification__title'>
                     {title}
                 </div>
                 <button
-                    type="button"
-                    className="promo-notification__btn"
+                    type='button'
+                    className='promo-notification__btn'
                     onClick={handleNotificationClick}
                 >
                     {btn}

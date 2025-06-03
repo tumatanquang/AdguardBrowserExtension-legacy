@@ -12,12 +12,12 @@ const EventsTypeFilter = observer(() => {
 
     const {
         eventTypesFilters,
-        setEventTypesFilters,
+        setEventTypesFilters
     } = logStore;
 
     return (
-        <div className="events-types">
-            <div className="events-types__content">
+        <div className='events-types'>
+            <div className='events-types__content'>
                 <Tags
                     type={NAVIGATION_TAGS.REGULAR}
                     tags={eventTypesFilters}

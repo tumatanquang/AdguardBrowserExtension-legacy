@@ -10,8 +10,8 @@ jest.mock('../../../../../Extension/src/background/filter/request-blocking', () 
     return {
         __esModule: true,
         webRequestService: {
-            isCollectingCosmeticRulesHits: jest.fn(() => false),
-        },
+            isCollectingCosmeticRulesHits: jest.fn(() => false)
+        }
     };
 });
 
@@ -36,7 +36,7 @@ describe('RequestFilter', () => {
         const result = requestFilter.findRuleForRequest({
             requestUrl,
             frameUrl,
-            requestType: RequestTypes.SUBDOCUMENT,
+            requestType: RequestTypes.SUBDOCUMENT
         });
 
         expect(result).toBeTruthy();
@@ -48,7 +48,7 @@ describe('RequestFilter', () => {
             error() {},
             warn() {},
             log() {},
-            info() {},
+            info() {}
         });
 
         // eslint-disable-next-line no-undef
@@ -58,16 +58,16 @@ describe('RequestFilter', () => {
         const frameUrl = 'http://example.org';
 
         const count = 50000;
-        const startTime = new Date().getTime();
-        for (let k = 0; k < count; k += 1) {
+        const startTime = Date.now();
+        for (let k = 0; k < count; ++k) {
             requestFilter.findRuleForRequest({
                 requestUrl,
                 frameUrl,
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             });
         }
 
-        const elapsed = new Date().getTime() - startTime;
+        const elapsed = Date.now() - startTime;
         expect(elapsed).toBeGreaterThan(0);
 
         console.log('------------------------------------START TEST PERFORMANCE-----------------------------------');
@@ -97,7 +97,7 @@ describe('RequestFilter', () => {
         result = requestFilter.findRuleForRequest({
             requestUrl,
             frameUrl,
-            requestType: RequestTypes.SUBDOCUMENT,
+            requestType: RequestTypes.SUBDOCUMENT
         });
         expect(result).toBeTruthy();
         expect(result.getText()).toBe(rule);
@@ -106,7 +106,7 @@ describe('RequestFilter', () => {
         result = requestFilter.findRuleForRequest({
             requestUrl,
             frameUrl,
-            requestType: RequestTypes.SUBDOCUMENT,
+            requestType: RequestTypes.SUBDOCUMENT
         });
         expect(result).toBeTruthy();
         expect(result.getText()).toBe(allowlist);
@@ -115,7 +115,7 @@ describe('RequestFilter', () => {
         result = requestFilter.findRuleForRequest({
             requestUrl,
             frameUrl,
-            requestType: RequestTypes.DOCUMENT,
+            requestType: RequestTypes.DOCUMENT
         });
         expect(result).toBeTruthy();
         expect(result.ruleText).toBe(documentRule);
@@ -124,7 +124,7 @@ describe('RequestFilter', () => {
         result = requestFilter.findRuleForRequest({
             requestUrl,
             frameUrl,
-            requestType: RequestTypes.DOCUMENT,
+            requestType: RequestTypes.DOCUMENT
         });
         expect(result).toBeTruthy();
         expect(result.getText()).toBe(genericHideRule);
@@ -145,7 +145,7 @@ describe('RequestFilter', () => {
         result = requestFilter.findRuleForRequest({
             requestUrl,
             frameUrl,
-            requestType: RequestTypes.SUBDOCUMENT,
+            requestType: RequestTypes.SUBDOCUMENT
         });
         expect(result).toBeTruthy();
         expect(result.getText()).toBe(rule);
@@ -154,7 +154,7 @@ describe('RequestFilter', () => {
         result = requestFilter.findRuleForRequest({
             requestUrl,
             frameUrl,
-            requestType: RequestTypes.SUBDOCUMENT,
+            requestType: RequestTypes.SUBDOCUMENT
         });
         expect(result).toBeTruthy();
         expect(result.getText()).toBe(allowlist);
@@ -163,7 +163,7 @@ describe('RequestFilter', () => {
         result = requestFilter.findRuleForRequest({
             requestUrl,
             frameUrl,
-            requestType: RequestTypes.SUBDOCUMENT,
+            requestType: RequestTypes.SUBDOCUMENT
         });
         expect(result).toBeTruthy();
         expect(result.getText()).toBe(important);
@@ -176,7 +176,7 @@ describe('RequestFilter', () => {
         const rules = requestFilter.findCookieRules({
             requestUrl: 'https://nop.xpanama.net/if.html?adflag=1&cb=kq4iOggNyP',
             frameUrl: 'https://www.merriam-webster.com/',
-            requestType: RequestTypes.DOCUMENT,
+            requestType: RequestTypes.DOCUMENT
         });
 
         expect(rules).toHaveLength(1);
@@ -208,7 +208,7 @@ describe('RequestFilter', () => {
         const rule = requestFilter.findRuleForRequest({
             requestUrl: 'http://example.org/ads.js',
             frameUrl: 'http://example.org/',
-            requestType: RequestTypes.SCRIPT,
+            requestType: RequestTypes.SCRIPT
         });
         expect(rule).toBeTruthy();
         expect(rule.getText()).toBe(redirectRule);
@@ -216,7 +216,7 @@ describe('RequestFilter', () => {
         const imgRule = requestFilter.findRuleForRequest({
             requestUrl: 'http://example.org/ad.png',
             frameUrl: 'http://example.org/',
-            requestType: RequestTypes.IMAGE,
+            requestType: RequestTypes.IMAGE
         });
 
         expect(imgRule).toBeTruthy();
@@ -237,88 +237,88 @@ describe('RequestFilter', () => {
 
             requestFilter = await createRequestFilterWithRules([
                 rule,
-                ruleTwo,
+                ruleTwo
             ]);
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: comAd,
                 frameUrl: '',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             })).toBeTruthy();
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: comDa,
                 frameUrl: '',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             })).toBeTruthy();
 
             requestFilter = await createRequestFilterWithRules([
                 rule,
                 ruleTwo,
-                badFilterRule,
+                badFilterRule
             ]);
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: comAd,
                 frameUrl: '',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             })).toBeFalsy();
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: comDa,
                 frameUrl: '',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             })).toBeTruthy();
 
             requestFilter = await createRequestFilterWithRules([
                 ruleTwo,
                 ruleThree,
-                badFilterRule,
+                badFilterRule
             ]);
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: comAd,
                 frameUrl: '',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             })).toBeTruthy();
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: comDa,
                 frameUrl: '',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             })).toBeTruthy();
 
             requestFilter = await createRequestFilterWithRules([
                 ruleTwo,
-                ruleThree,
+                ruleThree
             ]);
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: comAd,
                 frameUrl: '',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             })).toBeTruthy();
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: comDa,
                 frameUrl: '',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             })).toBeTruthy();
 
             requestFilter = await createRequestFilterWithRules([
-                ruleTwo,
+                ruleTwo
             ]);
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: comAd,
                 frameUrl: '',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             })).toBeFalsy();
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: comDa,
                 frameUrl: '',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             })).toBeTruthy();
         });
 
@@ -334,25 +334,25 @@ describe('RequestFilter', () => {
             let result;
 
             requestFilter = await createRequestFilterWithRules([
-                rule,
+                rule
             ]);
 
             result = requestFilter.findRuleForRequest({
                 requestUrl,
                 frameUrl,
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             });
             expect(result).toBeTruthy();
             expect(result.getText()).toEqual(rule);
 
             requestFilter = await createRequestFilterWithRules([
-                rule, allowlist,
+                rule, allowlist
             ]);
 
             result = requestFilter.findAllowlistRule({
                 requestUrl,
                 frameUrl,
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             });
             expect(result).toBeTruthy();
             expect(result.getText()).toEqual(allowlist);
@@ -360,26 +360,26 @@ describe('RequestFilter', () => {
             result = requestFilter.findRuleForRequest({
                 requestUrl,
                 frameUrl,
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             });
             expect(result).toBeTruthy();
             expect(result.getText()).toEqual(allowlist);
 
             requestFilter = await createRequestFilterWithRules([
-                rule, allowlist, badFilterRule,
+                rule, allowlist, badFilterRule
             ]);
 
             result = requestFilter.findAllowlistRule({
                 requestUrl,
                 frameUrl,
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             });
             expect(result).toBeFalsy();
 
             result = requestFilter.findRuleForRequest({
                 requestUrl,
                 frameUrl,
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             });
             expect(result).toBeTruthy();
             expect(result.getText()).toEqual(rule);
@@ -396,75 +396,75 @@ describe('RequestFilter', () => {
             let requestFilter;
 
             requestFilter = await createRequestFilterWithRules([
-                rule, ruleTwo,
+                rule, ruleTwo
             ]);
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: testUrl,
                 frameUrl: '',
-                requestType: RequestTypes.OBJECT,
+                requestType: RequestTypes.OBJECT
             })).toBeTruthy();
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: testUrl,
                 frameUrl: '',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             })).toBeTruthy();
 
             requestFilter = await createRequestFilterWithRules([
-                rule, ruleTwo, badFilterRule,
+                rule, ruleTwo, badFilterRule
             ]);
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: testUrl,
                 frameUrl: '',
-                requestType: RequestTypes.OBJECT,
+                requestType: RequestTypes.OBJECT
             })).toBeTruthy();
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: testUrl,
                 frameUrl: '',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             })).toBeTruthy();
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: testUrl,
                 frameUrl: '',
-                requestType: RequestTypes.OBJECT,
+                requestType: RequestTypes.OBJECT
             }).getText()).toBe(ruleTwo);
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: testUrl,
                 frameUrl: '',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             }).getText()).toBe(ruleTwo);
 
             requestFilter = await createRequestFilterWithRules([
-                rule, ruleTwo, badFilterRuleInv,
+                rule, ruleTwo, badFilterRuleInv
             ]);
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: testUrl,
                 frameUrl: '',
-                requestType: RequestTypes.OBJECT,
+                requestType: RequestTypes.OBJECT
             })).toBeTruthy();
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: testUrl,
                 frameUrl: '',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             })).toBeTruthy();
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: testUrl,
                 frameUrl: '',
-                requestType: RequestTypes.OBJECT,
+                requestType: RequestTypes.OBJECT
             }).getText()).toBe(ruleTwo);
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl: testUrl,
                 frameUrl: '',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             }).getText()).toBe(ruleTwo);
         });
 
@@ -480,51 +480,51 @@ describe('RequestFilter', () => {
             let requestFilter;
 
             requestFilter = await createRequestFilterWithRules([
-                rule, ruleTwo,
+                rule, ruleTwo
             ]);
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl,
                 frameUrl,
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             })).toBeTruthy();
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl,
                 frameUrl: '',
-                requestType: RequestTypes.XMLHTTPREQUEST,
+                requestType: RequestTypes.XMLHTTPREQUEST
             })).toBeTruthy();
 
             requestFilter = await createRequestFilterWithRules([
-                rule, ruleTwo, badFilterRule,
+                rule, ruleTwo, badFilterRule
             ]);
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl,
                 frameUrl,
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             })).toBeFalsy();
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl,
                 frameUrl: '',
-                requestType: RequestTypes.XMLHTTPREQUEST,
+                requestType: RequestTypes.XMLHTTPREQUEST
             })).toBeTruthy();
 
             requestFilter = await createRequestFilterWithRules([
-                rule, ruleTwo, badFilterRuleHttp,
+                rule, ruleTwo, badFilterRuleHttp
             ]);
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl,
                 frameUrl,
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             })).toBeTruthy();
 
             expect(requestFilter.findRuleForRequest({
                 requestUrl,
                 frameUrl: '',
-                requestType: RequestTypes.XMLHTTPREQUEST,
+                requestType: RequestTypes.XMLHTTPREQUEST
             })).toBeFalsy();
         });
     });
@@ -539,7 +539,7 @@ describe('RequestFilter', () => {
             result = requestFilter.findCspRules({
                 requestUrl: 'https://nop.xpanama.net/if.html?adflag=1&cb=kq4iOggNyP',
                 frameUrl: 'https://www.merriam-webster.com/',
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             });
             expect(result).toHaveLength(1);
             expect(result[0].getText()).toBe(cspRule);
@@ -547,7 +547,7 @@ describe('RequestFilter', () => {
             result = requestFilter.findCspRules({
                 requestUrl: 'https://xpanama.net',
                 frameUrl: 'https://example.org',
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             });
             expect(!result || result.length === 0).toBeTruthy();
 
@@ -557,7 +557,7 @@ describe('RequestFilter', () => {
             result = requestFilter.findCspRules({
                 requestUrl: 'https://xpanama.net',
                 frameUrl: 'https://www.merriam-webster.com/',
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             });
             // Specific allowlist rule should be returned
             expect(result).toHaveLength(1);
@@ -569,7 +569,7 @@ describe('RequestFilter', () => {
             result = requestFilter.findCspRules({
                 requestUrl: 'https://xpanama.net',
                 frameUrl: 'https://www.merriam-webster.com/',
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             });
             // Global allowlist rule should be returned
             expect(result).toHaveLength(1);
@@ -581,7 +581,7 @@ describe('RequestFilter', () => {
             result = requestFilter.findCspRules({
                 requestUrl: 'https://xpanama.net',
                 frameUrl: 'https://www.merriam-webster.com/',
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             });
             expect(result).toHaveLength(1);
             expect(result[0].getText()).toBe(cspRule);
@@ -592,7 +592,7 @@ describe('RequestFilter', () => {
             result = requestFilter.findCspRules({
                 requestUrl: 'https://xpanama.net',
                 frameUrl: 'https://www.merriam-webster.com/',
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             });
             expect(result).toHaveLength(1);
             expect(result[0].getText() === cspRule || result[0].getText() === duplicateCspRule).toBeTruthy();
@@ -606,7 +606,7 @@ describe('RequestFilter', () => {
             result = requestFilter.findCspRules({
                 requestUrl: 'https://nop.xpanama.net/if.html?adflag=1&cb=kq4iOggNyP',
                 frameUrl: 'https://www.merriam-webster.com/',
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             });
             expect(result).toHaveLength(2);
             expect(result[0].getText() === cspRuleAny || result[0].getText() === cspRuleNotSubDocument).toBeTruthy();
@@ -615,7 +615,7 @@ describe('RequestFilter', () => {
             result = requestFilter.findCspRules({
                 requestUrl: 'https://nop.xpanama.net/if.html?adflag=1&cb=kq4iOggNyP',
                 frameUrl: 'https://www.merriam-webster.com/',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             });
             expect(result).toHaveLength(2);
             expect(result[0].getText() === cspRuleAny || result[0].getText() === cspRuleSubDocument).toBeTruthy();
@@ -629,7 +629,6 @@ describe('RequestFilter', () => {
             // Test important rules
             const globalAllowlistRule = '@@||xpanama.net^$csp,domain=merriam-webster.com';
             const directiveAllowlistRule = '@@||xpanama.net^$csp=frame-src \'none\',domain=merriam-webster.com';
-            // eslint-disable-next-line max-len
             const importantDirectiveAllowlistRule = '@@||xpanama.net^$csp=frame-src \'none\',domain=merriam-webster.com,important';
             const defaultCspRule = '||xpanama.net^$csp=frame-src \'none\',domain=merriam-webster.com';
             const importantCspRule = '||xpanama.net^$csp=frame-src \'none\',domain=merriam-webster.com,important';
@@ -638,7 +637,7 @@ describe('RequestFilter', () => {
                 rules = requestFilter.findCspRules({
                     requestUrl: 'https://nop.xpanama.net/if.html?adflag=1&cb=kq4iOggNyP',
                     frameUrl: 'https://www.merriam-webster.com/',
-                    requestType: RequestTypes.DOCUMENT,
+                    requestType: RequestTypes.DOCUMENT
                 });
                 expect(rules).toHaveLength(1);
                 expect(rules[0].getText()).toBe(expected);
@@ -649,7 +648,7 @@ describe('RequestFilter', () => {
                 directiveAllowlistRule,
                 importantDirectiveAllowlistRule,
                 defaultCspRule,
-                importantCspRule,
+                importantCspRule
             ]);
 
             checkCspRules(globalAllowlistRule);
@@ -658,25 +657,25 @@ describe('RequestFilter', () => {
                 directiveAllowlistRule,
                 importantDirectiveAllowlistRule,
                 defaultCspRule,
-                importantCspRule,
+                importantCspRule
             ]);
             checkCspRules(importantDirectiveAllowlistRule);
 
             requestFilter = await createRequestFilterWithRules([
                 directiveAllowlistRule,
                 defaultCspRule,
-                importantCspRule,
+                importantCspRule
             ]);
             checkCspRules(importantCspRule);
 
             requestFilter = await createRequestFilterWithRules([
                 directiveAllowlistRule,
-                defaultCspRule,
+                defaultCspRule
             ]);
             checkCspRules(directiveAllowlistRule);
 
             requestFilter = await createRequestFilterWithRules([
-                defaultCspRule,
+                defaultCspRule
             ]);
             checkCspRules(defaultCspRule);
         });
@@ -697,12 +696,12 @@ describe('RequestFilter', () => {
             const ruleText3 = '||example.org^$csp=connect-src \'none\',~subdocument';
 
             const requestFilter = await createRequestFilterWithRules([
-                ruleText1, ruleText2, ruleText3,
+                ruleText1, ruleText2, ruleText3
             ]);
 
             const search1 = requestFilter.findCspRules({
                 requestUrl,
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             });
             expect(search1).toHaveLength(2);
             expect(search1[0].getText()).toBe(ruleText1);
@@ -710,7 +709,7 @@ describe('RequestFilter', () => {
 
             const search2 = requestFilter.findCspRules({
                 requestUrl,
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             });
             expect(search2).toHaveLength(2);
             expect(search2[0].getText()).toBe(ruleText1);
@@ -833,7 +832,7 @@ describe('RequestFilter', () => {
             expect(requestFilter.findRuleForRequest({
                 requestUrl: 'https://example.org',
                 frameUrl: 'https://example.org',
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             })).toBeTruthy();
         });
 
@@ -847,7 +846,7 @@ describe('RequestFilter', () => {
             const cspResultDocument = requestFilter.findCspRules({
                 requestUrl,
                 frameUrl: requestUrl,
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             });
             expect(cspResultDocument).toHaveLength(1);
             expect(cspResultDocument[0].getText()).toBe(cspRule);
@@ -855,7 +854,7 @@ describe('RequestFilter', () => {
             const cspResultSubDocument = requestFilter.findCspRules({
                 requestUrl,
                 frameUrl: requestUrl,
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             });
             expect(cspResultSubDocument).toHaveLength(1);
             expect(cspResultSubDocument[0].getText()).toBe(cspRule);
@@ -863,7 +862,7 @@ describe('RequestFilter', () => {
             const cookieResult = requestFilter.findCookieRules({
                 requestUrl,
                 frameUrl: requestUrl,
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             });
             expect(cookieResult).toHaveLength(1);
             expect(cookieResult[0].getText()).toBe(cookieRule);
@@ -874,7 +873,6 @@ describe('RequestFilter', () => {
             const cssRuleText = 'benchmark.pl##body';
             let requestFilter = await createRequestFilterWithRules([cssRuleText]);
 
-            // eslint-disable-next-line max-len
             const { css: [firstCss] } = requestFilter.getSelectorsForUrl('http://www.benchmark.pl./', TSUrlFilter.CosmeticOption.CosmeticOptionAll);
             expect(firstCss).toBeTruthy();
             expect(firstCss.indexOf('body { display: none!important; }')).toBeGreaterThan(-1);
@@ -885,14 +883,13 @@ describe('RequestFilter', () => {
             const rule = requestFilter.findRuleForRequest({
                 requestUrl: 'http://cdn.benchmark.pl/assets/css/mainPage.min.css',
                 frameUrl: 'http://www.benchmark.pl./',
-                requestType: RequestTypes.STYLESHEET,
+                requestType: RequestTypes.STYLESHEET
             });
 
             expect(rule.getText()).toBe(urlRuleText);
         });
 
         // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1534
-        // eslint-disable-next-line max-len
         it('In case request has "DOCUMENT" type - $domain modifier will match as well request URL hostname', async () => {
             const urlRuleText = 'check.com/url$domain=example.org|check.com';
             const requestFilter = await createRequestFilterWithRules([urlRuleText]);
@@ -901,7 +898,7 @@ describe('RequestFilter', () => {
             let rule = requestFilter.findRuleForRequest({
                 requestUrl: 'http://check.com/url',
                 frameUrl: 'http://www.example.org/',
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             });
 
             expect(rule.getText()).toBe(urlRuleText);
@@ -910,7 +907,7 @@ describe('RequestFilter', () => {
             rule = requestFilter.findRuleForRequest({
                 requestUrl: 'http://another.org/url',
                 frameUrl: 'http://www.example.org/',
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             });
 
             expect(rule).toBeFalsy();
@@ -919,7 +916,7 @@ describe('RequestFilter', () => {
             rule = requestFilter.findRuleForRequest({
                 requestUrl: 'http://check.com/url',
                 frameUrl: 'http://test.com/',
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             });
 
             expect(rule.getText()).toBe(urlRuleText);
@@ -928,7 +925,7 @@ describe('RequestFilter', () => {
             rule = requestFilter.findRuleForRequest({
                 requestUrl: 'http://check.com/url',
                 frameUrl: 'http://test.com/',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             });
 
             expect(rule.getText()).toBe(urlRuleText);
@@ -937,14 +934,13 @@ describe('RequestFilter', () => {
             rule = requestFilter.findRuleForRequest({
                 requestUrl: 'http://check.com/url',
                 frameUrl: 'http://test.com/',
-                requestType: RequestTypes.IMAGE,
+                requestType: RequestTypes.IMAGE
             });
 
             expect(rule).toBeFalsy();
         });
 
         // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1534
-        // eslint-disable-next-line max-len
         it('In case request has "DOCUMENT" type - $domain modifier will match as well request URL hostname 2', async () => {
             const urlRuleText = '|http://$third-party,domain=example.org';
             const requestFilter = await createRequestFilterWithRules([urlRuleText]);
@@ -953,7 +949,7 @@ describe('RequestFilter', () => {
             let rule = requestFilter.findRuleForRequest({
                 requestUrl: 'http://check.com/url',
                 frameUrl: 'http://www.example.org/',
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             });
 
             expect(rule.getText()).toBe(urlRuleText);
@@ -962,7 +958,7 @@ describe('RequestFilter', () => {
             rule = requestFilter.findRuleForRequest({
                 requestUrl: 'http://www.example.org/url',
                 frameUrl: 'http://test.com/',
-                requestType: RequestTypes.DOCUMENT,
+                requestType: RequestTypes.DOCUMENT
             });
 
             expect(rule.getText()).toBe(urlRuleText);
@@ -971,7 +967,7 @@ describe('RequestFilter', () => {
             rule = requestFilter.findRuleForRequest({
                 requestUrl: 'http://check.com/url',
                 frameUrl: 'http://test.com/',
-                requestType: RequestTypes.SUBDOCUMENT,
+                requestType: RequestTypes.SUBDOCUMENT
             });
 
             expect(rule).toBeFalsy();
@@ -980,7 +976,7 @@ describe('RequestFilter', () => {
             rule = requestFilter.findRuleForRequest({
                 requestUrl: 'http://check.com/url',
                 frameUrl: 'http://test.com/',
-                requestType: RequestTypes.IMAGE,
+                requestType: RequestTypes.IMAGE
             });
 
             expect(rule).toBeFalsy();

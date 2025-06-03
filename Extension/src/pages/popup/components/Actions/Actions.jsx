@@ -53,72 +53,72 @@ export const Actions = observer(() => {
     const actionChangingClassname = cn('action', { action_disabled: !store.applicationAvailable });
 
     return (
-        <div className="actions">
+        <div className='actions'>
             <button
-                type="button"
+                type='button'
                 className={actionChangingClassname}
                 onClick={handleBlockAds}
             >
                 <Icon
-                    id="#block-ad"
-                    classname="icon--action"
+                    id='#block-ad'
+                    classname='icon--action'
                 />
-                <div className="action-title">
+                <div className='action-title'>
                     {reactTranslator.getMessage('popup_block_site_ads_option')}
                 </div>
             </button>
             <button
-                type="button"
-                className="action"
+                type='button'
+                className='action'
                 onClick={handleOpenFilteringLog}
             >
                 <Icon
-                    id="#sandwich"
-                    classname="icon--action"
+                    id='#sandwich'
+                    classname='icon--action'
                 />
-                <div className="action-title">
+                <div className='action-title'>
                     {reactTranslator.getMessage('popup_open_filtering_log')}
                 </div>
             </button>
             <button
-                type="button"
+                type='button'
                 className={actionChangingClassname}
                 onClick={handleAbuseSite}
             >
                 <Icon
-                    id="#thumb-down"
-                    classname="icon--action"
+                    id='#thumb-down'
+                    classname='icon--action'
                 />
-                <div className="action-title">
+                <div className='action-title'>
                     {reactTranslator.getMessage('popup_abuse_site')}
                 </div>
             </button>
             <button
-                type="button"
+                type='button'
                 className={actionChangingClassname}
                 onClick={handleCheckSiteSecurity}
             >
                 <Icon
-                    id="#shield"
-                    classname="icon--action"
+                    id='#shield'
+                    classname='icon--action'
                 />
-                <div className="action-title">
+                <div className='action-title'>
                     {reactTranslator.getMessage('popup_security_report')}
                 </div>
             </button>
             { store.hasCustomRulesToReset
             && (
                 <button
-                    type="button"
+                    type='button'
                     className={actionChangingClassname}
                     onClick={resetCustomRulesForPage}
                 >
                     <Icon
-                        id="#small-cross"
-                        classname="icon--action"
+                        id='#small-cross'
+                        classname='icon--action'
                     />
                     <div
-                        className="action-title"
+                        className='action-title'
                         title={reactTranslator.getMessage('popup_reset_custom_rules')}
                     >
                         {reactTranslator.getMessage('popup_reset_custom_rules')}

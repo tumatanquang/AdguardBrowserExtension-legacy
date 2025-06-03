@@ -1,5 +1,5 @@
 import React, {
-    useContext, useEffect, useRef, useState,
+    useContext, useEffect, useRef, useState
 } from 'react';
 import { observer } from 'mobx-react';
 import { Link } from 'react-router-dom';
@@ -61,7 +61,8 @@ const Allowlist = observer(() => {
             const content = await handleFileUpload(file, 'txt');
             await settingsStore.appendAllowlist(content);
             setAllowlistRerender(true);
-        } catch (e) {
+        }
+        catch (e) {
             log.debug(e.message);
             uiStore.addNotification({ description: e.message });
         }
@@ -86,7 +87,7 @@ const Allowlist = observer(() => {
         bindKey: { win: 'Ctrl-S', mac: 'Command-S' },
         exec: async () => {
             await saveClickHandler();
-        },
+        }
     }];
 
     const allowlistChangeHandler = async (e) => {
@@ -107,21 +108,21 @@ const Allowlist = observer(() => {
             <SettingsSection
                 title={reactTranslator.getMessage('options_allowlist')}
                 id={ALLOWLIST_ENABLED}
-                mode="smallContainer"
+                mode='smallContainer'
                 description={settings.values[DEFAULT_ALLOWLIST_MODE]
                     ? reactTranslator.getMessage('options_allowlist_desc')
                     : (
                         <div>
-                            <span className="setting__alert-desc">
+                            <span className='setting__alert-desc'>
                                 {reactTranslator.getMessage('options_allowlist_alert_invert', {
                                     a: (chunks) => (
                                         <Link
-                                            className="setting__alert-link"
-                                            to="/miscellaneous"
+                                            className='setting__alert-link'
+                                            to='/miscellaneous'
                                         >
                                             {chunks}
                                         </Link>
-                                    ),
+                                    )
                                 })}
                             </span>
                         </div>
@@ -136,7 +137,7 @@ const Allowlist = observer(() => {
                 )}
             />
             <Editor
-                name="allowlist"
+                name='allowlist'
                 editorRef={editorRef}
                 shortcuts={shortcuts}
                 onChange={editorChangeHandler}
@@ -144,27 +145,27 @@ const Allowlist = observer(() => {
                 wrapEnabled={settingsStore.allowlistEditorWrap}
                 shouldResetSize={shouldResetSize}
             />
-            <div className="actions actions--divided">
-                <div className="actions__group">
+            <div className='actions actions--divided'>
+                <div className='actions__group'>
                     <AllowlistSavingButton onClick={saveClickHandler} />
                     <input
-                        type="file"
-                        id="inputEl"
-                        accept="text/plain"
+                        type='file'
+                        id='inputEl'
+                        accept='text/plain'
                         ref={inputRef}
                         onChange={inputChangeHandler}
                         style={{ display: 'none' }}
                     />
                     <button
-                        type="button"
-                        className="button button--m button--transparent actions__btn"
+                        type='button'
+                        className='button button--m button--transparent actions__btn'
                         onClick={importClickHandler}
                     >
                         {reactTranslator.getMessage('options_userfilter_import')}
                     </button>
                     <button
-                        type="button"
-                        className="button button--m button--transparent actions__btn"
+                        type='button'
+                        className='button button--m button--transparent actions__btn'
                         onClick={exportClickHandler}
                         disabled={!settingsStore.allowlist}
                     >

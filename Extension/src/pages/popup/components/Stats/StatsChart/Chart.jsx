@@ -14,7 +14,7 @@ const DAYS_OF_WEEK = [
     reactTranslator.getMessage('popup_statistics_week_days_thu'),
     reactTranslator.getMessage('popup_statistics_week_days_fri'),
     reactTranslator.getMessage('popup_statistics_week_days_sat'),
-    reactTranslator.getMessage('popup_statistics_week_days_sun'),
+    reactTranslator.getMessage('popup_statistics_week_days_sun')
 ];
 
 const dayOfWeekAsString = (dayIndex) => {
@@ -33,7 +33,7 @@ const MONTHS_OF_YEAR = [
     reactTranslator.getMessage('popup_statistics_months_sep'),
     reactTranslator.getMessage('popup_statistics_months_oct'),
     reactTranslator.getMessage('popup_statistics_months_nov'),
-    reactTranslator.getMessage('popup_statistics_months_dec'),
+    reactTranslator.getMessage('popup_statistics_months_dec')
 ];
 
 const monthsAsString = (monthIndex) => {
@@ -85,45 +85,47 @@ const getCategoriesLines = (statsData, range) => {
 
     switch (range) {
         case TIME_RANGES.DAY:
-            for (let i = 1; i <= HOURS_PER_DAY; i += 1) {
+            for (let i = 1; i <= HOURS_PER_DAY; ++i) {
                 if (i % 3 === 0) {
                     const hour = (i + now.getHours()) % HOURS_PER_DAY;
                     categories.push(hour.toString());
                     lines.push({
-                        value: i - 1,
+                        value: i - 1
                     });
-                } else {
+                }
+                else {
                     categories.push('');
                 }
             }
             break;
         case TIME_RANGES.WEEK:
-            for (let i = 0; i < DAYS_PER_WEEK; i += 1) {
+            for (let i = 0; i < DAYS_PER_WEEK; ++i) {
                 categories.push(dayOfWeekAsString((day + i) % DAYS_PER_WEEK));
                 lines.push({
-                    value: i,
+                    value: i
                 });
             }
             break;
         case TIME_RANGES.MONTH:
-            for (let i = 0; i <= DAYS_PER_MONTH; i += 1) {
+            for (let i = 0; i <= DAYS_PER_MONTH; ++i) {
                 if (i % 3 === 0) {
                     const c = ((i + now.getDate()) % lastDayOfPrevMonth) + 1;
                     categories.push(c.toString());
                     lines.push({
-                        value: i,
+                        value: i
                     });
-                } else {
+                }
+                else {
                     categories.push('');
                 }
             }
             break;
         case TIME_RANGES.YEAR:
-            for (let i = 0; i <= MONTHS_PER_YEAR; i += 1) {
+            for (let i = 0; i <= MONTHS_PER_YEAR; ++i) {
                 categories.push(monthsAsString((month + i) % MONTHS_PER_YEAR));
                 categories = categories.slice(-statsData.length);
                 lines.push({
-                    value: i,
+                    value: i
                 });
             }
             break;
@@ -133,11 +135,11 @@ const getCategoriesLines = (statsData, range) => {
 
     return {
         categories,
-        lines,
+        lines
     };
 };
 
-export const Chart = ({ stats, range, type }) => {
+export function Chart({ stats, range, type }) {
     useEffect(() => {
         const statsData = selectRequestsStatsData(stats, range, type);
         const categoriesLines = getCategoriesLines(statsData, range);
@@ -153,22 +155,22 @@ export const Chart = ({ stats, range, type }) => {
         c3.generate({
             bindTo: '#chart',
             size: {
-                height: 230,
+                height: 230
             },
             data: {
                 columns: [
-                    ['data1'].concat(statsData),
+                    ['data1'].concat(statsData)
                 ],
                 types: {
-                    data1: 'area-spline',
+                    data1: 'area-spline'
                 },
                 colors: {
-                    data1: 'url(#grad1)',
-                },
+                    data1: 'url(#grad1)'
+                }
             },
             padding: {
                 left: 15,
-                right: 15,
+                right: 15
             },
             axis: {
                 x: {
@@ -177,34 +179,34 @@ export const Chart = ({ stats, range, type }) => {
                     categories,
                     tick: {
                         outer: false,
-                        multiline: false,
-                    },
+                        multiline: false
+                    }
                 },
                 y: {
-                    show: false,
-                },
+                    show: false
+                }
             },
             legend: {
-                show: false,
+                show: false
             },
             grid: {
                 lines: {
-                    front: false,
+                    front: false
                 },
                 x: {
-                    lines,
+                    lines
                 },
                 focus: {
-                    show: true,
-                },
+                    show: true
+                }
             },
             spline: {
                 interpolation: {
-                    type: 'basis',
-                },
+                    type: 'basis'
+                }
             },
             point: {
-                show: false,
+                show: false
             },
             tooltip: {
                 position(data, width, height, element) {
@@ -217,20 +219,20 @@ export const Chart = ({ stats, range, type }) => {
                     const top = d3.mouse(element)[1] - 50;
                     return {
                         top,
-                        left: tooltipLeft,
+                        left: tooltipLeft
                     };
                 },
                 contents(d) {
                     const [{ value }] = d;
                     return `<div id="tooltip" class="chart__tooltip">${value}</div>`;
-                },
+                }
             },
             oninit() {
                 // eslint-disable-next-line react/no-this-in-sfc
                 this.svg[0][0].getElementsByTagName('defs')[0].innerHTML += grad1;
-            },
+            }
         });
     }, [range, type, stats]);
 
-    return <div className="chart" id="chart" />;
-};
+    return <div className='chart' id='chart' />;
+}

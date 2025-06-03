@@ -102,7 +102,8 @@ export const localStorageImpl = (function () {
         let items;
         try {
             items = await read(ADGUARD_SETTINGS_PROP);
-        } catch (e) {
+        }
+        catch (e) {
             log.error(e);
         }
 
@@ -115,6 +116,6 @@ export const localStorageImpl = (function () {
         removeItem,
         hasItem,
         init,
-        isInitialized,
+        isInitialized
     };
 })();

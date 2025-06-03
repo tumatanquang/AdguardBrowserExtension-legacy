@@ -4,16 +4,16 @@ import { Setting, SETTINGS_TYPES } from './Setting';
 import { SettingsSet } from './SettingsSet';
 
 // clickable setting with a label wrap
-const SettingsSetCheckbox = (props) => {
+function SettingsSetCheckbox(props) {
     const {
         title, description, children, disabled,
-        id, handler, label, inverted, value, sectionDisabled,
+        id, handler, label, inverted, value, sectionDisabled
     } = props;
 
     return (
         <label
             htmlFor={id}
-            className="setting-checkbox"
+            className='setting-checkbox'
         >
             <SettingsSet
                 title={title}
@@ -35,10 +35,10 @@ const SettingsSetCheckbox = (props) => {
             </SettingsSet>
         </label>
     );
-};
+}
 
 SettingsSetCheckbox.propTypes = {
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 };
 
 export { SettingsSetCheckbox };

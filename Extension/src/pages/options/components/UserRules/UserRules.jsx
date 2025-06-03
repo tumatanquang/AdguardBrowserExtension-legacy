@@ -24,30 +24,30 @@ const UserRules = observer(() => {
             <SettingsSection
                 title={reactTranslator.getMessage('options_userfilter')}
                 id={settingsStore.userFilterEnabledSettingId}
-                mode="smallContainer"
+                mode='smallContainer'
                 description={reactTranslator.getMessage('options_userfilter_description_key', {
                     a: (chunks) => (
                         <a
-                            className="desc--link"
+                            className='desc--link'
                             href={HOW_TO_CREATE_RULES_URL}
-                            target="_blank"
-                            rel="noreferrer"
+                            target='_blank'
+                            rel='noreferrer'
                         >
                             {chunks}
                         </a>
-                    ),
+                    )
                 })}
                 inlineControl={<UserRulesSwitcher />}
             />
             {settingsStore.isFullscreenUserRulesEditorOpen
                 ? (
-                    <div className="editor__open">
-                        <div className="editor__open-title">
+                    <div className='editor__open'>
+                        <div className='editor__open-title'>
                             {reactTranslator.getMessage('options_user_rules_editor_stub_title')}
                         </div>
                         <button
-                            type="button"
-                            className="button button--m button--green actions__btn"
+                            type='button'
+                            className='button button--m button--green actions__btn'
                             onClick={handleGoToEditorClick}
                         >
                             {reactTranslator.getMessage('options_user_rules_editor_stub_go_to_editor_button')}

@@ -21,7 +21,7 @@ describe('requestContextStorage', () => {
             originUrl: referrerUrl,
             requestType,
             method,
-            tab,
+            tab
         });
 
         let context = requestContextStorage.get(requestId);
@@ -57,7 +57,7 @@ describe('requestContextStorage', () => {
             originUrl: referrerUrl,
             method,
             requestType,
-            tab,
+            tab
         });
 
         requestContextStorage.onRequestCompleted(requestId, 200);
@@ -72,7 +72,7 @@ describe('requestContextStorage', () => {
             originUrl: referrerUrl,
             method,
             requestType,
-            tab,
+            tab
         });
 
         requestContextStorage.onContentModificationStarted(requestId);
@@ -105,7 +105,7 @@ describe('requestContextStorage', () => {
             originUrl: referrerUrl,
             method,
             requestType,
-            tab,
+            tab
         });
 
         // allow null values
@@ -125,10 +125,10 @@ describe('requestContextStorage', () => {
         // Modify request headers
         const modifiedRequestHeaders = [{
             name: 'header-1',
-            value: 'value-2',
+            value: 'value-2'
         }, {
             name: 'header-3',
-            value: 'value-3',
+            value: 'value-3'
         }];
         requestContextStorage.update(requestId, { modifiedRequestHeaders });
 
@@ -147,10 +147,10 @@ describe('requestContextStorage', () => {
         // Modify response headers
         const modifiedResponseHeaders = [{
             name: 'header-2',
-            value: 'value-1',
+            value: 'value-1'
         }, {
             name: 'header-4',
-            value: 'value-4',
+            value: 'value-4'
         }];
         requestContextStorage.update(requestId, { modifiedResponseHeaders });
 
@@ -190,7 +190,7 @@ describe('requestContextStorage', () => {
             method,
             originUrl: referrerUrl,
             requestType,
-            tab,
+            tab
         });
 
         requestContextStorage.update(requestId, { requestRule });

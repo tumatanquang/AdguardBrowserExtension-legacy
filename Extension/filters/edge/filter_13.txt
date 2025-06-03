@@ -37,7 +37,7 @@
 ! @param property property or properties chain
 ! @param debug optional, if true - we will print warning when script is aborted.
 !
-#%#var AG_abortOnPropertyWrite=function(a,b){var c=Math.random().toString(36).substr(2,8);AG_defineProperty(a,{beforeSet:function(){b&&console.warn("AdGuard aborted property write: "+a);throw new ReferenceError(c);}});var d=window.onerror;window.onerror=function(e){if("string"===typeof e&&-1!==e.indexOf(c))return b&&console.warn("AdGuard has caught window.onerror: "+a),!0;if(d instanceof Function)return d.apply(this,arguments)}};
+#%#var AG_abortOnPropertyWrite=function(a,b){var c=Math.random().toString(36).substr(2,8);AG_defineProperty(a,{beforeSet:function(){b&&console.warn("AdGuard aborted property write: "+a);throw new ReferenceError(c);}});var d=window.onerror;window.onerror=function(e){if("string"===typeof e&&e.indexOf(c) >= 0)return b&&console.warn("AdGuard has caught window.onerror: "+a),!0;if(d instanceof Function)return d.apply(this,arguments)}};
 !
 ! AG_abortOnPropertyRead(property, debug)
 ! Aborts execution of a script when it attempts to read the specified property.
@@ -49,7 +49,7 @@
 ! @param property property or properties chain
 ! @param debug optional, if true - we will print warning when script is aborted.
 !
-#%#var AG_abortOnPropertyRead=function(a,b){var c=Math.random().toString(36).substr(2,8);AG_defineProperty(a,{beforeGet:function(){b&&console.warn("AdGuard aborted property read: "+a);throw new ReferenceError(c);}});var d=window.onerror;window.onerror=function(e){if("string"===typeof e&&-1!==e.indexOf(c))return b&&console.warn("AdGuard has caught window.onerror: "+a),!0;if(d instanceof Function)return d.apply(this,arguments)}};
+#%#var AG_abortOnPropertyRead=function(a,b){var c=Math.random().toString(36).substr(2,8);AG_defineProperty(a,{beforeGet:function(){b&&console.warn("AdGuard aborted property read: "+a);throw new ReferenceError(c);}});var d=window.onerror;window.onerror=function(e){if("string"===typeof e&&e.indexOf(c) >= 0)return b&&console.warn("AdGuard has caught window.onerror: "+a),!0;if(d instanceof Function)return d.apply(this,arguments)}};
 !
 ! AG_abortInlineScript(regex, property, debug)
 ! Aborts execution of an inline script when it attempts to access the specified property
@@ -63,7 +63,7 @@
 ! @param property property or properties chain
 ! @param debug optional, if true - we will print warning when script is aborted.
 !
-#%#var AG_abortInlineScript=function(g,b,c){var d=function(){if("currentScript"in document)return document.currentScript;var a=document.getElementsByTagName("script");return a[a.length-1]},e=Math.random().toString(36).substr(2,8),h=d();AG_defineProperty(b,{beforeGet:function(){var a=d();if(a instanceof HTMLScriptElement&&a!==h&&""===a.src&&g.test(a.textContent))throw c&&console.warn("AdGuard aborted execution of an inline script"),new ReferenceError(e);}});var f=window.onerror;window.onerror=function(a){if("string"===typeof a&&-1!==a.indexOf(e))return c&&console.warn("AdGuard has caught window.onerror: "+b),!0;if(f instanceof Function)return f.apply(this,arguments)}};
+#%#var AG_abortInlineScript=function(g,b,c){var d=function(){if("currentScript"in document)return document.currentScript;var a=document.getElementsByTagName("script");return a[a.length-1]},e=Math.random().toString(36).substr(2,8),h=d();AG_defineProperty(b,{beforeGet:function(){var a=d();if(a instanceof HTMLScriptElement&&a!==h&&""===a.src&&g.test(a.textContent))throw c&&console.warn("AdGuard aborted execution of an inline script"),new ReferenceError(e);}});var f=window.onerror;window.onerror=function(a){if("string"===typeof a&&a.indexOf(e) >= 0)return c&&console.warn("AdGuard has caught window.onerror: "+b),!0;if(f instanceof Function)return f.apply(this,arguments)}};
 !
 ! AG_setConstant('property.chain', 'true') // defines boolean (true), same for false;
 ! AG_setConstant('property.chain', '123') // defines Number 123;
@@ -1462,7 +1462,7 @@ dreamfancy.org#%#(function() { window.open_ = window.open; var w_open = window.o
 sinemavitrini.com#%#document.cookie = "gosterilen_popup=1; path=/";
 ! https://github.com/AdguardTeam/AdguardFilters/issues/139054
 ! https://github.com/AdguardTeam/AdguardFilters/issues/25270
-gazeterize.com,aydinses.com#%#AG_onLoad(function() { if (window.location.pathname.indexOf('/tanitim.php') > -1) { document.cookie = "cookbanner=8saniye; path=/;"; var el = document.querySelector('.giris > a[href$="&interstitial=true"]'); if(el) { el.click(); } } });
+gazeterize.com,aydinses.com#%#AG_onLoad(function() { if (window.location.pathname.indexOf('/tanitim.php') >= 0) { document.cookie = "cookbanner=8saniye; path=/;"; var el = document.querySelector('.giris > a[href$="&interstitial=true"]'); if(el) { el.click(); } } });
 ! https://github.com/AdguardTeam/AdguardFilters/issues/19528
 haber7.com#%#AG_onLoad(function() { var elements = document.querySelectorAll(".headline-slider > .slick-dots > li > a:not([href*='advertorial'])"); for(var i = 0; i < elements.length; i++) { elements[i].innerHTML = i+1; }; });
 ! https://github.com/AdguardTeam/AdguardFilters/issues/18946
@@ -1474,7 +1474,7 @@ aksam.com.tr#%#AG_onLoad(function() { document.querySelectorAll("a[data-slide-in
 ! https://github.com/AdguardTeam/AdguardFilters/issues/16066
 ademocut.com#%#AG_onLoad(function() { document.getElementsByClassName("yazi-icerik")[0].innerHTML = document.getElementsByClassName("yazi-icerik")[0].innerHTML.replace("Sponsorlu Bağlantılar", ''); });
 ! https://github.com/AdguardTeam/AdguardFilters/issues/15889
-gazetevatan.com#%#AG_onLoad(function() { setTimeout(function() { $(".haberler").each(function() { if($(this).children(".child").length == 0) { $(this).hide(); } }) }, 100); });
+gazetevatan.com#%#AG_onLoad(function() { setTimeout(function() { $(".haberler").each(function() { if($(this).children(".child").length === 0) { $(this).hide(); } }) }, 100); });
 ! https://github.com/AdguardTeam/AdguardFilters/issues/13959
 haber32.com.tr#%#document.cookie = "modalads=yes";
 ! https://github.com/AdguardTeam/AdguardFilters/issues/11430
@@ -1482,11 +1482,11 @@ mobile.donanimhaber.com#%#if(window.sessionStorage) { window.sessionStorage.page
 ! https://github.com/AdguardTeam/AdguardFilters/issues/12881
 atv.com.tr#%#document.cookie = "bdSurvey=1";
 ! https://github.com/AdguardTeam/AdguardFilters/issues/12512
-61saat.com#%#AG_onLoad(function() { setTimeout(function() {if(window.location.href.indexOf("tanitim.php") != -1) { document.querySelectorAll('[href*="interstitial=true"]')[0].click(); }}, 300); });
+61saat.com#%#AG_onLoad(function() { setTimeout(function() {if(window.location.href.indexOf("tanitim.php") >= 0) { document.querySelectorAll('[href*="interstitial=true"]')[0].click(); }}, 300); });
 ! https://github.com/AdguardTeam/AdguardFilters/issues/10975
 izlesene.com#%#window.open = function() {};
 ! https://github.com/AdguardTeam/AdguardFilters/issues/9804
-superfb.com#%#AG_onLoad(function() { if (window.location.href.indexOf("/index_prestitial.php") != -1) { window.location.href = "/" }; });
+superfb.com#%#AG_onLoad(function() { if (window.location.href.indexOf("/index_prestitial.php") >= 0) { window.location.href = "/" }; });
 ! https://github.com/AdguardTeam/AdguardFilters/issues/8159
 zxro.com#%#AG_onLoad(function() { setTimeout(function() { var el = document.getElementById('btnpass'); if(el) el.click(); }, 500); });
 ! https://github.com/AdguardTeam/AdguardFilters/issues/7837
@@ -1504,9 +1504,9 @@ yenisafak.com#%#AG_onLoad(function(){if(0==location.pathname.indexOf("/foto-gale
 ! https://forum.adguard.com/index.php?threads/akgazete-com-tr.20391/#post-131661
 akgazete.com.tr#%#AG_onLoad(function(){document.querySelector("body>div>#timerText")&&(document.location.href="http://"+window.location.hostname)});
 ! https://forum.adguard.com/index.php?threads/11258/
-sporx.com#%#AG_onLoad(function() { if (window.location.href.indexOf("prestitial") != -1) { document.cookie = "interstitial_banner_2500=1"; document.cookie = "prestitial_banner_2500=1"; window.location.href = "http://www.sporx.com/?giris=ok"; } });
+sporx.com#%#AG_onLoad(function() { if (window.location.href.indexOf("prestitial") >= 0) { document.cookie = "interstitial_banner_2500=1"; document.cookie = "prestitial_banner_2500=1"; window.location.href = "http://www.sporx.com/?giris=ok"; } });
 ! https://forum.adguard.com/index.php?threads/9745/
-ajans32.com#%#AG_onLoad(function() { setTimeout(function() {if(window.location.href.indexOf("interstitial.php") != -1) {document.cookie="interstitial_banner_2500=1";document.cookie="prestitial_banner_2500=1"; var pathArray = window.location.href.split( '%2F'); var url = pathArray[1].split('%3F'); if (url[0] === "") {  window.location.href = "http://www.ajans32.com/?interstitial=true"; } else {  window.location.href = url[0] + "?interstitial=true"; }}}, 300); });
+ajans32.com#%#AG_onLoad(function() { setTimeout(function() {if(window.location.href.indexOf("interstitial.php") >= 0) {document.cookie="interstitial_banner_2500=1";document.cookie="prestitial_banner_2500=1"; var pathArray = window.location.href.split( '%2F'); var url = pathArray[1].split('%3F'); if (url[0] === "") {  window.location.href = "http://www.ajans32.com/?interstitial=true"; } else {  window.location.href = url[0] + "?interstitial=true"; }}}, 300); });
 ! http://forum.adguard.com/showthread.php?9653
 wowturkey.com#%#window.google_jobrunner = function() {};
 ! http://forum.adguard.com/showthread.php?9303
@@ -1523,7 +1523,7 @@ t24.com.tr#%#AG_onLoad(function() { $('a[href^="http://t24.com.tr/haber/advertor
 ! http://forum.adguard.com/showthread.php?7046
 mackolik.com,sahadan.com#%#setTimeout ("HideFloatAdBanner()", 1000);
 ! https://forum.adguard.com/index.php?threads/21052/
-finikeakdeniz.com.tr#%#AG_onLoad(function() { if (window.location.href.indexOf("/reklam.asp") != -1) { window.location.href = "/" }; });
+finikeakdeniz.com.tr#%#AG_onLoad(function() { if (window.location.href.indexOf("/reklam.asp") >= 0) { window.location.href = "/" }; });
 ! https://github.com/AdguardTeam/AdguardFilters/issues/65929#issuecomment-714316741
 r10.net#%#document.cookie = 'r10LeftHide=1';
 !--------------------------------------!

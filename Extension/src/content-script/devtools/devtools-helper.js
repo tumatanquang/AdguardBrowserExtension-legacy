@@ -67,6 +67,6 @@ export const DevToolsHelper = (function () {
 
     return {
         applyPreview,
-        cancelPreview,
+        cancelPreview
     };
 })();

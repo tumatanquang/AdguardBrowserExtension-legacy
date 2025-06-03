@@ -6,22 +6,22 @@ export const firefoxManifest = {
     'browser_specific_settings': {
         'gecko': {
             'id': appId,
-            'strict_min_version': '78.0',
-        },
+            'strict_min_version': '78.0'
+        }
     },
     'options_ui': {
         'page': 'pages/options.html',
-        'open_in_tab': true,
+        'open_in_tab': true
     },
     'permissions': [
-        'tabs',
         '<all_urls>',
+        'tabs',
         'webRequest',
         'webRequestBlocking',
         'webNavigation',
         'storage',
         'contextMenus',
         'cookies',
-        'privacy',
-    ],
+        'privacy'
+    ]
 };

@@ -17,7 +17,8 @@ export const useAppearanceTheme = (appearanceTheme) => {
         let theme = appearanceTheme;
         if (!theme) {
             theme = localStorage.getItem(STORAGE_KEY);
-        } else {
+        }
+        else {
             throttledSetToStorage(theme);
         }
 

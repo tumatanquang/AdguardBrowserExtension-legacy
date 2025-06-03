@@ -15,7 +15,7 @@ export const Tabs = observer(() => {
 
     const contentMap = {
         [VIEW_STATES.ACTIONS]: Actions,
-        [VIEW_STATES.STATS]: StatsTable,
+        [VIEW_STATES.STATS]: StatsTable
     };
 
     const TabContent = contentMap[store.viewState];
@@ -25,8 +25,8 @@ export const Tabs = observer(() => {
     };
 
     return (
-        <div className="tabs">
-            <div className="tabs__panel">
+        <div className='tabs'>
+            <div className='tabs__panel'>
                 <Tab
                     title={reactTranslator.getMessage('popup_tab_actions')}
                     active={store.viewState === VIEW_STATES.ACTIONS}
@@ -39,7 +39,7 @@ export const Tabs = observer(() => {
                 />
             </div>
             <div
-                className="tabs__content"
+                className='tabs__content'
                 tabIndex={TabContent === contentMap[VIEW_STATES.STATS] ? 0 : -1}
             >
                 <TabContent />

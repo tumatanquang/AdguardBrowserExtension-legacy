@@ -8,7 +8,7 @@ import { rootStore } from '../../stores/RootStore';
 export const FilteringEventsEmpty = observer(() => {
     const { logStore } = useContext(rootStore);
 
-    if (logStore.events.length > 0) {
+    if (logStore.events.length !== 0) {
         return null;
     }
 
@@ -21,17 +21,17 @@ export const FilteringEventsEmpty = observer(() => {
     };
 
     return (
-        <div className="filtering-log__empty">
-            <div className="filtering-log__empty-in">
-                <Icon id="#magnifying" classname="filtering-log__empty-img" />
-                <div className="filtering-log__desc">
+        <div className='filtering-log__empty'>
+            <div className='filtering-log__empty-in'>
+                <Icon id='#magnifying' classname='filtering-log__empty-img' />
+                <div className='filtering-log__desc'>
                     {reactTranslator.getMessage(
                         'filtering_table_empty_reload_page_desc',
                         {
                             reset: (chunks) => (
                                 <button
-                                    className="filtering-log__refresh"
-                                    type="button"
+                                    className='filtering-log__refresh'
+                                    type='button'
                                     onClick={resetFilters}
                                 >
                                     {chunks}
@@ -39,14 +39,14 @@ export const FilteringEventsEmpty = observer(() => {
                             ),
                             refresh: (chunks) => (
                                 <button
-                                    className="filtering-log__refresh"
-                                    type="button"
+                                    className='filtering-log__refresh'
+                                    type='button'
                                     onClick={refreshPage}
                                 >
                                     {chunks}
                                 </button>
-                            ),
-                        },
+                            )
+                        }
                     )}
                 </div>
             </div>

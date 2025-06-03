@@ -26,13 +26,13 @@ const createValidatorFile = (schemaPath, outputPath) => {
     fs.writeFileSync(
         outputPath,
         moduleBanner + moduleCode,
-        { flag: 'w' },
+        { flag: 'w' }
     );
 };
 
 export const genValidators = () => {
     createValidatorFile(
         path.resolve(__dirname, '../Extension/src/background/settings/settings.schema.json'),
-        path.resolve(__dirname, '../Extension/src/background/settings/validator.js'),
+        path.resolve(__dirname, '../Extension/src/background/settings/validator.js')
     );
 };

@@ -2,7 +2,7 @@ import React, {
     useContext,
     useEffect,
     useRef,
-    useCallback,
+    useCallback
 } from 'react';
 import { observer } from 'mobx-react';
 import { Range } from 'ace-builds';
@@ -47,7 +47,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
             await store.requestSettingsData();
 
             const events = [
-                NOTIFIER_TYPES.SETTING_UPDATED,
+                NOTIFIER_TYPES.SETTING_UPDATED
             ];
             removeListenerCallback = await messenger.createEventListener(
                 events,
@@ -64,7 +64,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
                             break;
                         }
                     }
-                },
+                }
             );
         })();
 
@@ -95,13 +95,9 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
 
             // initial export button state
             const { userRules } = await messenger.sendMessage(
-                MESSAGE_TYPES.GET_USER_RULES_EDITOR_DATA,
+                MESSAGE_TYPES.GET_USER_RULES_EDITOR_DATA
             );
-            if (userRules.length > 0) {
-                store.setUserRulesExportAvailableState(true);
-            } else {
-                store.setUserRulesExportAvailableState(false);
-            }
+            store.setUserRulesExportAvailableState(userRules.length !== 0);
         })();
     }, [store]);
 
@@ -112,7 +108,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
      */
     const handleUserFilterUpdated = useCallback(async () => {
         const { userRules } = await messenger.sendMessage(
-            MESSAGE_TYPES.GET_USER_RULES_EDITOR_DATA,
+            MESSAGE_TYPES.GET_USER_RULES_EDITOR_DATA
         );
 
         if (!store.userRulesEditorContentChanged) {
@@ -124,11 +120,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
         }
 
         // disable or enable export button
-        if (userRules.length > 0) {
-            store.setUserRulesExportAvailableState(true);
-        } else {
-            store.setUserRulesExportAvailableState(false);
-        }
+        store.setUserRulesExportAvailableState(userRules.length !== 0);
     }, [store]);
 
     // Append listeners
@@ -139,7 +131,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
             // Subscribe to events of request filter update
             // to have actual user rules in the editor
             const events = [
-                NOTIFIER_TYPES.USER_FILTER_UPDATED,
+                NOTIFIER_TYPES.USER_FILTER_UPDATED
             ];
 
             removeListenerCallback = await messenger.createEventListener(
@@ -157,7 +149,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
                             break;
                         }
                     }
-                },
+                }
             );
         })();
 
@@ -226,7 +218,8 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
                 editorRef.current.editor.setValue(rulesUnionString, 1);
                 await store.saveUserRules(rulesUnionString);
             }
-        } catch (e) {
+        }
+        catch (e) {
             log.debug(e.message);
             if (uiStore?.addNotification) {
                 uiStore.addNotification({ description: e.message });
@@ -253,7 +246,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
         {
             name: 'save',
             bindKey: { win: 'Ctrl-S', mac: 'Command-S' },
-            exec: saveClickHandler,
+            exec: saveClickHandler
         },
         {
             name: 'togglecomment',
@@ -281,12 +274,13 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
                         const lineWithRemovedComment = rawLine.replace(SimpleRegex.MASK_COMMENT, '');
                         editor.session.replace(new Range(row, 0, row), lineWithRemovedComment);
                         // otherwise we add it
-                    } else {
+                    }
+                    else {
                         editor.session.insert({ row, column: 0 }, SimpleRegex.MASK_COMMENT);
                     }
                 });
-            },
-        },
+            }
+        }
     ];
 
     const exportClickHandler = () => {
@@ -332,79 +326,79 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
     return (
         <>
             <Editor
-                name="user-rules"
+                name='user-rules'
                 editorRef={editorRef}
                 shortcuts={shortcuts}
                 fullscreen={fullscreen}
                 shouldResetSize={shouldResetSize}
                 highlightRules
             />
-            <div className="actions actions--divided">
-                <div className="actions__group">
+            <div className='actions actions--divided'>
+                <div className='actions__group'>
                     {
                         fullscreen && (
                             <label
-                                className="actions__label"
-                                htmlFor="user-filter-enabled"
+                                className='actions__label'
+                                htmlFor='user-filter-enabled'
                             >
-                                <div className="actions__title">
+                                <div className='actions__title'>
                                     {reactTranslator.getMessage('fullscreen_user_rules_title')}
                                 </div>
                                 <Checkbox
-                                    id="user-filter-enabled"
+                                    id='user-filter-enabled'
                                     handler={handleUserRulesToggle}
                                     value={store.userFilterEnabled}
-                                    className="checkbox__label--actions"
+                                    className='checkbox__label--actions'
                                 />
                             </label>
                         )
                     }
                     <UserRulesSavingButton onClick={saveClickHandler} />
                     <input
-                        type="file"
-                        id="inputEl"
-                        accept="text/plain"
+                        type='file'
+                        id='inputEl'
+                        accept='text/plain'
                         ref={inputRef}
                         onChange={inputChangeHandler}
                         style={{ display: 'none' }}
                     />
                     <button
-                        type="button"
-                        className="button button--m button--transparent actions__btn"
+                        type='button'
+                        className='button button--m button--transparent actions__btn'
                         onClick={importClickHandler}
                     >
                         {reactTranslator.getMessage('options_userfilter_import')}
                     </button>
                     <button
-                        type="button"
-                        className="button button--m button--transparent actions__btn"
+                        type='button'
+                        className='button button--m button--transparent actions__btn'
                         onClick={exportClickHandler}
                         disabled={!store.userRulesExportAvailable}
                     >
                         {reactTranslator.getMessage('options_userfilter_export')}
                     </button>
                 </div>
-                <div className="actions__group">
+                <div className='actions__group'>
                     <ToggleWrapButton onClick={toggleWrap} />
                     <Popover text={fullscreenTooltipText}>
                         {
                             fullscreen ? (
                                 <button
-                                    type="button"
-                                    className="button actions__btn actions__btn--icon"
+                                    type='button'
+                                    className='button actions__btn actions__btn--icon'
                                     onClick={closeEditorFullscreen}
                                     aria-label={reactTranslator.getMessage('options_editor_close_fullscreen_button_tooltip')}
                                 >
-                                    <Icon classname="icon--extend" id="#reduce" />
+                                    <Icon classname='icon--extend' id='#reduce' />
                                 </button>
                             ) : (
                                 <button
-                                    type="button"
-                                    className="button actions__btn actions__btn--icon"
+                                    type='button'
+                                    className='button actions__btn actions__btn--icon'
                                     onClick={openEditorFullscreen}
                                     aria-label={reactTranslator.getMessage('options_editor_open_fullscreen_button_tooltip')}
                                 >
-                                    <Icon classname="icon--extend" id="#extend" />
+                                    <Icon classname='icon--extend' id='#extend' />
                                 </button>
                             )
                         }

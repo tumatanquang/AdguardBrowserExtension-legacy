@@ -32,30 +32,30 @@ export const Filters = observer(() => {
     const timeRangeOptions = {
         [TIME_RANGES.DAY]: {
             id: TIME_RANGES.DAY,
-            title: reactTranslator.getMessage('popup_statistics_time_day'),
+            title: reactTranslator.getMessage('popup_statistics_time_day')
         },
         [TIME_RANGES.WEEK]: {
             id: TIME_RANGES.WEEK,
-            title: reactTranslator.getMessage('popup_statistics_time_week'),
+            title: reactTranslator.getMessage('popup_statistics_time_week')
         },
         [TIME_RANGES.MONTH]: {
             id: TIME_RANGES.MONTH,
-            title: reactTranslator.getMessage('popup_statistics_time_month'),
+            title: reactTranslator.getMessage('popup_statistics_time_month')
         },
         [TIME_RANGES.YEAR]: {
             id: TIME_RANGES.YEAR,
-            title: reactTranslator.getMessage('popup_statistics_time_year'),
-        },
+            title: reactTranslator.getMessage('popup_statistics_time_year')
+        }
     };
 
     return (
-        <div className="stats-chart__filters">
-            <div className="stats-chart__select stats-chart__select--left">
-                <Icon id="#select" classname="icon--select stats-chart__icon" />
+        <div className='stats-chart__filters'>
+            <div className='stats-chart__select stats-chart__select--left'>
+                <Icon id='#select' classname='icon--select stats-chart__icon' />
                 <select
-                    className="stats-chart__select-in"
-                    name="blocked-type"
-                    id="blocked-type"
+                    className='stats-chart__select-in'
+                    name='blocked-type'
+                    id='blocked-type'
                     onChange={handleBlockedTypeChange}
                     value={store.selectedBlockedType}
                 >
@@ -71,12 +71,12 @@ export const Filters = observer(() => {
                     })}
                 </select>
             </div>
-            <div className="stats-chart__select stats-chart__select--left">
-                <Icon id="#select" classname="icon--select stats-chart__icon" />
+            <div className='stats-chart__select stats-chart__select--left'>
+                <Icon id='#select' classname='icon--select stats-chart__icon' />
                 <select
-                    className="stats-chart__select-in"
-                    name="time-range"
-                    id="time-range"
+                    className='stats-chart__select-in'
+                    name='time-range'
+                    id='time-range'
                     onChange={handleTimeRangeChange}
                     value={store.selectedTimeRange}
                 >

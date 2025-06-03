@@ -44,7 +44,8 @@ class DomainsHolder {
             if (json) {
                 domains = JSON.parse(json);
             }
-        } catch (ex) {
+        }
+        catch (ex) {
             log.error('Error retrieving the allowlist domains {0}, cause {1}', prop, ex);
         }
         return domains;
@@ -79,7 +80,7 @@ export const allowlist = (() => {
      */
     const allowAllAllowlistRule = new TSUrlFilter.NetworkRule(
         '@@allowlist-all$document',
-        utils.filters.ALLOWLIST_FILTER_ID,
+        utils.filters.ALLOWLIST_FILTER_ID
     );
 
     /**
@@ -123,7 +124,8 @@ export const allowlist = (() => {
         }
         if (isDefaultAllowlistMode()) {
             allowlistDomainsHolder.add(domain);
-        } else {
+        }
+        else {
             blocklistDomainsHolder.add(domain);
         }
     }
@@ -147,7 +149,8 @@ export const allowlist = (() => {
 
         if (isDefaultAllowlistMode()) {
             utils.collections.removeBy(allowlistDomainsHolder.domains, predicate);
-        } else {
+        }
+        else {
             utils.collections.removeBy(blocklistDomainsHolder.domains, predicate);
         }
     }
@@ -231,7 +234,8 @@ export const allowlist = (() => {
         const domain = utils.url.getDomainName(url);
         if (isDefaultAllowlistMode()) {
             addToAllowlist(domain);
-        } else {
+        }
+        else {
             removeFromAllowlist(domain);
         }
     };
@@ -244,7 +248,8 @@ export const allowlist = (() => {
         const domain = utils.url.getDomainName(url);
         if (isDefaultAllowlistMode()) {
             removeFromAllowlist(domain);
-        } else {
+        }
+        else {
             addToAllowlist(domain);
         }
     };
@@ -265,7 +270,7 @@ export const allowlist = (() => {
         if (!domains) {
             return;
         }
-        for (let i = 0; i < domains.length; i += 1) {
+        for (let i = 0; i < domains.length; ++i) {
             const domain = domains[i];
             allowlistDomainsHolder.add(domain);
         }
@@ -288,7 +293,7 @@ export const allowlist = (() => {
         if (!domains) {
             return;
         }
-        for (let i = 0; i < domains.length; i += 1) {
+        for (let i = 0; i < domains.length; ++i) {
             const domain = domains[i];
             blocklistDomainsHolder.add(domain);
         }
@@ -304,7 +309,8 @@ export const allowlist = (() => {
         if (isDefaultAllowlistMode()) {
             clearAllowlisted();
             addAllowlisted(domains);
-        } else {
+        }
+        else {
             clearBlocklisted();
             addBlocklisted(domains);
         }
@@ -322,7 +328,7 @@ export const allowlist = (() => {
         allowlist,
         blocklist,
         mode,
-        enabled,
+        enabled
     }) {
         clearAllowlisted();
         clearBlocklisted();
@@ -386,6 +392,6 @@ export const allowlist = (() => {
         unAllowlistUrl,
 
         isDefaultMode: isDefaultAllowlistMode,
-        changeDefaultAllowlistMode,
+        changeDefaultAllowlistMode
     };
 })();

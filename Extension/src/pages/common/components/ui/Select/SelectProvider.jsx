@@ -3,23 +3,23 @@ import React, {
     useState,
     useMemo,
     useContext,
-    useCallback,
+    useCallback
 } from 'react';
 
 const noop = () => {};
 
 export const SelectContext = createContext({
     currentSelect: null,
-    setCurrentSelect: noop,
+    setCurrentSelect: noop
 });
 
-export const SelectProvider = ({ currentSelect: currentSelectProp = null, children }) => {
+export function SelectProvider({ currentSelect: currentSelectProp = null, children }) {
     const [currentSelect, setCurrentSelect] = useState(currentSelectProp);
 
     const context = useMemo(() => {
         return {
             currentSelect,
-            setCurrentSelect,
+            setCurrentSelect
         };
     }, [currentSelect]);
 
@@ -28,7 +28,7 @@ export const SelectProvider = ({ currentSelect: currentSelectProp = null, childr
             {children}
         </SelectContext.Provider>
     );
-};
+}
 
 export const useSelect = (id) => {
     const { currentSelect, setCurrentSelect } = useContext(SelectContext);

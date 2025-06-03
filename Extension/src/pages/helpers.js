@@ -21,7 +21,7 @@ export const handleFileUpload = (file, requiredExtension) => new Promise((resolv
     if (getFilenameExtension(file.name) !== requiredExtension) {
         reject(new Error(translator.getMessage(
             'options_popup_import_settings_wrong_file_ext',
-            { extension: requiredExtension },
+            { extension: requiredExtension }
         )));
     }
     const reader = new FileReader();
@@ -35,7 +35,7 @@ export const handleFileUpload = (file, requiredExtension) => new Promise((resolv
 });
 
 export const hoursToMs = (hours) => {
-    const MS_IN_HOUR = 1000 * 60 * 60;
+    const MS_IN_HOUR = 60 * 60 * 1000;
     return hours * MS_IN_HOUR;
 };
 
@@ -60,13 +60,14 @@ export const containsIgnoreCase = (str, searchString) => {
 
 export const findChunks = (str, searchString, chunks = []) => {
     const ind = indexOfIgnoreCase(str, searchString);
-    if (ind > -1) {
+    if (ind >= 0) {
         chunks.push(str.slice(0, ind));
         chunks.push(str.slice(ind, ind + searchString.length));
         const restStr = str.slice(ind + searchString.length);
         if (containsIgnoreCase(restStr, searchString)) {
             findChunks(restStr, searchString, chunks);
-        } else {
+        }
+        else {
             chunks.push(restStr);
         }
     }
@@ -88,12 +89,13 @@ export const passiveEventSupported = (() => {
                 get passive() {
                     supported = true;
                     return false;
-                },
+                }
             };
 
             window.addEventListener('test', null, options);
             window.removeEventListener('test', null, options);
-        } catch (err) {
+        }
+        catch (err) {
             supported = false;
         }
         passiveSupported = supported;
@@ -171,16 +173,18 @@ export const updateFilterDescription = (updatedFilters) => {
     if (!updatedFilters) {
         return {
             title: translator.getMessage('options_popup_update_title_error'),
-            description: translator.getMessage('options_popup_update_error'),
+            description: translator.getMessage('options_popup_update_error')
         };
     }
     const filterNames = updatedFilters.map((filter) => filter.name).join(', ');
     let description;
     if (updatedFilters.length === 0) {
         description = `${filterNames} ${translator.getMessage('options_popup_update_not_found')}`;
-    } else if (updatedFilters.length === 1) {
+    }
+    else if (updatedFilters.length === 1) {
         description = `${filterNames} ${translator.getMessage('options_popup_update_filter')}`;
-    } else if (updatedFilters.length > 1) {
+    }
+    else if (updatedFilters.length > 1) {
         description = `${filterNames} ${translator.getMessage('options_popup_update_filters')}`;
     }
 

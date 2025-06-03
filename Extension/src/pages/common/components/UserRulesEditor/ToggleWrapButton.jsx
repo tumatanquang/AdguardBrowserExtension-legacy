@@ -15,7 +15,7 @@ export const ToggleWrapButton = observer(({ onClick }) => {
     const store = useContext(userRulesEditorStore);
 
     const lineBreakClassNames = classnames('button actions__btn actions__btn--icon', {
-        'actions__btn--active': store.userRulesEditorWrapState,
+        'actions__btn--active': store.userRulesEditorWrapState
     });
 
     const tooltipText = store.userRulesEditorWrapState
@@ -25,12 +25,12 @@ export const ToggleWrapButton = observer(({ onClick }) => {
     return (
         <Popover text={tooltipText}>
             <button
-                type="button"
+                type='button'
                 className={lineBreakClassNames}
                 onClick={onClick}
                 aria-label={tooltipText}
             >
-                <Icon classname="icon--extend" id="#line-break" />
+                <Icon classname='icon--extend' id='#line-break' />
             </button>
         </Popover>
     );

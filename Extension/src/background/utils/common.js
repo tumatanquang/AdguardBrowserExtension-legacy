@@ -32,6 +32,10 @@ import { url } from './url';
 export const BACKGROUND_TAB_ID = -1;
 
 /**
+ * Set to -1 if no parent frame exists
+ */
+export const NO_PARENT_FRAME_ID = -1;
+/**
  * Main frame id is equal to 0
  */
 export const MAIN_FRAME_ID = 0;
@@ -48,7 +52,7 @@ export const utils = {
     workaround,
     i18n,
     filters,
-    url,
+    url
 };
 
 /**
@@ -63,7 +67,7 @@ export function toTabFromChromeTab(chromeTab) {
         url: chromeTab.url,
         title: chromeTab.title,
         incognito: chromeTab.incognito,
-        status: chromeTab.status,
+        status: chromeTab.status
     };
 }
 
@@ -82,7 +86,8 @@ export const unload = (function () {
         unloadChannel.addListener(() => {
             try {
                 callback();
-            } catch (ex) {
+            }
+            catch (ex) {
                 log.error('Error while invoke unload method');
                 log.error(ex);
             }
@@ -96,6 +101,6 @@ export const unload = (function () {
 
     return {
         when,
-        fireUnload,
+        fireUnload
     };
 })();

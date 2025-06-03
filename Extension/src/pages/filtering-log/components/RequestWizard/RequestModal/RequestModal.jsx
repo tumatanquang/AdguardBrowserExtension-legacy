@@ -4,7 +4,7 @@ import React, {
     useEffect,
     useState,
     useRef,
-    useCallback,
+    useCallback
 } from 'react';
 import Modal from 'react-modal';
 import { observer } from 'mobx-react';
@@ -50,7 +50,7 @@ const RequestModal = observer(() => {
         isModalOpen,
         closeModal,
         requestModalState,
-        requestModalStateEnum,
+        requestModalStateEnum
     } = wizardStore;
 
     let modalContent;
@@ -79,7 +79,7 @@ const RequestModal = observer(() => {
     const className = cn('ReactModal__Content request-modal', {
         'request-modal__view': requestModalStateEnum.isView,
         'request-modal__block': requestModalStateEnum.isBlock,
-        'request-modal__unblock': requestModalStateEnum.isUnblock,
+        'request-modal__unblock': requestModalStateEnum.isUnblock
     });
 
     const persistModalWidth = (width) => {
@@ -111,16 +111,16 @@ const RequestModal = observer(() => {
             isOpen={isModalOpen}
             onRequestClose={closeModal}
             className={className}
-            overlayClassName="ReactModal__Overlay request-modal__overlay"
+            overlayClassName='ReactModal__Overlay request-modal__overlay'
             style={{
                 content: {
-                    width: `${modalWidth}px`,
-                },
+                    width: `${modalWidth}px`
+                }
             }}
         >
             <div
                 ref={dragBar}
-                className="request-modal__dragbar"
+                className='request-modal__dragbar'
                 onMouseDown={mouseDownHandler}
             />
             {modalContent}

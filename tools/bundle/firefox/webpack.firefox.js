@@ -24,26 +24,26 @@ export const genFirefoxConfig = (browserConfig) => {
                 {
                     from: path.resolve(__dirname, '../manifest.common.json'),
                     to: 'manifest.json',
-                    transform: (content) => updateManifestBuffer(process.env.BUILD_ENV, content, firefoxManifest),
+                    transform: (content) => updateManifestBuffer(process.env.BUILD_ENV, content, firefoxManifest)
                 },
                 {
                     context: 'Extension',
                     from: 'filters/firefox',
-                    to: 'filters',
-                },
-            ],
+                    to: 'filters'
+                }
+            ]
         }),
         new ZipWebpackPlugin({
             path: '../',
-            filename: zipFilename,
-        }),
+            filename: zipFilename
+        })
     ];
 
     const firefoxConfig = {
         output: {
-            path: path.join(commonConfig.output.path, browserConfig.buildDir),
+            path: path.join(commonConfig.output.path, browserConfig.buildDir)
         },
-        plugins,
+        plugins
     };
 
     return merge(commonConfig, firefoxConfig);

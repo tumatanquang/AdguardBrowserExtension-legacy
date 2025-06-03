@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import './input.pcss';
 
-const TextInput = (props) => {
+function TextInput(props) {
     const {
-        id, value, handler, placeholder, disabled,
+        id, value, handler, placeholder, disabled
     } = props;
 
     const changeHandler = (e) => {
@@ -15,30 +15,30 @@ const TextInput = (props) => {
     };
 
     return (
-        <div className="input">
+        <div className='input'>
             <input
                 disabled={disabled}
-                type="number"
+                type='number'
                 name={id}
                 value={value}
                 onChange={changeHandler}
                 id={id}
-                className="input__in"
+                className='input__in'
                 placeholder={placeholder}
             />
         </div>
     );
-};
+}
 
 TextInput.defaultProps = {
-    placeholder: '',
+    placeholder: ''
 };
 
 TextInput.propTypes = {
     id: PropTypes.string.isRequired,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     handler: PropTypes.func.isRequired,
-    placeholder: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    placeholder: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 };
 
 export { TextInput };

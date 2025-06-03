@@ -16,7 +16,7 @@ export const metadataCache = (() => {
         groups,
         groupsMap,
         filters,
-        filtersMap,
+        filtersMap
     });
 
     /**
@@ -89,6 +89,6 @@ export const metadataCache = (() => {
         getGroup,
         getGroups,
         getGroupsMap,
-        getTags,
+        getTags
     };
 })();

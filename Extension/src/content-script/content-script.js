@@ -19,5 +19,5 @@ import { runtimeImpl } from '../common/common-script';
 
 export const contentPage = {
     sendMessage: runtimeImpl.sendMessage,
-    onMessage: runtimeImpl.onMessage,
+    onMessage: runtimeImpl.onMessage
 };

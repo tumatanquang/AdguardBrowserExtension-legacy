@@ -21,27 +21,27 @@ export const Footer = observer(() => {
     };
 
     return (
-        <div className="footer">
+        <div className='footer'>
             {settingsStore.footerRateShowState && (
-                <div className="footer__rate">
-                    <div className="footer__in footer__in--rate container">
-                        <div className="footer__rate-desc">
+                <div className='footer__rate'>
+                    <div className='footer__in footer__in--rate container'>
+                        <div className='footer__rate-desc'>
                             {reactTranslator.getMessage('options_do_you_like_question')}
                         </div>
                         <button
-                            type="button"
-                            className="button button--green button--s"
+                            type='button'
+                            className='button button--green button--s'
                             onClick={handleRateClick}
                         >
                             {reactTranslator.getMessage('options_footer_like_us_cta')}
                         </button>
                         <button
-                            type="button"
-                            className="footer__rate-close"
+                            type='button'
+                            className='footer__rate-close'
                             onClick={hideRate}
                             aria-label={reactTranslator.getMessage('close_button_title')}
                         >
-                            <Icon id="#cross" classname="icon--cross" />
+                            <Icon id='#cross' classname='icon--cross' />
                         </button>
                     </div>
                 </div>

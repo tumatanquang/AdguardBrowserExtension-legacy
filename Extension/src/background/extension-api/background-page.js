@@ -15,10 +15,11 @@
  * along with Adguard Browser Extension. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* eslint-disable max-len */
 import * as TSUrlFilter from '@adguard/tsurlfilter';
 import { RequestTypes, parseContentTypeFromUrlPath } from '../utils/request-types';
-import { BACKGROUND_TAB_ID, toTabFromChromeTab } from '../utils/common';
+import {
+    BACKGROUND_TAB_ID, NO_PARENT_FRAME_ID, MAIN_FRAME_ID, toTabFromChromeTab
+} from '../utils/common';
 import { runtimeImpl } from '../../common/common-script';
 import { browser } from './browser';
 import { prefs } from '../prefs';
@@ -42,7 +43,7 @@ export const backgroundPage = (() => {
 
                     return callback(message, senderOverride);
                 });
-            },
+            }
         };
 
         return {
@@ -52,7 +53,7 @@ export const backgroundPage = (() => {
             onConnect: browser.runtime.onConnect,
             get lastError() {
                 return browser.runtime.lastError;
-            },
+            }
         };
     })();
 
@@ -155,18 +156,18 @@ export const backgroundPage = (() => {
 
         // https://developer.chrome.com/extensions/webRequest#event-onBeforeRequest
         const requestDetails = {
-            requestUrl: details.url,    // request url
+            requestUrl: details.url, // request url
             url: details.url,
-            tab,                        // request tab,
+            tab, // request tab,
             tabId: details.tabId,
             requestId: details.requestId,
             statusCode: details.statusCode,
-            method: details.method,
+            method: details.method
         };
 
-        let frameId = 0;        // id of this frame (only for main_frame and sub_frame types)
+        let frameId = 0; // id of this frame (only for main_frame and sub_frame types)
         let requestFrameId = 0; // id of frame where request is executed
-        let requestType;        // request type
+        let requestType; // request type
 
         switch (details.type) {
             case 'main_frame':
@@ -186,15 +187,15 @@ export const backgroundPage = (() => {
         }
 
         // Relate request to main_frame
-        if (requestFrameId === -1) {
-            requestFrameId = 0;
+        if (requestFrameId === NO_PARENT_FRAME_ID) {
+            requestFrameId = MAIN_FRAME_ID;
         }
 
         if (requestType === 'IMAGESET') {
             requestType = RequestTypes.IMAGE;
         }
 
-        if (requestType === RequestTypes.OTHER) {
+        else if (requestType === RequestTypes.OTHER) {
             requestType = parseRequestTypeFromUrl(details.url);
         }
 
@@ -202,7 +203,7 @@ export const backgroundPage = (() => {
          * ping type is 'ping' in Chrome
          * but Firefox considers it as 'beacon'
          */
-        if (requestType === 'BEACON') {
+        else if (requestType === 'BEACON') {
             requestType = RequestTypes.PING;
         }
 
@@ -261,7 +262,7 @@ export const backgroundPage = (() => {
             }
 
             const extraInfoSpec = ['blocking'];
-            if (extraInfoSpecsDirty && extraInfoSpecsDirty.length > 0) {
+            if (extraInfoSpecsDirty && extraInfoSpecsDirty.length !== 0) {
                 extraInfoSpecsDirty.forEach((spec) => {
                     extraInfoSpec.push(spec);
                 });
@@ -276,7 +277,7 @@ export const backgroundPage = (() => {
                 const requestDetails = getRequestDetails(details);
                 return callback(requestDetails);
             }, filters, extraInfoSpec);
-        },
+        }
     };
 
     /**
@@ -317,7 +318,7 @@ export const backgroundPage = (() => {
                     return 'responseHeaders' in result ? { responseHeaders: result.responseHeaders } : {};
                 }
             }, urls ? { urls } : {}, onHeadersReceivedExtraInfoSpec);
-        },
+        }
     };
 
     const onBeforeSendHeaders = {
@@ -354,7 +355,7 @@ export const backgroundPage = (() => {
                     'csp_report',
                     'media',
                     'websocket',
-                    'other',
+                    'other'
                 ];
                 // this request types block requests, if use them with extraHeaders and blocking options
                 const nonExtraHeadersTypes = ['stylesheet', 'script', 'media'];
@@ -381,7 +382,7 @@ export const backgroundPage = (() => {
                     return 'requestHeaders' in result ? { requestHeaders: result.requestHeaders } : {};
                 }
             }, requestFilter, onBeforeSendHeadersExtraInfoSpec);
-        },
+        }
     };
 
     const onResponseStarted = {
@@ -399,7 +400,7 @@ export const backgroundPage = (() => {
                 const requestDetails = getRequestDetails(details);
                 return callback(requestDetails);
             }, urls ? { urls } : {}, ['responseHeaders']);
-        },
+        }
     };
 
     const onErrorOccurred = {
@@ -417,7 +418,7 @@ export const backgroundPage = (() => {
                 const requestDetails = getRequestDetails(details);
                 return callback(requestDetails);
             }, urls ? { urls } : {});
-        },
+        }
     };
 
     const onCompleted = {
@@ -435,7 +436,7 @@ export const backgroundPage = (() => {
                 const requestDetails = getRequestDetails(details);
                 return callback(requestDetails);
             }, urls ? { urls } : {}, ['responseHeaders']);
-        },
+        }
     };
 
     const onBeforeRedirect = {
@@ -454,7 +455,7 @@ export const backgroundPage = (() => {
                 requestDetails.redirectUrl = details.redirectUrl;
                 return callback(requestDetails);
             }, urls ? { urls } : {});
-        },
+        }
     };
 
     /**
@@ -515,7 +516,7 @@ export const backgroundPage = (() => {
          */
         isOwnRequest(referrerUrl) {
             return referrerUrl && referrerUrl.indexOf(this.getExtensionUrl()) === 0;
-        },
+        }
     };
 
     const webRequest = {
@@ -529,7 +530,7 @@ export const backgroundPage = (() => {
         onBeforeRedirect,
         webSocketSupported: typeof browser.webRequest.ResourceType !== 'undefined'
             && browser.webRequest.ResourceType.WEBSOCKET === 'websocket',
-        filterResponseData: browser.webRequest.filterResponseData,
+        filterResponseData: browser.webRequest.filterResponseData
     };
 
     const onCreatedNavigationTarget = {
@@ -548,10 +549,10 @@ export const backgroundPage = (() => {
                 callback({
                     tabId: details.tabId,
                     sourceTabId: details.sourceTabId,
-                    url: details.url,
+                    url: details.url
                 });
             });
-        },
+        }
     };
 
     const onCommitted = {
@@ -573,19 +574,19 @@ export const backgroundPage = (() => {
                 callback(details);
             }, {
                 url: [{
-                    urlPrefix: 'http',
+                    urlPrefix: 'http'
                 }, {
-                    urlPrefix: 'https',
-                }],
+                    urlPrefix: 'https'
+                }]
             });
-        },
+        }
     };
 
     // https://developer.chrome.com/extensions/webNavigation
     const webNavigation = {
         onCreatedNavigationTarget,
         onCommitted,
-        onDOMContentLoaded: browser.webNavigation.onDOMContentLoaded,
+        onDOMContentLoaded: browser.webNavigation.onDOMContentLoaded
     };
 
     const browserActionSupported = typeof browser.browserAction.setIcon !== 'undefined';
@@ -602,7 +603,8 @@ export const backgroundPage = (() => {
             const onIconReady = async () => {
                 try {
                     await browser.browserAction.setBadgeText({ tabId, text: badge });
-                } catch (e) {
+                }
+                catch (e) {
                     log.debug(new Error(e.message));
                     return;
                 }
@@ -610,7 +612,8 @@ export const backgroundPage = (() => {
                 if (badge) {
                     try {
                         await browser.browserAction.setBadgeBackgroundColor({ tabId, color: badgeColor });
-                    } catch (e) {
+                    }
+                    catch (e) {
                         log.debug(new Error(e.message));
                     }
                 }
@@ -634,7 +637,8 @@ export const backgroundPage = (() => {
                 // use path rather than imageData due to conversion problems in firefox for android
                 // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/2032
                 await browser.browserAction.setIcon({ tabId, path: icon });
-            } catch (e) {
+            }
+            catch (e) {
                 log.debug(new Error(e.message));
                 return;
             }
@@ -649,7 +653,7 @@ export const backgroundPage = (() => {
         },
         close() {
             // Do nothing
-        },
+        }
     };
 
     // eslint-disable-next-line prefer-destructuring
@@ -666,6 +670,6 @@ export const backgroundPage = (() => {
         webNavigation,
         browserAction,
         contextMenus,
-        i18n,
+        i18n
     };
 })();

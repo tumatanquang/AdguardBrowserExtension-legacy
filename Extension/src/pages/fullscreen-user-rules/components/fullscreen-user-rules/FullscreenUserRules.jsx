@@ -25,7 +25,7 @@ export const FullscreenUserRules = observer(() => {
 
         (async () => {
             const events = [
-                NOTIFIER_TYPES.SETTING_UPDATED,
+                NOTIFIER_TYPES.SETTING_UPDATED
             ];
 
             removeListenerCallback = messenger.createLongLivedConnection(
@@ -44,7 +44,7 @@ export const FullscreenUserRules = observer(() => {
                             break;
                         }
                     }
-                },
+                }
             );
         })();
 

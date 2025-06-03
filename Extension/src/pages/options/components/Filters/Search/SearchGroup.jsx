@@ -12,45 +12,45 @@ const renderFilters = (matchedFilters) => {
         .map((filter) => <Filter key={filter.filterId} filter={filter} />);
 };
 
-const SearchGroup = ({
+function SearchGroup({
     groupName,
     groupId,
     filtersToShow,
     groupClickHandler,
     checkboxHandler,
-    checkboxValue,
-}) => {
+    checkboxValue
+}) {
     const groupClassName = cn('setting group', { 'group--disabled': !checkboxValue });
     const filtersClassName = cn('filters', {
-        'filters--disabled': !checkboxValue,
+        'filters--disabled': !checkboxValue
     });
     return (
         <>
             <div className={groupClassName}>
                 <button
-                    type="button"
+                    type='button'
                     tabIndex={0}
-                    className="setting__area setting__area_group"
+                    className='setting__area setting__area_group'
                     onClick={groupClickHandler}
                 >
                     <Icon
                         id={`#setting-${groupId}`}
-                        classname="icon--setting setting__icon"
+                        classname='icon--setting setting__icon'
                     />
-                    <div className="setting__info">
-                        <div className="setting__title group__title">
+                    <div className='setting__info'>
+                        <div className='setting__title group__title'>
                             {groupName}
                         </div>
                     </div>
                 </button>
-                <div className="setting__inline-control setting__inline-control_group">
+                <div className='setting__inline-control setting__inline-control_group'>
                     <Setting
                         id={groupId}
                         type={SETTINGS_TYPES.CHECKBOX}
                         label={groupName}
                         value={checkboxValue}
                         handler={checkboxHandler}
-                        className="group__checkbox"
+                        className='group__checkbox'
                     />
                 </div>
             </div>
@@ -59,6 +59,6 @@ const SearchGroup = ({
             </div>
         </>
     );
-};
+}
 
 export { SearchGroup };

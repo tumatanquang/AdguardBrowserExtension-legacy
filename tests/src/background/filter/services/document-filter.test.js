@@ -9,7 +9,6 @@ describe('documentFilterService', () => {
         const ruleText = '||example.org^$document';
 
         const blockingUrl = documentFilterService.getDocumentBlockPageUrl(url, ruleText);
-        // eslint-disable-next-line max-len
         expect(blockingUrl).toBe('pages/ad-blocked.html?url=https%3A%2F%2Fexample.org%2F&rule=%7C%7Cexample.org%5E%24document');
     });
 

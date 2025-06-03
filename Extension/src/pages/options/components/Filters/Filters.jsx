@@ -3,7 +3,7 @@ import React, {
     useState,
     useEffect,
     useMemo,
-    useCallback,
+    useCallback
 } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { observer } from 'mobx-react';
@@ -28,7 +28,7 @@ import { ANTIBANNER_GROUPS_ID } from '../../../../common/constants';
 const QUERY_PARAM_NAMES = {
     GROUP: 'group',
     TITLE: 'title',
-    SUBSCRIBE: 'subscribe',
+    SUBSCRIBE: 'subscribe'
 };
 
 const Filters = observer(() => {
@@ -54,13 +54,13 @@ const Filters = observer(() => {
         4: reactTranslator.getMessage('group_description_annoyances'),
         5: reactTranslator.getMessage('group_description_security'),
         6: reactTranslator.getMessage('group_description_miscellaneous'),
-        7: reactTranslator.getMessage('group_description_lang'),
+        7: reactTranslator.getMessage('group_description_lang')
     };
 
     const {
         categories,
         filters,
-        filtersToRender,
+        filtersToRender
     } = settingsStore;
 
     useEffect(() => {
@@ -125,7 +125,8 @@ const Filters = observer(() => {
                 const { groupId } = filter;
                 if (typeof acc[groupId] === 'undefined') {
                     acc[groupId] = [filter];
-                } else {
+                }
+                else {
                     acc[groupId].push(filter);
                 }
                 return acc;
@@ -150,7 +151,7 @@ const Filters = observer(() => {
             });
         }
         return (
-            <div className="filter__empty">
+            <div className='filter__empty'>
                 {reactTranslator.getMessage('options_filters_empty_title')}
             </div>
         );
@@ -182,12 +183,12 @@ const Filters = observer(() => {
     const renderAddFilterBtn = (isEmpty) => {
         const buttonClass = classNames('button button--m button--green', {
             'button--empty-custom-filter': isEmpty,
-            'button--add-custom-filter': !isEmpty,
+            'button--add-custom-filter': !isEmpty
         });
 
         return (
             <button
-                type="button"
+                type='button'
                 onClick={openModalHandler}
                 className={buttonClass}
             >
@@ -205,7 +206,6 @@ const Filters = observer(() => {
             return group.groupId === settingsStore.selectedGroupId;
         });
 
-        // eslint-disable-next-line max-len
         const isCustom = settingsStore.selectedGroupId === ANTIBANNER_GROUPS_ID.CUSTOM_FILTERS_GROUP_ID;
         const isEmpty = filtersToRender.length === 0;
 
@@ -216,21 +216,21 @@ const Filters = observer(() => {
         const renderBackButton = () => (
             <>
                 <button
-                    type="button"
-                    className="button setting__back"
+                    type='button'
+                    className='button setting__back'
                     onClick={handleReturnToGroups}
                 >
-                    <Icon id="#arrow-back" classname="icon--back" />
+                    <Icon id='#arrow-back' classname='icon--back' />
                 </button>
-                <div className="title__inner">
+                <div className='title__inner'>
                     <button
-                        type="button"
+                        type='button'
                         onClick={handleReturnToGroups}
-                        className="title title--back-btn"
+                        className='title title--back-btn'
                     >
                         {selectedGroup.groupName}
                     </button>
-                    <div className="title__desc title__desc--back">{GROUP_DESCRIPTION[selectedGroup.groupId]}</div>
+                    <div className='title__desc title__desc--back'>{GROUP_DESCRIPTION[selectedGroup.groupId]}</div>
                 </div>
             </>
         );

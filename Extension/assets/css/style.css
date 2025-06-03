@@ -424,6 +424,7 @@ li.active .block-type__desc-title {
   border: 0;
   background-repeat: no-repeat;
   background-color: transparent;
+  appearance: none;
   -webkit-appearance: none;
 }
 
@@ -588,6 +589,18 @@ li.active .toggler:before {
   border: 1px solid #EDEDED;
 }
 
+@keyframes clockwise {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
 @-webkit-keyframes clockwise {
   0% {
     -webkit-transform: rotate(0deg);
@@ -599,6 +612,7 @@ li.active .toggler:before {
     transform: rotate(360deg);
   }
 }
+
 .preloader {
   background: url(../images/reload-ico-green.svg) no-repeat;
   height: 18px;
@@ -1347,7 +1361,8 @@ li.active .toggler:before {
   margin-bottom: 12px;
   width: 400px;
   color: #4d4d4d;
-  -moz-appearance:textfield;
+  appearance: textfield;
+  -moz-appearance: textfield;
 }
 
 .opt-input::placeholder {

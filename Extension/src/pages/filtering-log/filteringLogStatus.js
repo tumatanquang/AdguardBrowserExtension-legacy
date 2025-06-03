@@ -9,7 +9,7 @@ export const StatusMode = {
     REGULAR: 'regular',
     MODIFIED: 'modified',
     BLOCKED: 'blocked',
-    ALLOWED: 'allowed',
+    ALLOWED: 'allowed'
 };
 
 /**
@@ -23,38 +23,29 @@ export const getStatusMode = (event) => {
         replaceRules,
         requestRule,
         removeParam,
-        removeHeader,
+        removeHeader
     } = event;
 
-    let mode = StatusMode.REGULAR;
-
     if (cspReportBlocked) {
-        mode = StatusMode.BLOCKED;
-        return mode;
+        return StatusMode.BLOCKED;
     }
 
     if (replaceRules) {
-        mode = StatusMode.MODIFIED;
+        return StatusMode.MODIFIED;
     }
 
-    if (requestRule && !replaceRules) {
+    if (requestRule) {
         if (requestRule.allowlistRule) {
-            mode = StatusMode.ALLOWED;
-            // eslint-disable-next-line max-len
-        } else if (requestRule.cssRule || requestRule.scriptRule || removeParam || removeHeader) {
-            mode = StatusMode.MODIFIED;
-        } else if (requestRule.cookieRule) {
-            if (requestRule.isModifyingCookieRule) {
-                mode = StatusMode.MODIFIED;
-            } else {
-                mode = StatusMode.BLOCKED;
-            }
-        } else if (requestRule.cspRule) {
-            mode = StatusMode.MODIFIED;
-        } else {
-            mode = StatusMode.BLOCKED;
+            return StatusMode.ALLOWED;
         }
+        if (requestRule.cssRule || requestRule.scriptRule || requestRule.cspRule || removeParam || removeHeader) {
+            return StatusMode.MODIFIED;
+        }
+        if (requestRule.cookieRule) {
+            return requestRule.isModifyingCookieRule ? StatusMode.MODIFIED : StatusMode.BLOCKED;
+        }
+        return StatusMode.BLOCKED;
     }
 
-    return mode;
+    return StatusMode.REGULAR;
 };

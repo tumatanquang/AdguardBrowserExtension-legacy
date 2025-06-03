@@ -2,7 +2,7 @@ import { SimpleRegex } from '@adguard/tsurlfilter/dist/es/simple-regex';
 import {
     MASK_ALLOWLIST,
     OPTIONS_DELIMITER,
-    NETWORK_RULE_OPTIONS,
+    NETWORK_RULE_OPTIONS
 } from '@adguard/tsurlfilter/dist/es/network-rule-options';
 import { CosmeticRuleMarker } from '@adguard/tsurlfilter/dist/es/cosmetic-rule-marker';
 
@@ -25,7 +25,8 @@ export const splitToPatterns = (requestUrl, domain, isAllowlist) => {
     let prefix;
     if (hierarchicUrl) {
         prefix = SimpleRegex.MASK_START_URL; // Covers default protocols: http, ws
-    } else {
+    }
+    else {
         prefix = UrlUtils.getProtocol(requestUrl); // Covers non-default protocols: stun, turn
     }
 
@@ -42,7 +43,7 @@ export const splitToPatterns = (requestUrl, domain, isAllowlist) => {
         const parts = path.split('/');
 
         let pattern = `${domain}/`;
-        for (let i = 0; i < Math.min(parts.length - 1, PATTERNS_COUNT); i += 1) {
+        for (let i = 0; i < Math.min(parts.length - 1, PATTERNS_COUNT); ++i) {
             pattern += `${parts[i]}/`;
             patterns.push(prefix + pattern);
         }
@@ -82,7 +83,7 @@ export const splitToPatterns = (requestUrl, domain, isAllowlist) => {
  */
 export const createDocumentLevelBlockRule = (rule) => {
     const { ruleText } = rule;
-    if (ruleText.indexOf(OPTIONS_DELIMITER) > -1) {
+    if (ruleText.indexOf(OPTIONS_DELIMITER) >= 0) {
         return `${ruleText},${NETWORK_RULE_OPTIONS.BADFILTER}`;
     }
     return ruleText + OPTIONS_DELIMITER + NETWORK_RULE_OPTIONS.BADFILTER;
@@ -114,25 +115,23 @@ const generateExceptionRule = (ruleText, mask) => {
 export const createExceptionCssRule = (rule, event) => {
     const { ruleText } = rule;
     const domainPart = event.frameDomain;
-    if (ruleText.indexOf(CosmeticRuleMarker.Css) > -1) {
+    if (ruleText.indexOf(CosmeticRuleMarker.Css) >= 0) {
         return domainPart + generateExceptionRule(ruleText, CosmeticRuleMarker.Css);
     }
-    if (ruleText.indexOf(CosmeticRuleMarker.ElementHidingExtCSS) > -1) {
+    if (ruleText.indexOf(CosmeticRuleMarker.ElementHidingExtCSS) >= 0) {
         return domainPart + generateExceptionRule(
             ruleText,
-            CosmeticRuleMarker.ElementHidingExtCSS,
+            CosmeticRuleMarker.ElementHidingExtCSS
         );
     }
-    if (ruleText.indexOf(CosmeticRuleMarker.CssExtCSS) > -1) {
-        return domainPart + generateExceptionRule(
-            ruleText, CosmeticRuleMarker.CssExtCSS,
-        );
+    if (ruleText.indexOf(CosmeticRuleMarker.CssExtCSS) >= 0) {
+        return domainPart + generateExceptionRule(ruleText, CosmeticRuleMarker.CssExtCSS);
     }
-    if (ruleText.indexOf(CosmeticRuleMarker.ElementHiding) > -1) {
+    if (ruleText.indexOf(CosmeticRuleMarker.ElementHiding) >= 0) {
         return domainPart + generateExceptionRule(ruleText, CosmeticRuleMarker.ElementHiding);
     }
 
-    if (ruleText.indexOf(CosmeticRuleMarker.Html) > -1) {
+    if (ruleText.indexOf(CosmeticRuleMarker.Html) >= 0) {
         return domainPart + generateExceptionRule(ruleText, CosmeticRuleMarker.Html);
     }
 
@@ -151,12 +150,12 @@ export const createExceptionScriptRule = (rule, event) => {
     const { ruleText } = rule;
     const domainPart = event.frameDomain;
 
-    if (ruleText.indexOf(CosmeticRuleMarker.Js) > -1) {
+    if (ruleText.indexOf(CosmeticRuleMarker.Js) >= 0) {
         return domainPart + generateExceptionRule(ruleText, CosmeticRuleMarker.Js);
     }
 
     const MASK_SCRIPT_RULE_UBO = '##';
-    if (ruleText.indexOf(MASK_SCRIPT_RULE_UBO) > -1) {
+    if (ruleText.indexOf(MASK_SCRIPT_RULE_UBO) >= 0) {
         return domainPart + generateExceptionRule(ruleText, MASK_SCRIPT_RULE_UBO);
     }
 
@@ -186,7 +185,7 @@ export const createExceptionCookieRules = (event) => {
     const {
         frameDomain,
         cookieName,
-        requestRule: { modifierValue },
+        requestRule: { modifierValue }
     } = event;
     const domain = UrlUtils.getCookieDomain(frameDomain);
     const totalUnblockingRule = getUnblockDomainRule(domain, NETWORK_RULE_OPTIONS.COOKIE);
@@ -210,7 +209,7 @@ export const createExceptionRemoveParamRules = (event) => {
 
     return [
         getUnblockDomainRule(frameDomain, `${NETWORK_RULE_OPTIONS.REMOVEPARAM}=${requestRule.modifierValue}`),
-        getUnblockDomainRule(frameDomain, NETWORK_RULE_OPTIONS.REMOVEPARAM),
+        getUnblockDomainRule(frameDomain, NETWORK_RULE_OPTIONS.REMOVEPARAM)
     ];
 };
 
@@ -219,7 +218,7 @@ export const createExceptionRemoveHeaderRules = (event) => {
 
     return [
         getUnblockDomainRule(frameDomain, `${NETWORK_RULE_OPTIONS.REMOVEHEADER}=${requestRule.modifierValue}`),
-        getUnblockDomainRule(frameDomain, NETWORK_RULE_OPTIONS.REMOVEHEADER),
+        getUnblockDomainRule(frameDomain, NETWORK_RULE_OPTIONS.REMOVEHEADER)
     ];
 };
 
@@ -231,7 +230,7 @@ export const createExceptionRemoveHeaderRules = (event) => {
 export const createBlockingCookieRule = (event) => {
     const {
         frameDomain,
-        cookieName,
+        cookieName
     } = event;
     const domain = UrlUtils.getCookieDomain(frameDomain);
     const blockingRule = getBlockDomainRule(domain, NETWORK_RULE_OPTIONS.COOKIE);

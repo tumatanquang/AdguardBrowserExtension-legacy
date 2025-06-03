@@ -25,7 +25,7 @@ const FilteringLog = observer(() => {
         (async () => {
             await Promise.all([
                 logStore.synchronizeOpenTabs(),
-                logStore.getFilteringLogData(),
+                logStore.getFilteringLogData()
             ]);
         })();
     }, [logStore]);
@@ -68,7 +68,7 @@ const FilteringLog = observer(() => {
                 NOTIFIER_TYPES.TAB_UPDATE,
                 NOTIFIER_TYPES.TAB_CLOSE,
                 NOTIFIER_TYPES.TAB_RESET,
-                NOTIFIER_TYPES.SETTING_UPDATED,
+                NOTIFIER_TYPES.SETTING_UPDATED
             ];
 
             removeListenerCallback = messenger.createLongLivedConnection(
@@ -105,7 +105,7 @@ const FilteringLog = observer(() => {
                             break;
                         }
                     }
-                },
+                }
             );
         })();
 
@@ -120,7 +120,7 @@ const FilteringLog = observer(() => {
                 outerWidth,
                 outerHeight,
                 screenTop,
-                screenLeft,
+                screenLeft
             } = window;
 
             // eslint-disable-next-line no-restricted-globals
@@ -131,7 +131,7 @@ const FilteringLog = observer(() => {
                 height: outerHeight,
                 top: screenTop,
                 left: screenLeft,
-                isFullscreen,
+                isFullscreen
             });
         };
 

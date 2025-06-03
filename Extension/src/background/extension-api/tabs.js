@@ -15,8 +15,6 @@
  * along with Adguard Browser Extension. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* eslint-disable max-len */
-
 import { browser } from './browser';
 import { utils, toTabFromChromeTab } from '../utils/common';
 import { prefs } from '../prefs';
@@ -56,11 +54,12 @@ export const tabsImpl = (function () {
         let tabs;
         try {
             tabs = await browser.tabs.query({ currentWindow: true, active: true });
-        } catch (e) {
+        }
+        catch (e) {
             log.debug(new Error(e.message));
         }
 
-        if (tabs && tabs.length > 0) {
+        if (tabs && tabs.length !== 0) {
             return tabs[0].id;
         }
 
@@ -117,7 +116,8 @@ export const tabsImpl = (function () {
             // Focus window
             try {
                 await browser.windows.update(windowId, { focused: true });
-            } catch (e) {
+            }
+            catch (e) {
                 logOperationError(`Update window ${windowId}`, e);
             }
         }
@@ -135,7 +135,7 @@ export const tabsImpl = (function () {
             height,
             top,
             left,
-            isFullscreen,
+            isFullscreen
         } = createData;
         const active = createData.active === true;
 
@@ -150,7 +150,7 @@ export const tabsImpl = (function () {
                 width: width || 1000,
                 height: height || 650,
                 top: top || 0,
-                left: left || 0,
+                left: left || 0
             };
 
             let tabId;
@@ -158,10 +158,11 @@ export const tabsImpl = (function () {
                 const { id } = await browser.windows.create({
                     url,
                     type: 'popup',
-                    ...windowState,
+                    ...windowState
                 });
                 tabId = id;
-            } catch (e) {
+            }
+            catch (e) {
                 // Reopen tab with default pos if it was closed too far beyond the screen
                 // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/2100
                 if (e.message.includes('Invalid value for bounds.')) {
@@ -170,7 +171,7 @@ export const tabsImpl = (function () {
                         type: 'popup',
                         ...windowState,
                         top: 0,
-                        left: 0,
+                        left: 0
                     });
                     tabId = id;
                 }
@@ -198,7 +199,7 @@ export const tabsImpl = (function () {
                  */
                 windowId: !prefs.mobile ? win.id : undefined,
                 url,
-                active,
+                active
             });
 
             if (active) {
@@ -236,7 +237,7 @@ export const tabsImpl = (function () {
             const wins = await browser.windows.getAll({});
 
             if (wins) {
-                for (let i = 0; i < wins.length; i += 1) {
+                for (let i = 0; i < wins.length; ++i) {
                     const win = wins[i];
                     if (isAppropriateWindow(win)) {
                         return onWindowFound(win);
@@ -260,7 +261,8 @@ export const tabsImpl = (function () {
         // https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/tabs/remove
         try {
             await browser.tabs.remove(tabIdToInt(tabId));
-        } catch (e) {
+        }
+        catch (e) {
             return;
         }
         return tabId;
@@ -272,7 +274,8 @@ export const tabsImpl = (function () {
             const chromeTab = await browser.tabs.update(tabIdToInt(tabId), { active: true });
             await focusWindow(tabId, chromeTab.windowId);
             return tabId;
-        } catch (e) {
+        }
+        catch (e) {
             logOperationError('Before tab update', e);
         }
     };
@@ -295,7 +298,8 @@ export const tabsImpl = (function () {
         try {
             const response = await browser.tabs.sendMessage(...args);
             return response;
-        } catch (e) {
+        }
+        catch (e) {
             log.debug(e.message);
         }
     };
@@ -322,22 +326,27 @@ export const tabsImpl = (function () {
                 setTimeout(() => {
                     sendMessage(tabId, { type: 'update-tab-url', url });
                 }, 100);
-            } else {
+            }
+            else {
                 try {
                     await browser.tabs.update(tabIdToInt(tabId), { url });
-                } catch (e) {
+                }
+                catch (e) {
                     logOperationError('Tab update', e);
                 }
             }
         // https://developer.chrome.com/extensions/tabs#method-reload
         // https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/tabs/reload#Browser_compatibility
-        } else if (browser.tabs.reload) {
+        }
+        else if (browser.tabs.reload) {
             try {
                 await browser.tabs.reload(tabIdToInt(tabId), { bypassCache: true });
-            } catch (e) {
+            }
+            catch (e) {
                 logOperationError('Tab reload', e);
             }
-        } else {
+        }
+        else {
             // Reload page without cache via content script
             sendMessage(tabId, { type: 'no-cache-reload' });
         }
@@ -348,7 +357,7 @@ export const tabsImpl = (function () {
         // https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/tabs/query
         const chromeTabs = await browser.tabs.query({});
         const result = [];
-        for (let i = 0; i < chromeTabs.length; i += 1) {
+        for (let i = 0; i < chromeTabs.length; ++i) {
             const chromeTab = chromeTabs[i];
             result.push(toTabFromChromeTab(chromeTab));
         }
@@ -363,7 +372,8 @@ export const tabsImpl = (function () {
         try {
             const chromeTab = await browser.tabs.get(tabIdToInt(tabId));
             return toTabFromChromeTab(chromeTab);
-        } catch (e) {
+        }
+        catch (e) {
             logOperationError('Get tab', e);
         }
     };
@@ -379,7 +389,8 @@ export const tabsImpl = (function () {
         }
         try {
             await browser.tabs.update(tabId, { url });
-        } catch (e) {
+        }
+        catch (e) {
             log.error(new Error(e.message));
         }
     };
@@ -402,7 +413,7 @@ export const tabsImpl = (function () {
             code,
             runAt: 'document_start',
             frameId: requestFrameId,
-            matchAboutBlank: true,
+            matchAboutBlank: true
         };
 
         if (userCSSSupport) {
@@ -412,7 +423,8 @@ export const tabsImpl = (function () {
 
         try {
             await browser.tabs.insertCSS(tabId, injectDetails);
-        } catch (e) {
+        }
+        catch (e) {
             // e.message in edge is undefined
             const errorMessage = e.message || e;
             // Some browsers do not support user css origin // TODO which one?
@@ -436,9 +448,10 @@ export const tabsImpl = (function () {
                 code,
                 frameId: requestFrameId,
                 runAt: 'document_start',
-                matchAboutBlank: true,
+                matchAboutBlank: true
             });
-        } catch (e) {
+        }
+        catch (e) {
             log.debug(new Error(e.message));
         }
     };
@@ -457,7 +470,7 @@ export const tabsImpl = (function () {
         const { file, frameId = 0 } = options;
         const executeScriptOptions = {
             file,
-            runAt: 'document_start',
+            runAt: 'document_start'
         };
 
         // Chrome 49 throws an exception if browser.tabs.executeScript is called
@@ -468,7 +481,8 @@ export const tabsImpl = (function () {
 
         try {
             await browser.tabs.executeScript(tabId, executeScriptOptions);
-        } catch (e) {
+        }
+        catch (e) {
             log.debug(new Error(e.message));
         }
     };
@@ -492,6 +506,6 @@ export const tabsImpl = (function () {
 
         insertCssCode,
         executeScriptCode,
-        executeScriptFile,
+        executeScriptFile
     };
 })();

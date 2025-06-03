@@ -17,7 +17,7 @@ import '../RequestInfo/request-image.pcss';
 export const RequestPreview = observer(() => {
     const {
         wizardStore,
-        logStore,
+        logStore
     } = useContext(rootStore);
 
     const { selectedEvent } = logStore;
@@ -43,8 +43,8 @@ export const RequestPreview = observer(() => {
 
     const [previewState, send] = useMachine(fetchMachine, {
         services: {
-            fetchData: getFetcher(),
-        },
+            fetchData: getFetcher()
+        }
     });
 
     const [beautify, setBeautify] = useState(false);
@@ -72,8 +72,8 @@ export const RequestPreview = observer(() => {
     const renderContent = () => {
         if (previewState.matches(FetchStates.LOADING)) {
             return (
-                <div className="request-preview__status">
-                    <span className="request-info__value request-preview__text">
+                <div className='request-preview__status'>
+                    <span className='request-info__value request-preview__text'>
                         {reactTranslator.getMessage('filtering_modal_status_text_loading')}
                     </span>
                 </div>
@@ -81,13 +81,13 @@ export const RequestPreview = observer(() => {
         }
         if (previewState.matches(FetchStates.FAILURE)) {
             return (
-                <div className="request-preview__status">
-                    <span className="request-info__error request-preview__text">
+                <div className='request-preview__status'>
+                    <span className='request-info__error request-preview__text'>
                         {reactTranslator.getMessage('filtering_modal_status_text_error')}
                     </span>
                     <button
-                        type="button"
-                        className="request-preview__button request-preview__button--white"
+                        type='button'
+                        className='request-preview__button request-preview__button--white'
                         onClick={onRetry}
                         title={tryAgainButtonTitle}
                     >
@@ -120,25 +120,25 @@ export const RequestPreview = observer(() => {
 
     return (
         <>
-            <div className="request-modal__title">
+            <div className='request-modal__title'>
                 <button
-                    type="button"
+                    type='button'
                     onClick={handleBackToRequestClick}
-                    className="request-modal__navigation request-modal__navigation--button"
+                    className='request-modal__navigation request-modal__navigation--button'
                 >
-                    <Icon id="#arrow-left" classname="icon--24" />
-                    <span className="request-modal__header">
+                    <Icon id='#arrow-left' classname='icon--24' />
+                    <span className='request-modal__header'>
                         {reactTranslator.getMessage('filtering_modal_preview_title')}
                     </span>
                 </button>
             </div>
-            <div className="request-modal__content request-preview">
+            <div className='request-modal__content request-preview'>
                 {renderContent()}
             </div>
-            <div className="request-modal__controls">
+            <div className='request-modal__controls'>
                 <button
-                    type="button"
-                    className="request-modal__button request-modal__button--white"
+                    type='button'
+                    className='request-modal__button request-modal__button--white'
                     onClick={handleBackToRequestClick}
                     title={backToRequestButtonTitle}
                 >
@@ -146,8 +146,8 @@ export const RequestPreview = observer(() => {
                 </button>
                 {isText && previewState.matches(FetchStates.SUCCESS) && (
                     <button
-                        type="button"
-                        className="request-modal__button request-modal__button--white"
+                        type='button'
+                        className='request-modal__button request-modal__button--white'
                         onClick={handleBeautifyClick}
                         title={beautifyButtonTitle}
                     >

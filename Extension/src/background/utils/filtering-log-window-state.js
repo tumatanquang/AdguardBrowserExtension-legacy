@@ -36,6 +36,6 @@ export const filteringLogWindowState = (function () {
 
     return {
         setState,
-        getState,
+        getState
     };
 })();

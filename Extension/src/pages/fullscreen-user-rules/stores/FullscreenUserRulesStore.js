@@ -4,7 +4,7 @@ import {
     computed,
     makeObservable,
     observable,
-    runInAction,
+    runInAction
 } from 'mobx';
 import { messenger } from '../../services/messenger';
 import { MESSAGE_TYPES } from '../../../common/constants';

@@ -45,7 +45,7 @@ const abstractFilteringLog = {
     onCloseFilteringLogPage: errorFunction,
 
     isPreserveLogEnabled: errorFunction,
-    setPreserveLogState: errorFunction,
+    setPreserveLogState: errorFunction
 };
 
 export default abstractFilteringLog;

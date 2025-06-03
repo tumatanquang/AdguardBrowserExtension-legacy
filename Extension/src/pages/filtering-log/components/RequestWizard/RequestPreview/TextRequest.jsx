@@ -17,11 +17,11 @@ const getBeautifier = (type) => {
     }
 };
 
-export const TextRequest = ({
+export function TextRequest({
     text,
     requestType,
-    shouldBeautify,
-}) => {
+    shouldBeautify
+}) {
     const [textState, setTextState] = useState(text);
 
     useEffect(() => {
@@ -34,7 +34,7 @@ export const TextRequest = ({
 
     if (textState) {
         return (
-            <div className="request-modal__text">
+            <div className='request-modal__text'>
                 <pre>
                     <code>
                         {textState}
@@ -45,4 +45,4 @@ export const TextRequest = ({
     }
 
     return null;
-};
+}

@@ -41,7 +41,7 @@ export const stealthService = (() => {
      * Privacy permission for block webrtc stealth setting
      */
     const PRIVACY_PERMISSIONS = {
-        permissions: ['privacy'],
+        permissions: ['privacy']
     };
 
     /**
@@ -65,7 +65,7 @@ export const stealthService = (() => {
         }
 
         const stealthActions = engine.processRequestHeaders(
-            requestUrl, RequestTypes.transformRequestType(requestType), requestHeaders,
+            requestUrl, RequestTypes.transformRequestType(requestType), requestHeaders
         );
 
         if (stealthActions > 0) {
@@ -91,7 +91,7 @@ export const stealthService = (() => {
      * @return {boolean}
      */
     const hasFilterRules = () => {
-        return engine.getCookieRulesTexts().length > 0;
+        return engine.getCookieRulesTexts().length !== 0;
     };
 
     /**
@@ -137,7 +137,7 @@ export const stealthService = (() => {
             requestUrl,
             frameUrl: referrerUrl,
             requestType,
-            frameRule: frames.getFrameRule(tab),
+            frameRule: frames.getFrameRule(tab)
         });
 
         if (allowlistRule && allowlistRule.isDocumentAllowlistRule()) {
@@ -168,7 +168,7 @@ export const stealthService = (() => {
             const stealthDocumentAllowlistRule = filteringApi.findStealthAllowlistRule({
                 requestUrl: referrerUrl,
                 frameUrl: referrerUrl,
-                requestType,
+                requestType
             });
             if (stealthDocumentAllowlistRule && stealthDocumentAllowlistRule.isDocumentAllowlistRule()) {
                 log.debug('Stealth document allowlist rule found.');
@@ -179,7 +179,7 @@ export const stealthService = (() => {
         const stealthAllowlistRule = filteringApi.findStealthAllowlistRule({
             requestUrl,
             frameUrl: referrerUrl,
-            requestType,
+            requestType
         });
 
         if (stealthAllowlistRule) {
@@ -233,14 +233,16 @@ export const stealthService = (() => {
                 if (blockWebRTC) {
                     await browser.privacy.network.webRTCMultipleRoutesEnabled.set({
                         value: false,
-                        scope: 'regular',
-                    });
-                } else {
-                    await browser.privacy.network.webRTCMultipleRoutesEnabled.clear({
-                        scope: 'regular',
+                        scope: 'regular'
                     });
                 }
-            } catch (e) {
+                else {
+                    await browser.privacy.network.webRTCMultipleRoutesEnabled.clear({
+                        scope: 'regular'
+                    });
+                }
+            }
+            catch (e) {
                 logError(e);
             }
         }
@@ -251,14 +253,16 @@ export const stealthService = (() => {
                 if (blockWebRTC) {
                     await browser.privacy.network.webRTCIPHandlingPolicy.set({
                         value: 'disable_non_proxied_udp',
-                        scope: 'regular',
-                    });
-                } else {
-                    await browser.privacy.network.webRTCIPHandlingPolicy.clear({
-                        scope: 'regular',
+                        scope: 'regular'
                     });
                 }
-            } catch (e) {
+                else {
+                    await browser.privacy.network.webRTCIPHandlingPolicy.clear({
+                        scope: 'regular'
+                    });
+                }
+            }
+            catch (e) {
                 logError(e);
             }
         }
@@ -268,14 +272,16 @@ export const stealthService = (() => {
                 if (blockWebRTC) {
                     browser.privacy.network.peerConnectionEnabled.set({
                         value: false,
-                        scope: 'regular',
-                    });
-                } else {
-                    browser.privacy.network.peerConnectionEnabled.clear({
-                        scope: 'regular',
+                        scope: 'regular'
                     });
                 }
-            } catch (e) {
+                else {
+                    browser.privacy.network.peerConnectionEnabled.clear({
+                        scope: 'regular'
+                    });
+                }
+            }
+            catch (e) {
                 logError(e);
             }
         }
@@ -303,11 +309,13 @@ export const stealthService = (() => {
 
             if (isPermissionsGranted) {
                 await setBlockWebRTC(true);
-            } else {
+            }
+            else {
                 // If privacy permission is not granted set BLOCK_WEBRTC setting to false
                 settings.setProperty(settings.BLOCK_WEBRTC, false);
             }
-        } catch (e) {
+        }
+        catch (e) {
             log.error(e);
         }
     };
@@ -355,7 +363,7 @@ export const stealthService = (() => {
             selfDestructThirdPartyCookies: getStealthSettingValue(settings.SELF_DESTRUCT_THIRD_PARTY_COOKIES),
             selfDestructThirdPartyCookiesTime: settings.getProperty(settings.SELF_DESTRUCT_THIRD_PARTY_COOKIES_TIME),
             selfDestructFirstPartyCookies: getStealthSettingValue(settings.SELF_DESTRUCT_FIRST_PARTY_COOKIES),
-            selfDestructFirstPartyCookiesTime: settings.getProperty(settings.SELF_DESTRUCT_FIRST_PARTY_COOKIES_TIME),
+            selfDestructFirstPartyCookiesTime: settings.getProperty(settings.SELF_DESTRUCT_FIRST_PARTY_COOKIES_TIME)
         };
     };
 
@@ -369,7 +377,7 @@ export const stealthService = (() => {
         settings.SELF_DESTRUCT_FIRST_PARTY_COOKIES_TIME,
         settings.SELF_DESTRUCT_THIRD_PARTY_COOKIES,
         settings.SELF_DESTRUCT_THIRD_PARTY_COOKIES_TIME,
-        settings.BLOCK_WEBRTC,
+        settings.BLOCK_WEBRTC
     ];
 
     let engine = new StealthService(getConfig());
@@ -390,14 +398,15 @@ export const stealthService = (() => {
                     if (!isStealthModeDisabled()) {
                         shouldBlock = settingValue;
                     }
-                } else if (settingName === settings.DISABLE_STEALTH_MODE) {
+                }
+                else if (settingName === settings.DISABLE_STEALTH_MODE) {
                     if (settings.getProperty(settings.BLOCK_WEBRTC)) {
                         // Enable webRTC if stealth mode is disabled
                         shouldBlock = !settingValue;
                     }
                 }
 
-                if (typeof shouldBlock === 'undefined') {
+                if (shouldBlock === undefined) {
                     // Nothing to change indeed
                     return;
                 }
@@ -405,7 +414,8 @@ export const stealthService = (() => {
                 if (shouldHandlePrivacyPermission()) {
                     // Block or unblock WebRTC while handling privacy permission
                     await handlePrivacyPermissions(shouldBlock);
-                } else {
+                }
+                else {
                     // Set WebRTC blocking as is for everything else
                     await setBlockWebRTC(shouldBlock);
                 }
@@ -418,7 +428,8 @@ export const stealthService = (() => {
                 case listeners.APPLICATION_INITIALIZED:
                     try {
                         isPermissionsGranted = await browserUtils.containsPermissions(PRIVACY_PERMISSIONS);
-                    } catch (e) {
+                    }
+                    catch (e) {
                         log.error(e);
                     }
                     if (isPermissionsGranted) {
@@ -446,6 +457,6 @@ export const stealthService = (() => {
         hasFilterRules,
         canBlockWebRTC,
         getSetDomSignalScript,
-        STEALTH_ACTIONS,
+        STEALTH_ACTIONS
     };
 })();

@@ -1,7 +1,7 @@
 import {
     useEffect,
     useCallback,
-    useState,
+    useState
 } from 'react';
 
 import { copyToClipboard } from '../../helpers';

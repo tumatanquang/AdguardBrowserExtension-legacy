@@ -80,7 +80,7 @@ export const categories = (() => {
 
         const categories = [];
 
-        for (let i = 0; i < groupsMeta.length; i += 1) {
+        for (let i = 0; i < groupsMeta.length; ++i) {
             const category = groupsMeta[i];
             category.filters = selectFiltersByGroupId(category.groupId, filters);
             categories.push(category);
@@ -88,7 +88,7 @@ export const categories = (() => {
 
         return {
             filters,
-            categories,
+            categories
         };
     };
 
@@ -116,18 +116,19 @@ export const categories = (() => {
         const metadata = getFiltersMetadata();
         const result = [];
         const langSuitableFilters = subscriptions.getLangSuitableFilters();
-        for (let i = 0; i < metadata.categories.length; i += 1) {
+        for (let i = 0; i < metadata.categories.length; ++i) {
             const category = metadata.categories[i];
             if (category.groupId === groupId) {
                 category.filters.forEach(filter => {
                     if (tags.isRecommendedFilter(filter) && doesFilterMatchPlatform(filter)) {
                         // get ids intersection to enable recommended filters matching the lang tag
                         // only if filter has language
-                        if (filter.languages && filter.languages.length > 0) {
+                        if (filter.languages && filter.languages.length !== 0) {
                             if (langSuitableFilters.includes(filter.filterId)) {
                                 result.push(filter.filterId);
                             }
-                        } else {
+                        }
+                        else {
                             result.push(filter.filterId);
                         }
                     }
@@ -165,6 +166,6 @@ export const categories = (() => {
     return {
         getFiltersMetadata,
         enableFiltersGroup,
-        disableFiltersGroup,
+        disableFiltersGroup
     };
 })();

@@ -11,7 +11,7 @@ const formatOptions = {
     month: 'long',
     day: 'numeric',
     hour: '2-digit',
-    minute: '2-digit',
+    minute: '2-digit'
 };
 
 const FiltersUpdate = observer(() => {
@@ -21,7 +21,7 @@ const FiltersUpdate = observer(() => {
         rulesCount,
         lastUpdateTime,
         filtersUpdating,
-        isUpdateFiltersButtonActive,
+        isUpdateFiltersButtonActive
     } = settingsStore;
 
     const updateClickHandler = async () => {
@@ -31,19 +31,19 @@ const FiltersUpdate = observer(() => {
     const dateObj = new Date(lastUpdateTime);
 
     return (
-        <div className="filters-update">
-            <div className="filters-update__info">
-                <div className="filters-update__title">
+        <div className='filters-update'>
+            <div className='filters-update__info'>
+                <div className='filters-update__title'>
                     {reactTranslator.getMessage('options_antibanner_rules_count', { rules_count: rulesCount })}
                 </div>
-                <div className="filters-update__desc">
+                <div className='filters-update__desc'>
                     {dateObj.toLocaleDateString('default', formatOptions)}
                 </div>
             </div>
             <button
-                type="button"
+                type='button'
                 onClick={updateClickHandler}
-                className="button button--m button--transparent filters-update__btn"
+                className='button button--m button--transparent filters-update__btn'
                 title={reactTranslator.getMessage('options_update_antibanner_filters')}
                 disabled={!isUpdateFiltersButtonActive || filtersUpdating}
             >

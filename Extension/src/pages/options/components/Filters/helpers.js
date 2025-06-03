@@ -53,7 +53,8 @@ export const updateFilters = (currentFilters, newFilters) => {
 
         if (currentFilterIdx < 0) {
             updatedFilters.push(newFilter);
-        } else {
+        }
+        else {
             updatedFilters[currentFilterIdx] = newFilter;
         }
     });
@@ -76,7 +77,8 @@ export const updateGroups = (currentGroups, newGroups) => {
 
         if (currentGroupIdx < 0) {
             updatedGroups.push(newGroup);
-        } else {
+        }
+        else {
             updatedGroups[currentGroupIdx] = newGroup;
         }
     });

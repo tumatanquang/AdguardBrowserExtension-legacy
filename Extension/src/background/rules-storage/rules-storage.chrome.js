@@ -43,7 +43,7 @@ const chromeRulesStorageImpl = (() => {
     return {
         read,
         write,
-        remove,
+        remove
     };
 })();
 

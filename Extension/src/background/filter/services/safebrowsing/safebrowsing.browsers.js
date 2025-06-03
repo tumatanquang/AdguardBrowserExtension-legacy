@@ -38,7 +38,7 @@ const safebrowsing = (function () {
     const safebrowsingCache = {
         get cache() {
             return lazyGet(safebrowsingCache, 'cache', () => new LruCache('sb-lru-cache'));
-        },
+        }
     };
 
     /**
@@ -85,7 +85,7 @@ const safebrowsing = (function () {
         try {
             let result;
             const lines = responseText.split('\n');
-            for (let i = 0; i < lines.length; i += 1) {
+            for (let i = 0; i < lines.length; ++i) {
                 const r = lines[i].split(':');
                 const hash = r[2];
                 const list = r[0];
@@ -101,7 +101,8 @@ const safebrowsing = (function () {
             }
 
             return result;
-        } catch (ex) {
+        }
+        catch (ex) {
             log.error('Error parse safebrowsing response, cause {0}', ex);
         }
         return null;
@@ -158,7 +159,7 @@ const safebrowsing = (function () {
     function createHashesMap(hosts) {
         const result = Object.create(null);
 
-        for (let i = 0; i < hosts.length; i += 1) {
+        for (let i = 0; i < hosts.length; ++i) {
             const host = hosts[i];
             const hash = createHash(host);
             result[hash] = host;
@@ -175,7 +176,7 @@ const safebrowsing = (function () {
      * @private
      */
     function checkHostsInSbCache(hosts) {
-        for (let i = 0; i < hosts.length; i += 1) {
+        for (let i = 0; i < hosts.length; ++i) {
             const sbList = safebrowsingCache.cache.getValue(createHash(hosts[i]));
             if (sbList) {
                 return sbList;
@@ -202,8 +203,9 @@ const safebrowsing = (function () {
         const parts = host.split('.');
         if (parts.length <= 2) {
             hosts.push(host);
-        } else {
-            for (let i = 0; i <= parts.length - 2; i += 1) {
+        }
+        else {
+            for (let i = 0; i <= parts.length - 2; ++i) {
                 hosts.push(utils.strings.join(parts, '.', i, parts.length));
             }
         }
@@ -252,16 +254,15 @@ const safebrowsing = (function () {
         }
 
         // check safebrowsing is active
-        const now = Date.now();
-        const suspendedFrom = localStorage.getItem(suspendedFromProperty) - 0;
-        if (suspendedFrom && (now - suspendedFrom) < SUSPEND_TTL) {
+        const suspendedFrom = localStorage.getItem(suspendedFromProperty);
+        if (suspendedFrom && Date.now() - suspendedFrom < SUSPEND_TTL) {
             return;
         }
 
         const hashesMap = createHashesMap(hosts);
         const hashes = Object.keys(hashesMap);
         let shortHashes = [];
-        for (let i = 0; i < hashes.length; i += 1) {
+        for (let i = 0; i < hashes.length; ++i) {
             shortHashes.push(hashes[i].substring(0, DOMAIN_HASH_LENGTH));
         }
 
@@ -277,7 +278,8 @@ const safebrowsing = (function () {
         let response;
         try {
             response = await backend.lookupSafebrowsing(shortHashes);
-        } catch (e) {
+        }
+        catch (e) {
             log.error('Error response from safebrowsing lookup server for {0}', host);
             suspendSafebrowsing();
             return;
@@ -285,7 +287,6 @@ const safebrowsing = (function () {
 
         if (response && response.status >= 500) {
             // Error on server side, suspend request
-            // eslint-disable-next-line max-len
             log.error('Error response status {0} received from safebrowsing lookup server.', response.status);
             suspendSafebrowsing();
             return;
@@ -380,7 +381,7 @@ const safebrowsing = (function () {
         extractHosts,
         createHashesMap,
         processSbResponse,
-        clearCache,
+        clearCache
     };
 })();
 

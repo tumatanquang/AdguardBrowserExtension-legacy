@@ -29,7 +29,8 @@ export const fetchImage = async (ctx, { url }) => {
 
             if (width > 1 && height > 1) {
                 resolve(dataUrl);
-            } else {
+            }
+            else {
                 reject(new Error('Image is too small'));
             }
         }

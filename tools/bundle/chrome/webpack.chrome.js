@@ -16,10 +16,10 @@ export const genChromeConfig = (browserConfig) => {
     const chromeConfig = {
         entry: {
             'pages/devtools': path.join(DEVTOOLS_PATH, 'devtools.js'),
-            'pages/devtools-elements-sidebar': path.join(DEVTOOLS_PATH, 'devtools-elements-sidebar.js'),
+            'pages/devtools-elements-sidebar': path.join(DEVTOOLS_PATH, 'devtools-elements-sidebar.js')
         },
         output: {
-            path: path.join(commonConfig.output.path, browserConfig.buildDir),
+            path: path.join(commonConfig.output.path, browserConfig.buildDir)
         },
         plugins: [
             new CopyWebpackPlugin({
@@ -27,30 +27,30 @@ export const genChromeConfig = (browserConfig) => {
                     {
                         from: path.resolve(__dirname, '../manifest.common.json'),
                         to: 'manifest.json',
-                        transform: (content) => updateManifestBuffer(process.env.BUILD_ENV, content, chromeManifest),
+                        transform: (content) => updateManifestBuffer(process.env.BUILD_ENV, content, chromeManifest)
                     },
                     {
                         context: 'Extension',
                         from: 'filters/chromium',
-                        to: 'filters',
-                    },
-                ],
+                        to: 'filters'
+                    }
+                ]
             }),
             new HtmlWebpackPlugin({
                 template: path.join(DEVTOOLS_PATH, 'devtools.html'),
                 filename: 'pages/devtools.html',
-                chunks: ['pages/devtools'],
+                chunks: ['pages/devtools']
             }),
             new HtmlWebpackPlugin({
                 template: path.join(DEVTOOLS_PATH, 'devtools-elements-sidebar.html'),
                 filename: 'pages/devtools-elements-sidebar.html',
-                chunks: ['pages/devtools-elements-sidebar'],
+                chunks: ['pages/devtools-elements-sidebar']
             }),
             new ZipWebpackPlugin({
                 path: '../',
-                filename: `${browserConfig.browser}.zip`,
-            }),
-        ],
+                filename: `${browserConfig.browser}.zip`
+            })
+        ]
     };
 
     return merge(commonConfig, chromeConfig);

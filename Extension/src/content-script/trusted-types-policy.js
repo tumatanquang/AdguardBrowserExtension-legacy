@@ -10,7 +10,7 @@ const createPolicy = () => {
         },
         createScriptURL: (input) => {
             return input;
-        },
+        }
     };
 
     if (window.trustedTypes && window.trustedTypes.createPolicy) {

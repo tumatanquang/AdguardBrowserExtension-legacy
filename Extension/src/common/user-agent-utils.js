@@ -10,19 +10,25 @@ const isTargetBrowser = (browserName) => {
     if (browserName === 'Chrome') {
         brand = 'Google Chrome';
         uaStringName = 'Chrome';
-    } else if (browserName === 'Firefox') {
+    }
+    else if (browserName === 'Firefox') {
         uaStringName = 'Firefox';
-    } else if (browserName === 'Safari') {
+    }
+    else if (browserName === 'Safari') {
         uaStringName = 'Safari';
-    } else if (browserName === 'Opera') {
+    }
+    else if (browserName === 'Opera') {
         brand = 'Opera';
         uaStringName = 'OPR';
-    } else if (browserName === 'YaBrowser') {
+    }
+    else if (browserName === 'YaBrowser') {
         brand = 'Yandex';
         uaStringName = 'YaBrowser';
-    } else if (browserName === 'Edge') {
+    }
+    else if (browserName === 'Edge') {
         uaStringName = 'edge';
-    } else if (browserName === 'EdgeChromium') {
+    }
+    else if (browserName === 'EdgeChromium') {
         brand = 'Microsoft Edge';
         uaStringName = 'edg';
     }
@@ -66,7 +72,8 @@ const getBrowserVersion = (browserName) => {
     if (browserName === 'Chrome') {
         brand = 'Google Chrome';
         uaStringMask = /\sChrome\/(\d+)\./;
-    } else if (browserName === 'Firefox') {
+    }
+    else if (browserName === 'Firefox') {
         uaStringMask = /\sFirefox\/(\d+)\./;
     }
 

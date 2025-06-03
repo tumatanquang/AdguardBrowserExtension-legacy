@@ -103,7 +103,7 @@ export const RequestTypes = {
             default:
                 return contentTypes.OTHER;
         }
-    },
+    }
 };
 
 /**
@@ -121,21 +121,21 @@ export function parseContentTypeFromUrlPath(path) {
     const pos = ext.lastIndexOf('.');
 
     // Unable to parse extension from url
-    if (pos === -1) {
+    if (pos < 0) {
         return null;
     }
 
     ext = `${ext.slice(pos)}.`;
-    if (objectContentTypes.indexOf(ext) !== -1) {
+    if (objectContentTypes.indexOf(ext) >= 0) {
         return RequestTypes.OBJECT;
     }
-    if (mediaContentTypes.indexOf(ext) !== -1) {
+    if (mediaContentTypes.indexOf(ext) >= 0) {
         return RequestTypes.MEDIA;
     }
-    if (fontContentTypes.indexOf(ext) !== -1) {
+    if (fontContentTypes.indexOf(ext) >= 0) {
         return RequestTypes.FONT;
     }
-    if (imageContentTypes.indexOf(ext) !== -1) {
+    if (imageContentTypes.indexOf(ext) >= 0) {
         return RequestTypes.IMAGE;
     }
 
