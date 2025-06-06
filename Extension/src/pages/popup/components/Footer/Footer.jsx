@@ -9,11 +9,10 @@ import { FOOTER_LINK_TO_IOS, FOOTER_LINK_TO_ANDROID } from '../../../constants';
 import './footer.pcss';
 
 export const Footer = observer(() => {
-    const store = useContext(popupStore);
+    const { isEdgeBrowser } = useContext(popupStore);
 
-    const isShowFooterContent = store.showAdguardPromoInfo;
     let footerContent;
-    if (store.isEdgeBrowser) {
+    if (isEdgeBrowser) {
         const currentYear = new Date().getFullYear();
         const footerText = `© 2009 - ${currentYear} AdGuard Software Ltd`;
         footerContent = <div className='footer__text'>{footerText}</div>;
@@ -53,6 +52,6 @@ export const Footer = observer(() => {
     }
 
     return (
-        isShowFooterContent && <div className='footer'>{footerContent}</div>
+        <div className='footer'>{footerContent}</div>
     );
 });

@@ -17,6 +17,7 @@ import './popup.pcss';
 export const Popup = observer(() => {
     const {
         appearanceTheme,
+        showAdguardPromoInfo,
         getPopupData,
         updateBlockedStats
     } = useContext(popupStore);
@@ -52,12 +53,12 @@ export const Popup = observer(() => {
     }, [updateBlockedStats]);
 
     return (
-        <div className='popup'>
+        <div className={showAdguardPromoInfo ? 'popup show-footer' : 'popup'}>
             <Icons />
             <Header />
             <MainContainer />
             <Tabs />
-            <Footer />
+            {showAdguardPromoInfo && <Footer />}
             <PromoNotification />
         </div>
     );
