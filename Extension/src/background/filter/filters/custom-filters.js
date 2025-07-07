@@ -29,15 +29,23 @@ export const customFilters = (() => {
     const CUSTOM_FILTERS_STORAGE_KEY = 'custom_filters';
 
     /**
+     * Pattern of parseExpiresStr function
+     */
+    const PARSE_EXPIRES_STRING_PATTERN = /(\d+)\s+(day|hour)/;
+
+    /**
+     * Limits filter download timeout
+     */
+    const DOWNLOAD_LIMIT_MS = 3 * 1000;
+
+    /**
      * Parses expires string in meta
      *
      * @param str
      * @return {number}
      */
     const parseExpiresStr = (str) => {
-        const regexp = /(\d+)\s+(day|hour)/;
-
-        const parseRes = str.match(regexp);
+        const parseRes = str.match(PARSE_EXPIRES_STRING_PATTERN);
 
         if (!parseRes) {
             const parsed = Number.parseInt(str, 10);
@@ -46,22 +54,16 @@ export const customFilters = (() => {
 
         const [, num, period] = parseRes;
 
-        let multiplier = 1;
         switch (period) {
             case 'day': {
-                multiplier = 24 * 60 * 60;
-                break;
+                return num * 24 * 60 * 60;
             }
             case 'hour': {
-                multiplier = 60 * 60;
-                break;
-            }
-            default: {
-                break;
+                return num * 60 * 60;
             }
         }
 
-        return num * multiplier;
+        return num;
     };
 
     /**
@@ -240,7 +242,6 @@ export const customFilters = (() => {
      * @param url
      */
     const downloadRulesWithTimeout = async (url) => {
-        const DOWNLOAD_LIMIT_MS = 3 * 1000;
         return Promise.race([
             downloadRules(url),
             new Promise((_, reject) => {
@@ -390,11 +391,9 @@ export const customFilters = (() => {
 
     // Add event listener to persist filter metadata to local storage
     listeners.addListener((event, payload) => {
-        if (event === listeners.FILTER_ADD_REMOVE) {
-            if (payload && payload.removed) {
-                removeCustomFilter(payload);
-                removeCustomFilterFromStorage(payload);
-            }
+        if (event === listeners.FILTER_ADD_REMOVE && payload && payload.removed) {
+            removeCustomFilter(payload);
+            removeCustomFilterFromStorage(payload);
         }
     });
 

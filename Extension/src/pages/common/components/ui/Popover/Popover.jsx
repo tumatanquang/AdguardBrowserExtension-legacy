@@ -3,8 +3,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { AttachmentPortal } from '../../AttachmentPortal';
 import { Tooltip } from '../Tooltip';
 
-const TOOLTIP_SHOW_DELAY_MS = 1000;
-
 /*
     Wrap child container for handle tooltips rendering in overlay on hover
 */
@@ -39,7 +37,7 @@ export function Popover({
                     y: rect.bottom + window.scrollY
                 }
             });
-        }, delay || TOOLTIP_SHOW_DELAY_MS);
+        }, delay || 1000);
     };
 
     const handleMouseLeave = () => {

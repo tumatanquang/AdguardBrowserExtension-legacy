@@ -98,8 +98,9 @@ const longLivedMessageHandler = (port) => {
     onPortConnection(port);
 
     port.onMessage.addListener((message) => {
-        const { type, data } = message;
+        const { type } = message;
         if (type === MESSAGE_TYPES.ADD_LONG_LIVED_CONNECTION) {
+            const { data } = message;
             const { events } = data;
             listenerId = listeners.addSpecifiedListener(events, async (...data) => {
                 const type = MESSAGE_TYPES.NOTIFY_LISTENERS;
@@ -256,6 +257,7 @@ const createMessageHandler = () => {
         return true;
     };
 
+    const SAVE_ALLOWLIST_DOMAIN_PATTERN = /[\r\n]+/;
     /**
      * Main function for processing messages from content-scripts
      *
@@ -301,11 +303,14 @@ const createMessageHandler = () => {
                 settings.setProperty(message.key, message.value);
                 break;
             case MESSAGE_TYPES.INITIALIZE_ONINSTALL_DEFAULT_FILTERS: {
-                // Retrieve filters and install them
-                const filterIds = application.offerFilters();
-                await application.addAndEnableFilters(filterIds);
-                // enable language-specific group by default
-                await application.enableGroup(ANTIBANNER_GROUPS_ID.LANGUAGE_FILTERS_GROUP_ID);
+                const isUseDefaultSettings = !!localStorage.getItem('useDefaultSettings');
+                if (isUseDefaultSettings) {
+                    // Retrieve filters and install them
+                    const filterIds = application.offerFilters();
+                    await application.addAndEnableFilters(filterIds);
+                    // enable language-specific group by default
+                    await application.enableGroup(ANTIBANNER_GROUPS_ID.LANGUAGE_FILTERS_GROUP_ID);
+                }
                 break;
             }
             case MESSAGE_TYPES.CHECK_REQUEST_FILTER_READY:
@@ -349,7 +354,7 @@ const createMessageHandler = () => {
             }
             case MESSAGE_TYPES.SAVE_ALLOWLIST_DOMAINS: {
                 const { value } = data;
-                const domains = value.split(/[\r\n]+/)
+                const domains = value.split(SAVE_ALLOWLIST_DOMAIN_PATTERN)
                     .map(string => string.trim())
                     .filter(string => string.length !== 0);
                 allowlist.updateAllowlistDomains(domains);

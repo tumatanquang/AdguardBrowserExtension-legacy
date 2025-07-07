@@ -9,8 +9,6 @@ import { useResizeObserver } from '../../../common/hooks/useResizeObserver';
 
 import './filters.pcss';
 
-const RESIZE_OBSERVER_THROTTLE_MS = 500;
-
 function Filters() {
     const [leftArrow, setLeftArrow] = useState(false);
     const [rightArrow, setRightArrow] = useState(true);
@@ -28,7 +26,7 @@ function Filters() {
         });
     }, []);
 
-    useResizeObserver(ref, calcArrowState, RESIZE_OBSERVER_THROTTLE_MS);
+    useResizeObserver(ref, calcArrowState, 500);
 
     const scrollTags = () => {
         const { scrollLeft, scrollWidth, clientWidth } = ref.current;

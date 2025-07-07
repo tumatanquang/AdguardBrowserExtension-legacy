@@ -8,11 +8,10 @@ export const useAppearanceTheme = (appearanceTheme) => {
         const STORAGE_KEY = 'appearance_theme';
         const DARK_THEME_CLASS = 'dark-mode';
         const LIGHT_THEME_CLASS = 'light-mode';
-        const SET_TO_STORAGE_TIMEOUT = 500;
 
         const throttledSetToStorage = throttle((mode) => {
             localStorage.setItem(STORAGE_KEY, mode);
-        }, SET_TO_STORAGE_TIMEOUT);
+        }, 500);
 
         let theme = appearanceTheme;
         if (!theme) {

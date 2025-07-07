@@ -199,9 +199,8 @@ export const pageStats = (function () {
         }
         else {
             for (let diffHours = utils.dates.getDifferenceInHours(now, currentDate);
-                diffHours >= 2;) {
+                diffHours >= 2; --diffHours) {
                 result.hours.push(createStatsDataItem(null, 0));
-                --diffHours;
             }
 
             result.hours.push(createStatsDataItem(type, blocked));
@@ -219,9 +218,8 @@ export const pageStats = (function () {
         }
         else {
             for (let diffDays = utils.dates.getDifferenceInDays(now, currentDate);
-                diffDays >= 2;) {
+                diffDays >= 2; --diffDays) {
                 result.days.push(createStatsDataItem(null, 0));
-                --diffDays;
             }
 
             result.days.push(createStatsDataItem(type, blocked));
@@ -239,9 +237,8 @@ export const pageStats = (function () {
         }
         else {
             for (let diffMonths = utils.dates.getDifferenceInMonths(now, currentDate);
-                diffMonths >= 2;) {
+                diffMonths >= 2; --diffMonths) {
                 result.months.push(createStatsDataItem(null, 0));
-                --diffMonths;
             }
 
             result.months.push(createStatsDataItem(type, blocked));

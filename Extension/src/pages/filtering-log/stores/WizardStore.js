@@ -48,22 +48,22 @@ class WizardStore {
     }
 
     @observable
-        isModalOpen = false;
+    isModalOpen = false;
 
     @observable
-        requestModalState = WIZARD_STATES.VIEW_REQUEST;
+    requestModalState = WIZARD_STATES.VIEW_REQUEST;
 
     @observable
-        ruleText = null;
+    ruleText = null;
 
     @observable
-        rulePattern = '';
+    rulePattern = '';
 
     @observable
-        ruleOptions = defaultRuleOptions;
+    ruleOptions = defaultRuleOptions;
 
     @observable
-        addedRuleState = null;
+    addedRuleState = null;
 
     @computed
     get requestModalStateEnum() {
@@ -102,12 +102,12 @@ class WizardStore {
     }
 
     @action
-        closeModal = () => {
-            this.isModalOpen = false;
-            this.addedRuleState = null;
-            this.requestModalState = WIZARD_STATES.VIEW_REQUEST;
-            this.rootStore.logStore.removeSelectedEvent();
-        };
+    closeModal = () => {
+        this.isModalOpen = false;
+        this.addedRuleState = null;
+        this.requestModalState = WIZARD_STATES.VIEW_REQUEST;
+        this.rootStore.logStore.removeSelectedEvent();
+    };
 
     @action
     setBlockState() {
@@ -131,33 +131,33 @@ class WizardStore {
     }
 
     @action
-        removeFromAllowlistHandler = async () => {
-            const { selectedTabId } = this.rootStore.logStore;
-            const { frameInfo } = await messenger.getTabFrameInfoById(selectedTabId);
+    removeFromAllowlistHandler = async () => {
+        const { selectedTabId } = this.rootStore.logStore;
+        const { frameInfo } = await messenger.getTabFrameInfoById(selectedTabId);
 
-            if (!frameInfo) {
-                return;
-            }
+        if (!frameInfo) {
+            return;
+        }
 
-            await messenger.unAllowlistFrame(frameInfo);
+        await messenger.unAllowlistFrame(frameInfo);
 
-            this.closeModal();
-        };
-
-    @action
-        removeFromUserFilterHandler = async (filteringEvent) => {
-            const { requestRule } = filteringEvent;
-
-            await messenger.removeUserRule(requestRule.ruleText);
-
-            this.closeModal();
-        };
+        this.closeModal();
+    };
 
     @action
-        removeAddedRuleFromUserFilter = async () => {
-            await messenger.removeUserRule(this.rule);
-            this.closeModal();
-        };
+    removeFromUserFilterHandler = async (filteringEvent) => {
+        const { requestRule } = filteringEvent;
+
+        await messenger.removeUserRule(requestRule.ruleText);
+
+        this.closeModal();
+    };
+
+    @action
+    removeAddedRuleFromUserFilter = async () => {
+        await messenger.removeUserRule(this.rule);
+        this.closeModal();
+    };
 
     @action
     setViewState() {

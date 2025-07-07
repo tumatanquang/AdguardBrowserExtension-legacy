@@ -94,24 +94,15 @@ export const contentUtils = (function () {
      * @returns {string}
      */
     const genAlertHtml = (title, text) => {
-        let descBlock = '';
-        if (text && text.length !== 0) {
-            descBlock = `<div class="adguard-popup-alert__desc">
-                            ${text}
-                        </div>`;
-        }
+        const descBlock = text && text.length !== 0 && (title !== text || text !== 'undefined')
+            ? `<div class="adguard-popup-alert__desc">
+                ${text}
+            </div>` : '';
 
-        // don't show description text if it is same as title or if it is equal to undefined
-        if (title === text || text === 'undefined') {
-            descBlock = '';
-        }
-
-        let titleBlock = '';
-        if (title && title.length !== 0) {
-            titleBlock = `<div class="adguard-popup-alert__title">
-                            ${title}
-                        </div>`;
-        }
+        const titleBlock = title && title.length !== 0
+            ? `<div class="adguard-popup-alert__title">
+                ${title}
+            </div>` : '';
 
         return `<div class="adguard-popup-alert">
                     ${titleBlock}
@@ -134,7 +125,7 @@ export const contentUtils = (function () {
             alertContainerStyles
         } = message;
 
-        if (!title && !text) {
+        if (!text && !title) {
             return;
         }
 
@@ -148,7 +139,7 @@ export const contentUtils = (function () {
 
         let fullText = '';
         for (let i = 0; i < messages.length; ++i) {
-            if (i > 0) {
+            if (i !== 0) {
                 fullText += ', ';
             }
             fullText += messages[i];
@@ -179,7 +170,7 @@ export const contentUtils = (function () {
                     if (alertElement && alertElement.parentNode) {
                         alertElement.parentNode.removeChild(alertElement);
                     }
-                }, 4 * 1000);
+                }, 4000);
             }
             else {
                 setTimeout(() => {
@@ -244,8 +235,6 @@ export const contentUtils = (function () {
                                 </div>
                             </div>`;
 
-        const triesCount = 10;
-
         const handleCloseIframe = (iframe) => {
             const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
             const closeElements = iframeDocument.querySelectorAll('.close-iframe');
@@ -285,8 +274,9 @@ export const contentUtils = (function () {
             return false;
         };
 
+        const MAX_TRIES_COUNT = 10;
         function appendPopup(count) {
-            if (count >= triesCount) {
+            if (count >= MAX_TRIES_COUNT) {
                 return;
             }
 
@@ -345,23 +335,25 @@ export const contentUtils = (function () {
         /**
          * On extension startup contentPage is undefined
          */
-        if (typeof contentPage === 'undefined') {
+        if (contentPage === undefined) {
             return;
         }
 
         contentPage.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.type === 'show-alert-popup') {
-                showAlertPopup(message);
-            }
-            else if (message.type === 'show-version-updated-popup') {
-                showVersionUpdatedPopup(message);
-                sendResponse(true);
-            }
-            else if (message.type === 'no-cache-reload') {
-                noCacheReload();
-            }
-            else if (message.type === 'update-tab-url') {
-                window.location = message.url;
+            switch (message.type) {
+                case 'show-alert-popup':
+                    showAlertPopup(message);
+                    break;
+                case 'show-version-updated-popup':
+                    showVersionUpdatedPopup(message);
+                    sendResponse(true);
+                    break;
+                case 'no-cache-reload':
+                    noCacheReload();
+                    break;
+                case 'update-tab-url':
+                    window.location = message.url;
+                    break;
             }
         });
     };

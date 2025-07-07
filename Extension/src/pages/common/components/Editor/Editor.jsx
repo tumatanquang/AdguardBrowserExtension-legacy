@@ -17,8 +17,6 @@ const DEFAULT_EDITOR_SIZE = {
     height: '300px'
 };
 
-const EDITOR_PADDING = 26;
-
 function Editor({
     name,
     value,
@@ -56,6 +54,8 @@ function Editor({
         width: size.width,
         height: size.height
     };
+
+    const EDITOR_PADDING = 26;
 
     // On fullscreen ignore size change
     const onResize = fullscreen

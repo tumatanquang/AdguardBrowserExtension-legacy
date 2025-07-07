@@ -1133,8 +1133,6 @@ export const uiService = (function () {
                         checkFiltersUpdates(enabledFilters, false);
                     }
                     break;
-                default:
-                    break;
             }
         });
 

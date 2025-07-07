@@ -187,8 +187,6 @@ export const tabsImpl = (function () {
             return;
         }
 
-        const isHttp = url.indexOf('http') === 0;
-
         async function onWindowFound(win) {
             // https://developer.chrome.com/extensions/tabs#method-create
             const chromeTab = await browser.tabs.create({
@@ -219,7 +217,7 @@ export const tabsImpl = (function () {
 
         function isAppropriateWindow(win) {
             // We can't open not-http (e.g. 'chrome-extension://') urls in incognito mode
-            return win.type === 'normal' && (isHttp || !win.incognito);
+            return win.type === 'normal' && (!win.incognito || url.indexOf('http') === 0);
         }
 
         if (!inNewWindow) {
@@ -400,6 +398,7 @@ export const tabsImpl = (function () {
      */
     let userCSSSupport = true;
 
+    const CSS_ORIGIN_PATTERN = /\bcssOrigin\b/;
     /**
      * Inserts CSS using the `browser.tabs.insertCSS` under the hood.
      * This method always injects CSS using `runAt: document_start`/
@@ -428,7 +427,7 @@ export const tabsImpl = (function () {
             // e.message in edge is undefined
             const errorMessage = e.message || e;
             // Some browsers do not support user css origin // TODO which one?
-            if (/\bcssOrigin\b/.test(errorMessage)) {
+            if (CSS_ORIGIN_PATTERN.test(errorMessage)) {
                 userCSSSupport = false;
             }
         }

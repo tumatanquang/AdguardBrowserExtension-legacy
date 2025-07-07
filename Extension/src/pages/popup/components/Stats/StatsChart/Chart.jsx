@@ -63,8 +63,6 @@ const selectRequestsStatsData = (stats, range, type) => {
                 result.push(d[type]);
             });
             break;
-        default:
-            break;
     }
     return result.map((val) => (val === undefined ? 0 : val));
 };
@@ -212,8 +210,9 @@ export function Chart({ stats, range, type }) {
                 position(data, width, height, element) {
                     const chart = document.querySelector('#chart');
                     const elementRect = element.getBoundingClientRect();
-                    const elementCenterPosition = elementRect.left + (elementRect.width / 2);
-                    const tooltipHalfWidth = chart.querySelector('.chart__tooltip').clientWidth / 2;
+                    const elementHalfWidth = elementRect.width >> 1;
+                    const elementCenterPosition = elementRect.left + elementHalfWidth;
+                    const tooltipHalfWidth = chart.querySelector('.chart__tooltip').clientWidth >> 1;
                     const tooltipLeft = elementCenterPosition - tooltipHalfWidth;
                     // eslint-disable-next-line no-undef
                     const top = d3.mouse(element)[1] - 50;

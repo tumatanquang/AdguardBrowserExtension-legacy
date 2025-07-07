@@ -184,15 +184,17 @@ const browsersFilteringLog = (function () {
             destinationRuleDTO.cookieRule = sourceRule.isOptionEnabled(TSUrlFilter.NetworkRuleOption.Cookie);
         }
         else if (sourceRule instanceof TSUrlFilter.CosmeticRule) {
-            const ruleType = sourceRule.getType();
-            if (ruleType === TSUrlFilter.CosmeticRuleType.Html) {
-                destinationRuleDTO.contentRule = true;
-            }
-            else if (ruleType === TSUrlFilter.CosmeticRuleType.ElementHiding || ruleType === TSUrlFilter.CosmeticRuleType.Css) {
-                destinationRuleDTO.cssRule = true;
-            }
-            else if (ruleType === TSUrlFilter.CosmeticRuleType.Js) {
-                destinationRuleDTO.scriptRule = true;
+            switch (sourceRule.getType()) {
+                case TSUrlFilter.CosmeticRuleType.Html:
+                    destinationRuleDTO.contentRule = true;
+                    break;
+                case TSUrlFilter.CosmeticRuleType.ElementHiding:
+                case TSUrlFilter.CosmeticRuleType.Css:
+                    destinationRuleDTO.cssRule = true;
+                    break;
+                case TSUrlFilter.CosmeticRuleType.Js:
+                    destinationRuleDTO.scriptRule = true;
+                    break;
             }
         }
 

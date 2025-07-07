@@ -186,6 +186,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
         editorRef.current.editor.session.setUseWrapMode(store.userRulesEditorWrapState);
     }, [store.userRulesEditorWrapState]);
 
+    const LINE_SEPARATOR = '\n';
     const inputChangeHandler = async (event) => {
         event.persist();
         const file = event.target.files[0];
@@ -199,8 +200,8 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
             }
 
             const oldRulesString = editorRef.current.editor.getValue();
-            const oldRules = oldRulesString.split('\n');
-            const newRules = trimmedNewRules.split('\n');
+            const oldRules = oldRulesString.split(LINE_SEPARATOR);
+            const newRules = trimmedNewRules.split(LINE_SEPARATOR);
             const uniqNewRules = newRules.filter((newRule) => {
                 const trimmedNewRule = newRule.trim();
                 if (trimmedNewRule.length === 0) {
@@ -212,7 +213,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
             });
 
             const rulesUnion = [...oldRules, ...uniqNewRules];
-            const rulesUnionString = rulesUnion.join('\n').trim();
+            const rulesUnionString = rulesUnion.join(LINE_SEPARATOR).trim();
 
             if (oldRulesString !== rulesUnionString) {
                 editorRef.current.editor.setValue(rulesUnionString, 1);

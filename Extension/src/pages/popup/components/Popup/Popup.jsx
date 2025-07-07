@@ -34,14 +34,9 @@ export const Popup = observer(() => {
     // subscribe to stats change
     useEffect(() => {
         const messageHandler = (message) => {
-            switch (message.type) {
-                case 'updateTotalBlocked': {
-                    const { tabInfo } = message;
-                    updateBlockedStats(tabInfo);
-                    break;
-                }
-                default:
-                    break;
+            if (message.type === 'updateTotalBlocked') {
+                const { tabInfo } = message;
+                updateBlockedStats(tabInfo);
             }
         };
 

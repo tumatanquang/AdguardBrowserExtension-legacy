@@ -19,6 +19,7 @@ import { localStorage } from '../storage';
 import { log } from '../../common/log';
 
 export const ExpiringCache = (() => {
+    const EXPIRING_CACHE_SIZE = 1000;
     /**
      * Cache with maxCacheSize stored in local storage, which automatically clears expired values
      *
@@ -26,9 +27,7 @@ export const ExpiringCache = (() => {
      * @param {number} size                     Max cache size
      */
     function ExpiringCache(storagePropertyName, size) {
-        const CACHE_SIZE = 1000;
-
-        const maxCacheSize = size || CACHE_SIZE;
+        const maxCacheSize = size || EXPIRING_CACHE_SIZE;
 
         let cache;
         let cacheSize;
@@ -84,12 +83,13 @@ export const ExpiringCache = (() => {
                     --cacheSize;
                 }
             }
-            if (cacheSize > maxCacheSize / 2) {
+            const halfMaxCacheSize = maxCacheSize >> 1;
+            if (cacheSize > halfMaxCacheSize) {
                 const keys = Object.keys(cache);
                 for (let i = 0; i < keys.length; ++i) {
                     const key = keys[i];
                     delete cache[key];
-                    if (--cacheSize <= maxCacheSize / 2) {
+                    if (--cacheSize <= halfMaxCacheSize) {
                         break;
                     }
                 }

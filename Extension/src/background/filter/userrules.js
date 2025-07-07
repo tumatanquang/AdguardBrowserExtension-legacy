@@ -57,12 +57,14 @@ export const userrules = (function () {
         listeners.notifyListeners(listeners.REMOVE_RULE, userFilter, [ruleText]);
     };
 
+    const USER_RULE_LINE_SEPARATOR_PATTERN = /\n/;
+    const USER_RULE_JOIN_LINE_SEPARATOR = '\n';
     /**
      * Save user rules text to storage
      * @param content Rules text
      */
     const updateUserRulesText = function (content) {
-        const lines = content.length !== 0 ? content.split(/\n/) : [];
+        const lines = content.length !== 0 ? content.split(USER_RULE_LINE_SEPARATOR_PATTERN) : [];
         listeners.notifyListeners(listeners.UPDATE_FILTER_RULES, userFilter, lines);
     };
 
@@ -71,7 +73,7 @@ export const userrules = (function () {
      */
     const getUserRulesText = async function () {
         const rulesText = await rulesStorage.read(utils.filters.USER_FILTER_ID);
-        const content = (rulesText || []).join('\n');
+        const content = (rulesText || []).join(USER_RULE_JOIN_LINE_SEPARATOR);
         return content;
     };
 
@@ -93,7 +95,7 @@ export const userrules = (function () {
      */
     const removeRulesByUrl = async (url) => {
         const userRulesText = await getUserRulesText();
-        const userRulesStrings = userRulesText.split('\n');
+        const userRulesStrings = userRulesText.split(USER_RULE_LINE_SEPARATOR_PATTERN);
         const updatedUserRulesText = userRulesStrings
             .filter((userRuleString) => {
                 return !TSUrlFilter.RuleSyntaxUtils.isRuleForUrl(
@@ -101,7 +103,7 @@ export const userrules = (function () {
                     url
                 );
             })
-            .join('\n');
+            .join(USER_RULE_JOIN_LINE_SEPARATOR);
         updateUserRulesText(updatedUserRulesText);
     };
 
@@ -112,7 +114,7 @@ export const userrules = (function () {
      */
     const hasRulesForUrl = async (url) => {
         const userRulesText = await getUserRulesText();
-        const userRulesStrings = userRulesText.split('\n');
+        const userRulesStrings = userRulesText.split(USER_RULE_LINE_SEPARATOR_PATTERN);
         return userRulesStrings
             .some(userRuleString => TSUrlFilter.RuleSyntaxUtils.isRuleForUrl(
                 userRuleString,
@@ -150,13 +152,11 @@ export const userrules = (function () {
             }
             result.push(...converted);
 
-            if (converted.length !== 0) {
-                if (converted.length > 1 || converted[0] !== line) {
-                    // Fill the map only for converted rules
-                    converted.forEach((x) => {
-                        conversionMap.set(x, line);
-                    });
-                }
+            if (converted.length !== 0 && (converted.length > 1 || converted[0] !== line)) {
+                // Fill the map only for converted rules
+                converted.forEach((x) => {
+                    conversionMap.set(x, line);
+                });
             }
         }
 

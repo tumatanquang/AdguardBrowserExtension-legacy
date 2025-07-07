@@ -87,8 +87,7 @@ const safebrowsing = (function () {
             const lines = responseText.split('\n');
             for (let i = 0; i < lines.length; ++i) {
                 const r = lines[i].split(':');
-                const hash = r[2];
-                const list = r[0];
+                const [list, , hash] = r;
 
                 safebrowsingCache.cache.saveValue(hash, list);
 
@@ -303,9 +302,11 @@ const safebrowsing = (function () {
             safebrowsingRequestsCache.set(x, true);
         });
 
-        sbList = SB_ALLOW_LIST;
         if (response.status !== 204) {
             sbList = processSbResponse(response.responseText, hashesMap) || SB_ALLOW_LIST;
+        }
+        else {
+            sbList = SB_ALLOW_LIST;
         }
 
         safebrowsingCache.cache.saveValue(createHash(host), sbList);

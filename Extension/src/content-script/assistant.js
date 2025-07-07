@@ -37,7 +37,7 @@ export const startAssistant = () => {
      * In the case of the FF browser, content scripts with the `document_start`
      * option won't injected into opened tabs, so we have to directly check this case.
      */
-    if (typeof contentPage === 'undefined') {
+    if (contentPage === undefined) {
         return;
     }
 
@@ -73,8 +73,6 @@ export const startAssistant = () => {
                 });
                 break;
             }
-            default:
-                break;
         }
     });
 

@@ -255,7 +255,7 @@ export const preload = (function () {
         const eventType = event.type;
         const tagName = element.tagName.toLowerCase();
 
-        const expectedEventType = (tagName === 'iframe' || tagName === 'frame' || tagName === 'embed')
+        const expectedEventType = tagName === 'iframe' || tagName === 'frame' || tagName === 'embed'
             ? 'load'
             : 'error';
         if (eventType !== expectedEventType) {
@@ -314,10 +314,11 @@ export const preload = (function () {
                  * the text of protectStyleEl, either there was removes a whole child "text"
                  * element of protectStyleEl we'll process both of them
                  */
-                if (m.removedNodes.length !== 0) {
-                    for (let j = 0; j < m.removedNodes.length; ++j) {
+                const { removedNodes } = m;
+                if (removedNodes.length !== 0) {
+                    for (let j = 0; j < removedNodes.length; ++j) {
                         isProtectStyleElModified = true;
-                        protectStyleEl.appendChild(m.removedNodes[j]);
+                        protectStyleEl.appendChild(removedNodes[j]);
                     }
                 }
                 else if (m.oldValue) {

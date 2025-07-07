@@ -41,7 +41,7 @@ export const browserUtils = (function () {
             return Math.max(part, 0);
         }
 
-        for (let i = 3; i >= 0; --i) {
+        for (let i = 4; --i >= 0;) {
             this.version[i] = parseVersionPart(parts[i]);
         }
     };
@@ -63,6 +63,7 @@ export const browserUtils = (function () {
         return 0;
     };
 
+    const SEMVER_PATTERN = /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)$/;
     const browserUtils = {
         getClientId() {
             let clientId = localStorage.getItem('client-id');
@@ -88,8 +89,7 @@ export const browserUtils = (function () {
          * @return {boolean}
          */
         isSemver(version) {
-            const semverRegex = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
-            return semverRegex.test(version);
+            return SEMVER_PATTERN.test(version);
         },
 
         /**

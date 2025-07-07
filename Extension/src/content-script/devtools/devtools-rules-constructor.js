@@ -63,8 +63,7 @@ export const DevToolsRulesConstructor = (function () {
         const { excludeId } = options;
 
         const path = [];
-        let el = element;
-        while (el.parentNode) {
+        for (let el = element; el.parentNode;) {
             const nodeName = el && el.nodeName ? el.nodeName.toUpperCase() : '';
             if (nodeName === 'BODY' && path.length === 0) {
                 const bodySelector = makeDefaultCssFilter(
@@ -221,8 +220,6 @@ export const DevToolsRulesConstructor = (function () {
             case 'SIMILAR':
                 selector = makeSimilarCssFilter(element, options.classList, true);
                 break;
-            default:
-                // do nothing
         }
 
         return selector ? CSS_RULE_MARK + selector : '';
@@ -252,28 +249,29 @@ export const DevToolsRulesConstructor = (function () {
         return element.id && element.id.trim() !== '';
     };
 
+    const CROP_DOMAIN_PATTERN = /:\d+/;
     const cropDomain = function (url) {
         const domain = getUrl(url).host;
-        return domain.replace('www.', '').replace(/:\d+/, '');
+        return domain.replace('www.', '').replace(CROP_DOMAIN_PATTERN, '');
     };
 
+    const GET_URL_PATTERN = /^(?:(?:[^:/\\?#]+):)?(?:\/\/((?:[^:/\\?#]*)(?::(?:[^/\\?#]*))?))?([^\\?#]*)(?:\\?(?:[^#]*))?(?:#(?:.*))?$/;
     const getUrl = function (url) {
-        const pattern = '^(([^:/\\?#]+):)?(//(([^:/\\?#]*)(?::([^/\\?#]*))?))?([^\\?#]*)(\\?([^#]*))?(#(.*))?$';
-        const rx = new RegExp(pattern);
-        const parts = rx.exec(url);
+        const parts = GET_URL_PATTERN.exec(url);
 
         return {
-            host: parts[4] || '',
-            path: parts[7] || ''
+            host: parts[0] || '',
+            path: parts[1] || ''
         };
     };
 
+    const BLOCK_URL_TEXT_PATTERN = /^http:\/\/(www\.)?/;
     const constructUrlBlockRuleText = function (element, urlBlockAttribute, oneDomain, domain) {
         if (!urlBlockAttribute) {
             return null;
         }
 
-        let blockUrlRuleText = urlBlockAttribute.replace(/^http:\/\/(www\.)?/, '||');
+        let blockUrlRuleText = urlBlockAttribute.replace(BLOCK_URL_TEXT_PATTERN, '||');
         if (blockUrlRuleText.indexOf('.') === 0) {
             blockUrlRuleText = blockUrlRuleText.substring(1);
         }
@@ -330,6 +328,7 @@ export const DevToolsRulesConstructor = (function () {
         };
     };
 
+    const CONSTRUCT_RULE_CSS_SELECTOR_PATTERN = /[\|]|[\^]/g;
     /**
      * Constructs css selector for specified rule
      *
@@ -348,8 +347,7 @@ export const DevToolsRulesConstructor = (function () {
             return ruleText.substring(index + CSS_RULE_MARK.length, optionsIndex >= 0 ? optionsIndex : ruleText.length);
         }
 
-        let s = ruleText.substring(0, optionsIndex);
-        s = s.replace(/[\|]|[\^]/g, '');
+        const s = ruleText.substring(0, optionsIndex).replace(CONSTRUCT_RULE_CSS_SELECTOR_PATTERN, '');
 
         if (isValidUrl(s)) {
             return `[src*="${s}"]`;
@@ -382,27 +380,26 @@ export const DevToolsRulesConstructor = (function () {
 
         const { ruleType } = options;
 
-        if (ruleType === 'URL') {
-            const blockUrlRuleText = constructUrlBlockRuleText(
-                element,
-                options.urlMask,
-                options.isBlockOneDomain,
-                croppedDomain
-            );
-            if (blockUrlRuleText) {
-                return blockUrlRuleText;
-            }
-        }
-
         let result;
-
-        if (ruleType === 'CSS') {
-            result = constructCssRuleText(element, options);
-
-            // Append html attributes to css selector
-            if (options.attributes) {
-                result = (result || CSS_RULE_MARK + result) + options.attributes;
-            }
+        switch (ruleType) {
+            case 'URL':
+                const blockUrlRuleText = constructUrlBlockRuleText(
+                    element,
+                    options.urlMask,
+                    options.isBlockOneDomain,
+                    croppedDomain
+                );
+                if (blockUrlRuleText) {
+                    return blockUrlRuleText;
+                }
+                break;
+            case 'CSS':
+                result = constructCssRuleText(element, options);
+                // Append html attributes to css selector
+                if (options.attributes) {
+                    result = (result || CSS_RULE_MARK + result) + options.attributes;
+                }
+                break;
         }
 
         if (!options.isBlockOneDomain) {

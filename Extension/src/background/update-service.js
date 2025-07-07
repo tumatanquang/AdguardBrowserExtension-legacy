@@ -75,12 +75,11 @@ export const applicationUpdateService = (function () {
         });
     }
 
+    const UPDATE_PREVIOUS_DEFAULT_VALUE = 48 * 60 * 60 * 1000;
     function handleDefaultUpdatePeriodSetting() {
-        const previousDefaultValue = 48 * 60 * 60 * 1000;
-
         const currentUpdatePeriod = settings.getFiltersUpdatePeriod();
 
-        if (currentUpdatePeriod === previousDefaultValue) {
+        if (currentUpdatePeriod === UPDATE_PREVIOUS_DEFAULT_VALUE) {
             settings.setFiltersUpdatePeriod(settings.DEFAULT_FILTERS_UPDATE_PERIOD);
         }
     }
@@ -165,7 +164,7 @@ export const applicationUpdateService = (function () {
         const currentVersion = backgroundPage.app.getVersion();
         browserUtils.setAppVersion(currentVersion);
 
-        const isFirstRun = (currentVersion !== prevVersion && !prevVersion);
+        const isFirstRun = currentVersion !== prevVersion && !prevVersion;
         const isUpdate = !!(currentVersion !== prevVersion && prevVersion);
 
         return ({

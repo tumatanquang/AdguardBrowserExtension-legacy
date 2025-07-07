@@ -33,6 +33,8 @@ export const filtersUpdate = (() => {
      */
     const UPDATE_FILTERS_DELAY = 5 * 60 * 1000;
 
+    const MINIMUM_EXPIRES_SECOND = 60 * 60;
+
     // Get filters update period
     let filtersUpdatePeriod = settings.getFiltersUpdatePeriod();
 
@@ -44,12 +46,10 @@ export const filtersUpdate = (() => {
      * @returns {number}
      */
     const normalizeExpires = (expires) => {
-        const minimumExpiresSec = 60 * 60;
-
         expires = Number.parseInt(expires, 10);
 
-        if (Number.isNaN(expires) || expires < minimumExpiresSec) {
-            expires = minimumExpiresSec;
+        if (Number.isNaN(expires) || expires < MINIMUM_EXPIRES_SECOND) {
+            expires = MINIMUM_EXPIRES_SECOND;
         }
 
         return expires * 1000;
@@ -86,14 +86,12 @@ export const filtersUpdate = (() => {
         for (let i = 0; i < filters.length; ++i) {
             const filter = filters[i];
             const group = subscriptions.getGroup(filter.groupId);
-            if (filter.installed && filter.enabled && group.enabled) {
-                if (forceUpdate || needUpdate(filter)) {
-                    if (filter.customUrl) {
-                        customFilterIds.push(filter.filterId);
-                    }
-                    else {
-                        filterIds.push(filter.filterId);
-                    }
+            if (filter.installed && filter.enabled && group.enabled && (forceUpdate || needUpdate(filter))) {
+                if (filter.customUrl) {
+                    customFilterIds.push(filter.filterId);
+                }
+                else {
+                    filterIds.push(filter.filterId);
                 }
             }
         }
@@ -333,10 +331,13 @@ export const filtersUpdate = (() => {
         return loadedFilters;
     };
 
+    /**
+     * Schedule update check timeout
+     */
+    const UPDATE_CHECK_TIMEOUT = 30 * 60 * 1000;
     // Scheduling job
     let scheduleUpdateTimeoutId;
     function scheduleUpdate() {
-        const checkTimeout = 30 * 60 * 1000;
         if (scheduleUpdateTimeoutId) {
             clearTimeout(scheduleUpdateTimeoutId);
         }
@@ -354,7 +355,7 @@ export const filtersUpdate = (() => {
                 log.error('Error update filters, cause {0}', ex);
             }
             scheduleUpdate();
-        }, checkTimeout);
+        }, UPDATE_CHECK_TIMEOUT);
     }
 
     /**

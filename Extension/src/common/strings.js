@@ -2,6 +2,7 @@
  * Util class for work with strings
  */
 export const strings = (() => {
+    const ESCAPE_DOUBLE_QUOTES_PATTERN = /"/g;
     const StringUtils = {
         isEmpty(str) {
             return !str || str.trim().length === 0;
@@ -120,17 +121,16 @@ export const strings = (() => {
                 const c = str.charAt(i);
 
                 if (c === delimiter) {
-                    if (i === 0) {
-                        // Ignore
-                    }
-                    else if (str.charAt(i - 1) === escapeCharacter) {
-                        sb.splice(sb.length - 1, 1);
-                        sb.push(c);
-                    }
-                    else if (preserveAllTokens || sb.length !== 0) {
-                        const part = sb.join('');
-                        parts.push(part);
-                        sb = [];
+                    if (i !== 0) {
+                        if (str.charAt(i - 1) === escapeCharacter) {
+                            sb.splice(sb.length - 1, 1);
+                            sb.push(c);
+                        }
+                        else if (preserveAllTokens || sb.length !== 0) {
+                            const part = sb.join('');
+                            parts.push(part);
+                            sb = [];
+                        }
                     }
                 }
                 else {
@@ -159,7 +159,7 @@ export const strings = (() => {
                 s.push(' ');
                 s.push(attr.name);
                 s.push('="');
-                const value = attr.value === null ? '' : attr.value.replace(/"/g, '\\"');
+                const value = attr.value === null ? '' : attr.value.replace(ESCAPE_DOUBLE_QUOTES_PATTERN, '\\"');
                 s.push(value);
                 s.push('"');
             }

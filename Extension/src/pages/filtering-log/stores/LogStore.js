@@ -184,7 +184,7 @@ class LogStore {
     @observable eventTypesFilters = initEventTypesFilters;
 
     @observable
-        selectIsOpen = false;
+    selectIsOpen = false;
 
     constructor(rootStore) {
         this.rootStore = rootStore;
@@ -192,29 +192,29 @@ class LogStore {
     }
 
     @action
-        setMiscellaneousFilters = (payload) => {
-            this.miscellaneousFilters = payload;
-        };
+    setMiscellaneousFilters = (payload) => {
+        this.miscellaneousFilters = payload;
+    };
 
     @action
-        setRequestSourceFilters = (payload) => {
-            this.requestSourceFilters = payload;
-        };
+    setRequestSourceFilters = (payload) => {
+        this.requestSourceFilters = payload;
+    };
 
     @action
-        setEventTypesFilters = (payload) => {
-            this.eventTypesFilters = payload;
-        };
+    setEventTypesFilters = (payload) => {
+        this.eventTypesFilters = payload;
+    };
 
     @action
-        resetAllFilters = () => {
-        // enable all eventTypesFilters
-            this.eventTypesFilters = initEventTypesFilters;
-            // disable all miscellaneousFilters
-            this.miscellaneousFilters = initMiscellaneousFilters;
-            // disable all requestSourceFilters
-            this.requestSourceFilters = initRequestSourceFilters;
-        };
+    resetAllFilters = () => {
+    // enable all eventTypesFilters
+        this.eventTypesFilters = initEventTypesFilters;
+        // disable all miscellaneousFilters
+        this.miscellaneousFilters = initMiscellaneousFilters;
+        // disable all requestSourceFilters
+        this.requestSourceFilters = initRequestSourceFilters;
+    };
 
     @action
     onTabUpdate(tabInfo) {
@@ -275,9 +275,9 @@ class LogStore {
     };
 
     @action
-        setSelectIsOpenState = (value) => {
-            this.selectIsOpen = value;
-        };
+    setSelectIsOpenState = (value) => {
+        this.selectIsOpen = value;
+    };
 
     @computed
     get tabs() {
@@ -297,55 +297,55 @@ class LogStore {
     }
 
     @action
-        getEventsByTabId = async (tabId) => {
-            const filteringInfo = await messenger.getFilteringInfoByTabId(tabId);
-            runInAction(() => {
-                const filteringEvents = filteringInfo?.filteringEvents;
-                if (filteringEvents) {
-                    this.filteringEvents = filteringEvents
-                        .map((filteringEvent) => this.formatEvent(filteringEvent));
-                }
-                else {
-                    this.filteringEvents = [];
-                }
+    getEventsByTabId = async (tabId) => {
+        const filteringInfo = await messenger.getFilteringInfoByTabId(tabId);
+        runInAction(() => {
+            const filteringEvents = filteringInfo?.filteringEvents;
+            if (filteringEvents) {
+                this.filteringEvents = filteringEvents
+                    .map((filteringEvent) => this.formatEvent(filteringEvent));
+            }
+            else {
+                this.filteringEvents = [];
+            }
+        });
+    };
+
+    @action
+    setSelectedTabId = async (tabId) => {
+        this.selectedTabId = Number.parseInt(tabId, 10);
+        await this.getEventsByTabId(tabId);
+    };
+
+    @action
+    synchronizeOpenTabs = async () => {
+        const tabsInfo = await messenger.synchronizeOpenTabs();
+        runInAction(() => {
+            tabsInfo.forEach((tabInfo) => {
+                this.tabsMap[tabInfo.tabId] = tabInfo;
             });
-        };
+        });
+    };
 
     @action
-        setSelectedTabId = async (tabId) => {
-            this.selectedTabId = Number.parseInt(tabId, 10);
-            await this.getEventsByTabId(tabId);
-        };
+    getFilteringLogData = async () => {
+        const {
+            filtersMetadata,
+            settings,
+            preserveLogEnabled
+        } = await messenger.getFilteringLogData();
+
+        runInAction(() => {
+            this.filtersMetadata = filtersMetadata;
+            this.settings = settings;
+            this.preserveLogEnabled = preserveLogEnabled;
+        });
+    };
 
     @action
-        synchronizeOpenTabs = async () => {
-            const tabsInfo = await messenger.synchronizeOpenTabs();
-            runInAction(() => {
-                tabsInfo.forEach((tabInfo) => {
-                    this.tabsMap[tabInfo.tabId] = tabInfo;
-                });
-            });
-        };
-
-    @action
-        getFilteringLogData = async () => {
-            const {
-                filtersMetadata,
-                settings,
-                preserveLogEnabled
-            } = await messenger.getFilteringLogData();
-
-            runInAction(() => {
-                this.filtersMetadata = filtersMetadata;
-                this.settings = settings;
-                this.preserveLogEnabled = preserveLogEnabled;
-            });
-        };
-
-    @action
-        getFilteringLogEvents = async () => {
-            await this.getEventsByTabId(this.selectedTabId);
-        };
+    getFilteringLogEvents = async () => {
+        await this.getEventsByTabId(this.selectedTabId);
+    };
 
     @computed
     get events() {
@@ -425,35 +425,35 @@ class LogStore {
      * @return {Promise<void>}
      */
     @action
-        clearFilteringEvents = async () => {
-            const ignorePreserveLog = true;
-            await messenger.clearEventsByTabId(this.selectedTabId, ignorePreserveLog);
-            runInAction(() => {
-                this.filteringEvents = [];
-            });
-        };
+    clearFilteringEvents = async () => {
+        const ignorePreserveLog = true;
+        await messenger.clearEventsByTabId(this.selectedTabId, ignorePreserveLog);
+        runInAction(() => {
+            this.filteringEvents = [];
+        });
+    };
 
     @action
-        setEventsSearchValue = (value) => {
-            this.eventsSearchValue = value;
-        };
+    setEventsSearchValue = (value) => {
+        this.eventsSearchValue = value;
+    };
 
     @action
-        refreshPage = async () => {
-            if (this.selectedTabId === BACKGROUND_TAB_ID) {
-                await messenger.clearEventsByTabId(this.selectedTabId);
-                return;
-            }
-            await messenger.refreshPage(this.selectedTabId, this.preserveLogEnabled);
-        };
+    refreshPage = async () => {
+        if (this.selectedTabId === BACKGROUND_TAB_ID) {
+            await messenger.clearEventsByTabId(this.selectedTabId);
+            return;
+        }
+        await messenger.refreshPage(this.selectedTabId, this.preserveLogEnabled);
+    };
 
     @action
-        setPreserveLog = async (state) => {
-            await messenger.setPreserveLogState(state);
-            runInAction(() => {
-                this.preserveLogEnabled = state;
-            });
-        };
+    setPreserveLog = async (state) => {
+        await messenger.setPreserveLogState(state);
+        runInAction(() => {
+            this.preserveLogEnabled = state;
+        });
+    };
 
     toNumberOrString = (dirtyString) => {
         const num = Number.parseInt(dirtyString, 10);
@@ -464,31 +464,31 @@ class LogStore {
     };
 
     @action
-        handleSelectEvent = (eventIdString) => {
-            const eventId = this.toNumberOrString(eventIdString);
+    handleSelectEvent = (eventIdString) => {
+        const eventId = this.toNumberOrString(eventIdString);
 
-            if (this.selectedEvent
-            && this.rootStore.wizardStore.isModalOpen
-            && eventId === this.selectedEvent.eventId) {
-                this.selectedEvent = null;
-                this.rootStore.wizardStore.closeModal();
-                return;
-            }
-
-            this.rootStore.wizardStore.setAddedRuleState(false);
-            this.setSelectedEventById(eventId);
-            this.rootStore.wizardStore.openModal();
-        };
-
-    @action
-        setSelectedEventById = (eventId) => {
-            this.selectedEvent = find(this.filteringEvents, { eventId });
-        };
-
-    @action
-        removeSelectedEvent = () => {
+        if (this.selectedEvent
+        && this.rootStore.wizardStore.isModalOpen
+        && eventId === this.selectedEvent.eventId) {
             this.selectedEvent = null;
-        };
+            this.rootStore.wizardStore.closeModal();
+            return;
+        }
+
+        this.rootStore.wizardStore.setAddedRuleState(false);
+        this.setSelectedEventById(eventId);
+        this.rootStore.wizardStore.openModal();
+    };
+
+    @action
+    setSelectedEventById = (eventId) => {
+        this.selectedEvent = find(this.filteringEvents, { eventId });
+    };
+
+    @action
+    removeSelectedEvent = () => {
+        this.selectedEvent = null;
+    };
 
     @computed
     get appearanceTheme() {

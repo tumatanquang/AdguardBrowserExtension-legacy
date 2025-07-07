@@ -394,16 +394,18 @@ export const stealthService = (() => {
         settings.onUpdated.addListener(async (settingName, settingValue) => {
             if (settingName === settings.BLOCK_WEBRTC || settingName === settings.DISABLE_STEALTH_MODE) {
                 let shouldBlock;
-                if (settingName === settings.BLOCK_WEBRTC) {
-                    if (!isStealthModeDisabled()) {
-                        shouldBlock = settingValue;
-                    }
-                }
-                else if (settingName === settings.DISABLE_STEALTH_MODE) {
-                    if (settings.getProperty(settings.BLOCK_WEBRTC)) {
-                        // Enable webRTC if stealth mode is disabled
-                        shouldBlock = !settingValue;
-                    }
+                switch (settingName) {
+                    case settings.BLOCK_WEBRTC:
+                        if (!isStealthModeDisabled()) {
+                            shouldBlock = settingValue;
+                        }
+                        break;
+                    case settings.DISABLE_STEALTH_MODE:
+                        if (settings.getProperty(settings.BLOCK_WEBRTC)) {
+                            // Enable webRTC if stealth mode is disabled
+                            shouldBlock = !settingValue;
+                        }
+                        break;
                 }
 
                 if (shouldBlock === undefined) {
@@ -435,8 +437,6 @@ export const stealthService = (() => {
                     if (isPermissionsGranted) {
                         await setBlockWebRTC(getStealthSettingValue(settings.BLOCK_WEBRTC));
                     }
-                    break;
-                default:
                     break;
             }
         });

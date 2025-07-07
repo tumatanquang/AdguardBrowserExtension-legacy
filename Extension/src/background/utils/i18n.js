@@ -42,7 +42,7 @@ export const i18n = (function () {
 
             // Try to search by the language
             const parts = locale.split('_');
-            const language = parts[0];
+            const [language] = parts;
             if (search(locales, language)) {
                 return language;
             }

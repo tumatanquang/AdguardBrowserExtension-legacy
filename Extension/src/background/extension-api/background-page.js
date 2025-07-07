@@ -191,20 +191,20 @@ export const backgroundPage = (() => {
             requestFrameId = MAIN_FRAME_ID;
         }
 
-        if (requestType === 'IMAGESET') {
-            requestType = RequestTypes.IMAGE;
-        }
-
-        else if (requestType === RequestTypes.OTHER) {
-            requestType = parseRequestTypeFromUrl(details.url);
-        }
-
-        /**
-         * ping type is 'ping' in Chrome
-         * but Firefox considers it as 'beacon'
-         */
-        else if (requestType === 'BEACON') {
-            requestType = RequestTypes.PING;
+        switch (requestType) {
+            case 'IMAGESET':
+                requestType = RequestTypes.IMAGE;
+                break;
+            case RequestTypes.OTHER:
+                requestType = parseRequestTypeFromUrl(details.url);
+                break;
+            /**
+             * ping type is 'ping' in Chrome
+             * but Firefox considers it as 'beacon'
+             */
+            case 'BEACON':
+                requestType = RequestTypes.PING;
+                break;
         }
 
         /**

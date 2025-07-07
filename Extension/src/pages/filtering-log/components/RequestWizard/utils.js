@@ -64,12 +64,11 @@ export const UrlUtils = {
  * @returns {String}
  */
 export const getFilterName = (filterId, filtersMetadata) => {
-    if (filterId === ANTIBANNER_FILTERS_ID.USER_FILTER_ID) {
-        return reactTranslator.getMessage('options_userfilter');
-    }
-
-    if (filterId === ANTIBANNER_FILTERS_ID.ALLOWLIST_FILTER_ID) {
-        return reactTranslator.getMessage('options_allowlist');
+    switch (filterId) {
+        case ANTIBANNER_FILTERS_ID.USER_FILTER_ID:
+            return reactTranslator.getMessage('options_userfilter');
+        case ANTIBANNER_FILTERS_ID.ALLOWLIST_FILTER_ID:
+            return reactTranslator.getMessage('options_allowlist');
     }
 
     const filterMetadata = filtersMetadata?.filter((el) => el.filterId === filterId)[0];
@@ -94,8 +93,7 @@ export const getRequestEventType = (event) => {
 
     let requestEventType = requestType;
 
-    if (requestRule?.cookieRule
-        || requestRule?.isModifyingCookieRule) {
+    if (requestRule?.cookieRule || requestRule?.isModifyingCookieRule) {
         requestEventType = RequestTypes.COOKIE;
     }
     else if (cspReportBlocked) {

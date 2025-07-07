@@ -41,8 +41,6 @@
                 case 'location':
                     url = decodeURIComponent(parts[1]);
                     break;
-                default:
-                    break;
             }
         }
 
@@ -52,6 +50,9 @@
         };
     };
 
+    const ABP_LINK_CLICKED_SUBCRIBE_PATTERN = /^abp:\/*subscribe\/*\?/i;
+    const ADGUARD_LINK_CLICKED_SUBCRIBE_PATTERN = /^adguard:\/*subscribe\/*\?/i;
+    const AMP_REPLACE_LINK_CLICKED_PATTERN = /&amp;/g;
     const onLinkClicked = function (e) {
         if (e.button === 2) {
             // ignore right-click
@@ -75,8 +76,8 @@
                 return;
             }
         }
-        else if (!(/^abp:\/*subscribe\/*\?/i.test(target.href)
-            || /^adguard:\/*subscribe\/*\?/i.test(target.href))) {
+        else if (!(ABP_LINK_CLICKED_SUBCRIBE_PATTERN.test(target.href)
+            || ADGUARD_LINK_CLICKED_SUBCRIBE_PATTERN.test(target.href))) {
             return;
         }
 
@@ -85,12 +86,12 @@
 
         let urlParams;
         if (target.search) {
-            urlParams = target.search.substring(1).replace(/&amp;/g, '&').split('&');
+            urlParams = target.search.substring(1).replace(AMP_REPLACE_LINK_CLICKED_PATTERN, '&').split('&');
         }
         else {
             const { href } = target;
             const index = href.indexOf('?');
-            urlParams = href.substring(index + 1).replace(/&amp;/g, '&').split('&');
+            urlParams = href.substring(index + 1).replace(AMP_REPLACE_LINK_CLICKED_PATTERN, '&').split('&');
         }
 
         const subParams = getSubscriptionParams(urlParams);

@@ -374,9 +374,10 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
                     checkWebRTCRequest(connection, iceServer.url);
                 }
 
-                if (iceServer.urls) {
-                    for (let j = 0; j < iceServer.urls.length; ++j) {
-                        checkWebRTCRequest(connection, iceServer.urls[j]);
+                const { urls } = iceServer;
+                if (urls) {
+                    for (let j = 0; j < urls.length; ++j) {
+                        checkWebRTCRequest(connection, urls[j]);
                     }
                 }
             }

@@ -63,8 +63,8 @@ export const xpi = async (browser) => {
     // Revert manifest to prev state
     await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 4));
 
+    const VERSION_PATTERN = /\%VERSION\%/g;
     // create update.json
-    let updateJsonTemplate = (await fs.readFile(FIREFOX_UPDATE_TEMPLATE)).toString();
-    updateJsonTemplate = updateJsonTemplate.replace(/\%VERSION\%/g, version);
+    const updateJsonTemplate = (await fs.readFile(FIREFOX_UPDATE_TEMPLATE)).toString().replace(VERSION_PATTERN, version);
     await fs.writeFile(path.join(DIST_PATH, 'update.json'), updateJsonTemplate);
 };

@@ -382,12 +382,11 @@ const RequestInfo = observer(() => {
             && !event?.cookieName
             && !(getStatusMode(event) === StatusMode.BLOCKED);
 
-        if (addedRuleState === ADDED_RULE_STATES.BLOCK) {
-            return renderButton(BUTTON_MAP.REMOVE_ADDED_BLOCK_RULE);
-        }
-
-        if (addedRuleState === ADDED_RULE_STATES.UNBLOCK) {
-            return renderButton(BUTTON_MAP.REMOVE_ADDED_UNBLOCK_RULE);
+        switch (addedRuleState) {
+            case ADDED_RULE_STATES.BLOCK:
+                return renderButton(BUTTON_MAP.REMOVE_ADDED_BLOCK_RULE);
+            case ADDED_RULE_STATES.UNBLOCK:
+                return renderButton(BUTTON_MAP.REMOVE_ADDED_UNBLOCK_RULE);
         }
 
         if (!requestRule) {
@@ -427,12 +426,11 @@ const RequestInfo = observer(() => {
     };
 
     const getFilterStatusMode = () => {
-        if (addedRuleState === ADDED_RULE_STATES.BLOCK) {
-            return StatusMode.BLOCKED;
-        }
-
-        if (addedRuleState === ADDED_RULE_STATES.UNBLOCK) {
-            return StatusMode.ALLOWED;
+        switch (addedRuleState) {
+            case ADDED_RULE_STATES.BLOCK:
+                return StatusMode.BLOCKED;
+            case ADDED_RULE_STATES.UNBLOCK:
+                return StatusMode.ALLOWED;
         }
 
         return getStatusMode(selectedEvent);

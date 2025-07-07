@@ -45,6 +45,7 @@ export const log = (() => {
         return localTime.toISOString().replace('Z', '');
     };
 
+    const PRINT_LOG_FORMAT_PATTERN = /{(\d+)}/g;
     /**
      * Prints log message
      */
@@ -59,7 +60,7 @@ export const log = (() => {
 
         const str = `${args[0]}`;
         args = Array.prototype.slice.call(args, 1);
-        let formatted = str.replace(/{(\d+)}/g, (match, number) => {
+        let formatted = str.replace(PRINT_LOG_FORMAT_PATTERN, (match, number) => {
             if (typeof args[number] !== 'undefined') {
                 let value = args[number];
                 if (value instanceof Error) {

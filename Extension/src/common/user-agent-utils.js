@@ -7,30 +7,32 @@ const isTargetBrowser = (browserName) => {
     let brand;
     let uaStringName;
 
-    if (browserName === 'Chrome') {
-        brand = 'Google Chrome';
-        uaStringName = 'Chrome';
-    }
-    else if (browserName === 'Firefox') {
-        uaStringName = 'Firefox';
-    }
-    else if (browserName === 'Safari') {
-        uaStringName = 'Safari';
-    }
-    else if (browserName === 'Opera') {
-        brand = 'Opera';
-        uaStringName = 'OPR';
-    }
-    else if (browserName === 'YaBrowser') {
-        brand = 'Yandex';
-        uaStringName = 'YaBrowser';
-    }
-    else if (browserName === 'Edge') {
-        uaStringName = 'edge';
-    }
-    else if (browserName === 'EdgeChromium') {
-        brand = 'Microsoft Edge';
-        uaStringName = 'edg';
+    switch (browserName) {
+        case 'Chrome':
+            brand = 'Google Chrome';
+            uaStringName = 'Chrome';
+            break;
+        case 'Firefox':
+            uaStringName = 'Firefox';
+            break;
+        case 'Safari':
+            uaStringName = 'Safari';
+            break;
+        case 'Opera':
+            brand = 'Opera';
+            uaStringName = 'OPR';
+            break;
+        case 'YaBrowser':
+            brand = 'Yandex';
+            uaStringName = 'YaBrowser';
+            break;
+        case 'Edge':
+            uaStringName = 'edge';
+            break;
+        case 'EdgeChromium':
+            brand = 'Microsoft Edge';
+            uaStringName = 'edg';
+            break;
     }
 
     const brandsData = navigator.userAgentData?.brands;
@@ -69,12 +71,14 @@ const getBrowserVersion = (browserName) => {
     let brand;
     let uaStringMask;
 
-    if (browserName === 'Chrome') {
-        brand = 'Google Chrome';
-        uaStringMask = /\sChrome\/(\d+)\./;
-    }
-    else if (browserName === 'Firefox') {
-        uaStringMask = /\sFirefox\/(\d+)\./;
+    switch (browserName) {
+        case 'Chrome':
+            brand = 'Google Chrome';
+            uaStringMask = /\sChrome\/(\d+)\./;
+            break;
+        case 'Firefox':
+            uaStringMask = /\sFirefox\/(\d+)\./;
+            break;
     }
 
     const brandsData = navigator.userAgentData?.brands;

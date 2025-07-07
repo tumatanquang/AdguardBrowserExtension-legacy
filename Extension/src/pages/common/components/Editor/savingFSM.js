@@ -15,8 +15,6 @@ export const EVENTS = {
     TIMEOUT: 'timeout'
 };
 
-const SAVED_DISPLAY_TIMEOUT_MS = 1000;
-
 const savingStateMachine = {
     initial: 'idle',
     states: {
@@ -42,7 +40,7 @@ const savingStateMachine = {
         },
         [STATES.SAVED]: {
             after: [{
-                delay: SAVED_DISPLAY_TIMEOUT_MS, target: STATES.IDLE
+                delay: 1000, target: STATES.IDLE
             }]
         }
     }

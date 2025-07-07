@@ -560,11 +560,9 @@ export const webRequestService = (function () {
      */
     const processRequestResponse = function (tab, requestUrl, referrerUrl, requestType) {
         // add page view to stats
-        if (requestType === RequestTypes.DOCUMENT) {
+        if (requestType === RequestTypes.DOCUMENT && canCollectHitStatsForTab(tab)) {
             const domain = frames.getFrameDomain(tab);
-            if (canCollectHitStatsForTab(tab)) {
-                hitStats.addDomainView(domain);
-            }
+            hitStats.addDomainView(domain);
         }
     };
 

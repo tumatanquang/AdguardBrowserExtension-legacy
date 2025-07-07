@@ -259,18 +259,14 @@ function AddCustomModal({
 
     const renderStep = () => {
         switch (stepToRender) {
-            case STEPS.INPUT: {
+            case STEPS.INPUT:
                 return renderInputStep();
-            }
-            case STEPS.CHECKING: {
+            case STEPS.CHECKING:
                 return renderCheckingStep();
-            }
-            case STEPS.ERROR: {
+            case STEPS.ERROR:
                 return renderErrorStep();
-            }
-            case STEPS.APPROVE: {
+            case STEPS.APPROVE:
                 return renderApproveStep();
-            }
             default:
                 throw new Error(`there is no such step: ${stepToRender}`);
         }

@@ -44,6 +44,7 @@ module.exports = {
         'arrow-body-style': 'off',
         'class-methods-use-this': 'off',
         'consistent-return': 'off',
+        'default-case': 'off',
         'default-case-last': 'error',
         'dot-notation': 'off',
         'eqeqeq': [
@@ -58,6 +59,7 @@ module.exports = {
             }
         ],
         'no-bitwise': 'off',
+        'no-case-declarations': 'off',
         'no-continue': 'off',
         'no-extra-boolean-cast': 'error',
         'no-param-reassign': 'off',

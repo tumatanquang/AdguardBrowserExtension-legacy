@@ -4,10 +4,11 @@ import { FilterTag, SubscriptionFilter, SubscriptionGroup } from './metadata';
  * Metadata factory
  */
 export const metadataFactory = (() => {
+    const PARSE_SAFARI_DATE_STRING = /\+(\d{2})(\d{2})$/;
     /**
      * Parses string to date
      *
-     * @param timeUpdatedString String in format 'yyyy-MM-dd'T'HH:mm:ssZ'
+     * @param {string} timeUpdatedString String in format 'yyyy-MM-dd'T'HH:mm:ssZ'
      * @returns number from date string
      */
     const parseTimeUpdated = timeUpdatedString => {
@@ -20,7 +21,7 @@ export const metadataFactory = (() => {
         let timeUpdated = Date.parse(timeUpdatedString);
         if (Number.isNaN(timeUpdated)) {
             // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/478
-            timeUpdated = Date.parse(timeUpdatedString.replace(/\+(\d{2})(\d{2})$/, '+$1:$2'));
+            timeUpdated = Date.parse(timeUpdatedString.replace(PARSE_SAFARI_DATE_STRING, '+$1:$2'));
         }
         if (Number.isNaN(timeUpdated)) {
             timeUpdated = Date.now();

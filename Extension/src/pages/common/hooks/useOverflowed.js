@@ -15,14 +15,12 @@ export const useOverflowed = (ref, track = { x: false, y: true }, throttleTime =
 
     const calcIsOverflowed = useCallback(([entry]) => {
         const el = entry.target;
-        let overflowedX = false;
-        let overflowedY = false;
-        if (track.x) {
-            overflowedX = el.scrollWidth > el.offsetWidth;
-        }
-        if (track.y) {
-            overflowedY = el.scrollHeight > el.offsetHeight;
-        }
+        const overflowedX = track.x
+            ? el.scrollWidth > el.offsetWidth
+            : false;
+        const overflowedY = track.y
+            ? el.scrollHeight > el.offsetHeight
+            : false;
 
         /**
          * call setState within requestAnimationFrame to prevent inifinite loop

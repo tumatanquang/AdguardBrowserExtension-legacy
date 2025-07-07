@@ -22,12 +22,16 @@ import { strings } from '../../common/strings';
 
 export const url = (function () {
     const RE_V4 = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|0x[0-9a-f][0-9a-f]?|0[0-7]{3})\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|0x[0-9a-f][0-9a-f]?|0[0-7]{3})$/i;
-    const RE_V4_HEX = /^0x([0-9a-f]{8})$/i;
+    const RE_V4_HEX = /^0x(?:[0-9a-f]{8})$/i;
     const RE_V4_NUMERIC = /^[0-9]+$/;
     const RE_V4inV6 = /(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 
-    const RE_BAD_CHARACTERS = /([^0-9a-f:])/i;
-    const RE_BAD_ADDRESS = /([0-9a-f]{5,}|:{3,}|[^:]:$|^:[^:]$)/i;
+    const RE_BAD_CHARACTERS = /(?:[^0-9a-f:])/i;
+    const RE_BAD_ADDRESS = /(?:[0-9a-f]{5,}|:{3,}|[^:]:$|^:[^:]$)/i;
+    const RE_TO_PUNY_CODE_PATTERN = /^[\x00-\x7F]+$/;
+    const RE_IS_IPV6_BLOCK_PATTERN = /^0[0-9]+/;
+    const RE_IS_IPV6_V4INV6_PATTERN = /[0-9]$/;
+    const RE_URL_EQUALS_SPLIT_PATTERN = /[#?]/;
 
     /**
      * Helper methods to work with URLs
@@ -46,7 +50,7 @@ export const url = (function () {
             if (!domain) {
                 return '';
             }
-            if (/^[\x00-\x7F]+$/.test(domain)) {
+            if (RE_TO_PUNY_CODE_PATTERN.test(domain)) {
                 return domain;
             }
             return punycode.toASCII(domain);
@@ -125,12 +129,12 @@ export const url = (function () {
             if (address4) {
                 const temp4 = address4[0].split('.');
                 for (let i = 0; i < 4; ++i) {
-                    if (/^0[0-9]+/.test(temp4[i])) {
+                    if (RE_IS_IPV6_BLOCK_PATTERN.test(temp4[i])) {
                         return false;
                     }
                 }
                 address = address.replace(RE_V4inV6, '');
-                if (/[0-9]$/.test(address)) {
+                if (RE_IS_IPV6_V4INV6_PATTERN.test(address)) {
                     return false;
                 }
 
@@ -167,9 +171,9 @@ export const url = (function () {
                 return false;
             }
             // eslint-disable-next-line prefer-destructuring
-            u1 = u1.split(/[#?]/)[0];
+            u1 = u1.split(RE_URL_EQUALS_SPLIT_PATTERN)[0];
             // eslint-disable-next-line prefer-destructuring
-            u2 = u2.split(/[#?]/)[0];
+            u2 = u2.split(RE_URL_EQUALS_SPLIT_PATTERN)[0];
             return u1 === u2;
         }
     };

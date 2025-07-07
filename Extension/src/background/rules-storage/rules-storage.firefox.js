@@ -37,6 +37,7 @@ const firefoxRulesStorageImpl = (function (initialAPI) {
         log.error('Adguard rulesStorage error: {0}', error.error || error);
     }
 
+    const RESULT_SPLIT_PATTERN = /\r?\n/;
     /**
      * Gets value from the database by key
      */
@@ -56,7 +57,7 @@ const firefoxRulesStorageImpl = (function (initialAPI) {
                 let lines = [];
                 const { result } = request;
                 if (result && result.value) {
-                    lines = result.value.split(/\r?\n/);
+                    lines = result.value.split(RESULT_SPLIT_PATTERN);
                 }
                 resolve(lines);
             };

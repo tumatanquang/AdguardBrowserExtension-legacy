@@ -123,7 +123,7 @@ const Filters = observer(() => {
         const searchData = matchedFilters
             .reduce((acc, filter) => {
                 const { groupId } = filter;
-                if (typeof acc[groupId] === 'undefined') {
+                if (acc[groupId] === undefined) {
                     acc[groupId] = [filter];
                 }
                 else {

@@ -606,10 +606,8 @@ const webrequestInit = function () {
                 handlerBehaviorTimeout = setTimeout(() => {
                     handlerBehaviorTimeout = null;
                     backgroundPage.webRequest.handlerBehaviorChanged();
-                }, 3 * 1000);
+                }, 3000);
                 break;
-            default:
-                // do noting
         }
     });
 
@@ -769,7 +767,6 @@ const webrequestInit = function () {
              * {@link https://github.com/seanl-adg/InlineResourceLiteral/blob/master/index.js#L136}
              * {@link https://github.com/joliss/js-string-escape/blob/master/index.js}
              */
-            const reJsEscape = /["'\\\n\r\u2028\u2029]/g;
             function escapeJs(match) {
                 switch (match) {
                     case '"':
@@ -786,8 +783,6 @@ const webrequestInit = function () {
                         return '\\u2028';
                     case '\u2029':
                         return '\\u2029';
-                    default:
-                        // do nothing
                 }
             }
 
@@ -797,6 +792,7 @@ const webrequestInit = function () {
              * https://bugs.chromium.org/p/project-zero/issues/detail?id=1225&desc=6
              */
             const variableName = `scriptExecuted${Date.now()}`;
+            const reJsEscape = /["'\\\n\r\u2028\u2029]/g;
 
             function buildScriptText(scriptText) {
                 if (!scriptText) {
@@ -885,7 +881,6 @@ const webrequestInit = function () {
                 return false;
             }
 
-            const REQUEST_FILTER_READY_TIMEOUT = 100;
             /**
              * Prepares injection content (scripts and css) for a given frame.
              * @param {RequestDetails} details
@@ -952,6 +947,7 @@ const webrequestInit = function () {
                 return injection && injection.url === url;
             }
 
+            const REQUEST_FILTER_READY_TIMEOUT = 100;
             /**
              * Injects necessary CSS and scripts into the web page.
              * @param {RequestDetails} details Details about the navigation event
@@ -1080,11 +1076,11 @@ const webrequestInit = function () {
                         return;
                     }
                     const jsScriptText = buildScriptText(result.scripts);
-                    const cssText = buildCssText(result.selectors);
                     if (jsScriptText) {
                         // grep "localScriptRulesService" for details about script source
                         tabsApi.executeScriptCode(tabId, frameId, jsScriptText);
                     }
+                    const cssText = buildCssText(result.selectors);
                     if (cssText) {
                         tabsApi.insertCssCode(tabId, frameId, cssText);
                     }

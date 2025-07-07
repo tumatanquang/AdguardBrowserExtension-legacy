@@ -29,12 +29,10 @@ export const ElementCollapser = (function () {
         }
         const string = String(value);
         const { length } = string;
-        let index = -1;
-        let codeUnit;
         let result = '';
-        const firstCodeUnit = string.charCodeAt(0);
-        while (++index < length) {
-            codeUnit = string.charCodeAt(index);
+        const isHyphenMinus = string.charCodeAt(0) === 0x002D;
+        for (let index = -1; ++index < length;) {
+            const codeUnit = string.charCodeAt(index);
             // Note: there’s no need to special-case astral symbols, surrogate
             // pairs, or lone surrogates.
 
@@ -45,8 +43,7 @@ export const ElementCollapser = (function () {
                 continue;
             }
 
-            if (
-                // If the character is in the range [\1-\1F] (U+0001 to U+001F) or is
+            if (// If the character is in the range [\1-\1F] (U+0001 to U+001F) or is
                 // U+007F, […]
                 (codeUnit >= 0x0001 && codeUnit <= 0x001F) || codeUnit === 0x007F
                 // If the character is the first character and is in the range [0-9]
@@ -57,7 +54,7 @@ export const ElementCollapser = (function () {
                 || (
                     index === 1
                     && codeUnit >= 0x0030 && codeUnit <= 0x0039
-                    && firstCodeUnit === 0x002D
+                    && isHyphenMinus
                 )
             ) {
                 // https://drafts.csswg.org/cssom/#escape-a-character-as-code-point
@@ -65,8 +62,7 @@ export const ElementCollapser = (function () {
                 continue;
             }
 
-            if (
-                // If the character is the first character and is a `-` (U+002D), and
+            if (// If the character is the first character and is a `-` (U+002D), and
                 // there is no second character, […]
                 index === 0
                 && length === 1
@@ -80,8 +76,7 @@ export const ElementCollapser = (function () {
             // greater than or equal to U+0080, is `-` (U+002D) or `_` (U+005F), or
             // is in one of the ranges [0-9] (U+0030 to U+0039), [A-Z] (U+0041 to
             // U+005A), or [a-z] (U+0061 to U+007A), […]
-            if (
-                codeUnit >= 0x0080
+            if (codeUnit >= 0x0080
                 || codeUnit === 0x002D
                 || codeUnit === 0x005F
                 || (codeUnit >= 0x0030 && codeUnit <= 0x0039)
@@ -176,7 +171,7 @@ export const ElementCollapser = (function () {
      */
     const isCollapsed = function (element) {
         const computedStyle = window.getComputedStyle(element);
-        return (computedStyle && computedStyle.display === 'none');
+        return computedStyle && computedStyle.display === 'none';
     };
 
     /**
@@ -212,13 +207,16 @@ export const ElementCollapser = (function () {
             return;
         }
 
-        let cssProperty = 'display';
-        let cssValue = 'none';
-        const cssPriority = 'important';
+        let cssProperty;
+        let cssValue;
 
         if (tagName === 'frame') {
             cssProperty = 'visibility';
             cssValue = 'hidden';
+        }
+        else {
+            cssProperty = 'display';
+            cssValue = 'none';
         }
 
         const elementStyle = element.style;
@@ -228,8 +226,8 @@ export const ElementCollapser = (function () {
         // <input type="image"> elements try to load their image again
         // when the "display" CSS property is set. So we have to check
         // that it isn't already collapsed to avoid an infinite recursion.
-        if (elCssValue !== cssValue || elCssPriority !== cssPriority) {
-            elementStyle.setProperty(cssProperty, cssValue, cssPriority);
+        if (elCssValue !== cssValue || elCssPriority !== 'important') {
+            elementStyle.setProperty(cssProperty, cssValue, 'important');
         }
     };
 

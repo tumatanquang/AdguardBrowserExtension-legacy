@@ -29,14 +29,12 @@ export const I18nHelper = {
     },
 
     processString(str, element) {
-        let el;
-
-        const match1 = /^([^]*?)<(a|strong|span|i)([^>]*)>(.*?)<\/\2>([^]*)$/m.exec(str);
-        const match2 = /^([^]*?)<(br|input)([^>]*)\/?>([^]*)$/m.exec(str);
+        const match1 = PROCESS_STRING_MATCH1_PATTERN.exec(str);
+        const match2 = PROCESS_STRING_MATCH2_PATTERN.exec(str);
         if (match1) {
             this.processString(match1[1], element);
 
-            el = this.createElement(match1[2], match1[3]);
+            const el = this.createElement(match1[2], match1[3]);
 
             this.processString(match1[4], el);
             element.appendChild(el);
@@ -46,13 +44,14 @@ export const I18nHelper = {
         else if (match2) {
             this.processString(match2[1], element);
 
-            el = this.createElement(match2[2], match2[3]);
+            const el = this.createElement(match2[2], match2[3]);
             element.appendChild(el);
 
             this.processString(match2[4], element);
         }
         else {
-            element.appendChild(document.createTextNode(str.replace(/&nbsp;/g, '\u00A0')));
+            const nodeValue = str.replace(PROCESS_STRING_NON_BREAKING_SPACE_PATTERN, '\u00A0');
+            element.appendChild(document.createTextNode(nodeValue));
         }
     },
 
@@ -62,7 +61,7 @@ export const I18nHelper = {
             return el;
         }
 
-        const attrs = attributes.split(/([a-z]+='[^']+')/);
+        const attrs = attributes.split(CREATE_ELEMENT_SPLIT_PATTERN);
         for (let i = 0; i < attrs.length; ++i) {
             const attr = attrs[i].trim();
             if (!attr) {
@@ -83,3 +82,7 @@ export const I18nHelper = {
         return el;
     }
 };
+const PROCESS_STRING_MATCH1_PATTERN = /^([^]*?)<(a|strong|span|i)([^>]*)>(.*?)<\/\2>([^]*)$/m;
+const PROCESS_STRING_MATCH2_PATTERN = /^([^]*?)<(br|input)([^>]*)\/?>([^]*)$/m;
+const PROCESS_STRING_NON_BREAKING_SPACE_PATTERN = /&nbsp;/g;
+const CREATE_ELEMENT_SPLIT_PATTERN = /([a-z]+='[^']+')/;

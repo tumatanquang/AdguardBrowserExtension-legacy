@@ -1056,7 +1056,10 @@ ace.define('ace/mode/folding/cstyle', [], (require, exports, module) => {
                 if (range && !range.isMultiLine()) {
                     if (forceMultiline) {
                         range = this.getSectionRange(session, row);
-                    } else if (foldStyle != 'all') range = null;
+                    }
+                    else if (foldStyle !== 'all') {
+                        range = null;
+                    }
                 }
 
                 return range;
@@ -1074,15 +1077,16 @@ ace.define('ace/mode/folding/cstyle', [], (require, exports, module) => {
             }
         };
 
+        const NOT_WHITESPACE_SEARCH_PATTERN = /\S/;
         this.getSectionRange = function (session, row) {
             let line = session.getLine(row);
-            const startIndent = line.search(/\S/);
+            const startIndent = line.search(NOT_WHITESPACE_SEARCH_PATTERN);
             const startRow = row;
             const startColumn = line.length;
             let endRow = ++row;
             for (const maxRow = session.getLength(); ++row < maxRow;) {
                 line = session.getLine(row);
-                const indent = line.search(/\S/);
+                const indent = line.search(NOT_WHITESPACE_SEARCH_PATTERN);
                 if (indent < 0) continue;
                 if (startIndent > indent) break;
                 const subRange = this.getFoldWidgetRange(session, 'all', row);
@@ -1090,9 +1094,11 @@ ace.define('ace/mode/folding/cstyle', [], (require, exports, module) => {
                 if (subRange) {
                     if (subRange.start.row <= startRow) {
                         break;
-                    } else if (subRange.isMultiLine()) {
+                    }
+                    else if (subRange.isMultiLine()) {
                         row = subRange.end.row;
-                    } else if (startIndent == indent) {
+                    }
+                    else if (startIndent == indent) {
                         break;
                     }
                 }
@@ -1101,15 +1107,16 @@ ace.define('ace/mode/folding/cstyle', [], (require, exports, module) => {
 
             return new Range(startRow, startColumn, endRow, session.getLine(endRow).length);
         };
+        const WHITESPACE_SEARCH_PATTERN = /\s*$/;
+        const COMMENT_REGION_BLOCK_PATTERN = /^\s*(?:\/\*|\/\/|--)#?(end)?region\b/;
         this.getCommentRegionBlock = function (session, line, row) {
-            const startColumn = line.search(/\s*$/);
+            const startColumn = line.search(WHITESPACE_SEARCH_PATTERN);
             const startRow = row;
 
-            const re = /^\s*(?:\/\*|\/\/|--)#?(end)?region\b/;
             let depth = 1;
             for (const maxRow = session.getLength(); ++row < maxRow;) {
                 line = session.getLine(row);
-                const m = re.exec(line);
+                const m = COMMENT_REGION_BLOCK_PATTERN.exec(line);
                 if (!m) continue;
                 if (m[1]) --depth;
                 else ++depth;

@@ -65,8 +65,8 @@ export const init = () => {
             showDenyButton: true,
             confirmButtonText: i18n.getMessage('yes_button_title'),
             denyButtonText: i18n.getMessage('no_button_title'),
-            confirmButtonColor: '#68bc86',
-            denyButtonColor: '#bf4829',
+            confirmButtonColor: '#68BC86',
+            denyButtonColor: '#BF4829',
             showLoaderOnConfirm: true,
             preConfirm: async () => {
                 nanobar.go(50);

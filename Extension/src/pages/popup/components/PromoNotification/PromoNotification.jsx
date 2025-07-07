@@ -28,14 +28,12 @@ export const PromoNotification = observer(() => {
         return null;
     }
 
-    const closeTimeoutMs = 300;
-
     const handleNotificationClose = (e) => {
         setNotificationOnClose(true);
         setTimeout(() => {
             e.preventDefault();
             closePromoNotification();
-        }, closeTimeoutMs);
+        }, 300);
     };
 
     const handleNotificationClick = (e) => {

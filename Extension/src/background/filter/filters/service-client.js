@@ -154,10 +154,7 @@ export const backend = (function () {
 
                 const errorCallbackWrapper = (errorMessage) => {
                     return (e) => {
-                        let errorText = errorMessage;
-                        if (e?.message) {
-                            errorText = `${errorText}: ${e?.message}`;
-                        }
+                        const errorText = e?.message ? `${errorText}: ${e?.message}` : errorMessage;
                         const error = new Error(`Error: "${errorText}", statusText: ${request.statusText}`);
                         reject(error);
                     };

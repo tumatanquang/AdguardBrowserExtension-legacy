@@ -153,8 +153,6 @@ export const filtersState = (function () {
             case listeners.FILTER_GROUP_ENABLE_DISABLE:
                 updateGroupState(payload);
                 break;
-            default:
-                break;
         }
     });
 

@@ -566,7 +566,6 @@ export const antiBannerService = (() => {
                 case listeners.FILTER_ENABLE_DISABLE:
                     processFilterEvent(event, filter, rules);
                     break;
-                default: break;
             }
         });
 
@@ -574,8 +573,6 @@ export const antiBannerService = (() => {
             switch (event) {
                 case listeners.FILTER_GROUP_ENABLE_DISABLE:
                     processGroupEvent(event, group);
-                    break;
-                default:
                     break;
             }
         });
@@ -600,7 +597,6 @@ export const antiBannerService = (() => {
             const eventType = event.event;
             const eventRules = event.rules;
 
-            // eslint-disable-next-line default-case
             switch (eventType) {
                 case listeners.ADD_RULES:
                     // ditch empty first editor line while adding rule
@@ -659,8 +655,6 @@ export const antiBannerService = (() => {
                     break;
                 case settings.USER_FILTER_ENABLED:
                     await createRequestFilter();
-                    break;
-                default:
                     break;
             }
         });

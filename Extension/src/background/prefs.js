@@ -43,26 +43,23 @@ export const prefs = (() => {
 
         get browser() {
             return lazyGet(Prefs, 'browser', () => {
-                let browser;
                 if (isYaBrowser) {
-                    browser = 'YaBrowser';
+                    return 'YaBrowser';
                 }
-                else if (isEdge) {
-                    browser = 'Edge';
+                if (isEdge) {
+                    return 'Edge';
                 }
-                else if (isEdgeChromium) {
-                    browser = 'EdgeChromium';
+                if (isEdgeChromium) {
+                    return 'EdgeChromium';
                 }
-                else if (isOpera) {
-                    browser = 'Opera';
+                if (isOpera) {
+                    return 'Opera';
                 }
-                else if (isFirefox) {
-                    browser = 'Firefox';
+                if (isFirefox) {
+                    return 'Firefox';
                 }
-                else {
-                    browser = 'Chrome';
-                }
-                return browser;
+
+                return 'Chrome';
             });
         },
 
@@ -133,9 +130,9 @@ export const prefs = (() => {
         // Get the global extension object (browser for FF, chrome for Chromium)
         const browser = window.browser || window.chrome;
 
-        const responseContentFilteringSupported = (browser !== undefined
+        const responseContentFilteringSupported = browser !== undefined
             && browser.webRequest !== undefined
-            && browser.webRequest.filterResponseData !== undefined);
+            && browser.webRequest.filterResponseData !== undefined;
 
         const canUseInsertCSSAndExecuteScript = browser.tabs?.insertCSS !== undefined
             && browser.tabs?.executeScript !== undefined;

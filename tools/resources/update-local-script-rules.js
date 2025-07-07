@@ -32,8 +32,11 @@ const isInArray = (arr, domainsToCheck, scriptToCheck) => {
     return false;
 };
 
+const BROWSER_PATTERN = '%browser';
+const LINE_SEPARATOR = '\n';
+const JAVASCRIPT_PATTERN = '#%#';
 const updateLocalScriptRulesForBrowser = async (browser) => {
-    const folder = FILTERS_DEST.replace('%browser', browser);
+    const folder = FILTERS_DEST.replace(BROWSER_PATTERN, browser);
     const rules = {
         comment: LOCAL_SCRIPT_RULES_COMMENT,
         rules: []
@@ -43,12 +46,12 @@ const updateLocalScriptRulesForBrowser = async (browser) => {
     for (const filterId of ADGUARD_DOWNLOAD_UPDATE_FILTERS_IDS) {
         // eslint-disable-next-line no-await-in-loop
         const filters = (await fs.readFile(`${folder}/filter_${filterId}.txt`)).toString();
-        const lines = filters.split('\n');
+        const lines = filters.split(LINE_SEPARATOR);
 
         lines.forEach((line) => {
             line = line.trim();
-            if (line && line[0] !== '!' && line.indexOf('#%#') >= 0) {
-                const m = line.split('#%#');
+            if (line && line[0] !== '!' && line.indexOf(JAVASCRIPT_PATTERN) >= 0) {
+                const m = line.split(JAVASCRIPT_PATTERN);
                 m[0] = m[0] === '' ? '<any>' : m[0];
                 // check that rule is not in array already
                 if (!isInArray(rules.rules, m[0], m[1])) {
@@ -62,7 +65,7 @@ const updateLocalScriptRulesForBrowser = async (browser) => {
     }
 
     await fs.writeFile(
-        `${FILTERS_DEST.replace('%browser', browser)}/local_script_rules.json`,
+        `${FILTERS_DEST.replace(BROWSER_PATTERN, browser)}/local_script_rules.json`,
         JSON.stringify(rules, null, 4)
     );
 };

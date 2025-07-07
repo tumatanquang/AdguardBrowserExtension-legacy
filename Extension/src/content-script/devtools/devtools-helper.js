@@ -33,7 +33,7 @@ export const DevToolsHelper = (function () {
     const applyPreview = function (options) {
         const { ruleText } = options;
 
-        const head = document.getElementsByTagName('head')[0];
+        const [head] = document.getElementsByTagName('head');
         if (!head) {
             return;
         }
@@ -55,7 +55,7 @@ export const DevToolsHelper = (function () {
      * Cancel early applied preview
      */
     const cancelPreview = function () {
-        const head = document.getElementsByTagName('head')[0];
+        const [head] = document.getElementsByTagName('head');
         if (!head) {
             return;
         }

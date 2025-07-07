@@ -55,6 +55,7 @@ export const cssService = (() => {
     const INJECT_HIT_START = " content: 'adguard";
     const HIT_SEP = encodeURIComponent(';');
     const HIT_END = "' !important;}\r\n";
+    const ESCAPE_RULE_REPLACE_PATTERN = /['()]/g;
 
     /**
      * Urlencodes rule text.
@@ -63,7 +64,7 @@ export const cssService = (() => {
      * @return {string}
      */
     const escapeRule = ruleText => encodeURIComponent(ruleText)
-        .replace(/['()]/g, match => ({ "'": '%27', '(': '%28', ')': '%29' }[match]));
+        .replace(ESCAPE_RULE_REPLACE_PATTERN, match => ({ "'": '%27', '(': '%28', ')': '%29' }[match]));
 
     /**
      * Patch rule selector adding adguard mark rule info in the content attribute
@@ -83,6 +84,7 @@ export const cssService = (() => {
         return result.join('');
     };
 
+    const CONTENT_ATTRIBUTE_PATTERN = /[{;"(]\s*content\s*:/gi;
     /**
      * Patch rule selector adding adguard mark and rule info in the content attribute
      * Example:
@@ -94,8 +96,7 @@ export const cssService = (() => {
         const result = [];
         const ruleContent = rule.getContent();
         // if rule text has content attribute we don't add rule marker
-        const contentAttributeRegex = /[{;"(]\s*content\s*:/gi;
-        if (contentAttributeRegex.test(ruleContent)) {
+        if (CONTENT_ATTRIBUTE_PATTERN.test(ruleContent)) {
             return ruleContent;
         }
 
