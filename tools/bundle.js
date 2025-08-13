@@ -91,18 +91,15 @@ const runBuild = async (tasks) => {
 
 const mainBuild = async () => {
     switch (process.env.BUILD_ENV) {
-        case ENVS.DEV: {
+        case ENVS.DEV:
             await runBuild(devPlan);
             break;
-        }
-        case ENVS.BETA: {
+        case ENVS.BETA:
             await runBuild(betaPlan);
             break;
-        }
-        case ENVS.RELEASE: {
+        case ENVS.RELEASE:
             await runBuild(releasePlan);
             break;
-        }
         default:
             throw new Error('Provide BUILD_ENV to choose correct build plan');
     }

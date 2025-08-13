@@ -18,7 +18,7 @@
 /**
  * DevTools rules constructor helper
  */
-export const DevToolsRulesConstructor = (function () {
+export const DevToolsRulesConstructor = (() => {
     const CSS_RULE_MARK = '##';
     const RULE_OPTIONS_MARK = '$';
 
@@ -35,7 +35,7 @@ export const DevToolsRulesConstructor = (function () {
      * @param excludeId Omit element id in selector
      * @returns {string}
      */
-    const makeDefaultCssFilter = function (element, classList, excludeTagName, excludeId) {
+    const makeDefaultCssFilter = (element, classList, excludeTagName, excludeId) => {
         let cssSelector = excludeTagName ? '' : element.tagName.toLowerCase();
         if (element.id && !excludeId) {
             cssSelector += `#${CSS.escape(element.id)}`;
@@ -51,7 +51,7 @@ export const DevToolsRulesConstructor = (function () {
      * @param options Construct options. For example: {excludeTagName: false, excludeId: false, classList: []}
      * @returns {string}
      */
-    const makeCssNthChildFilter = function (element, options) {
+    const makeCssNthChildFilter = (element, options) => {
         options = options || {};
 
         const { classList } = options;
@@ -75,8 +75,9 @@ export const DevToolsRulesConstructor = (function () {
                 path.unshift(bodySelector);
                 break;
             }
-            if (nodeName === 'BODY') {
-                break;
+            switch (nodeName) {
+                case 'BODY':
+                    break;
             }
             if (el.id) {
                 /**
@@ -107,9 +108,9 @@ export const DevToolsRulesConstructor = (function () {
 
                 let cldCount = 0;
                 if (el.parentNode) {
-                    const elChildNodes = el.parentNode.childNodes;
-                    for (let i = 0; i < elChildNodes.length; ++i) {
-                        if (elChildNodes[i].nodeType === 1) {
+                    const { childNodes } = el.parentNode;
+                    for (let i = 0; i < childNodes.length; ++i) {
+                        if (childNodes[i].nodeType === 1) {
                             ++cldCount;
                         }
                     }
@@ -157,7 +158,7 @@ export const DevToolsRulesConstructor = (function () {
      * @param classList
      * @returns {string}
      */
-    const constructClassCssSelectorByAND = function (classList) {
+    const constructClassCssSelectorByAND = (classList) => {
         const selectors = [];
         if (classList) {
             for (let i = 0; i < classList.length; ++i) {
@@ -172,7 +173,7 @@ export const DevToolsRulesConstructor = (function () {
      * @param classList
      * @returns {string}
      */
-    const constructClassCssSelectorByOR = function (classList) {
+    const constructClassCssSelectorByOR = (classList) => {
         const selectors = [];
         if (classList) {
             for (let i = 0; i < classList.length; ++i) {
@@ -190,7 +191,7 @@ export const DevToolsRulesConstructor = (function () {
      * @param classList Override element classes (If classList is null, element classes will be used)
      * @returns {string}
      */
-    const makeSimilarCssFilter = function (element, classList) {
+    const makeSimilarCssFilter = (element, classList) => {
         return constructClassCssSelectorByOR(classList || element.classList);
     };
 
@@ -201,7 +202,7 @@ export const DevToolsRulesConstructor = (function () {
      * For example: {cssSelectorType: 'STRICT_FULL', excludeTagName: false, excludeId: false, classList: []}
      * @returns {string}
      */
-    const constructCssRuleText = function (element, options) {
+    const constructCssRuleText = (element, options) => {
         if (!element) {
             return;
         }
@@ -225,7 +226,7 @@ export const DevToolsRulesConstructor = (function () {
         return selector ? CSS_RULE_MARK + selector : '';
     };
 
-    const isValidUrl = function (value) {
+    const isValidUrl = (value) => {
         if (value) {
             linkHelper.href = value;
             if (linkHelper.hostname) {
@@ -236,27 +237,27 @@ export const DevToolsRulesConstructor = (function () {
         return false;
     };
 
-    const haveUrlBlockParameter = function (element) {
+    const haveUrlBlockParameter = (element) => {
         const value = getUrlBlockAttribute(element);
         return value && value !== '';
     };
 
-    const haveClassAttribute = function (element) {
+    const haveClassAttribute = (element) => {
         return element.classList && element.classList.length !== 0;
     };
 
-    const haveIdAttribute = function (element) {
+    const haveIdAttribute = (element) => {
         return element.id && element.id.trim() !== '';
     };
 
     const CROP_DOMAIN_PATTERN = /:\d+/;
-    const cropDomain = function (url) {
+    const cropDomain = (url) => {
         const domain = getUrl(url).host;
         return domain.replace('www.', '').replace(CROP_DOMAIN_PATTERN, '');
     };
 
     const GET_URL_PATTERN = /^(?:(?:[^:/\\?#]+):)?(?:\/\/((?:[^:/\\?#]*)(?::(?:[^/\\?#]*))?))?([^\\?#]*)(?:\\?(?:[^#]*))?(?:#(?:.*))?$/;
-    const getUrl = function (url) {
+    const getUrl = (url) => {
         const parts = GET_URL_PATTERN.exec(url);
 
         return {
@@ -265,8 +266,8 @@ export const DevToolsRulesConstructor = (function () {
         };
     };
 
-    const BLOCK_URL_TEXT_PATTERN = /^http:\/\/(www\.)?/;
-    const constructUrlBlockRuleText = function (element, urlBlockAttribute, oneDomain, domain) {
+    const BLOCK_URL_TEXT_PATTERN = /^http:\/\/(?:www\.)?/;
+    const constructUrlBlockRuleText = (element, urlBlockAttribute, oneDomain, domain) => {
         if (!urlBlockAttribute) {
             return null;
         }
@@ -283,7 +284,7 @@ export const DevToolsRulesConstructor = (function () {
         return blockUrlRuleText;
     };
 
-    const getUrlBlockAttribute = function (element) {
+    const getUrlBlockAttribute = (element) => {
         if (!element || !element.getAttribute) {
             return null;
         }
@@ -304,7 +305,7 @@ export const DevToolsRulesConstructor = (function () {
      *
      * @param element
      */
-    const getElementInfo = function (element) {
+    const getElementInfo = (element) => {
         // Convert attributes to array
         const attributes = [];
         const elementAttributes = element.attributes;
@@ -335,7 +336,7 @@ export const DevToolsRulesConstructor = (function () {
      * @param ruleText rule text
      * @returns {string} css style selector
      */
-    const constructRuleCssSelector = function (ruleText) {
+    const constructRuleCssSelector = (ruleText) => {
         if (!ruleText) {
             return null;
         }
@@ -375,7 +376,7 @@ export const DevToolsRulesConstructor = (function () {
      * @param options
      * @returns {*}
      */
-    const constructRuleText = function (element, options) {
+    const constructRuleText = (element, options) => {
         const croppedDomain = cropDomain(options.url);
 
         const { ruleType } = options;

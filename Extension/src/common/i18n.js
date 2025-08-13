@@ -26,23 +26,27 @@ const i18nPatched = (() => {
 
     function init() {
         document.addEventListener('DOMContentLoaded', () => {
-            [].slice.call(document.querySelectorAll('[i18n]'))
-                .forEach((el) => {
-                    const message = i18n.getMessage(el.getAttribute('i18n'));
-                    I18nHelper.translateElement(el, message);
-                });
-            [].slice.call(document.querySelectorAll('[i18n-plhr]'))
-                .forEach((el) => {
-                    el.setAttribute('placeholder', i18n.getMessage(el.getAttribute('i18n-plhr')));
-                });
-            [].slice.call(document.querySelectorAll('[i18n-href]'))
-                .forEach((el) => {
-                    el.setAttribute('href', i18n.getMessage(el.getAttribute('i18n-href')));
-                });
-            [].slice.call(document.querySelectorAll('[i18n-title]'))
-                .forEach((el) => {
-                    el.setAttribute('title', i18n.getMessage(el.getAttribute('i18n-title')));
-                });
+            const i18nElements = document.querySelectorAll('[i18n]');
+            for (let i = 0; i < i18nElements.length; ++i) {
+                const el = i18nElements[i];
+                const message = i18n.getMessage(el.getAttribute('i18n'));
+                I18nHelper.translateElement(el, message);
+            }
+            const i18nPlhr = document.querySelectorAll('[i18n-plhr]');
+            for (let i = 0; i < i18nPlhr.length; ++i) {
+                const el = i18nPlhr[i];
+                el.setAttribute('placeholder', i18n.getMessage(el.getAttribute('i18n-plhr')));
+            }
+            const i18nHref = document.querySelectorAll('[i18n-href]');
+            for (let i = 0; i < i18nHref.length; ++i) {
+                const el = i18nHref[i];
+                el.setAttribute('href', i18n.getMessage(el.getAttribute('i18n-href')));
+            }
+            const i18nTitle = document.querySelectorAll('[i18n-title]');
+            for (let i = 0; i < i18nTitle.length; ++i) {
+                const el = i18nTitle[i];
+                el.setAttribute('title', i18n.getMessage(el.getAttribute('i18n-title')));
+            }
         });
     }
 

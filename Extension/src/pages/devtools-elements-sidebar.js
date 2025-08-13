@@ -1,6 +1,7 @@
 /* eslint-disable no-nested-ternary */
 
 import { MESSAGE_TYPES } from '../common/constants';
+import { APPEARANCE_THEMES } from './constants';
 
 /**
  * This file is part of Adguard Browser Extension (https://github.com/AdguardTeam/AdguardBrowserExtension).
@@ -22,12 +23,12 @@ import { MESSAGE_TYPES } from '../common/constants';
 const browser = window.browser || chrome;
 
 export const devtoolsElementsSidebar = (() => {
-    const initPanel = function () {
+    const initPanel = () => {
         initTheme();
         initElements();
         bindEvents();
 
-        const onElementSelected = function () {
+        const onElementSelected = () => {
             browser.devtools.inspectedWindow.eval('DevToolsRulesConstructor.getElementInfo($0)', {
                 useContentScriptContext: true
             }, (info) => {
@@ -53,7 +54,7 @@ export const devtoolsElementsSidebar = (() => {
             });
         };
 
-        const onPageChanged = function () {
+        const onPageChanged = () => {
             document.getElementById('preview-rule-button').value = 'Preview';
             delete window.adguardDevToolsPreview;
         };
@@ -66,14 +67,16 @@ export const devtoolsElementsSidebar = (() => {
         onElementSelected();
     };
 
-    const initTheme = function () {
+    const initTheme = () => {
         const theme = browser.devtools.panels.themeName;
-        if (theme === 'dark') {
-            document.body.classList.add('-theme-with-dark-background');
+        switch (theme) {
+            case APPEARANCE_THEMES.DARK:
+                document.body.classList.add('-theme-with-dark-background');
+                break;
         }
     };
 
-    const initElements = function () {
+    const initElements = () => {
         document.querySelector('#block-by-url-checkbox').checked = false;
         document.querySelector('#create-full-css-path').checked = false;
         document.querySelector('#one-domain-checkbox').checked = true;
@@ -85,13 +88,13 @@ export const devtoolsElementsSidebar = (() => {
         }
     };
 
-    const updateRule = function () {
-        getInspectedPageUrl((url) => {
+    const updateRule = () => {
+        getInspectedPageUrl(url => {
             updateFilterRuleInput(window.selectedElementInfo, url);
         });
     };
 
-    const bindEvents = function () {
+    const bindEvents = () => {
         const previewRuleButton = document.getElementById('preview-rule-button');
         previewRuleButton.addEventListener('click', (e) => {
             e.preventDefault();
@@ -127,43 +130,47 @@ export const devtoolsElementsSidebar = (() => {
         });
 
         const updateRuleBlocks = document.querySelectorAll('.update-rule-block');
-        updateRuleBlocks.forEach((block) => {
+        for (let i = 0; i < updateRuleBlocks.length; ++i) {
+            const block = updateRuleBlocks[i];
             block.addEventListener('click', () => {
                 updatePanelElements();
                 updateRule();
             });
-        });
+        }
 
         document.getElementById('select-attributes-checkbox').addEventListener('click', (e) => {
             const { checked } = e.currentTarget;
 
             const attributeCheckBoxes = document.querySelectorAll('.attribute-check-box');
-            attributeCheckBoxes.forEach((el) => {
+            for (let i = 0; i < attributeCheckBoxes.length; ++i) {
+                const el = attributeCheckBoxes[i];
                 el.checked = checked;
-            });
+            }
 
             updatePanelElements();
             updateRule();
         });
     };
 
-    const updatePanelElements = function () {
+    const updatePanelElements = () => {
         const checkboxes = document.querySelectorAll('#one-domain-checkbox, #create-full-css-path, .attribute-check-box');
 
         // All checkboxes should be disabled if block by url is checked
         if (document.querySelector('#block-by-url-checkbox').checked) {
-            checkboxes.forEach((checkbox) => {
+            for (let i = 0; i < checkboxes.length; ++i) {
+                const checkbox = checkboxes[i];
                 checkbox.setAttribute('disabled', 'disabled');
-            });
+            }
         }
         else {
-            checkboxes.forEach((checkbox) => {
+            for (let i = 0; i < checkboxes.length; ++i) {
+                const checkbox = checkboxes[i];
                 checkbox.removeAttribute('disabled');
-            });
+            }
         }
     };
 
-    const handleShowBlockSettings = function (showBlockByUrl, createFullCssPath) {
+    const handleShowBlockSettings = (showBlockByUrl, createFullCssPath) => {
         if (showBlockByUrl) {
             document.querySelector('#block-by-url-checkbox-block').style.display = 'block';
         }
@@ -181,7 +188,7 @@ export const devtoolsElementsSidebar = (() => {
         }
     };
 
-    const setupAttributesInfo = function (info) {
+    const setupAttributesInfo = (info) => {
         const placeholder = document.getElementById('attributes-block');
 
         while (placeholder.firstChild) {
@@ -191,13 +198,11 @@ export const devtoolsElementsSidebar = (() => {
         const createAttributeElement = (attributeName, attributeValue, defaultChecked) => {
             const checked = defaultChecked ? 'checked="true"' : '';
 
-            const elHtml = `
-                    <li class="parent">
-                        <input class="enabled-button attribute-check-box" type="checkbox" id="attribute-check-box-${attributeName}" ${checked}>
-                        <span class="webkit-css-property">${attributeName}</span>:
-                        <span class="value attribute-check-box-value">${attributeValue}</span>
-                    </li>
-            `;
+            const elHtml = `<li class="parent">
+                <input class="enabled-button attribute-check-box" type="checkbox" id="attribute-check-box-${attributeName}" ${checked}>
+                <span class="webkit-css-property">${attributeName}</span>:
+                <span class="value attribute-check-box-value">${attributeValue}</span>
+            </li>`;
 
             const tmpEl = document.createElement('div');
             tmpEl.innerHTML = elHtml;
@@ -208,8 +213,9 @@ export const devtoolsElementsSidebar = (() => {
             placeholder.appendChild(createAttributeElement('tag', info.tagName.toLowerCase(), true));
         }
 
-        for (let i = 0; i < info.attributes.length; ++i) {
-            const attribute = info.attributes[i];
+        const { attributes } = info;
+        for (let i = 0; i < attributes.length; ++i) {
+            const attribute = attributes[i];
 
             if (attribute.name === 'class' && attribute.value) {
                 const split = attribute.value.split(' ');
@@ -235,13 +241,13 @@ export const devtoolsElementsSidebar = (() => {
         }
     };
 
-    const getInspectedPageUrl = function (callback) {
+    const getInspectedPageUrl = (callback) => {
         browser.devtools.inspectedWindow.eval('document.location && document.location.href', (result) => {
             callback(result);
         });
     };
 
-    const updateFilterRuleInput = function (info, url) {
+    const updateFilterRuleInput = (info, url) => {
         const isBlockByUrl = document.querySelector('#block-by-url-checkbox').checked;
         const createFullCssPath = document.querySelector('#create-full-css-path').checked;
         const isBlockOneDomain = document.querySelector('#one-domain-checkbox').checked;
@@ -250,26 +256,26 @@ export const devtoolsElementsSidebar = (() => {
         let includeElementId = true;
         const selectedClasses = [];
         let attributesSelector = '';
-        document.querySelectorAll('.attribute-check-box').forEach((el) => {
-            if (el) {
-                const attrName = el.id.substring('attribute-check-box-'.length);
-                if (attrName === 'tag') {
-                    includeTagName = el.checked;
+        const checkboxes = document.querySelectorAll('.attribute-check-box');
+        for (let i = 0; i < checkboxes.length; ++i) {
+            const el = checkboxes[i];
+            const attrName = el.id.substring('attribute-check-box-'.length);
+            if (attrName === 'tag') {
+                includeTagName = el.checked;
+            }
+            else if (attrName === 'id') {
+                includeElementId = el.checked;
+            }
+            else if (el.checked) {
+                const attrValue = el.parentNode.querySelector('.attribute-check-box-value').innerText;
+                if (attrName === 'class') {
+                    selectedClasses.push(attrValue);
                 }
-                else if (attrName === 'id') {
-                    includeElementId = el.checked;
-                }
-                else if (el.checked) {
-                    const attrValue = el.parentNode.querySelector('.attribute-check-box-value').innerText;
-                    if (attrName === 'class') {
-                        selectedClasses.push(attrValue);
-                    }
-                    else {
-                        attributesSelector += `[${attrName}="${attrValue}"]`;
-                    }
+                else {
+                    attributesSelector += `[${attrName}="${attrValue}"]`;
                 }
             }
-        });
+        }
 
         const options = {
             urlMask: info.urlBlockAttributeValue,

@@ -252,7 +252,7 @@ export const notifications = (function () {
      * If it was not shown yet, initialized with the current time.
      */
     const getLastNotificationTime = function () {
-        let lastTime = localStorage.getItem(LAST_NOTIFICATION_TIME) || 0;
+        let lastTime = +localStorage.getItem(LAST_NOTIFICATION_TIME);
         if (lastTime === 0) {
             lastTime = Date.now();
             localStorage.setItem(LAST_NOTIFICATION_TIME, lastTime);
@@ -300,10 +300,7 @@ export const notifications = (function () {
 
             notification.text = getNotificationText(notification);
 
-            const to = new Date(notification.to).getTime();
-            const expired = Date.now() > to;
-
-            if (!notification.text || expired) {
+            if (!notification.text || Date.now() > new Date(notification.to).getTime()) {
                 // Remove expired and invalid
                 delete notifications[notificationKey];
             }
@@ -375,18 +372,15 @@ export const notifications = (function () {
         // Update the last notification check time
         notificationCheckTime = currentTime;
 
-        const notificationsKeys = Object.keys(notifications);
         const viewedNotifications = localStorage.getItem(VIEWED_NOTIFICATIONS) || [];
-
+        const notificationsKeys = Object.keys(notifications);
         for (let i = 0; i < notificationsKeys.length; ++i) {
             const notificationKey = notificationsKeys[i];
             const notification = notifications[notificationKey];
             const from = new Date(notification.from).getTime();
             const to = new Date(notification.to).getTime();
-            if (from < currentTime
-                && to > currentTime
-                && !viewedNotifications.includes(notification.id)
-            ) {
+            if (from < currentTime && to > currentTime
+                && !viewedNotifications.includes(notification.id)) {
                 currentNotification = notification;
                 return currentNotification;
             }

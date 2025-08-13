@@ -139,11 +139,12 @@ export const subscriptions = (() => {
 
         // Load custom filters
         const customFiltersList = customFilters.loadCustomFilters();
-        customFiltersList.forEach((f) => {
+        for (let i = 0; i < customFiltersList.length; ++i) {
+            const f = customFiltersList[i];
             const customFilter = metadataFactory.createSubscriptionFilterFromJSON(f);
             filters.push(customFilter);
             filtersMap[customFilter.filterId] = customFilter;
-        });
+        }
 
         filters.sort((f1, f2) => f1.displayNumber - f2.displayNumber);
 
@@ -458,7 +459,8 @@ export const subscriptions = (() => {
         // Get all used languages
         const languages = browserUtils.getNavigatorLanguages();
         for (let i = 0; i < languages.length; ++i) {
-            localeFilterIds = getFilterIdsForLanguage(languages[i]);
+            const language = languages[i];
+            localeFilterIds = getFilterIdsForLanguage(language);
             filterIds = filterIds.concat(localeFilterIds);
         }
         return [...new Set(filterIds)];

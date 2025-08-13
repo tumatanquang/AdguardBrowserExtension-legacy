@@ -19,9 +19,11 @@ export const filters = (() => {
     FilterUtils.ids = ANTIBANNER_FILTERS_ID;
 
     // Copy filter ids to api
-    Object.keys(ANTIBANNER_FILTERS_ID).forEach(key => {
+    const filterIds = Object.keys(ANTIBANNER_FILTERS_ID);
+    for (let i = 0; i < filterIds.length; ++i) {
+        const key = filterIds[i];
         FilterUtils[key] = ANTIBANNER_FILTERS_ID[key];
-    });
+    }
 
     return FilterUtils;
 })();

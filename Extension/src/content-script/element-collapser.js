@@ -29,45 +29,36 @@ export const ElementCollapser = (function () {
         }
         const string = String(value);
         const { length } = string;
-        let result = '';
         const isHyphenMinus = string.charCodeAt(0) === 0x002D;
-        for (let index = -1; ++index < length;) {
+        let result = '';
+        for (let index = 0; index < length; ++index) {
             const codeUnit = string.charCodeAt(index);
-            // Note: there’s no need to special-case astral symbols, surrogate
-            // pairs, or lone surrogates.
+            // Note: there’s no need to special-case astral symbols, surrogate pairs, or lone surrogates.
 
-            // If the character is NULL (U+0000), then the REPLACEMENT CHARACTER
-            // (U+FFFD).
+            // If the character is NULL (U+0000), then the REPLACEMENT CHARACTER (U+FFFD).
             if (codeUnit === 0x0000) {
                 result += '\uFFFD';
                 continue;
             }
 
-            if (// If the character is in the range [\1-\1F] (U+0001 to U+001F) or is
-                // U+007F, […]
-                (codeUnit >= 0x0001 && codeUnit <= 0x001F) || codeUnit === 0x007F
-                // If the character is the first character and is in the range [0-9]
-                // (U+0030 to U+0039), […]
+            // If the character is in the range [\1-\1F] (U+0001 to U+001F) or is U+007F, […]
+            if ((codeUnit >= 0x0001 && codeUnit <= 0x001F) || codeUnit === 0x007F
+                // If the character is the first character and is in the range [0-9] (U+0030 to U+0039), […]
                 || (index === 0 && codeUnit >= 0x0030 && codeUnit <= 0x0039)
                 // If the character is the second character and is in the range [0-9]
                 // (U+0030 to U+0039) and the first character is a `-` (U+002D), […]
-                || (
-                    index === 1
+                || (index === 1
                     && codeUnit >= 0x0030 && codeUnit <= 0x0039
                     && isHyphenMinus
-                )
-            ) {
+                )) {
                 // https://drafts.csswg.org/cssom/#escape-a-character-as-code-point
                 result += `\\${codeUnit.toString(16)} `;
                 continue;
             }
-
-            if (// If the character is the first character and is a `-` (U+002D), and
-                // there is no second character, […]
-                index === 0
+            // If the character is the first character and is a `-` (U+002D), and there is no second character, […]
+            if (index === 0
                 && length === 1
-                && codeUnit === 0x002D
-            ) {
+                && codeUnit === 0x002D) {
                 result += `\\${string.charAt(index)}`;
                 continue;
             }
@@ -81,8 +72,7 @@ export const ElementCollapser = (function () {
                 || codeUnit === 0x005F
                 || (codeUnit >= 0x0030 && codeUnit <= 0x0039)
                 || (codeUnit >= 0x0041 && codeUnit <= 0x005A)
-                || (codeUnit >= 0x0061 && codeUnit <= 0x007A)
-            ) {
+                || (codeUnit >= 0x0061 && codeUnit <= 0x007A)) {
                 // the character itself
                 result += string.charAt(index);
                 continue;
@@ -121,19 +111,21 @@ export const ElementCollapser = (function () {
      * Adds "selectorText { display:none!important; }" style
      */
     const hideBySelectorAndTagName = function (selectorText, tagName) {
-        if (tagName === 'frame' || tagName === 'iframe') {
+        switch (tagName) {
+            case 'frame':
+            case 'iframe':
             // Use specific style for frames due to these issues:
             // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/346
             // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/355
             // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/347
             // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/733
-            hideBySelector(
-                selectorText,
-                'visibility: hidden!important; height: 0px!important; min-height: 0px!important;'
-            );
-        }
-        else {
-            hideBySelector(selectorText, null);
+                hideBySelector(selectorText,
+                    'visibility: hidden!important; height: 0px!important; min-height: 0px!important;'
+                );
+                break;
+            default:
+                hideBySelector(selectorText, null);
+                break;
         }
     };
 
@@ -153,13 +145,14 @@ export const ElementCollapser = (function () {
     const clearElStylesPriority = function (element, styles) {
         const elementStyle = element.style;
 
-        styles.forEach((prop) => {
+        for (let i = 0; i < styles.length; ++i) {
+            const prop = styles[i];
             const elCssPriority = elementStyle.getPropertyPriority(prop);
             if (elCssPriority && elCssPriority.toLowerCase() === 'important') {
                 const elCssValue = elementStyle.getPropertyValue(prop);
                 elementStyle.setProperty(prop, elCssValue, null);
             }
-        });
+        }
     };
 
     /**
@@ -209,14 +202,15 @@ export const ElementCollapser = (function () {
 
         let cssProperty;
         let cssValue;
-
-        if (tagName === 'frame') {
-            cssProperty = 'visibility';
-            cssValue = 'hidden';
-        }
-        else {
-            cssProperty = 'display';
-            cssValue = 'none';
+        switch (tagName) {
+            case 'frame':
+                cssProperty = 'visibility';
+                cssValue = 'hidden';
+                break;
+            default:
+                cssProperty = 'display';
+                cssValue = 'none';
+                break;
         }
 
         const elementStyle = element.style;

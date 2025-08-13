@@ -77,7 +77,7 @@ const getFilesPathsList = async (targets, filesReg) => {
     });
     return Promise
         .all(filesListsPromises)
-        .then((filesLists) => {
+        .then(filesLists => {
             return filesLists.reduce((uniqueFiles, filesList) => {
                 return [...new Set([...uniqueFiles, ...filesList])];
             }, []);
@@ -85,7 +85,7 @@ const getFilesPathsList = async (targets, filesReg) => {
 };
 
 const filterMessages = (messages, content) => {
-    return messages.filter((message) => {
+    return messages.filter(message => {
         return content.indexOf(message) >= 0;
     });
 };
@@ -98,7 +98,7 @@ const chooseMessagesFromFiles = async (messages, targets, filesReg) => {
     });
     return Promise
         .all(filteredMessages)
-        .then((messages) => {
+        .then(messages => {
             return [...messages.reduce((unique, messageArray) => {
                 return new Set([...unique, ...messageArray]);
             }, new Set())];
@@ -133,12 +133,13 @@ export const renewLocales = async () => {
     const oldKeys = Object.keys({ ...source });
 
     chooseMessagesFromFiles(oldKeys, targets, filesReg)
-        .then((chosenKeys) => {
+        .then(chosenKeys => {
             const result = {};
             const resultMessages = uniq([...chosenKeys, ...persistedMessages]);
-            resultMessages.forEach((key) => {
+            for (let i = 0; i < resultMessages.length; ++i) {
+                const key = resultMessages[i];
                 result[key] = source[key];
-            });
+            }
             const removedKeys = xor(resultMessages, oldKeys);
             if (removedKeys.length === 0) {
                 cliLog.info('There is nothing to renew');

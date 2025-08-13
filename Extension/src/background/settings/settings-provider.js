@@ -305,9 +305,10 @@ export const settingsProvider = (function () {
      * Remove existing custom filters before adding new custom filters
      */
     const removeCustomFilters = (filterIds) => {
-        filterIds.forEach((filterId) => {
+        for (let i = 0; i < filterIds.length; ++i) {
+            const filterId = filterIds[i];
             application.removeFilter(filterId);
-        });
+        }
         log.info(`Settings sync: Next filters were removed: ${filterIds}`);
     };
 
@@ -332,11 +333,12 @@ export const settingsProvider = (function () {
         const presentCustomFilters = customFilters.getCustomFilters();
 
         const enrichedFiltersInitials = customFiltersInitials.map((filterToAdd) => {
-            presentCustomFilters.forEach((existingFilter) => {
+            for (let i = 0; i < presentCustomFilters.length; ++i) {
+                const existingFilter = presentCustomFilters[i];
                 if (existingFilter.customUrl === filterToAdd.customUrl) {
                     filterToAdd.filterId = existingFilter.filterId;
                 }
-            });
+            }
             return filterToAdd;
         });
 
@@ -385,9 +387,10 @@ export const settingsProvider = (function () {
      * @param {boolean} drop enabled flag
      */
     const syncEnabledGroups = (enabledGroups, drop) => {
-        enabledGroups.forEach((groupId) => {
+        for (let i = 0; i < enabledGroups.length; ++i) {
+            const groupId = enabledGroups[i];
             categories.enableFiltersGroup(groupId);
-        });
+        }
         log.info(`Settings sync: Next groups were enabled: ${enabledGroups}`);
 
         // disable groups not listed in the imported list
@@ -397,9 +400,10 @@ export const settingsProvider = (function () {
             .map(group => group.groupId)
             .filter(groupId => !enabledGroups.includes(groupId));
 
-        groupIdsToDisable.forEach((groupId) => {
+        for (let i = 0; i < groupIdsToDisable.length; ++i) {
+            const groupId = groupIdsToDisable[i];
             categories.disableFiltersGroup(groupId, drop);
-        });
+        }
     };
 
     /**
@@ -440,7 +444,7 @@ export const settingsProvider = (function () {
         const customFilterIdsToEnable = availableCustomFilters
             .filter((availableCustomFilter) => {
                 const filterData = customFiltersData
-                    .find((filter) => {
+                    .find(filter => {
                         if (!filter.customUrl) {
                             throw new Error(`Custom filter should always have custom URL: ${JSON.stringify(filter)}`);
                         }

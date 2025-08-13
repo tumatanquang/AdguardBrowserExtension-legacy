@@ -11,12 +11,15 @@ import { Icons } from '../../../common/components/ui/Icons';
 import { FILTERING_LOG, NOTIFIER_TYPES } from '../../../../common/constants';
 import { useAppearanceTheme } from '../../../common/hooks/useAppearanceTheme';
 import { FilteringEvents } from '../FilteringEvents';
+import {
+    FILTERING_LOG_RESIZE_THROTTLE,
+    FILTERING_LOG_FETCH_EVENTS_TIMEOUT_MS
+} from '../../../common/constants';
 
 import '../../styles/styles.pcss';
 
 const FilteringLog = observer(() => {
     const { wizardStore, logStore } = useContext(rootStore);
-    const RESIZE_THROTTLE = 500;
 
     useAppearanceTheme(logStore.appearanceTheme);
 
@@ -31,10 +34,9 @@ const FilteringLog = observer(() => {
     }, [logStore]);
 
     useEffect(() => {
-        const FETCH_EVENTS_TIMEOUT_MS = 1500;
         const intervalId = setInterval(async () => {
             await logStore.getFilteringLogEvents();
-        }, FETCH_EVENTS_TIMEOUT_MS);
+        }, FILTERING_LOG_FETCH_EVENTS_TIMEOUT_MS);
 
         return () => {
             clearInterval(intervalId);
@@ -60,7 +62,7 @@ const FilteringLog = observer(() => {
 
     // append message listeners
     useEffect(() => {
-        let removeListenerCallback = async () => { };
+        let removeListenerCallback = async () => {};
 
         (async () => {
             const events = [
@@ -135,7 +137,7 @@ const FilteringLog = observer(() => {
             });
         };
 
-        const throttledWindowStateHandler = throttle(windowStateHandler, RESIZE_THROTTLE);
+        const throttledWindowStateHandler = throttle(windowStateHandler, FILTERING_LOG_RESIZE_THROTTLE);
 
         window.addEventListener('beforeunload', windowStateHandler);
         window.addEventListener('resize', throttledWindowStateHandler);
@@ -149,8 +151,7 @@ const FilteringLog = observer(() => {
     return (
         <>
             <Icons />
-            {wizardStore.isModalOpen
-                && <RequestModal />}
+            {wizardStore.isModalOpen && <RequestModal />}
             <Filters />
             <FilteringEvents />
         </>

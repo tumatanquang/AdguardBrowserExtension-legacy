@@ -43,19 +43,23 @@ export const frames = (function () {
         const frame = tabsApi.getTabFrame(tab.tabId, frameId);
 
         let previousUrl = '';
-        if (type === RequestTypes.DOCUMENT) {
-            tabsApi.clearTabFrames(tab.tabId);
-            tabsApi.clearTabMetadata(tab.tabId);
-            if (frame) {
-                previousUrl = frame.url;
-            }
+        switch (type) {
+            case RequestTypes.DOCUMENT:
+                tabsApi.clearTabFrames(tab.tabId);
+                tabsApi.clearTabMetadata(tab.tabId);
+                if (frame) {
+                    previousUrl = frame.url;
+                }
+                break;
         }
 
         tabsApi.recordTabFrame(tab.tabId, frameId, url, utils.url.getDomainName(url));
 
-        if (type === RequestTypes.DOCUMENT) {
-            tabsApi.updateTabMetadata(tab.tabId, { previousUrl });
-            reloadFrameData(tab);
+        switch (type) {
+            case RequestTypes.DOCUMENT:
+                tabsApi.updateTabMetadata(tab.tabId, { previousUrl });
+                reloadFrameData(tab);
+                break;
         }
     };
 
@@ -85,9 +89,8 @@ export const frames = (function () {
         }
 
         // if frame has different rule, then we consider this as a new page load
-        let previousUrl = '';
         if (frame && frame.url !== url) {
-            previousUrl = frame.url;
+            const previousUrl = frame.url;
             tabsApi.clearTabFrames(tabId);
             tabsApi.clearTabMetadata(tabId);
             tabsApi.recordTabFrame(tabId, frameId, url, utils.url.getDomainName(url));
@@ -253,9 +256,9 @@ export const frames = (function () {
         const totalBlockedTab = tabsApi.getTabMetadata(tabId, 'blocked') || 0;
         const applicationFilteringDisabled = settings.isFilteringDisabled();
 
-        if (applicationAvailable) {
+        if (applicationAvailable === true) {
             documentAllowlisted = isTabAllowlisted(tab);
-            if (documentAllowlisted) {
+            if (documentAllowlisted === true) {
                 const rule = getFrameRule(tab);
                 userAllowlisted = utils.filters.isAllowlistFilterRule(rule)
                         || utils.filters.isUserFilterRule(rule);
@@ -332,10 +335,12 @@ export const frames = (function () {
 
     // Records frames on application initialization
     listeners.addListener((event) => {
-        if (event === listeners.APPLICATION_INITIALIZED) {
-            tabsApi.forEach((tab) => {
-                recordFrame(tab, 0, tab.url, RequestTypes.DOCUMENT);
-            });
+        switch (event) {
+            case listeners.APPLICATION_INITIALIZED:
+                tabsApi.forEach(tab => {
+                    recordFrame(tab, 0, tab.url, RequestTypes.DOCUMENT);
+                });
+                break;
         }
     });
 

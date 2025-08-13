@@ -38,7 +38,7 @@ export const browserUtils = (function () {
             if (Number.isNaN(part)) {
                 return 0;
             }
-            return Math.max(part, 0);
+            return Math.max(+part, 0);
         }
 
         for (let i = 4; --i >= 0;) {
@@ -182,7 +182,7 @@ export const browserUtils = (function () {
          */
         findHeaderByName(headers, headerName) {
             if (headers) {
-                for (let i = 0; i < headers.length; ++i) {
+                for (let i = headers.length; --i >= 0;) {
                     const header = headers[i];
                     if (header.name.toLowerCase() === headerName.toLowerCase()) {
                         return header;

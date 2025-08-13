@@ -111,7 +111,11 @@ export const allowlist = (() => {
             return null;
         }
 
-        return new TSUrlFilter.NetworkRule(`@@//${domain}$document`, utils.filters.ALLOWLIST_FILTER_ID);
+        const rule = new TSUrlFilter.NetworkRule(
+            `@@//${domain}$document`,
+            utils.filters.ALLOWLIST_FILTER_ID
+        );
+        return rule;
     }
 
     /**
@@ -144,7 +148,8 @@ export const allowlist = (() => {
          * and if they equal to domain after removing www
          */
         const predicate = (domainFromCollection) => {
-            return domainFromCollection === domain || utils.url.getCroppedDomainName(domainFromCollection) === domain;
+            return domainFromCollection === domain
+                || utils.url.getCroppedDomainName(domainFromCollection) === domain;
         };
 
         if (isDefaultAllowlistMode()) {

@@ -56,6 +56,8 @@ const safebrowsing = (function () {
 
     const SB_ALLOW_LIST = 'allowlist';
 
+    const SB_MAX_RESPONSE_LENGTH = 10 * 1024;
+
     /**
      * Domain hash length
      */
@@ -78,7 +80,7 @@ const safebrowsing = (function () {
      * @private
      */
     function processSbResponse(responseText, hashesMap) {
-        if (!responseText || responseText.length > 10 * 1024) {
+        if (!responseText || responseText.length > SB_MAX_RESPONSE_LENGTH) {
             return null;
         }
 
@@ -253,7 +255,7 @@ const safebrowsing = (function () {
         }
 
         // check safebrowsing is active
-        const suspendedFrom = localStorage.getItem(suspendedFromProperty);
+        const suspendedFrom = +localStorage.getItem(suspendedFromProperty);
         if (suspendedFrom && Date.now() - suspendedFrom < SUSPEND_TTL) {
             return;
         }
@@ -298,9 +300,10 @@ const safebrowsing = (function () {
 
         resumeSafebrowsing();
 
-        shortHashes.forEach((x) => {
+        for (let i = 0; i < shortHashes.length; ++i) {
+            const x = shortHashes[i];
             safebrowsingRequestsCache.set(x, true);
-        });
+        }
 
         if (response.status !== 204) {
             sbList = processSbResponse(response.responseText, hashesMap) || SB_ALLOW_LIST;

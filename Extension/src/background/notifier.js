@@ -80,10 +80,13 @@ export const listeners = (() => {
                 throw new Error(`Illegal event: ${event}`);
             }
 
-            Object.entries(this.listenersMap).forEach(([listenerId, listener]) => {
+            const listenerEntries = Object.entries(this.listenersMap);
+            for (let i = 0; i < listenerEntries.length; ++i) {
+                const nofifyListener = listenerEntries[i];
+                const [listenerId, listener] = nofifyListener;
                 const events = this.listenersEventsMap[listenerId];
                 if (events && events.length !== 0 && events.indexOf(event) < 0) {
-                    return;
+                    continue;
                 }
                 try {
                     listener.apply(listener, args);
@@ -91,7 +94,7 @@ export const listeners = (() => {
                 catch (ex) {
                     log.error('Error invoking listener for {0} cause: {1}', event, ex);
                 }
-            });
+            }
         },
 
         /**
@@ -110,13 +113,16 @@ export const listeners = (() => {
     EventNotifier.events = NOTIFIER_TYPES;
 
     // Copy global properties
-    Object.entries(NOTIFIER_TYPES).forEach(([key, event]) => {
+    const notifierEntries = Object.entries(NOTIFIER_TYPES);
+    for (let i = 0; i < notifierEntries.length; ++i) {
+        const notifierType = notifierEntries[i];
+        const [key, event] = notifierType;
         EventNotifier[key] = event;
         if (event in EventNotifierEventsMap) {
             throw new Error(`Duplicate event:  ${event}`);
         }
         EventNotifierEventsMap[event] = key;
-    });
+    }
 
     return EventNotifier;
 })();

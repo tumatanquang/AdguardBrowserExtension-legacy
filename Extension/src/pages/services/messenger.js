@@ -43,9 +43,11 @@ class Messenger {
         port.postMessage({ type: MESSAGE_TYPES.ADD_LONG_LIVED_CONNECTION, data: { events } });
 
         port.onMessage.addListener((message) => {
-            if (message.type === MESSAGE_TYPES.NOTIFY_LISTENERS) {
-                const [type, ...data] = message.data;
-                eventListener({ type, data });
+            switch (message.type) {
+                case MESSAGE_TYPES.NOTIFY_LISTENERS:
+                    const [type, ...data] = message.data;
+                    eventListener({ type, data });
+                    break;
             }
         });
 
@@ -79,17 +81,18 @@ class Messenger {
 
         let { listenerId } = await this.sendMessage(MESSAGE_TYPES.CREATE_EVENT_LISTENER, { events });
 
-        browser.runtime.onMessage.addListener((message) => {
-            if (message.type === MESSAGE_TYPES.NOTIFY_LISTENERS) {
-                const [type, ...data] = message.data;
-                eventListener({ type, data });
+        browser.runtime.onMessage.addListener(message => {
+            switch (message.type) {
+                case MESSAGE_TYPES.NOTIFY_LISTENERS:
+                    const [type, ...data] = message.data;
+                    eventListener({ type, data });
+                    break;
             }
         });
 
         const onUnload = async () => {
             if (listenerId) {
-                const type = MESSAGE_TYPES.REMOVE_LISTENER;
-                this.sendMessage(type, { listenerId });
+                this.sendMessage(MESSAGE_TYPES.REMOVE_LISTENER, { listenerId });
                 listenerId = null;
                 if (typeof onUnloadCallback === 'function') {
                     onUnloadCallback();
@@ -177,7 +180,8 @@ class Messenger {
         const type = data
             ? MESSAGE_TYPES.ENABLE_FILTERS_GROUP
             : MESSAGE_TYPES.DISABLE_FILTERS_GROUP;
-        await this.sendMessage(type, { id });
+        const groupId = +id;
+        await this.sendMessage(type, { groupId });
     }
 
     async updateFilterStatus(filterId, data) {

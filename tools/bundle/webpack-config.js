@@ -10,24 +10,18 @@ export const getWebpackConfig = (browser) => {
     const browserConf = getBrowserConf(browser);
 
     switch (browser) {
-        case BROWSERS.CHROME: {
+        case BROWSERS.CHROME:
             return genChromeConfig(browserConf);
-        }
         case BROWSERS.FIREFOX_STANDALONE:
-        case BROWSERS.FIREFOX_AMO: {
+        case BROWSERS.FIREFOX_AMO:
             return genFirefoxConfig(browserConf);
-        }
-        case BROWSERS.OPERA: {
+        case BROWSERS.OPERA:
             return genOperaConfig(browserConf);
-        }
-        case BROWSERS.EDGE: {
+        case BROWSERS.EDGE:
             return genEdgeConfig(browserConf);
-        }
-        case BROWSERS.ADGUARD_API: {
+        case BROWSERS.ADGUARD_API:
             return genSampleApiConfig(browserConf);
-        }
-        default: {
+        default:
             throw new Error(`Unknown browser: "${browser}"`);
-        }
     }
 };

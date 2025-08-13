@@ -18,7 +18,7 @@
 import { utils } from '../utils/common';
 import { tabsImpl } from '../extension-api/tabs';
 
-const tabsApi = ((tabsImpl) => {
+const tabsApi = (tabsImpl => {
     const tabs = Object.create(null);
 
     // Fired when a tab is created. Note that the tab's URL may not be set at the time
@@ -59,7 +59,7 @@ const tabsApi = ((tabsImpl) => {
 
     tabsImpl.onCreated.addListener(onTabCreated);
 
-    tabsImpl.onRemoved.addListener((tabId) => {
+    tabsImpl.onRemoved.addListener(tabId => {
         const tab = tabs[tabId];
         if (tab) {
             onRemovedChannel.notify(tab);
@@ -67,7 +67,7 @@ const tabsApi = ((tabsImpl) => {
         }
     });
 
-    tabsImpl.onUpdated.addListener((aTab) => {
+    tabsImpl.onUpdated.addListener(aTab => {
         const tab = tabs[aTab.tabId];
         if (tab) {
             tab.url = aTab.url;
@@ -79,7 +79,7 @@ const tabsApi = ((tabsImpl) => {
         }
     });
 
-    tabsImpl.onActivated.addListener((tabId) => {
+    tabsImpl.onActivated.addListener(tabId => {
         const tab = tabs[tabId];
         if (tab) {
             onActivatedChannel.notify(tab);
@@ -114,7 +114,7 @@ const tabsApi = ((tabsImpl) => {
     };
 
     // Sends message to tab
-    const sendMessage = function (tabId, message, options) {
+    const sendMessage = (tabId, message, options) => {
         return tabsImpl.sendMessage(tabId, message, options);
     };
 
@@ -159,7 +159,7 @@ const tabsApi = ((tabsImpl) => {
     };
 
     // Calls callback with each tab
-    const forEach = function (callback) {
+    const forEach = (callback) => {
         (async () => {
             const aTabs = await tabsImpl.getAll();
             for (let i = 0; i < aTabs.length; ++i) {
@@ -204,13 +204,13 @@ const tabsApi = ((tabsImpl) => {
         return tab;
     };
 
-    const isIncognito = function (tabId) {
+    const isIncognito = (tabId) => {
         const tab = tabs[tabId];
         return tab && tab.incognito === true;
     };
 
     // Records tab's frame
-    const recordTabFrame = function (tabId, frameId, url, domainName) {
+    const recordTabFrame = (tabId, frameId, url, domainName) => {
         let tab = tabs[tabId];
         if (!tab && frameId === 0) {
             // Sync tab for that 'onCreated' event was missed.
@@ -235,7 +235,7 @@ const tabsApi = ((tabsImpl) => {
         }
     };
 
-    const clearTabFrames = function (tabId) {
+    const clearTabFrames = (tabId) => {
         const tab = tabs[tabId];
         if (tab) {
             tab.frames = null;
@@ -243,7 +243,7 @@ const tabsApi = ((tabsImpl) => {
     };
 
     // Gets tab's frame by id
-    const getTabFrame = function (tabId, frameId) {
+    const getTabFrame = (tabId, frameId) => {
         const tab = tabs[tabId];
         if (tab && tab.frames) {
             return tab.frames[frameId || 0];
@@ -262,11 +262,11 @@ const tabsApi = ((tabsImpl) => {
         if (!tab) {
             return false;
         }
-        return !!(tab.url === '' || tab.url === 'about:blank');
+        return !!(tab.url.length === 0 || tab.url === 'about:blank');
     };
 
     // Update tab metadata
-    const updateTabMetadata = function (tabId, values) {
+    const updateTabMetadata = (tabId, values) => {
         const tab = tabs[tabId];
         if (tab) {
             if (!tab.metadata) {

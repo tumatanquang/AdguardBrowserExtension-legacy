@@ -267,7 +267,7 @@ class LogStore {
     getTabs = () => {
         const MAX_TITLE_LENGTH = 60;
         return Object.values(this.tabsMap)
-            .filter((tab) => !tab.isExtensionTab)
+            .filter(tab => !tab.isExtensionTab)
             .map(({ title, tabId }) => {
                 const updatedTitle = truncate(title, { length: MAX_TITLE_LENGTH });
                 return { title: updatedTitle, tabId };
@@ -321,9 +321,10 @@ class LogStore {
     synchronizeOpenTabs = async () => {
         const tabsInfo = await messenger.synchronizeOpenTabs();
         runInAction(() => {
-            tabsInfo.forEach((tabInfo) => {
+            for (let i = 0; i < tabsInfo.length; ++i) {
+                const tabInfo = tabsInfo[i];
                 this.tabsMap[tabInfo.tabId] = tabInfo;
-            });
+            }
         });
     };
 
@@ -468,8 +469,8 @@ class LogStore {
         const eventId = this.toNumberOrString(eventIdString);
 
         if (this.selectedEvent
-        && this.rootStore.wizardStore.isModalOpen
-        && eventId === this.selectedEvent.eventId) {
+            && this.rootStore.wizardStore.isModalOpen
+            && eventId === this.selectedEvent.eventId) {
             this.selectedEvent = null;
             this.rootStore.wizardStore.closeModal();
             return;

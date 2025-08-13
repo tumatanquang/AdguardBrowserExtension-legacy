@@ -99,18 +99,20 @@ const longLivedMessageHandler = (port) => {
 
     port.onMessage.addListener((message) => {
         const { type } = message;
-        if (type === MESSAGE_TYPES.ADD_LONG_LIVED_CONNECTION) {
-            const { data } = message;
-            const { events } = data;
-            listenerId = listeners.addSpecifiedListener(events, async (...data) => {
-                const type = MESSAGE_TYPES.NOTIFY_LISTENERS;
-                try {
-                    port.postMessage({ type, data });
-                }
-                catch (e) {
-                    log.error(e.message);
-                }
-            });
+        switch (type) {
+            case MESSAGE_TYPES.ADD_LONG_LIVED_CONNECTION:
+                const { data } = message;
+                const { events } = data;
+                listenerId = listeners.addSpecifiedListener(events, async (...data) => {
+                    const type = MESSAGE_TYPES.NOTIFY_LISTENERS;
+                    try {
+                        port.postMessage({ type, data });
+                    }
+                    catch (e) {
+                        log.error(e.message);
+                    }
+                });
+                break;
         }
     });
 
@@ -153,10 +155,12 @@ const createMessageHandler = () => {
         const AntiBannerFiltersId = utils.filters.ids;
 
         const enabledFilters = {};
-        Object.values(AntiBannerFiltersId).forEach((filterId) => {
+        const antiBannerFiltersIds = Object.values(AntiBannerFiltersId);
+        for (let i = 0; i < antiBannerFiltersIds.length; ++i) {
+            const filterId = antiBannerFiltersIds[i];
             const enabled = application.isFilterEnabled(filterId);
             enabledFilters[filterId] = !!enabled;
-        });
+        }
 
         return {
             userSettings: settings.getAllSettings(),
@@ -304,7 +308,7 @@ const createMessageHandler = () => {
                 break;
             case MESSAGE_TYPES.INITIALIZE_ONINSTALL_DEFAULT_FILTERS: {
                 const isUseDefaultSettings = !!localStorage.getItem('useDefaultSettings');
-                if (isUseDefaultSettings) {
+                if (isUseDefaultSettings === true) {
                     // Retrieve filters and install them
                     const filterIds = application.offerFilters();
                     await application.addAndEnableFilters(filterIds);
@@ -371,9 +375,11 @@ const createMessageHandler = () => {
                 // We are waiting until request filter is updated
                 return new Promise((resolve) => {
                     const listenerId = listeners.addListener((event) => {
-                        if (event === listeners.USER_FILTER_UPDATED) {
-                            listeners.removeListener(listenerId);
-                            resolve();
+                        switch (event) {
+                            case listeners.USER_FILTER_UPDATED:
+                                listeners.removeListener(listenerId);
+                                resolve();
+                                break;
                         }
                     });
                 });
@@ -691,9 +697,11 @@ const createMessageHandler = () => {
                 // wait until request filter is updated
                 await new Promise((resolve) => {
                     const listenerId = listeners.addListener((event) => {
-                        if (event === listeners.REQUEST_FILTER_UPDATED) {
-                            listeners.removeListener(listenerId);
-                            resolve();
+                        switch (event) {
+                            case listeners.REQUEST_FILTER_UPDATED:
+                                listeners.removeListener(listenerId);
+                                resolve();
+                                break;
                         }
                     });
                 });
@@ -724,9 +732,10 @@ const createMessageHandler = () => {
                 const { content } = data;
                 return TSUrlFilter.RuleConverter.convertRules(content);
             }
-            default:
+            default: {
                 // Unhandled message
                 throw new Error(`There is no such message type ${message.type}`);
+            }
         }
         return Promise.resolve();
     };

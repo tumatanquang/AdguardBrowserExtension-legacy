@@ -49,9 +49,11 @@ export const backend = (function () {
             return lazyGet(this, 'filtersUrl', () => {
                 if (browserUtils.isFirefoxBrowser()) {
                     return 'https://filters.adtidy.org/extension/firefox';
-                } if (browserUtils.isEdgeBrowser()) {
+                }
+                if (browserUtils.isEdgeBrowser()) {
                     return 'https://filters.adtidy.org/extension/edge';
-                } if (browserUtils.isOperaBrowser()) {
+                }
+                if (browserUtils.isOperaBrowser()) {
                     return 'https://filters.adtidy.org/extension/opera';
                 }
                 return 'https://filters.adtidy.org/extension/chromium';

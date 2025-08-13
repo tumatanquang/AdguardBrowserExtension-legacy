@@ -130,21 +130,22 @@ const PageController = (response) => {
         }
         allowAcceptableAdsCheckbox.addEventListener('change', allowAcceptableAdsChange);
 
-        const openExtensionStoreBtns = [].slice.call(document.querySelectorAll('.openExtensionStore'));
-        openExtensionStoreBtns.forEach((openExtensionStoreBtn) => {
+        const openExtensionStoreBtns = document.querySelectorAll('.openExtensionStore');
+        for (let i = 0; i < openExtensionStoreBtns.length; ++i) {
+            const openExtensionStoreBtn = openExtensionStoreBtns[i];
             openExtensionStoreBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 contentPage.sendMessage({ type: MESSAGE_TYPES.OPEN_EXTENSION_STORE });
             });
-        });
-
-        const openSettingsBtns = [].slice.call(document.querySelectorAll('.openSettings'));
-        openSettingsBtns.forEach((openSettingsBtn) => {
+        }
+        const openSettingsBtns = document.querySelectorAll('.openSettings');
+        for (let i = 0; i < openSettingsBtns.length; ++i) {
+            const openSettingsBtn = openSettingsBtns[i];
             openSettingsBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 contentPage.sendMessage({ type: MESSAGE_TYPES.OPEN_SETTINGS_TAB });
             });
-        });
+        }
     };
 
     const updateCheckbox = (checkbox, enabled) => {
@@ -204,13 +205,15 @@ const init = async () => {
 
     const response = await contentPage.sendMessage({ type: MESSAGE_TYPES.INITIALIZE_FRAME_SCRIPT });
     const controller = PageController(response);
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
+    switch (document.readyState) {
+        case 'loading':
+            document.addEventListener('DOMContentLoaded', () => {
+                controller.init();
+            });
+            break;
+        default:
             controller.init();
-        });
-    }
-    else {
-        controller.init();
+            break;
     }
 };
 

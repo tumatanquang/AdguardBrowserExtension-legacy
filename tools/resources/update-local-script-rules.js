@@ -43,13 +43,14 @@ const updateLocalScriptRulesForBrowser = async (browser) => {
     };
 
     // eslint-disable-next-line no-restricted-syntax
-    for (const filterId of ADGUARD_DOWNLOAD_UPDATE_FILTERS_IDS) {
+    for (let i = 0; i < ADGUARD_DOWNLOAD_UPDATE_FILTERS_IDS.length; ++i) {
+        const filterId = ADGUARD_DOWNLOAD_UPDATE_FILTERS_IDS[i];
         // eslint-disable-next-line no-await-in-loop
         const filters = (await fs.readFile(`${folder}/filter_${filterId}.txt`)).toString();
         const lines = filters.split(LINE_SEPARATOR);
 
-        lines.forEach((line) => {
-            line = line.trim();
+        for (let j = 0; j < lines.length; ++j) {
+            const line = lines[j].trim();
             if (line && line[0] !== '!' && line.indexOf(JAVASCRIPT_PATTERN) >= 0) {
                 const m = line.split(JAVASCRIPT_PATTERN);
                 m[0] = m[0] === '' ? '<any>' : m[0];
@@ -61,7 +62,7 @@ const updateLocalScriptRulesForBrowser = async (browser) => {
                     });
                 }
             }
-        });
+        }
     }
 
     await fs.writeFile(

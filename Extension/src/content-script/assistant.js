@@ -20,7 +20,7 @@ import { adguardAssistant } from '@adguard/assistant';
 import { contentPage } from './content-script';
 
 export const startAssistant = () => {
-    if (global.assistantStarted) {
+    if (global.assistantStarted === true) {
         return;
     }
 
@@ -41,19 +41,20 @@ export const startAssistant = () => {
         return;
     }
 
-    let assistant;
-
     // save right-clicked element for assistant
     let clickedEl = null;
     document.addEventListener('mousedown', (event) => {
-        if (event.button === 2) {
-            clickedEl = event.target;
+        switch (event.button) {
+            case 2:
+                clickedEl = event.target;
+                break;
         }
     });
 
+    let assistant;
     contentPage.onMessage.addListener((message) => {
         switch (message.type) {
-            case 'initAssistant': {
+            case 'initAssistant':
                 const { options } = message;
                 const { addRuleCallbackName, token } = options;
                 let selectedElement = null;
@@ -72,7 +73,6 @@ export const startAssistant = () => {
                     contentPage.sendMessage({ type: addRuleCallbackName, data: { token, ruleText: rules } });
                 });
                 break;
-            }
         }
     });
 

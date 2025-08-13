@@ -44,27 +44,35 @@ const selectRequestsStatsData = (stats, range, type) => {
     const result = [];
     switch (range) {
         case TIME_RANGES.DAY:
-            stats.today.forEach((d) => {
+            const { today } = stats;
+            for (let i = 0; i < today.length; ++i) {
+                const d = today[i];
                 result.push(d[type]);
-            });
+            }
             break;
         case TIME_RANGES.WEEK:
-            stats.lastWeek.forEach((d) => {
+            const { lastWeek } = stats;
+            for (let i = 0; i < lastWeek.length; ++i) {
+                const d = lastWeek[i];
                 result.push(d[type]);
-            });
+            }
             break;
         case TIME_RANGES.MONTH:
-            stats.lastMonth.forEach((d) => {
+            const { lastMonth } = stats;
+            for (let i = 0; i < lastMonth.length; ++i) {
+                const d = lastMonth[i];
                 result.push(d[type]);
-            });
+            }
             break;
         case TIME_RANGES.YEAR:
-            stats.lastYear.forEach((d) => {
+            const { lastYear } = stats;
+            for (let i = 0; i < lastYear.length; ++i) {
+                const d = lastYear[i];
                 result.push(d[type]);
-            });
+            }
             break;
     }
-    return result.map((val) => (val === undefined ? 0 : val));
+    return result.map(val => (val === undefined ? 0 : val));
 };
 
 const getCategoriesLines = (statsData, range) => {

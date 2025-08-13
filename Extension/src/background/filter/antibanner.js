@@ -34,6 +34,14 @@ import { userrules } from './userrules';
  * Creating service that manages our filter rules.
  */
 export const antiBannerService = (() => {
+    /**
+     * Delay on application updated event
+     */
+    const APP_UPDATED_NOTIFICATION_DELAY = 60 * 1000;
+
+    const FILTERS_CHANGE_DEBOUNCE_PERIOD = 1000;
+    const RELOAD_FILTERS_DEBOUNCE_PERIOD = 1000;
+
     // Request filter contains all filter rules
     // This class does the actual filtering (checking URLs, constructing CSS/JS to inject, etc)
     let requestFilter = new RequestFilter();
@@ -46,14 +54,6 @@ export const antiBannerService = (() => {
 
     // Application initialized flag (Sets on first call of 'start' method)
     let applicationInitialized = false;
-
-    /**
-     * Delay on application updated event
-     */
-    const APP_UPDATED_NOTIFICATION_DELAY = 60 * 1000;
-
-    const FILTERS_CHANGE_DEBOUNCE_PERIOD = 1000;
-    const RELOAD_FILTERS_DEBOUNCE_PERIOD = 1000;
 
     /**
      * List of events which cause RequestFilter re-creation
@@ -162,7 +162,7 @@ export const antiBannerService = (() => {
 
         applicationRunning = true;
 
-        if (!applicationInitialized) {
+        if (applicationInitialized === false) {
             await initialize(options);
             applicationInitialized = true;
             return;
@@ -175,10 +175,7 @@ export const antiBannerService = (() => {
      * Request Filter info
      */
     const getRequestFilterInfo = function () {
-        let rulesCount = 0;
-        if (requestFilter) {
-            rulesCount = requestFilter.getRulesCount();
-        }
+        const rulesCount = requestFilter ? requestFilter.getRulesCount() : 0;
         return {
             rulesCount
         };
@@ -385,11 +382,13 @@ export const antiBannerService = (() => {
                     !isTrustedFilter
                 );
 
-                if (filterId === utils.filters.USER_FILTER_ID) {
-                    userFilterList = filterList;
-                }
-                else {
-                    lists.push(filterList);
+                switch (filterId) {
+                    case utils.filters.USER_FILTER_ID:
+                        userFilterList = filterList;
+                        break;
+                    default:
+                        lists.push(filterList);
+                        break;
                 }
             }
 
@@ -606,12 +605,11 @@ export const antiBannerService = (() => {
                         : loadedRulesText.concat(eventRules);
                     log.debug('Add {0} rules to filter {1}', eventRules.length, filterId);
                     break;
-                case listeners.REMOVE_RULE: {
+                case listeners.REMOVE_RULE:
                     const actionRule = eventRules[0];
                     utils.collections.removeAll(loadedRulesText, actionRule);
                     log.debug('Remove {0} rule from filter {1}', actionRule, filterId);
                     break;
-                }
                 case listeners.UPDATE_FILTER_RULES:
                     loadedRulesText = eventRules;
                     log.debug('Update filter {0} rules count to {1}', filterId, eventRules.length);

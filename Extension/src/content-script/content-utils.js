@@ -110,6 +110,9 @@ export const contentUtils = (function () {
                 </div>`;
     };
 
+    const MAX_TRIES_COUNT = 10;
+    const APPEND_POPUP_TIMEOUT_MS = 500;
+    const BODY_POPUP_TIMEOUT_MS = 4 * 1000;
     /**
      * Shows alert popup.
      * Popup content is added right to the page content.
@@ -147,10 +150,8 @@ export const contentUtils = (function () {
 
         const alertDivHtml = genAlertHtml(title, fullText);
 
-        const triesCount = 10;
-
         function appendPopup(count) {
-            if (count >= triesCount) {
+            if (count >= MAX_TRIES_COUNT) {
                 return;
             }
 
@@ -170,12 +171,12 @@ export const contentUtils = (function () {
                     if (alertElement && alertElement.parentNode) {
                         alertElement.parentNode.removeChild(alertElement);
                     }
-                }, 4000);
+                }, BODY_POPUP_TIMEOUT_MS);
             }
             else {
                 setTimeout(() => {
                     appendPopup(count + 1);
-                }, 500);
+                }, APPEND_POPUP_TIMEOUT_MS);
             }
         }
 
@@ -204,77 +205,76 @@ export const contentUtils = (function () {
             updateIframeStyles
         } = message;
 
-        const updateIframeHtml = `
-                            <div id="adguard-new-version-popup" class="adguard-update-popup adguard-update-popup--active${showPromoNotification ? ' adguard-update-popup--promo' : ''}">
-                                <div id="adguard-new-version-popup-close" class="adguard-update-popup__close close-iframe"></div>
-                                <div class="adguard-update-popup__logo"></div>
-                                <div class="adguard-update-popup__title">
-                                    ${title}
-                                </div>
-                                <div class="adguard-update-popup__desc">
-                                    ${description}
-                                </div>
-                                <div class="adguard-update-popup__links">
-                                    <a href="${changelogHref}" class="adguard-update-popup__link close-iframe" target="_blank">
-                                        ${changelogText}
-                                    </a>
-                                    <a href="#" class="adguard-update-popup__link adguard-update-popup__link--disable close-iframe disable-notifications">
-                                        ${disableNotificationText}
-                                    </a>
-                                </div>
-                                <div class="adguard-update-popup__offer${showPromoNotification ? ' adguard-update-popup__offer--show' : ''}">
-                                    <div class="adguard-update-popup__offer-close close-iframe set-notification-viewed"></div>
-                                    <div class="adguard-update-popup__offer-content">
-                                        <div class="adguard-update-popup__offer-title">
-                                            ${offer}
-                                        </div>
-                                        <a href="${offerButtonHref}" class="adguard-update-popup__btn close-iframe set-notification-viewed${showPromoNotification ? ' adguard-update-popup__btn--promo' : ''}" target="_blank">
-                                            ${offerButtonText}
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>`;
+        const updateIframeHtml = `<div id="adguard-new-version-popup" class="adguard-update-popup adguard-update-popup--active${showPromoNotification ? ' adguard-update-popup--promo' : ''}">
+            <div id="adguard-new-version-popup-close" class="adguard-update-popup__close close-iframe"></div>
+            <div class="adguard-update-popup__logo"></div>
+            <div class="adguard-update-popup__title">
+                ${title}
+            </div>
+            <div class="adguard-update-popup__desc">
+                ${description}
+            </div>
+            <div class="adguard-update-popup__links">
+                <a href="${changelogHref}" class="adguard-update-popup__link close-iframe" target="_blank">
+                    ${changelogText}
+                </a>
+                <a href="#" class="adguard-update-popup__link adguard-update-popup__link--disable close-iframe disable-notifications">
+                    ${disableNotificationText}
+                </a>
+            </div>
+            <div class="adguard-update-popup__offer${showPromoNotification ? ' adguard-update-popup__offer--show' : ''}">
+                <div class="adguard-update-popup__offer-close close-iframe set-notification-viewed"></div>
+                <div class="adguard-update-popup__offer-content">
+                    <div class="adguard-update-popup__offer-title">
+                        ${offer}
+                    </div>
+                    <a href="${offerButtonHref}" class="adguard-update-popup__btn close-iframe set-notification-viewed${showPromoNotification ? ' adguard-update-popup__btn--promo' : ''}" target="_blank">
+                        ${offerButtonText}
+                    </a>
+                </div>
+            </div>
+        </div>`;
 
         const handleCloseIframe = (iframe) => {
             const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
             const closeElements = iframeDocument.querySelectorAll('.close-iframe');
-            if (closeElements.length !== 0) {
-                closeElements.forEach((element) => {
-                    element.addEventListener('click', () => {
-                        if (element.classList.contains('disable-notifications')) {
-                            // disable update notifications
-                            contentPage.sendMessage({
-                                type: MESSAGE_TYPES.CHANGE_USER_SETTING,
-                                key: 'show-app-updated-disabled',
-                                value: true
-                            });
-                        }
-                        if (showPromoNotification
-                            && element.classList.contains('set-notification-viewed')) {
-                            contentPage.sendMessage({
-                                type: 'setNotificationViewed',
-                                withDelay: false
-                            });
-                            const promoNotification = iframeDocument.querySelector('.adguard-update-popup__offer');
-                            if (promoNotification) {
-                                promoNotification.parentNode.removeChild(promoNotification);
-                            }
-                            return;
-                        }
-                        // Remove iframe after click event fire on link
-                        // NOTICE: if here is used value equal to 0,
-                        // then iframe is closed early than link is clicked
-                        setTimeout(() => {
-                            iframe.parentNode.removeChild(iframe);
-                        }, 10);
-                    });
-                });
-                return true;
+            if (closeElements.length === 0) {
+                return false;
             }
-            return false;
+            for (let i = 0; i < closeElements.length; ++i) {
+                const element = closeElements[i];
+                element.addEventListener('click', () => {
+                    if (element.classList.contains('disable-notifications')) {
+                        // disable update notifications
+                        contentPage.sendMessage({
+                            type: MESSAGE_TYPES.CHANGE_USER_SETTING,
+                            key: 'show-app-updated-disabled',
+                            value: true
+                        });
+                    }
+                    if (showPromoNotification
+                        && element.classList.contains('set-notification-viewed')) {
+                        contentPage.sendMessage({
+                            type: 'setNotificationViewed',
+                            withDelay: false
+                        });
+                        const promoNotification = iframeDocument.querySelector('.adguard-update-popup__offer');
+                        if (promoNotification) {
+                            promoNotification.parentNode.removeChild(promoNotification);
+                        }
+                        return;
+                    }
+                    // Remove iframe after click event fire on link
+                    // NOTICE: if here is used value equal to 0,
+                    // then iframe is closed early than link is clicked
+                    setTimeout(() => {
+                        iframe.parentNode.removeChild(iframe);
+                    }, 10);
+                });
+            }
+            return true;
         };
 
-        const MAX_TRIES_COUNT = 10;
         function appendPopup(count) {
             if (count >= MAX_TRIES_COUNT) {
                 return;
@@ -296,7 +296,7 @@ export const contentUtils = (function () {
             else {
                 setTimeout(() => {
                     appendPopup(count + 1);
-                }, 500);
+                }, APPEND_POPUP_TIMEOUT_MS);
             }
         }
 

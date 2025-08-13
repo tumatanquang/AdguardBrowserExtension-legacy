@@ -157,7 +157,8 @@ export const RequestFilter = (() => {
             });
 
             if (debug) {
-                selectedScriptRules.forEach((scriptRule) => {
+                for (let i = 0; i < selectedScriptRules.length; ++i) {
+                    const scriptRule = selectedScriptRules[i];
                     if (!scriptRule.isGeneric()) {
                         filteringLog.addScriptInjectionEvent({
                             tab,
@@ -167,7 +168,7 @@ export const RequestFilter = (() => {
                             timestamp: Date.now()
                         });
                     }
-                });
+                }
             }
 
             const scripts = selectedScriptRules.map(scriptRule => scriptRule.getScript({

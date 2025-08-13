@@ -6,12 +6,16 @@ import { rootStore } from '../../../stores/RootStore';
 
 import './filters-update.pcss';
 
-const formatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
+const formatDate = (date) => {
+    const dateObj = new Date(date);
+    const formatOptions = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+    return dateObj.toLocaleDateString('default', formatOptions);
 };
 
 const FiltersUpdate = observer(() => {
@@ -28,8 +32,6 @@ const FiltersUpdate = observer(() => {
         await settingsStore.updateFilters();
     };
 
-    const dateObj = new Date(lastUpdateTime);
-
     return (
         <div className='filters-update'>
             <div className='filters-update__info'>
@@ -37,7 +39,7 @@ const FiltersUpdate = observer(() => {
                     {reactTranslator.getMessage('options_antibanner_rules_count', { rules_count: rulesCount })}
                 </div>
                 <div className='filters-update__desc'>
-                    {dateObj.toLocaleDateString('default', formatOptions)}
+                    {formatDate(lastUpdateTime)}
                 </div>
             </div>
             <button

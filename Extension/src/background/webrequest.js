@@ -70,6 +70,7 @@ const webrequestInit = function () {
             || frames.getMainFrameUrl(requestDetails.tab);
     }
 
+    const MAX_URL_LENGTH = 16 * 1024;
     /**
      * Process request
      *
@@ -94,29 +95,34 @@ const webrequestInit = function () {
         const { tabId } = tab;
         let { requestUrl } = requestDetails;
 
-        if (requestType === RequestTypes.DOCUMENT || requestType === RequestTypes.SUBDOCUMENT) {
-            frames.recordFrame(tab, frameId, requestUrl, requestType);
+        switch (requestType) {
+            case RequestTypes.DOCUMENT:
+            case RequestTypes.SUBDOCUMENT:
+                frames.recordFrame(tab, frameId, requestUrl, requestType);
+                break;
         }
 
-        if (requestType === RequestTypes.DOCUMENT) {
+        switch (requestType) {
+            case RequestTypes.DOCUMENT:
             // Reset tab button state
-            listeners.notifyListeners(listeners.UPDATE_TAB_BUTTON_STATE, tab, true);
+                listeners.notifyListeners(listeners.UPDATE_TAB_BUTTON_STATE, tab, true);
 
-            /**
+                /**
              * Just to remember!
              * In the case of the "about:newtab" pages we don't receive onResponseReceived event for the main_frame
              * Also if chrome://newtab is overwritten, we won't receive any webRequest events for the main_frame
              * Unfortunately, we can't do anything in this case and just must remember about it
              */
 
-            /**
+                /**
              * Binds rule to the main_frame request
              * In integration mode, rule from the headers will override this value
              */
-            const tabRequestRule = frames.getFrameRule(tab);
-            if (tabRequestRule) {
-                requestContextStorage.update(requestId, { requestRule: tabRequestRule });
-            }
+                const tabRequestRule = frames.getFrameRule(tab);
+                if (tabRequestRule) {
+                    requestContextStorage.update(requestId, { requestRule: tabRequestRule });
+                }
+                break;
         }
 
         if (!utils.url.isHttpOrWsRequest(requestUrl)) {
@@ -128,7 +134,6 @@ const webrequestInit = function () {
 
         // truncate too long urls
         // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1493
-        const MAX_URL_LENGTH = 16 * 1024;
         if (requestUrl.length > MAX_URL_LENGTH) {
             requestUrl = requestUrl.slice(0, MAX_URL_LENGTH);
         }
@@ -273,9 +278,12 @@ const webrequestInit = function () {
 
         // Strip the protocol and host name (for first-party requests) from the selector
         const thirdParty = TSUrlFilter.isThirdPartyRequest(requestUrl, referrerUrl);
-        let srcUrlStartIndex = requestUrl.indexOf('//');
+        let srcUrlStartIndex;
         if (!thirdParty) {
             srcUrlStartIndex = requestUrl.indexOf('/', srcUrlStartIndex + 2);
+        }
+        else {
+            srcUrlStartIndex = requestUrl.indexOf('//');
         }
         const srcUrl = requestUrl.substring(srcUrlStartIndex);
 
@@ -309,12 +317,14 @@ const webrequestInit = function () {
 
         let requestHeadersModified = false;
 
-        if (requestType === RequestTypes.DOCUMENT) {
+        switch (requestType) {
+            case RequestTypes.DOCUMENT:
             // Save ref header
-            const refHeader = browserUtils.findHeaderByName(requestHeaders, 'Referer');
-            if (refHeader) {
-                frames.recordFrameReferrerHeader(tab, refHeader.value);
-            }
+                const refHeader = browserUtils.findHeaderByName(requestHeaders, 'Referer');
+                if (refHeader) {
+                    frames.recordFrameReferrerHeader(tab, refHeader.value);
+                }
+                break;
         }
 
         cookieService.onBeforeSendHeaders(requestDetails);
@@ -327,7 +337,7 @@ const webrequestInit = function () {
             requestHeadersModified = true;
         }
 
-        if (requestHeadersModified) {
+        if (requestHeadersModified === true) {
             requestContextStorage.update(requestId, { modifiedRequestHeaders: requestHeaders });
             return { requestHeaders };
         }
@@ -407,12 +417,15 @@ const webrequestInit = function () {
 
         let responseHeadersModified = false;
 
-        if (requestType === RequestTypes.DOCUMENT || requestType === RequestTypes.SUBDOCUMENT) {
-            const cspHeaders = getCSPHeaders(requestDetails);
-            if (cspHeaders && cspHeaders.length !== 0) {
-                responseHeaders = responseHeaders.concat(cspHeaders);
-                responseHeadersModified = true;
-            }
+        switch (requestType) {
+            case RequestTypes.DOCUMENT:
+            case RequestTypes.SUBDOCUMENT:
+                const cspHeaders = getCSPHeaders(requestDetails);
+                if (cspHeaders && cspHeaders.length !== 0) {
+                    responseHeaders = responseHeaders.concat(cspHeaders);
+                    responseHeadersModified = true;
+                }
+                break;
         }
 
         if (cookieService.onHeadersReceived(requestDetails)) {
@@ -423,7 +436,7 @@ const webrequestInit = function () {
             responseHeadersModified = true;
         }
 
-        if (responseHeadersModified) {
+        if (responseHeadersModified === true) {
             requestContextStorage.update(requestId, { modifiedResponseHeaders: responseHeaders });
             return { responseHeaders };
         }
@@ -593,7 +606,7 @@ const webrequestInit = function () {
     backgroundPage.webNavigation.onCommitted.addListener(onCommittedCheckFrameUrl);
 
     let handlerBehaviorTimeout = null;
-    listeners.addListener((event) => {
+    listeners.addListener(event => {
         switch (event) {
             case listeners.ADD_RULES:
             case listeners.REMOVE_RULE:
@@ -606,7 +619,7 @@ const webrequestInit = function () {
                 handlerBehaviorTimeout = setTimeout(() => {
                     handlerBehaviorTimeout = null;
                     backgroundPage.webRequest.handlerBehaviorChanged();
-                }, 3000);
+                }, 3 * 1000);
                 break;
         }
     });
@@ -1070,7 +1083,7 @@ const webrequestInit = function () {
                         { tabId }, mainFrameUrl, true
                     );
                     if (result.requestFilterReady === false) {
-                        setTimeout((details) => {
+                        setTimeout(details => {
                             tryInjectInIframesWithoutSrc(details);
                         }, REQUEST_FILTER_READY_TIMEOUT, details);
                         return;
@@ -1100,7 +1113,7 @@ const webrequestInit = function () {
             // This is true only for SUBDOCUMENTS i.e. iframes
             // so we inject code when onCompleted event fires
             if (browserUtils.isFirefoxBrowser()) {
-                backgroundPage.webRequest.onCompleted.addListener((details) => { tryInject(details, 'onCompleted') }, ['<all_urls>']);
+                backgroundPage.webRequest.onCompleted.addListener(details => { tryInject(details, 'onCompleted') }, ['<all_urls>']);
             }
             // Remove injections when tab is closed
             tabsApi.onRemoved.addListener(injections.removeTabInjection);
@@ -1147,7 +1160,7 @@ const webrequestInit = function () {
      * Subscribe script is executed when onCommitted event fires,
      * because this event is the most reliable
      */
-    backgroundPage.webNavigation.onCommitted.addListener((details) => {
+    backgroundPage.webNavigation.onCommitted.addListener(details => {
         const { tab, requestType, frameId } = details;
         if ((requestType !== RequestTypes.DOCUMENT
             && requestType !== RequestTypes.SUBDOCUMENT)

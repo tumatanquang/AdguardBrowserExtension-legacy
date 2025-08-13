@@ -31,29 +31,34 @@ const LOCALES = Object.keys(LANGUAGES);
  */
 const printTranslationsResults = (results, isMinimum = false) => {
     cliLog.info('Translations readiness:');
-    results.forEach((r) => {
+    for (let i = 0; i < results.length; ++i) {
+        const r = results[i];
         const record = `${r.locale} -- ${r.level}%`;
         if (r.level < THRESHOLD_PERCENTAGE) {
             cliLog.warningRed(record);
-            if (r.untranslatedStrings.length !== 0) {
+            const { untranslatedStrings } = r;
+            if (untranslatedStrings.length !== 0) {
                 cliLog.warning('  untranslated:');
-                r.untranslatedStrings.forEach((str) => {
+                for (let j = 0; j < untranslatedStrings.length; ++j) {
+                    const str = untranslatedStrings[j];
                     cliLog.warning(`    - ${str}`);
-                });
+                }
             }
-            if (!isMinimum) {
-                if (r.invalidTranslations.length !== 0) {
+            if (isMinimum === false) {
+                const { invalidTranslations } = r;
+                if (invalidTranslations.length !== 0) {
                     cliLog.warning('  invalid:');
-                    r.invalidTranslations.forEach((obj) => {
+                    for (let j = 0; j < invalidTranslations.length; ++j) {
+                        const obj = invalidTranslations[j];
                         cliLog.warning(`    - ${obj.key} -- ${obj.error}`);
-                    });
+                    }
                 }
             }
         }
         else {
             cliLog.success(record);
         }
-    });
+    }
 };
 
 /**
@@ -62,12 +67,15 @@ const printTranslationsResults = (results, isMinimum = false) => {
  */
 const printCriticalResults = (criticals) => {
     cliLog.warning('Invalid translated string:');
-    criticals.forEach((cr) => {
+    for (let i = 0; i < criticals.length; ++i) {
+        const cr = criticals[i];
         cliLog.warningRed(`${cr.locale}:`);
-        cr.invalidTranslations.forEach((obj) => {
+        const { invalidTranslations } = cr;
+        for (let j = 0; j < invalidTranslations.length; ++j) {
+            const obj = invalidTranslations[j];
             cliLog.warning(`   - ${obj.key} -- ${obj.error}`);
-        });
-    });
+        }
+    }
 };
 
 const validateMessage = (baseKey, baseLocaleTranslations, localeTranslations) => {
@@ -111,7 +119,8 @@ export const checkTranslations = async (locales, flags) => {
 
         const untranslatedStrings = [];
         const invalidTranslations = [];
-        baseMessages.forEach((baseKey) => {
+        for (let i = 0; i < localeMessagesCount; ++i) {
+            const baseKey = baseMessages[i];
             if (!localeMessages.includes(baseKey)) {
                 untranslatedStrings.push(baseKey);
             }
@@ -121,7 +130,7 @@ export const checkTranslations = async (locales, flags) => {
                     invalidTranslations.push(validationError);
                 }
             }
-        });
+        }
 
         const validLocaleMessagesCount = localeMessagesCount - invalidTranslations.length;
 
@@ -168,7 +177,7 @@ export const checkTranslations = async (locales, flags) => {
                 printTranslationsResults(filteredReadinessResults, isMinimum);
                 cliLog.warningRed('Our locales should be done for 100%');
             }
-            if (!isSuccess) {
+            if (isSuccess === false) {
                 // throw error finally
                 throw new Error('Locales validation failed!');
             }

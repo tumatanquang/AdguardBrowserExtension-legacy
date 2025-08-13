@@ -200,14 +200,11 @@ export const strings = (() => {
             for (let i = 0; i < str.length; ++i) {
                 const cursor = str[i];
 
-                if (stack.length === 0) {
-                    if (this.startsAtIndexWith(str, i, substr)) {
-                        return true;
-                    }
+                if (stack.length === 0 && this.startsAtIndexWith(str, i, substr)) {
+                    return true;
                 }
 
-                if (quotes.indexOf(cursor) >= 0
-                    && (i === 0 || str[i - 1] !== '\\')) {
+                if (quotes.indexOf(cursor) >= 0 && (i === 0 || str[i - 1] !== '\\')) {
                     const last = stack.pop();
                     if (!last) {
                         stack.push(cursor);

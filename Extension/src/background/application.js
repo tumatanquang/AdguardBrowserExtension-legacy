@@ -91,7 +91,7 @@ export const application = (() => {
      * @param filterId Filter identifier
      * @returns {*} true if enabled
      */
-    const isFilterEnabled = function (filterId) {
+    const isFilterEnabled = (filterId) => {
         const filter = subscriptions.getFilter(filterId);
         return filter && filter.enabled;
     };
@@ -102,7 +102,7 @@ export const application = (() => {
      * @param filterId Filter id
      * @returns {*} true if installed
      */
-    const isFilterInstalled = function (filterId) {
+    const isFilterInstalled = (filterId) => {
         const filter = subscriptions.getFilter(filterId);
         return filter && filter.installed;
     };
@@ -154,7 +154,7 @@ export const application = (() => {
      * Enable group
      * @param {number} groupId filter group identifier
      */
-    const enableGroup = function (groupId) {
+    const enableGroup = (groupId) => {
         const group = subscriptions.getGroup(groupId);
         if (!group || group.enabled) {
             return;
@@ -243,7 +243,7 @@ export const application = (() => {
      * @param {Array.<Number>} filterIds Filter identifiers
      * @returns {boolean} true if filter was disabled successfully
      */
-    const disableFilters = function (filterIds) {
+    const disableFilters = (filterIds) => {
         // Copy array to prevent parameter mutation
         filterIds = utils.collections.removeDuplicates(filterIds.slice(0));
         for (let i = 0; i < filterIds.length; ++i) {
@@ -263,7 +263,7 @@ export const application = (() => {
      * @param {Array.<Number>} filterIds Filter identifiers
      * @returns {boolean} true if filter was removed successfully
      */
-    const uninstallFilters = function (filterIds) {
+    const uninstallFilters = (filterIds) => {
         // Copy array to prevent parameter mutation
         filterIds = utils.collections.removeDuplicates(filterIds.slice(0));
 
@@ -288,7 +288,7 @@ export const application = (() => {
      *
      * @param {Number} filterId Filter identifier
      */
-    const removeFilter = function (filterId) {
+    const removeFilter = (filterId) => {
         const filter = subscriptions.getFilter(filterId);
         if (!filter || filter.removed) {
             return;
@@ -316,7 +316,7 @@ export const application = (() => {
      * @param url custom url, there rules are
      * @param options object containing title of custom filter
      */
-    const loadCustomFilter = async function (url, options) {
+    const loadCustomFilter = async (url, options) => {
         log.info('Downloading custom filter from {0}', url);
 
         if (!url) {

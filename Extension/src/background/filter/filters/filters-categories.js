@@ -34,17 +34,20 @@ export const categories = (() => {
 
         const filterTags = tags.getTags();
 
-        result.forEach((f) => {
+        for (let i = 0; i < result.length; ++i) {
+            const f = result[i];
             f.tagsDetails = [];
-            f.tags.forEach((tagId) => {
-                const tagDetails = filterTags.find((tag) => {
+            const { tags } = f;
+            for (let j = 0; j < tags.length; ++j) {
+                const tagId = tags[j];
+                const tagDetails = filterTags.find(tag => {
                     return tag.tagId === tagId;
                 });
 
                 if (tagDetails) {
                     if (tagDetails.keyword.startsWith('reference:')) {
                         // Hide 'reference:' tags
-                        return;
+                        continue;
                     }
 
                     if (!tagDetails.keyword.startsWith('lang:')) {
@@ -54,8 +57,8 @@ export const categories = (() => {
 
                     f.tagsDetails.push(tagDetails);
                 }
-            });
-        });
+            }
+        }
 
         return result;
     };
@@ -79,7 +82,6 @@ export const categories = (() => {
         const filters = getFilters();
 
         const categories = [];
-
         for (let i = 0; i < groupsMeta.length; ++i) {
             const category = groupsMeta[i];
             category.filters = selectFiltersByGroupId(category.groupId, filters);
@@ -116,10 +118,13 @@ export const categories = (() => {
         const metadata = getFiltersMetadata();
         const result = [];
         const langSuitableFilters = subscriptions.getLangSuitableFilters();
-        for (let i = 0; i < metadata.categories.length; ++i) {
-            const category = metadata.categories[i];
+        const { categories } = metadata;
+        for (let i = 0; i < categories.length; ++i) {
+            const category = categories[i];
             if (category.groupId === groupId) {
-                category.filters.forEach(filter => {
+                const { filters } = category;
+                for (let j = 0; j < filters.length; ++j) {
+                    const filter = filters[j];
                     if (tags.isRecommendedFilter(filter) && doesFilterMatchPlatform(filter)) {
                         // get ids intersection to enable recommended filters matching the lang tag
                         // only if filter has language
@@ -132,7 +137,7 @@ export const categories = (() => {
                             result.push(filter.filterId);
                         }
                     }
-                });
+                }
                 return result;
             }
         }
@@ -147,7 +152,7 @@ export const categories = (() => {
      */
     const enableFiltersGroup = async function (groupId) {
         const group = subscriptions.getGroup(groupId);
-        if (group && typeof group.enabled === 'undefined') {
+        if (group && group.enabled === undefined) {
             const recommendedFiltersIds = getRecommendedFilterIdsByGroupId(groupId);
             await application.addAndEnableFilters(recommendedFiltersIds);
         }

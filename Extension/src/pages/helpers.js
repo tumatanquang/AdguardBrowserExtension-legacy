@@ -44,7 +44,7 @@ export const hoursToMs = (hours) => {
  * @returns {Promise<unknown>}
  */
 export const sleep = (timeoutMs) => {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
         setTimeout(resolve, timeoutMs);
     });
 };
@@ -70,7 +70,7 @@ export const findChunks = (str, searchString, chunks = []) => {
             chunks.push(restStr);
         }
     }
-    return chunks.filter((i) => !!i);
+    return chunks.filter(i => !!i);
 };
 
 export const passiveEventSupported = (() => {
@@ -175,17 +175,14 @@ export const updateFilterDescription = (updatedFilters) => {
             description: translator.getMessage('options_popup_update_error')
         };
     }
-    const filterNames = updatedFilters.map((filter) => filter.name).join(', ');
-    let description;
-    if (updatedFilters.length === 0) {
-        description = `${filterNames} ${translator.getMessage('options_popup_update_not_found')}`;
+    const filterNames = updatedFilters.map(filter => filter.name).join(', ');
+    const updatedFiltersCount = updatedFilters.length;
+    if (updatedFiltersCount === 0) {
+        return `${filterNames} ${translator.getMessage('options_popup_update_not_found')}`;
     }
-    else if (updatedFilters.length === 1) {
-        description = `${filterNames} ${translator.getMessage('options_popup_update_filter')}`;
-    }
-    else if (updatedFilters.length > 1) {
-        description = `${filterNames} ${translator.getMessage('options_popup_update_filters')}`;
+    if (updatedFiltersCount === 1) {
+        return `${filterNames} ${translator.getMessage('options_popup_update_filter')}`;
     }
 
-    return { description };
+    return `${filterNames} ${translator.getMessage('options_popup_update_filters')}`;
 };

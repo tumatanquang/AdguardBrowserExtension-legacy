@@ -31,8 +31,6 @@ const TabSelector = observer(() => {
     const [resultItems, setResultItems] = useState([]);
     const [currentStep, setCurrentStep] = useState(0);
 
-    const SELECTED_CLASS_NAME = 'selected';
-
     useEffect(() => {
         if (refResult.current?.childNodes) {
             setResultItems(Array.from(refResult.current.childNodes));
@@ -41,13 +39,14 @@ const TabSelector = observer(() => {
 
     useEffect(() => {
         if (resultItems) {
-            resultItems.forEach(
-                (el) => el.classList.remove(SELECTED_CLASS_NAME)
-            );
+            for (let i = 0; i < resultItems.length; ++i) {
+                const el = resultItems[i];
+                el.classList.remove('selected');
+            }
 
             const currentEl = resultItems[currentStep];
 
-            currentEl?.classList.add(SELECTED_CLASS_NAME);
+            currentEl?.classList.add('selected');
             currentEl?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         }
     }, [currentStep, resultItems]);
@@ -76,17 +75,15 @@ const TabSelector = observer(() => {
 
     useKeyDown(refResult, 'Enter', () => {
         // Selected with the arrow buttons
-        const targetElem = resultItems?.find(
-            (el) => el.classList.contains(SELECTED_CLASS_NAME)
-        );
+        const targetElem = resultItems?.find(el => el.classList.contains('selected'));
         // Selected with the tab button
-        const activeElem = resultItems?.find(
-            (el) => el === document.activeElement
-        );
+        const activeElem = resultItems?.find(el => el === document.activeElement);
 
         if (activeElem || targetElem) {
             (async () => {
-                await selectionHandlerSearch(Number(activeElem ? activeElem.id : targetElem.id));
+                await selectionHandlerSearch(Number(activeElem
+                    ? activeElem.id
+                    : targetElem.id));
             })();
             document.activeElement.blur();
         }
@@ -94,15 +91,13 @@ const TabSelector = observer(() => {
 
     useKeyDown(refResult, 'ArrowDown', () => {
         const lastIndex = resultItems.length - 1;
-        const step = lastIndex > currentStep
-            ? currentStep + 1 : 0;
+        const step = lastIndex > currentStep ? currentStep + 1 : 0;
         setCurrentStep(step);
     });
 
     useKeyDown(refResult, 'ArrowUp', () => {
         const lastIndex = resultItems.length - 1;
-        const step = currentStep > 0
-            ? currentStep - 1 : lastIndex;
+        const step = currentStep > 0 ? currentStep - 1 : lastIndex;
         setCurrentStep(step);
     });
 
@@ -111,7 +106,7 @@ const TabSelector = observer(() => {
     useOutsideFocus(refSelector, cancelTabSearch);
 
     useEffect(() => {
-        const selectedTab = tabs.find((tab) => tab.tabId === selectedTabId);
+        const selectedTab = tabs.find(tab => tab.tabId === selectedTabId);
         const title = selectedTab?.title || '';
         setPrevTabTitle(title);
         if (!selectIsOpen) {
@@ -130,7 +125,7 @@ const TabSelector = observer(() => {
 
     const renderSearchResult = () => {
         const searchValueString = searchValue.replace(WASTE_CHARACTERS, '\\$&');
-        const searchQuery = new RegExp(searchValueString, 'ig');
+        const searchQuery = new RegExp(searchValueString, 'gi');
         return tabs.map((tab) => {
             const { title, tabId } = tab;
 

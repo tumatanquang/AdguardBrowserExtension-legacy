@@ -45,8 +45,9 @@ export const sleep = (wait) => {
  * @returns {Promise<void>}
  */
 export const sleepIfNecessary = async (entryTimeMs, minDurationMs) => {
-    if (Date.now() - entryTimeMs < minDurationMs) {
-        await sleep(minDurationMs - (Date.now() - entryTimeMs));
+    const duration = Date.now() - entryTimeMs;
+    if (duration < minDurationMs) {
+        await sleep(minDurationMs - duration);
     }
 };
 

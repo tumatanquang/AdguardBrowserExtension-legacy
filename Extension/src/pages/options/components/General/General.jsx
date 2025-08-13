@@ -167,7 +167,7 @@ const General = observer(() => {
                     disabled={allowAcceptableAds}
                     id={ALLOW_ACCEPTABLE_ADS}
                     type={SETTINGS_TYPES.CHECKBOX}
-                    value={!allowAcceptableAds}
+                    value={allowAcceptableAds}
                     label={reactTranslator.getMessage('options_block_acceptable_ads')}
                     handler={allowAcceptableAdsChangeHandler}
                 />

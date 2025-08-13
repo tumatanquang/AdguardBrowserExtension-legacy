@@ -77,21 +77,22 @@ export const prefs = (() => {
          */
         get edgeVersion() {
             return lazyGet(Prefs, 'edgeVersion', function () {
-                if (this.browser === 'Edge') {
-                    const { userAgent } = navigator;
-                    const i = userAgent.indexOf('Edge/');
-                    if (i < 0) {
+                switch (this.browser) {
+                    case 'Edge':
+                        const { userAgent } = navigator;
+                        const i = userAgent.indexOf('Edge/');
+                        if (i < 0) {
+                            return {
+                                rev: 0,
+                                build: 0
+                            };
+                        }
+                        const version = userAgent.substring(i + 'Edge/'.length);
+                        const parts = version.split('.');
                         return {
-                            rev: 0,
-                            build: 0
+                            rev: Number.parseInt(parts[0], 10),
+                            build: Number.parseInt(parts[1], 10)
                         };
-                    }
-                    const version = userAgent.substring(i + 'Edge/'.length);
-                    const parts = version.split('.');
-                    return {
-                        rev: Number.parseInt(parts[0], 10),
-                        build: Number.parseInt(parts[1], 10)
-                    };
                 }
             });
         },

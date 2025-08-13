@@ -7,8 +7,8 @@ import {
     makeObservable
 } from 'mobx';
 
-import { messenger } from '../../../services/messenger';
 import { createSavingService, EVENTS as SAVING_FSM_EVENTS, STATES } from '../Editor/savingFSM';
+import { messenger } from '../../../services/messenger';
 
 const savingService = createSavingService({
     id: 'userRules',
@@ -36,8 +36,10 @@ class UserRulesEditorStore {
         savingService.onTransition((state) => {
             runInAction(() => {
                 this.savingUserRulesState = state.value;
-                if (state.value === STATES.SAVING) {
-                    this.userRulesEditorContentChanged = false;
+                switch (state.value) {
+                    case STATES.SAVING:
+                        this.userRulesEditorContentChanged = false;
+                        break;
                 }
             });
         });

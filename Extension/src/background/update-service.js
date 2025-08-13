@@ -60,19 +60,20 @@ export const applicationUpdateService = (function () {
 
         const filtersStateInfo = filtersState.getFiltersState();
 
-        const enabledFilters = filters.filter((filter) => {
+        const enabledFilters = filters.filter(filter => {
             const { filterId } = filter;
             return !!(filtersStateInfo[filterId] && filtersStateInfo[filterId].enabled);
         });
 
         const groupState = filtersState.getGroupsState();
 
-        enabledFilters.forEach((filter) => {
+        for (let i = 0; i < enabledFilters.length; ++i) {
+            const filter = enabledFilters[i];
             const { groupId } = filter;
             if (groupState[groupId] === undefined) {
                 application.enableGroup(filter.groupId);
             }
-        });
+        }
     }
 
     const UPDATE_PREVIOUS_DEFAULT_VALUE = 48 * 60 * 60 * 1000;
@@ -144,9 +145,12 @@ export const applicationUpdateService = (function () {
             return !existingFiltersIds.includes(id);
         });
 
-        filtersIdsToRemove.forEach(filterId => filtersState.removeFilter(filterId));
+        for (let i = 0; i < filtersIdsToRemove.length; ++i) {
+            const filterId = filtersIdsToRemove[i];
+            filtersState.removeFilter(filterId);
+        }
 
-        const removePromises = filtersIdsToRemove.map(async (filterId) => {
+        const removePromises = filtersIdsToRemove.map(async filterId => {
             await rulesStorage.remove(filterId);
             log.info(`Filter with id: ${filterId} removed from the storage`);
         });

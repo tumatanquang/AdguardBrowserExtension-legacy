@@ -522,7 +522,8 @@ export const webRequestService = (function () {
         });
 
         let result = requestUrl;
-        rules.forEach((r) => {
+        for (let i = 0; i < rules.length; ++i) {
+            const r = rules[i];
             if (!r.isAllowlist()) {
                 const ruleResult = r.getAdvancedModifier().removeParameters(result);
                 if (ruleResult !== result) {
@@ -537,7 +538,7 @@ export const webRequestService = (function () {
 
                 result = ruleResult;
             }
-        });
+        }
 
         if (result !== requestUrl) {
             return result;

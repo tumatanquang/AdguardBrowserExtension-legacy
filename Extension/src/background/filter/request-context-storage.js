@@ -326,77 +326,84 @@ export const requestContextStorage = (function () {
 
         let ruleHitsRecords = [];
 
-        if (context.requestState === States.DONE) {
-            context.requestState = States.NONE;
+        switch (context.requestState) {
+            case States.DONE:
+                context.requestState = States.NONE;
 
-            const {
-                requestRule,
-                cspRules,
-                stealthActions,
-                cspReportBlocked
-            } = context;
+                const {
+                    requestRule,
+                    cspRules,
+                    stealthActions,
+                    cspReportBlocked
+                } = context;
 
-            if (requestRule) {
-                filteringLog.bindRuleToHttpRequestEvent(tab, requestRule, context.eventId);
-                ruleHitsRecords.push(requestRule);
-            }
+                if (requestRule) {
+                    filteringLog.bindRuleToHttpRequestEvent(tab, requestRule, context.eventId);
+                    ruleHitsRecords.push(requestRule);
+                }
 
-            if (cspRules) {
-                cspRules.forEach(cspRule => {
-                    filteringLog.addHttpRequestEvent({
-                        tab,
-                        requestUrl,
-                        frameUrl: referrerUrl,
-                        requestType: RequestTypes.CSP,
-                        requestRule: cspRule,
-                        timestamp: Date.now()
-                    });
-                });
-
-                ruleHitsRecords = ruleHitsRecords.concat(cspRules);
-            }
-
-            if (stealthActions) {
-                filteringLog.bindStealthActionsToHttpRequestEvent(tab, stealthActions, context.eventId);
-            }
-
-            if (cspReportBlocked) {
-                filteringLog.bindCspReportBlockedToHttpRequestEvent(tab, cspReportBlocked, context.eventId);
-            }
-        }
-
-        if (context.contentModifyingState === States.DONE) {
-            context.contentModifyingState = States.NONE;
-
-            const { replaceRules } = context;
-            const { contentRules } = context;
-
-            if (replaceRules) {
-                filteringLog.bindReplaceRulesToHttpRequestEvent(tab, replaceRules, context.eventId);
-                ruleHitsRecords = ruleHitsRecords.concat(replaceRules);
-            }
-
-            if (contentRules) {
-                contentRules.forEach(contentRule => {
-                    const elements = context.elements.get(contentRule) || [];
-                    elements.forEach(element => {
-                        filteringLog.addCosmeticEvent({
+                if (cspRules) {
+                    for (let i = 0; i < cspRules.length; ++i) {
+                        const cspRule = cspRules[i];
+                        filteringLog.addHttpRequestEvent({
                             tab,
-                            element,
-                            frameUrl: requestUrl,
-                            requestType: context.requestType,
-                            requestRule: contentRule,
+                            requestUrl,
+                            frameUrl: referrerUrl,
+                            requestType: RequestTypes.CSP,
+                            requestRule: cspRule,
                             timestamp: Date.now()
                         });
-                    });
-                    context.elements.delete(contentRule);
-                });
-                ruleHitsRecords = ruleHitsRecords.concat(contentRules);
-            }
+                    }
+
+                    ruleHitsRecords = ruleHitsRecords.concat(cspRules);
+                }
+
+                if (stealthActions) {
+                    filteringLog.bindStealthActionsToHttpRequestEvent(tab, stealthActions, context.eventId);
+                }
+
+                if (cspReportBlocked === true) {
+                    filteringLog.bindCspReportBlockedToHttpRequestEvent(tab, cspReportBlocked, context.eventId);
+                }
+                break;
+        }
+
+        switch (context.contentModifyingState) {
+            case States.DONE:
+                context.contentModifyingState = States.NONE;
+
+                const { replaceRules, contentRules } = context;
+
+                if (replaceRules) {
+                    filteringLog.bindReplaceRulesToHttpRequestEvent(tab, replaceRules, context.eventId);
+                    ruleHitsRecords = ruleHitsRecords.concat(replaceRules);
+                }
+
+                if (contentRules) {
+                    for (let i = 0; i < contentRules.length; ++i) {
+                        const contentRule = contentRules[i];
+                        const elements = context.elements.get(contentRule) || [];
+                        for (let j = 0; j < elements.length; ++j) {
+                            const element = elements[j];
+                            filteringLog.addCosmeticEvent({
+                                tab,
+                                element,
+                                frameUrl: requestUrl,
+                                requestType: context.requestType,
+                                requestRule: contentRule,
+                                timestamp: Date.now()
+                            });
+                        }
+                        context.elements.delete(contentRule);
+                    }
+                    ruleHitsRecords = ruleHitsRecords.concat(contentRules);
+                }
+                break;
         }
 
         for (let i = 0; i < ruleHitsRecords.length; ++i) {
-            webRequestService.recordRuleHit(tab, ruleHitsRecords[i], requestUrl);
+            const ruleHitsRecord = ruleHitsRecords[i];
+            webRequestService.recordRuleHit(tab, ruleHitsRecord, requestUrl);
         }
 
         // All processes finished

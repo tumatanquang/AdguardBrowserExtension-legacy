@@ -122,14 +122,15 @@ const saveLocales = async (localeDataPairs) => {
 const checkRequiredFields = (locale, messages, baseMessages) => {
     const requiredFields = PERSISTENT_MESSAGES;
     const resultMessages = { ...messages };
-    requiredFields.forEach((requiredField) => {
+    for (let i = 0; i < requiredFields.length; ++i) {
+        const requiredField = requiredFields[i];
         const fieldData = resultMessages[requiredField];
         if (!fieldData) {
             cliLog.info(` - "${locale}" locale does't have required field: "${requiredField}"`);
             cliLog.info('   Will be added message from base locale');
             resultMessages[requiredField] = baseMessages[requiredField];
         }
-    });
+    }
     return resultMessages;
 };
 
@@ -142,7 +143,7 @@ const validateRequiredFields = async () => {
         const checkedMessagesString = JSON.stringify(checkedMessages, null, 4).replace(/\//g, '\\/');
         await fs.promises.writeFile(pathToLocale, checkedMessagesString);
     });
-    await Promise.all(promises).catch((e) => {
+    await Promise.all(promises).catch(e => {
         cliLog.error(e);
     });
 };

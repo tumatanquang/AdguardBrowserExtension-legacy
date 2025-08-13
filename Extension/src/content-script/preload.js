@@ -43,7 +43,7 @@ export const preload = (function () {
      *
      * @returns {boolean}
      */
-    const isHtml = function () {
+    const isHtml = () => {
         return (document instanceof HTMLDocument)
             // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/233
             || ((document instanceof XMLDocument) && (document.createElement('div') instanceof HTMLDivElement));
@@ -53,7 +53,7 @@ export const preload = (function () {
      * Execute scripts in a page context and cleanup itself when execution completes
      * @param {string} script Script to execute
      */
-    const executeScript = function (script) {
+    const executeScript = (script) => {
         const scriptTag = document.createElement('script');
         scriptTag.setAttribute('type', 'text/javascript');
         // grep "localScriptRulesService" for details about script source
@@ -70,7 +70,7 @@ export const preload = (function () {
      * Applies JS injections.
      * @param scripts Array with JS scripts and scriptSource ('remote' or 'local')
      */
-    const applyScripts = function (scripts) {
+    const applyScripts = (scripts) => {
         if (!scripts || scripts.length === 0) {
             return;
         }
@@ -88,13 +88,15 @@ export const preload = (function () {
      * If onCommitted event doesn't occur for the frame, scripts will be applied in usual way.
      */
     contentPage.onMessage.addListener((response, sender, sendResponse) => {
-        if (response.type === 'injectScripts') {
+        switch (response.type) {
+            case 'injectScripts':
             // Notify background-page that content-script was received scripts
-            sendResponse({ applied: true });
-            if (!isHtml()) {
-                return;
-            }
-            applyScripts(response.scripts);
+                sendResponse({ applied: true });
+                if (!isHtml()) {
+                    return;
+                }
+                applyScripts(response.scripts);
+                break;
         }
     });
 
@@ -103,7 +105,7 @@ export const preload = (function () {
      * We insert wrapper's code into http/https documents and dynamically created frames.
      * The last one is due to the circumvention with using iframe's contentWindow.
      */
-    const isHttpOrAboutPage = function () {
+    const isHttpOrAboutPage = () => {
         const { protocol } = window.location;
         return protocol.indexOf('http') === 0 || protocol.indexOf('about:') === 0;
     };
@@ -112,7 +114,7 @@ export const preload = (function () {
      * Execute several scripts
      * @param {Array<string>} scripts Scripts to execute
      */
-    const executeScripts = function (scripts) {
+    const executeScripts = (scripts) => {
         if (!scripts || scripts.length === 0) {
             return;
         }
@@ -127,7 +129,7 @@ export const preload = (function () {
      * Overrides window.RTCPeerConnection running the function from wrappers.js
      * https://github.com/AdguardTeam/AdguardBrowserExtension/issues/588
      */
-    const initRequestWrappers = function () {
+    const initRequestWrappers = () => {
         // Only for dynamically created frames and http/https documents.
         if (!isHttpOrAboutPage()) {
             return;
@@ -148,7 +150,7 @@ export const preload = (function () {
      * Extracts element URL from the dom node
      * @param element DOM node
      */
-    const getElementUrl = function (element) {
+    const getElementUrl = (element) => {
         let elementUrl = element.src || element.data;
         if (!elementUrl
             || elementUrl.indexOf('http') !== 0
@@ -174,7 +176,7 @@ export const preload = (function () {
      * @param element Element to check
      * @return request ID
      */
-    const saveCollapseRequest = function (element) {
+    const saveCollapseRequest = (element) => {
         const tagName = element.tagName.toLowerCase();
         const requestId = collapseRequestId++;
         collapseRequests[requestId] = {
@@ -190,7 +192,7 @@ export const preload = (function () {
      * Response callback for "processShouldCollapse" message.
      * @param response Response got from the background page
      */
-    const onProcessShouldCollapseResponse = function (response) {
+    const onProcessShouldCollapseResponse = (response) => {
         if (!response) {
             return;
         }
@@ -213,7 +215,7 @@ export const preload = (function () {
      * Checks if element is blocked by AG and should be hidden
      * @param element Element to check
      */
-    const checkShouldCollapseElement = async function (element) {
+    const checkShouldCollapseElement = async (element) => {
         const requestType = requestTypeMap[element.localName];
         if (!requestType) {
             return;
@@ -250,14 +252,13 @@ export const preload = (function () {
      * Checks if loaded element is blocked by AG and should be hidden
      * @param event Load or error event
      */
-    const checkShouldCollapse = function (event) {
+    const checkShouldCollapse = (event) => {
         const element = event.target;
         const eventType = event.type;
         const tagName = element.tagName.toLowerCase();
 
-        const expectedEventType = tagName === 'iframe' || tagName === 'frame' || tagName === 'embed'
-            ? 'load'
-            : 'error';
+        const expectedEventType = tagName === 'iframe' || tagName === 'frame'
+            || tagName === 'embed' ? 'load' : 'error';
         if (eventType !== expectedEventType) {
             return;
         }
@@ -270,7 +271,7 @@ export const preload = (function () {
      * We will then check loaded elements if they are blocked by our extension.
      * In this case we'll hide these blocked elements.
      */
-    const initCollapseEventListeners = function () {
+    const initCollapseEventListeners = () => {
         document.addEventListener('error', checkShouldCollapse, true);
 
         // We need to listen for load events to hide blocked iframes (they don't raise error event)
@@ -282,7 +283,7 @@ export const preload = (function () {
      * @param styleEl       "style" DOM element
      * @param cssContent    CSS content to set
      */
-    const setStyleContent = function (styleEl, cssContent) {
+    const setStyleContent = (styleEl, cssContent) => {
         styleEl.textContent = cssContent;
     };
 
@@ -292,13 +293,13 @@ export const preload = (function () {
      *
      * @param protectStyleEl protected style element
      */
-    const protectStyleElementContent = function (protectStyleEl) {
+    const protectStyleElementContent = (protectStyleEl) => {
         const MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
         if (!MutationObserver) {
             return;
         }
         /* observer, which observe protectStyleEl inner changes, without deleting styleEl */
-        const innerObserver = new MutationObserver(((mutations) => {
+        const innerObserver = new MutationObserver(mutations => {
             for (let i = 0; i < mutations.length; ++i) {
                 const m = mutations[i];
                 if (protectStyleEl.hasAttribute('mod') && protectStyleEl.getAttribute('mod') === 'inner') {
@@ -307,13 +308,13 @@ export const preload = (function () {
                 }
 
                 protectStyleEl.setAttribute('mod', 'inner');
-                let isProtectStyleElModified = false;
 
                 /**
                  * further, there are two mutually exclusive situations: either there were changes
                  * the text of protectStyleEl, either there was removes a whole child "text"
                  * element of protectStyleEl we'll process both of them
                  */
+                let isProtectStyleElModified = false;
                 const { removedNodes } = m;
                 if (removedNodes.length !== 0) {
                     for (let j = 0; j < removedNodes.length; ++j) {
@@ -326,11 +327,11 @@ export const preload = (function () {
                     protectStyleEl.textContent = m.oldValue;
                 }
 
-                if (!isProtectStyleElModified) {
+                if (isProtectStyleElModified === false) {
                     protectStyleEl.removeAttribute('mod');
                 }
             }
-        }));
+        });
 
         innerObserver.observe(protectStyleEl, {
             'childList': true,
@@ -345,7 +346,7 @@ export const preload = (function () {
      *
      * @param css Array with CSS stylesheets
      */
-    const applyCss = function (css) {
+    const applyCss = (css) => {
         if (!css || css.length === 0) {
             return;
         }
@@ -366,7 +367,7 @@ export const preload = (function () {
      *
      * @param extendedCss Array with ExtendedCss stylesheets
      */
-    const applyExtendedCss = function (extendedCss) {
+    const applyExtendedCss = (extendedCss) => {
         if (!extendedCss || !extendedCss.length) {
             return;
         }
@@ -389,7 +390,7 @@ export const preload = (function () {
      * Applies CSS and extended CSS stylesheets
      * @param selectors     Object with the stylesheets got from the background page.
      */
-    const applySelectors = function (selectors) {
+    const applySelectors = (selectors) => {
         if (!selectors) {
             return;
         }
@@ -402,7 +403,7 @@ export const preload = (function () {
      * Response callback for "processShouldCollapseMany" message.
      * @param response Response from bg page.
      */
-    const onProcessShouldCollapseManyResponse = function (response) {
+    const onProcessShouldCollapseManyResponse = (response) => {
         if (!response) {
             return;
         }
@@ -460,14 +461,16 @@ export const preload = (function () {
      * In this case content scripts waits for add-on initialization and the
      * checks all page elements.
      */
-    const initBatchCollapse = function () {
-        if (document.readyState === 'complete'
-            || document.readyState === 'loaded'
-            || document.readyState === 'interactive') {
-            checkBatchShouldCollapse();
-        }
-        else {
-            document.addEventListener('DOMContentLoaded', checkBatchShouldCollapse);
+    const initBatchCollapse = () => {
+        switch (document.readyState) {
+            case 'loaded':
+            case 'interactive':
+            case 'complete':
+                checkBatchShouldCollapse();
+                break;
+            default:
+                document.addEventListener('DOMContentLoaded', checkBatchShouldCollapse);
+                break;
         }
     };
 

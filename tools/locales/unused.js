@@ -40,7 +40,9 @@ const canContainLocalesStrings = (filePath) => {
  * @returns {Array}
  */
 const getSrcFilesContents = (dirPath, contents = []) => {
-    fs.readdirSync(dirPath).forEach((file) => {
+    const files = fs.readdirSync(dirPath);
+    for (let i = 0; i < files.length; ++i) {
+        const file = files[i];
         const fullPath = path.join(dirPath, file);
         if (fs.lstatSync(fullPath).isDirectory()) {
             getSrcFilesContents(fullPath, contents);
@@ -48,7 +50,7 @@ const getSrcFilesContents = (dirPath, contents = []) => {
         else if (canContainLocalesStrings(fullPath)) {
             contents.push(fs.readFileSync(fullPath).toString());
         }
-    });
+    }
     return contents;
 };
 
@@ -77,8 +79,9 @@ export const checkUnusedMessages = async () => {
     }
     else {
         cliLog.warningRed('Unused messages:');
-        unusedMessages.forEach((key) => {
+        for (let i = 0; i < unusedMessages.length; ++i) {
+            const key = unusedMessages[i];
             cliLog.warning(`  ${key}`);
-        });
+        }
     }
 };

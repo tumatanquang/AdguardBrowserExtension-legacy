@@ -12,23 +12,24 @@ export function Notification(props) {
 
     const { uiStore } = useContext(rootStore);
 
-    const displayTimeoutAnimationMs = 5000;
-    const displayTimeoutMs = 5300;
+    const DISPLAY_DELAY_MS = 300;
+    const DISPLAY_TIMEOUT_ANIMATION_MS = 5 * 1000;
+    const DISPLAY_TIMEOUT_MS = DISPLAY_TIMEOUT_ANIMATION_MS + DISPLAY_DELAY_MS;
 
     useEffect(() => {
         const displayTimeoutAnimationId = setTimeout(() => {
             setNotificationOnClose(true);
-        }, displayTimeoutAnimationMs);
+        }, DISPLAY_TIMEOUT_ANIMATION_MS);
 
         const displayTimeout = setTimeout(() => {
             uiStore.removeNotification(id);
-        }, displayTimeoutMs);
+        }, DISPLAY_TIMEOUT_MS);
 
         return () => {
             clearTimeout(displayTimeoutAnimationId);
             clearTimeout(displayTimeout);
         };
-    }, [id, uiStore]);
+    }, [id, uiStore, DISPLAY_TIMEOUT_ANIMATION_MS, DISPLAY_TIMEOUT_MS]);
 
     const notificationClassnames = classnames('notification', {
         'notification--close': notificationOnClose
@@ -38,7 +39,7 @@ export function Notification(props) {
         setNotificationOnClose(true);
         setTimeout(() => {
             uiStore.removeNotification(id);
-        }, 300);
+        }, DISPLAY_DELAY_MS);
     };
 
     return (

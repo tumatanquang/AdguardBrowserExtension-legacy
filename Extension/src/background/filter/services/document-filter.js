@@ -35,8 +35,8 @@ export const documentFilterService = (function () {
         }
     };
 
+    const TRUSTED_TTL_MS = 1000 * 60 * 40; // 40 minutes
     function documentFilterService() {
-        const TRUSTED_TTL_MS = 1000 * 60 * 40; // 40 minutes
         const DOCUMENT_BLOCKED_URL = 'pages/ad-blocked.html';
 
         /**
@@ -50,7 +50,7 @@ export const documentFilterService = (function () {
                 return false;
             }
             const value = trustedCache.cache.getValue(host);
-            return !!(value);
+            return !!value;
         };
 
         /**
@@ -65,10 +65,8 @@ export const documentFilterService = (function () {
             }
 
             let blockingUrl = backgroundPage.getURL(DOCUMENT_BLOCKED_URL);
-
             blockingUrl += `?url=${encodeURIComponent(url)}`;
             blockingUrl += `&rule=${encodeURIComponent(ruleText)}`;
-
             return blockingUrl;
         };
 

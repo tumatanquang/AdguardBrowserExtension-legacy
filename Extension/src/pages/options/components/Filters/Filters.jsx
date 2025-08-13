@@ -83,7 +83,7 @@ const Filters = observer(() => {
     };
 
     const getEnabledFiltersByGroup = (group) => (
-        filters.filter((filter) => filter.groupId === group.groupId && filter.enabled)
+        filters.filter(filter => filter.groupId === group.groupId && filter.enabled)
     );
 
     const renderGroups = (groups) => {
@@ -113,8 +113,7 @@ const Filters = observer(() => {
     };
 
     const renderFilters = (filtersList) => {
-        return filtersList
-            .map((filter) => <Filter key={filter.filterId} filter={filter} />);
+        return filtersList.map(filter => <Filter key={filter.filterId} filter={filter} />);
     };
 
     const renderGroupsOnSearch = (matchedFilters) => {
@@ -133,7 +132,7 @@ const Filters = observer(() => {
             }, {});
         const affectedGroupsIds = Object.keys(searchData).map((id) => Number(id));
         const groupsToRender = categories
-            .filter((group) => affectedGroupsIds.includes(group.groupId));
+            .filter(group => affectedGroupsIds.includes(group.groupId));
         if (groupsToRender.length) {
             return groupsToRender.map((group) => {
                 const filtersToShow = searchData[group.groupId];
@@ -202,7 +201,7 @@ const Filters = observer(() => {
     }
 
     if (Number.isInteger(settingsStore.selectedGroupId)) {
-        const selectedGroup = categories.find((group) => {
+        const selectedGroup = categories.find(group => {
             return group.groupId === settingsStore.selectedGroupId;
         });
 

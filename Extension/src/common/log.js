@@ -13,13 +13,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Adguard Browser Extension. If not, see <http://www.gnu.org/licenses/>.
- */
-
-/* eslint-disable no-console */
-
-/**
+ *
  * Simple logger with log levels
  */
+/* eslint-disable no-console */
 export const log = (() => {
     // Redefine if you need it
     const CURRENT_LEVEL = 'INFO';
@@ -39,8 +36,7 @@ export const log = (() => {
     };
 
     const getLocalTimeString = (date) => {
-        const ONE_MINUTE_MS = 60 * 1000;
-        const timeZoneOffsetMs = date.getTimezoneOffset() * ONE_MINUTE_MS;
+        const timeZoneOffsetMs = date.getTimezoneOffset() * 60 * 1000;
         const localTime = new Date(date - timeZoneOffsetMs);
         return localTime.toISOString().replace('Z', '');
     };
@@ -61,7 +57,7 @@ export const log = (() => {
         const str = `${args[0]}`;
         args = Array.prototype.slice.call(args, 1);
         let formatted = str.replace(PRINT_LOG_FORMAT_PATTERN, (match, number) => {
-            if (typeof args[number] !== 'undefined') {
+            if (args[number] !== undefined) {
                 let value = args[number];
                 if (value instanceof Error) {
                     value = errorToString(value);

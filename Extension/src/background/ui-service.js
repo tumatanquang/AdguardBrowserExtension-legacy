@@ -24,6 +24,7 @@ import { listeners } from './notifier';
 import { settings } from './settings/user-settings';
 import { tabsApi } from './tabs/tabs-api';
 import { prefs } from './prefs';
+import { localStorage } from './storage';
 import { pageStats } from './filter/page-stats';
 import { frames } from './tabs/frames';
 import { notifications } from './utils/notifications';
@@ -414,7 +415,7 @@ export const uiService = (function () {
     }
 
     function closeAllPages() {
-        tabsApi.forEach((tab) => {
+        tabsApi.forEach(tab => {
             if (tab.url.indexOf(backgroundPage.getURL('')) >= 0) {
                 tabsApi.remove(tab.tabId);
             }
@@ -913,6 +914,7 @@ export const uiService = (function () {
     };
 
     const openFiltersDownloadPage = function () {
+        localStorage.setItem('useDefaultSettings', false);
         openTab(getPageUrl('filter-download.html'));
     };
 
@@ -1075,47 +1077,53 @@ export const uiService = (function () {
             updateTabIconAsync(tab);
 
             const activeTab = await tabsApi.getActive();
-            if (activeTab) {
-                if (tab.tabId === activeTab.tabId) {
-                    updatePopupStatsAsync(activeTab);
-                }
+            if (activeTab && tab.tabId === activeTab.tabId) {
+                updatePopupStatsAsync(activeTab);
             }
         });
 
         // Update context menu on change user settings
         settings.onUpdated.addListener(async (setting) => {
-            if (setting === settings.DISABLE_SHOW_CONTEXT_MENU) {
-                const tab = await tabsApi.getActive();
-                if (tab) {
-                    updateTabContextMenu(tab);
-                }
+            switch (setting) {
+                case settings.DISABLE_SHOW_CONTEXT_MENU:
+                    const tab = await tabsApi.getActive();
+                    if (tab) {
+                        updateTabContextMenu(tab);
+                    }
+                    break;
             }
         });
 
         // Update tab icon and context menu on application initialization
         listeners.addListener(async (event) => {
-            if (event === listeners.APPLICATION_INITIALIZED) {
-                const tab = await tabsApi.getActive();
-                if (tab) {
-                    updateTabIconAndContextMenu(tab);
-                }
+            switch (event) {
+                case listeners.APPLICATION_INITIALIZED:
+                    const tab = await tabsApi.getActive();
+                    if (tab) {
+                        updateTabIconAndContextMenu(tab);
+                    }
+                    break;
             }
         });
 
         // on application updated event
         listeners.addListener((event, info) => {
-            if (event === listeners.APPLICATION_UPDATED) {
-                if (settings.isShowAppUpdatedNotification()) {
-                    showApplicationUpdatedPopup(info.currentVersion, info.prevVersion, alertStyles, updateIframeStyles);
-                }
+            switch (event) {
+                case listeners.APPLICATION_UPDATED:
+                    if (settings.isShowAppUpdatedNotification()) {
+                        showApplicationUpdatedPopup(info.currentVersion, info.prevVersion, alertStyles, updateIframeStyles);
+                    }
+                    break;
             }
         });
 
         // on filter auto-enabled event
         listeners.addListener((event, enabledFilters) => {
-            if (event === listeners.ENABLE_FILTER_SHOW_POPUP) {
-                const result = getFiltersEnabledResultMessage(enabledFilters);
-                showAlertMessagePopup(result.title, result.text, alertStyles);
+            switch (event) {
+                case listeners.ENABLE_FILTER_SHOW_POPUP:
+                    const result = getFiltersEnabledResultMessage(enabledFilters);
+                    showAlertMessagePopup(result.title, result.text, alertStyles);
+                    break;
             }
         });
 
@@ -1138,9 +1146,11 @@ export const uiService = (function () {
 
         // on filters updated event
         listeners.addListener((event, success, updatedFilters) => {
-            if (event === listeners.UPDATE_FILTERS_SHOW_POPUP) {
-                const result = getFiltersUpdateResultMessage(success, updatedFilters);
-                showAlertMessagePopup(result.title, result.text, alertStyles);
+            switch (event) {
+                case listeners.UPDATE_FILTERS_SHOW_POPUP:
+                    const result = getFiltersUpdateResultMessage(success, updatedFilters);
+                    showAlertMessagePopup(result.title, result.text, alertStyles);
+                    break;
             }
         });
 

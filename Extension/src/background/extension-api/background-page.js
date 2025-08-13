@@ -37,7 +37,7 @@ export const backgroundPage = (() => {
                         senderOverride.tab = toTabFromChromeTab(sender.tab);
                     }
 
-                    if (typeof sender.frameId !== 'undefined') {
+                    if (sender.frameId !== undefined) {
                         senderOverride.frameId = sender.frameId;
                     }
 
@@ -137,6 +137,7 @@ export const backgroundPage = (() => {
      * @typedef {Object} WebRequestDetails
      */
 
+    const DETAILS_URL_PATTERN = /^http(s)?:/;
     /**
      * Transforms raw request details from different browsers into unified format
      * @param {WebRequestDetails} details raw webRequest details
@@ -151,7 +152,7 @@ export const backgroundPage = (() => {
          * we use a chromium based approach in this case.
          */
         if (details.type === 'websocket' && details.url.indexOf('http') === 0) {
-            details.url = details.url.replace(/^http(s)?:/, 'ws$1:');
+            details.url = details.url.replace(DETAILS_URL_PATTERN, 'ws$1:');
         }
 
         // https://developer.chrome.com/extensions/webRequest#event-onBeforeRequest
@@ -262,14 +263,15 @@ export const backgroundPage = (() => {
             }
 
             const extraInfoSpec = ['blocking'];
-            if (extraInfoSpecsDirty && extraInfoSpecsDirty.length !== 0) {
-                extraInfoSpecsDirty.forEach((spec) => {
+            if (extraInfoSpecsDirty) {
+                for (let i = 0; i < extraInfoSpecsDirty.length; ++i) {
+                    const spec = extraInfoSpecsDirty[i];
                     extraInfoSpec.push(spec);
-                });
+                }
             }
 
             // https://developer.chrome.com/extensions/webRequest#event-onBeforeRequest
-            browser.webRequest.onBeforeRequest.addListener((details) => {
+            browser.webRequest.onBeforeRequest.addListener(details => {
                 if (shouldSkipRequest(details)) {
                     return;
                 }
@@ -289,12 +291,12 @@ export const backgroundPage = (() => {
     const onBeforeSendHeadersExtraInfoSpec = ['requestHeaders', 'blocking'];
     const onHeadersReceivedExtraInfoSpec = ['responseHeaders', 'blocking'];
 
-    if (typeof browser.webRequest.OnBeforeSendHeadersOptions !== 'undefined'
+    if (browser.webRequest.OnBeforeSendHeadersOptions !== undefined
         && browser.webRequest.OnBeforeSendHeadersOptions.hasOwnProperty('EXTRA_HEADERS')) {
         onBeforeSendHeadersExtraInfoSpec.push('extraHeaders');
     }
 
-    if (typeof browser.webRequest.OnHeadersReceivedOptions !== 'undefined'
+    if (browser.webRequest.OnHeadersReceivedOptions !== undefined
         && browser.webRequest.OnHeadersReceivedOptions.hasOwnProperty('EXTRA_HEADERS')) {
         onHeadersReceivedExtraInfoSpec.push('extraHeaders');
     }
@@ -528,7 +530,7 @@ export const backgroundPage = (() => {
         onBeforeSendHeaders,
         onResponseStarted,
         onBeforeRedirect,
-        webSocketSupported: typeof browser.webRequest.ResourceType !== 'undefined'
+        webSocketSupported: browser.webRequest.ResourceType !== undefined
             && browser.webRequest.ResourceType.WEBSOCKET === 'websocket',
         filterResponseData: browser.webRequest.filterResponseData
     };
@@ -537,7 +539,7 @@ export const backgroundPage = (() => {
 
         addListener(callback) {
             // https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webNavigation/onCreatedNavigationTarget#Browser_compatibility
-            if (typeof browser.webNavigation.onCreatedNavigationTarget === 'undefined') {
+            if (browser.webNavigation.onCreatedNavigationTarget === undefined) {
                 return;
             }
 
@@ -589,12 +591,12 @@ export const backgroundPage = (() => {
         onDOMContentLoaded: browser.webNavigation.onDOMContentLoaded
     };
 
-    const browserActionSupported = typeof browser.browserAction.setIcon !== 'undefined';
+    const browserActionSupported = browser.browserAction.setIcon !== undefined;
 
     const browserAction = {
         /* eslint-disable-next-line no-unused-vars */
         async setBrowserAction(tab, icon, badge, badgeColor, title) {
-            if (!browserActionSupported) {
+            if (browserActionSupported === false) {
                 return;
             }
 

@@ -1119,7 +1119,7 @@
         },
         {
             "domains": "tvsmotr.ru",
-            "script": "(function() { var intervalId = 0; var blockAds = function() { try { if (typeof BeSeedRotator != 'undefined' && BeSeedRotator.Container.player) { clearInterval(intervalId); BeSeedRotator.showDismissButton(); BeSeedRotator.reCache(); } } catch (ex) {}  }; intervalId = setInterval(blockAds, 100); })();"
+            "script": "(function() { var intervalId = 0; var blockAds = function() { try { if (typeof BeSeedRotator !== 'undefined' && BeSeedRotator.Container.player) { clearInterval(intervalId); BeSeedRotator.showDismissButton(); BeSeedRotator.reCache(); } } catch (ex) {}  }; intervalId = setInterval(blockAds, 100); })();"
         },
         {
             "domains": "lets-play.tv",
@@ -8923,11 +8923,11 @@
         },
         {
             "domains": "sleazyneasy.com,watchfree.to,vidbull.com",
-            "script": "if (typeof localStorage != 'undefined' && localStorage.setItem) { localStorage.setItem('InfNumFastPops', '1'); }"
+            "script": "if (typeof localStorage !== 'undefined' && localStorage.setItem) { localStorage.setItem('InfNumFastPops', '1'); }"
         },
         {
             "domains": "sleazyneasy.com,watchfree.to,vidbull.com",
-            "script": "if (typeof localStorage != 'undefined' && localStorage.setItem) { localStorage.setItem('InfNumFastPopsExpire', new Date(new Date().setYear(2020))); }"
+            "script": "if (typeof localStorage !== 'undefined' && localStorage.setItem) { localStorage.setItem('InfNumFastPopsExpire', new Date(new Date().setYear(2020))); }"
         },
         {
             "domains": "tamilyogi.fm,watchjavonline.com,maturemoms.tv,pornovideoshub.com,pornsharing.com,pornoid.com,finevids.xxx,bossvideotube.com,nudevista.net,cashvideotube.com,pervertslut.com,embedlink.info,befuck.com,nudevista.com.br,pinkrod.com,thenewporn.com,ghostvidstube.com,nudevista.at,carvideotube.com,updatetube.com,wetplace.com,xmovies1.com,wow-mature.com,omamaturetube.com,vermangasporno.com,desibees.com,sexxincest.com,hotshame.com,tubetria.com,pornalized.com,verpornocomic.com,fusker.xxx,hentaisd.tv",
@@ -15835,7 +15835,7 @@
         },
         {
             "domains": "videomega.tv",
-            "script": "if (typeof localStorage != 'undefined' && localStorage.setItem) { localStorage.setItem('ppu_main_none', 1 + (1 ? \"; expires=\" + (new Date((new Date()).getTime() )).toUTCString() : \"\")); }"
+            "script": "if (typeof localStorage !== 'undefined' && localStorage.setItem) { localStorage.setItem('ppu_main_none', 1 + (1 ? \"; expires=\" + (new Date((new Date()).getTime() )).toUTCString() : \"\")); }"
         },
         {
             "domains": "pcmag.com",
@@ -15843,11 +15843,11 @@
         },
         {
             "domains": "mediafire.com",
-            "script": "if (typeof localStorage != 'undefined' && localStorage.setItem) { localStorage.setItem('InfNumFastPops', '5'); }"
+            "script": "if (typeof localStorage !== 'undefined' && localStorage.setItem) { localStorage.setItem('InfNumFastPops', '5'); }"
         },
         {
             "domains": "mediafire.com",
-            "script": "if (typeof localStorage != 'undefined' && localStorage.setItem) { localStorage.setItem('InfNumFastPopsExpire', new Date(new Date().setYear(2020))); }"
+            "script": "if (typeof localStorage !== 'undefined' && localStorage.setItem) { localStorage.setItem('InfNumFastPopsExpire', new Date(new Date().setYear(2020))); }"
         },
         {
             "domains": "constitution.com",
@@ -21211,7 +21211,7 @@
         },
         {
             "domains": "inszury.pl",
-            "script": "if (typeof localStorage != 'undefined' && localStorage.setItem) { localStorage.setItem('CookieAccept', '{\"Necessary\":true,\"Statistics\":false,\"Marketing\":false}'); };"
+            "script": "if (typeof localStorage !== 'undefined' && localStorage.setItem) { localStorage.setItem('CookieAccept', '{\"Necessary\":true,\"Statistics\":false,\"Marketing\":false}'); };"
         },
         {
             "domains": "officesuite.com",
@@ -21631,7 +21631,7 @@
         },
         {
             "domains": "bc.game",
-            "script": "if (typeof localStorage != 'undefined' && localStorage.setItem) { localStorage.setItem('ns_system', '{\"showCookie\":false}'); };"
+            "script": "if (typeof localStorage !== 'undefined' && localStorage.setItem) { localStorage.setItem('ns_system', '{\"showCookie\":false}'); };"
         },
         {
             "domains": "depop.com",
@@ -24759,7 +24759,7 @@
         },
         {
             "domains": "linkedin.com",
-            "script": "if (typeof localStorage != 'undefined' && localStorage.setItem) { localStorage.setItem('visited', 'true'); }"
+            "script": "if (typeof localStorage !== 'undefined' && localStorage.setItem) { localStorage.setItem('visited', 'true'); }"
         },
         {
             "domains": "chordify.net",
@@ -24779,7 +24779,7 @@
         },
         {
             "domains": "music.yandex.com,music.yandex.by,music.yandex.kz,music.yandex.ru",
-            "script": "if (typeof localStorage != 'undefined' && localStorage.setItem) { localStorage.setItem('gdpr-welcome', '{\"0\":0}'); }"
+            "script": "if (typeof localStorage !== 'undefined' && localStorage.setItem) { localStorage.setItem('gdpr-welcome', '{\"0\":0}'); }"
         },
         {
             "domains": "dokterdokter.nl",
@@ -25023,7 +25023,7 @@
         },
         {
             "domains": "twitch.tv",
-            "script": "if (typeof localStorage != 'undefined' && localStorage.setItem) { localStorage.setItem('twilight.gdpr.preferences', '{\"version\":1,\"vendorPreferences\":{\"amazon\":false,\"comscore\":false,\"google\":false,\"nielsen\":false,\"salesforce_dmp\":false}}'); };"
+            "script": "if (typeof localStorage !== 'undefined' && localStorage.setItem) { localStorage.setItem('twilight.gdpr.preferences', '{\"version\":1,\"vendorPreferences\":{\"amazon\":false,\"comscore\":false,\"google\":false,\"nielsen\":false,\"salesforce_dmp\":false}}'); };"
         },
         {
             "domains": "rtlmost.hu",
@@ -25271,7 +25271,7 @@
         },
         {
             "domains": "szkolenia.pfp.com.pl",
-            "script": "if (typeof localStorage != 'undefined' && localStorage.setItem) { localStorage.setItem('persist:cookies', '{\"isAccepted\":\"true\"}'); };"
+            "script": "if (typeof localStorage !== 'undefined' && localStorage.setItem) { localStorage.setItem('persist:cookies', '{\"isAccepted\":\"true\"}'); };"
         },
         {
             "domains": "sky.it",
@@ -26735,7 +26735,7 @@
         },
         {
             "domains": "die-bibel.de",
-            "script": "if (typeof localStorage != 'undefined' && localStorage.setItem) { localStorage.setItem('bep-USPbox-close-date', '{\"value\":\"usp disabled\"}'); };"
+            "script": "if (typeof localStorage !== 'undefined' && localStorage.setItem) { localStorage.setItem('bep-USPbox-close-date', '{\"value\":\"usp disabled\"}'); };"
         },
         {
             "domains": "mrt.od.ua",
@@ -27307,7 +27307,7 @@
         },
         {
             "domains": "news.rambler.ru",
-            "script": "if (typeof localStorage != 'undefined' && localStorage.setItem) { localStorage.setItem('rnews.disablePopups', '9999999999999'); }"
+            "script": "if (typeof localStorage !== 'undefined' && localStorage.setItem) { localStorage.setItem('rnews.disablePopups', '9999999999999'); }"
         },
         {
             "domains": "allrecipes.com",
@@ -27423,7 +27423,7 @@
         },
         {
             "domains": "mic.com",
-            "script": "if (typeof localStorage != 'undefined' && localStorage.setItem) { localStorage.setItem('new_user_modal_show_dates', '[9999999999]'); }"
+            "script": "if (typeof localStorage !== 'undefined' && localStorage.setItem) { localStorage.setItem('new_user_modal_show_dates', '[9999999999]'); }"
         },
         {
             "domains": "easy-deutsch.de",
@@ -31671,7 +31671,7 @@
         },
         {
             "domains": "doviz.com",
-            "script": "AG_onLoad(function() { setTimeout(function() { if(typeof player.pause != 'undefined') { player.pause(); } }, 3000); });"
+            "script": "AG_onLoad(function() { setTimeout(function() { if(typeof player.pause !== 'undefined') { player.pause(); } }, 3000); });"
         },
         {
             "domains": "reklamlar.my-debrid.net",
@@ -31687,7 +31687,7 @@
         },
         {
             "domains": "zdnet.com",
-            "script": "if (typeof localStorage != 'undefined' && localStorage.setItem) { localStorage.setItem('zdnetSettings', '{\"autoplayEnabled\":\"off\"}'); }"
+            "script": "if (typeof localStorage !== 'undefined' && localStorage.setItem) { localStorage.setItem('zdnetSettings', '{\"autoplayEnabled\":\"off\"}'); }"
         },
         {
             "domains": "azaku-anime.com",
@@ -31695,7 +31695,7 @@
         },
         {
             "domains": "cnet.com",
-            "script": "if (typeof localStorage != 'undefined' && localStorage.setItem) { localStorage.setItem('cnetSettings', '{\"autoplayEnabled\":\"off\"}'); }"
+            "script": "if (typeof localStorage !== 'undefined' && localStorage.setItem) { localStorage.setItem('cnetSettings', '{\"autoplayEnabled\":\"off\"}'); }"
         },
         {
             "domains": "dl.pcgamestorrents.org,bluemediafile.*,bluemediafiles.*",

@@ -51,7 +51,7 @@ export const requestSanitizer = (function () {
             requestHeadersModified = browserUtils.removeHeader(requestHeaders, 'Cookie');
         }
 
-        if (requestHeadersModified) {
+        if (requestHeadersModified === true) {
             return {
                 requestHeaders
             };
@@ -62,7 +62,7 @@ export const requestSanitizer = (function () {
         // Firefox doesn't allow to use "extraHeaders" extra option,
         //  but chrome requires it in order to get access to "Cookie" header
         const onBeforeSendHeadersExtraInfoSpec = ['requestHeaders', 'blocking'];
-        if (typeof browser.webRequest.OnBeforeSendHeadersOptions !== 'undefined'
+        if (browser.webRequest.OnBeforeSendHeadersOptions !== undefined
             && browser.webRequest.OnBeforeSendHeadersOptions.hasOwnProperty('EXTRA_HEADERS')) {
             onBeforeSendHeadersExtraInfoSpec.push('extraHeaders');
         }

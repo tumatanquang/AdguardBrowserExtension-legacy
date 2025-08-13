@@ -32,11 +32,8 @@ import { userrules } from '../userrules';
  */
 const browsersFilteringLog = (function () {
     const REQUESTS_SIZE_PER_TAB = 1000;
-
-    const backgroundTabId = BACKGROUND_TAB_ID;
-
     const backgroundTab = {
-        tabId: backgroundTabId,
+        tabId: BACKGROUND_TAB_ID,
         title: translator.getMessage('background_tab_title')
     };
 
@@ -51,7 +48,7 @@ const browsersFilteringLog = (function () {
 
     // Force to add background tab if it's defined
     if (prefs.features.hasBackgroundTab) {
-        tabsInfoMap[backgroundTabId] = backgroundTab;
+        tabsInfoMap[BACKGROUND_TAB_ID] = backgroundTab;
     }
 
     /**
@@ -76,10 +73,12 @@ const browsersFilteringLog = (function () {
         openedFilteringLogsPage = Math.max(openedFilteringLogsPage - 1, 0);
         if (openedFilteringLogsPage === 0) {
             // Clear events
-            Object.keys(tabsInfoMap).forEach((tabId) => {
+            const tabIds = Object.keys(tabsInfoMap);
+            for (let i = 0; i < tabIds.length; ++i) {
+                const tabId = tabIds[i];
                 const tabInfo = tabsInfoMap[tabId];
                 delete tabInfo.filteringEvents;
-            });
+            }
         }
     };
 
@@ -111,7 +110,7 @@ const browsersFilteringLog = (function () {
     const addTab = (tab) => {
         // Background tab can't be added
         // Synthetic tabs are used to send initial requests from new tab in chrome
-        if (tab.tabId === backgroundTabId || tab.synthetic) {
+        if (tab.tabId === BACKGROUND_TAB_ID || tab.synthetic) {
             return;
         }
 
@@ -127,7 +126,7 @@ const browsersFilteringLog = (function () {
      */
     const removeTabById = (tabId) => {
         // Background tab can't be removed
-        if (tabId === backgroundTabId) {
+        if (tabId === BACKGROUND_TAB_ID) {
             return;
         }
 
@@ -144,7 +143,7 @@ const browsersFilteringLog = (function () {
      */
     const updateTab = (tab) => {
         // Background tab can't be updated
-        if (tab.tabId === backgroundTabId) {
+        if (tab.tabId === BACKGROUND_TAB_ID) {
             return;
         }
 
@@ -174,8 +173,10 @@ const browsersFilteringLog = (function () {
             if (sourceRule.isDocumentLevelAllowlistRule()) {
                 destinationRuleDTO.documentLevelRule = true;
             }
-            if (sourceRule.getFilterListId() === ANTIBANNER_FILTERS_ID.STEALTH_MODE_FILTER_ID) {
-                destinationRuleDTO.isStealthModeRule = true;
+            switch (sourceRule.getFilterListId()) {
+                case ANTIBANNER_FILTERS_ID.STEALTH_MODE_FILTER_ID:
+                    destinationRuleDTO.isStealthModeRule = true;
+                    break;
             }
 
             destinationRuleDTO.allowlistRule = sourceRule.isAllowlist();
@@ -198,12 +199,14 @@ const browsersFilteringLog = (function () {
             }
         }
 
-        if (sourceRule.getFilterListId() === ANTIBANNER_FILTERS_ID.USER_FILTER_ID) {
-            const originalRule = userrules.getSourceRule(sourceRule.getText());
-            if (originalRule) {
-                destinationRuleDTO.ruleText = originalRule;
-                destinationRuleDTO.appliedRuleText = sourceRule.getText();
-            }
+        switch (sourceRule.getFilterListId()) {
+            case ANTIBANNER_FILTERS_ID.USER_FILTER_ID:
+                const originalRule = userrules.getSourceRule(sourceRule.getText());
+                if (originalRule) {
+                    destinationRuleDTO.ruleText = originalRule;
+                    destinationRuleDTO.appliedRuleText = sourceRule.getText();
+                }
+                break;
         }
     };
 
@@ -443,18 +446,19 @@ const browsersFilteringLog = (function () {
     /**
      * Writes to filtering event some useful properties from the replace rules
      * @param filteringEvent
-     * @param replaceRules
+     * @param {Array} replaceRules
      */
     const addReplaceRulesToFilteringEvent = (filteringEvent, replaceRules) => {
         // only replace rules can be applied together
         filteringEvent.requestRule = {};
         filteringEvent.requestRule.replaceRule = true;
         filteringEvent.replaceRules = [];
-        replaceRules.forEach((replaceRule) => {
+        for (let i = 0; i < replaceRules.length; ++i) {
+            const replaceRule = replaceRules[i];
             const ruleDTO = {};
             copyRuleProperties(ruleDTO, replaceRule);
             filteringEvent.replaceRules.push(ruleDTO);
-        });
+        }
     };
 
     const isExistingCookieEvent = ({
@@ -561,7 +565,7 @@ const browsersFilteringLog = (function () {
      * Replace rules are fired after the event was added
      * We should find event for this rule and update in log UI
      * @param tab
-     * @param replaceRules
+     * @param {Array} replaceRules
      * @param eventId
      */
     const bindReplaceRulesToHttpRequestEvent = function (tab, replaceRules, eventId) {
@@ -667,7 +671,7 @@ const browsersFilteringLog = (function () {
 
         const preserveLog = ignorePreserveLog ? false : preserveLogEnabled;
 
-        if (tabInfo && !preserveLog) {
+        if (tabInfo && preserveLog === false) {
             delete tabInfo.filteringEvents;
             listeners.notifyListeners(listeners.TAB_RESET, tabInfo);
         }
@@ -680,7 +684,7 @@ const browsersFilteringLog = (function () {
         const tabs = await tabsApi.getAll();
         // As Object.keys() returns strings we convert them to integers,
         // because tabId is integer in extension API
-        const tabIdsToRemove = Object.keys(tabsInfoMap).map(id => parseInt(id, 10));
+        const tabIdsToRemove = Object.keys(tabsInfoMap).map(id => Number.parseInt(id, 10));
         for (let i = 0; i < tabs.length; ++i) {
             const openTab = tabs[i];
             const tabInfo = tabsInfoMap[openTab.tabId];
@@ -703,9 +707,11 @@ const browsersFilteringLog = (function () {
 
         const syncTabs = [];
 
-        Object.keys(tabsInfoMap).forEach((tabId) => {
+        const tabIds = Object.keys(tabsInfoMap);
+        for (let i = 0; i < tabIds.length; ++i) {
+            const tabId = tabIds[i];
             syncTabs.push(tabsInfoMap[tabId]);
-        });
+        }
 
         return syncTabs;
     };
@@ -738,7 +744,7 @@ const browsersFilteringLog = (function () {
         // Bind to tab events
         tabsApi.onCreated.addListener(addTab);
         tabsApi.onUpdated.addListener(updateTab);
-        tabsApi.onRemoved.addListener((tab) => {
+        tabsApi.onRemoved.addListener(tab => {
             removeTabById(tab.tabId);
         });
     };

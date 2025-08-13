@@ -46,7 +46,7 @@ export function Setting(props) {
                 value
             } = props;
             const changeHandler = (currentValue) => {
-                let dataValue = parseInt(currentValue, 10);
+                let dataValue = Number.parseInt(currentValue, 10);
                 if (Number.isNaN(dataValue)) {
                     dataValue = currentValue;
                 }

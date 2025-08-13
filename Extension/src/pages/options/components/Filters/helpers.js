@@ -40,14 +40,15 @@ export const sortFilters = (filters) => {
 
 /**
  * Updates filters state without changing order
- * @param currentFilters
- * @param newFilters
+ * @param {SettingsStore['filters']} currentFilters
+ * @param {categories.getFiltersMetadata['filters']} newFilters
  */
 export const updateFilters = (currentFilters, newFilters) => {
     const updatedFilters = [...currentFilters];
 
-    newFilters.forEach((newFilter) => {
-        const currentFilterIdx = currentFilters.findIndex((currentFilter) => {
+    for (let i = 0; i < newFilters.length; ++i) {
+        const newFilter = newFilters[i];
+        const currentFilterIdx = currentFilters.findIndex(currentFilter => {
             return currentFilter.filterId === newFilter.filterId;
         });
 
@@ -57,21 +58,22 @@ export const updateFilters = (currentFilters, newFilters) => {
         else {
             updatedFilters[currentFilterIdx] = newFilter;
         }
-    });
+    }
 
     return updatedFilters;
 };
 
 /**
  * Updates groups state without changing order
- * @param currentGroups
- * @param newGroups
+ * @param {SettingsStore['categories']} currentGroups
+ * @param {categories.getFiltersMetadata['categories']} newGroups
  */
 export const updateGroups = (currentGroups, newGroups) => {
     const updatedGroups = [...currentGroups];
 
-    newGroups.forEach((newGroup) => {
-        const currentGroupIdx = currentGroups.findIndex((currentGroup) => {
+    for (let i = 0; i < newGroups.length; ++i) {
+        const newGroup = newGroups[i];
+        const currentGroupIdx = currentGroups.findIndex(currentGroup => {
             return currentGroup.groupId === newGroup.groupId;
         });
 
@@ -81,7 +83,7 @@ export const updateGroups = (currentGroups, newGroups) => {
         else {
             updatedGroups[currentGroupIdx] = newGroup;
         }
-    });
+    }
 
     return updatedGroups;
 };

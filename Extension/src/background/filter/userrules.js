@@ -58,7 +58,6 @@ export const userrules = (function () {
     };
 
     const USER_RULE_LINE_SEPARATOR_PATTERN = /\n/;
-    const USER_RULE_JOIN_LINE_SEPARATOR = '\n';
     /**
      * Save user rules text to storage
      * @param content Rules text
@@ -68,6 +67,7 @@ export const userrules = (function () {
         listeners.notifyListeners(listeners.UPDATE_FILTER_RULES, userFilter, lines);
     };
 
+    const USER_RULE_JOIN_LINE_SEPARATOR = '\n';
     /**
      * Loads user rules text from storage
      */
@@ -77,13 +77,16 @@ export const userrules = (function () {
         return content;
     };
 
-    const unAllowlistFrame = function (frameInfo) {
-        if (frameInfo.frameRule) {
-            if (frameInfo.frameRule.filterId === utils.filters.ALLOWLIST_FILTER_ID) {
-                allowlist.unAllowlistUrl(frameInfo.url);
-            }
-            else {
-                removeRule(frameInfo.frameRule.ruleText);
+    const unAllowlistFrame = (frameInfo) => {
+        const { frameRule } = frameInfo;
+        if (frameRule) {
+            switch (frameRule.filterId) {
+                case utils.filters.ALLOWLIST_FILTER_ID:
+                    allowlist.unAllowlistUrl(frameInfo.url);
+                    break;
+                default:
+                    removeRule(frameRule.ruleText);
+                    break;
             }
         }
     };
@@ -97,7 +100,7 @@ export const userrules = (function () {
         const userRulesText = await getUserRulesText();
         const userRulesStrings = userRulesText.split(USER_RULE_LINE_SEPARATOR_PATTERN);
         const updatedUserRulesText = userRulesStrings
-            .filter((userRuleString) => {
+            .filter(userRuleString => {
                 return !TSUrlFilter.RuleSyntaxUtils.isRuleForUrl(
                     userRuleString,
                     url
@@ -154,9 +157,10 @@ export const userrules = (function () {
 
             if (converted.length !== 0 && (converted.length > 1 || converted[0] !== line)) {
                 // Fill the map only for converted rules
-                converted.forEach((x) => {
+                for (let j = 0; j < converted.length; ++j) {
+                    const x = converted[i];
                     conversionMap.set(x, line);
-                });
+                }
             }
         }
 

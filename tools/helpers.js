@@ -51,7 +51,7 @@ const getClickToLoadSha = () => {
     const rawYaml = fs.readFileSync(redirectsYamlPath);
     const redirects = new Redirects(rawYaml);
     const click2loadSource = redirects.getRedirect('click2load.html');
-    return click2loadSource.sha; // click2loadSource.sha
+    return click2loadSource.sha;
 };
 
 /**
@@ -95,30 +95,27 @@ export const updateManifestBuffer = (env, targetPart, addedPart) => {
 };
 
 const capitalize = (str) => {
-    return str.charAt(0)
-        .toUpperCase() + str.slice(1);
+    return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
 const getNameSuffix = (buildEnv, browser) => {
     switch (browser) {
-        case BROWSERS.FIREFOX_STANDALONE: {
-            if (buildEnv === ENVS.BETA) {
-                return ' (Standalone)';
-            }
-            if (buildEnv === ENVS.DEV) {
-                return ' (Standalone Dev)';
-            }
-            break;
-        }
-        case BROWSERS.FIREFOX_AMO: {
-            if (buildEnv === ENVS.BETA) {
-                return ' (Beta)';
-            }
-            if (buildEnv === ENVS.DEV) {
-                return ' (AMO Dev)';
+        case BROWSERS.FIREFOX_STANDALONE:
+            switch (buildEnv) {
+                case ENVS.BETA:
+                    return ' (Standalone)';
+                case ENVS.DEV:
+                    return ' (Standalone Dev)';
             }
             break;
-        }
+        case BROWSERS.FIREFOX_AMO:
+            switch (buildEnv) {
+                case ENVS.BETA:
+                    return ' (Beta)';
+                case ENVS.DEV:
+                    return ' (AMO Dev)';
+            }
+            break;
         default:
             if (buildEnv !== ENVS.RELEASE) {
                 return ` (${capitalize(buildEnv)})`;

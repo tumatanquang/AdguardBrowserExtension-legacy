@@ -65,7 +65,8 @@ export const ExpiringCache = (() => {
         function getValue(key) {
             const value = cache[key];
             if (value !== undefined) {
-                if (Date.now() >= value.expires) {
+                const expires = +value.expires;
+                if (Date.now() >= expires) {
                     return null;
                 }
                 return value.data;
@@ -74,9 +75,9 @@ export const ExpiringCache = (() => {
         }
 
         function cleanup() {
-            const keys = Object.keys(cache);
-            for (let i = 0; i < keys.length; ++i) {
-                const key = keys[i];
+            const cacheKeys = Object.keys(cache);
+            for (let i = 0; i < cacheKeys.length; ++i) {
+                const key = cacheKeys[i];
                 const foundItem = getValue(key);
                 if (!foundItem) {
                     delete cache[key];
@@ -85,9 +86,9 @@ export const ExpiringCache = (() => {
             }
             const halfMaxCacheSize = maxCacheSize >> 1;
             if (cacheSize > halfMaxCacheSize) {
-                const keys = Object.keys(cache);
-                for (let i = 0; i < keys.length; ++i) {
-                    const key = keys[i];
+                const cacheKeys = Object.keys(cache);
+                for (let i = 0; i < cacheKeys.length; ++i) {
+                    const key = cacheKeys[i];
                     delete cache[key];
                     if (--cacheSize <= halfMaxCacheSize) {
                         break;

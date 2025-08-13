@@ -4,7 +4,7 @@
  */
 export const patchWindows = function (browser) {
     // Make compatible with Android WebExt
-    if (typeof browser.windows === 'undefined') {
+    if (browser.windows === undefined) {
         browser.windows = (function () {
             const defaultWindow = {
                 id: 1,

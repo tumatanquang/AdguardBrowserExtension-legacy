@@ -54,35 +54,37 @@ export const init = () => {
             }
         }
 
-        Swal.fire({
-            titleText: i18n.getMessage('filters_download_confirm_title'),
-            text: i18n.getMessage('filters_download_confirm_text'),
-            icon: 'question',
-            theme: 'auto',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            showConfirmButton: true,
-            showDenyButton: true,
-            confirmButtonText: i18n.getMessage('yes_button_title'),
-            denyButtonText: i18n.getMessage('no_button_title'),
-            confirmButtonColor: '#68BC86',
-            denyButtonColor: '#BF4829',
-            showLoaderOnConfirm: true,
-            preConfirm: async () => {
-                nanobar.go(50);
-            }
-        }).then((result) => {
-            localStorage.setItem('useDefaultSettings', result.isConfirmed);
-            if (result.isConfirmed) {
-                contentPage.sendMessage({
-                    type: MESSAGE_TYPES.INITIALIZE_ONINSTALL_DEFAULT_FILTERS
-                });
-                checkRequestFilterReady();
-            }
-            else {
-                onLoaded();
-            }
-        });
+        setTimeout(() => {
+            Swal.fire({
+                titleText: i18n.getMessage('filters_download_confirm_title'),
+                text: i18n.getMessage('filters_download_confirm_text'),
+                icon: 'question',
+                theme: 'auto',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: true,
+                showDenyButton: true,
+                confirmButtonText: i18n.getMessage('yes_button_title'),
+                denyButtonText: i18n.getMessage('no_button_title'),
+                confirmButtonColor: '#68BC86',
+                denyButtonColor: '#BF4829',
+                showLoaderOnConfirm: true,
+                preConfirm: async () => {
+                    nanobar.go(50);
+                }
+            }).then((result) => {
+                localStorage.setItem('useDefaultSettings', result.isConfirmed);
+                if (result.isConfirmed) {
+                    contentPage.sendMessage({
+                        type: MESSAGE_TYPES.INITIALIZE_ONINSTALL_DEFAULT_FILTERS
+                    });
+                    checkRequestFilterReady();
+                }
+                else {
+                    onLoaded();
+                }
+            });
+        }, 234);
     });
 };
 

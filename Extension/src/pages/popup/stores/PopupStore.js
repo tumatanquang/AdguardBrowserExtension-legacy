@@ -22,59 +22,41 @@ class PopupStore {
     TOTAL_BLOCKED_GROUP_ID = 'total';
 
     // need for render blocking before first data retrieving
-    @observable
-    isInitialDataReceived = false;
+    @observable isInitialDataReceived = false;
 
-    @observable
-    applicationFilteringDisabled = null;
+    @observable applicationFilteringDisabled = null;
 
-    @observable
-    applicationAvailable = true;
+    @observable applicationAvailable = true;
 
-    @observable
-    canAddRemoveRule = true;
+    @observable canAddRemoveRule = true;
 
-    @observable
-    url = null;
+    @observable url = null;
 
-    @observable
-    viewState = VIEW_STATES.ACTIONS;
+    @observable viewState = VIEW_STATES.ACTIONS;
 
-    @observable
-    totalBlocked = 0;
+    @observable totalBlocked = 0;
 
-    @observable
-    totalBlockedTab = 0;
+    @observable totalBlockedTab = 0;
 
-    @observable
-    documentAllowlisted = null;
+    @observable documentAllowlisted = null;
 
-    @observable
-    userAllowlisted = null;
+    @observable userAllowlisted = null;
 
-    @observable
-    showInfoAboutFullVersion = true;
+    @observable showInfoAboutFullVersion = true;
 
-    @observable
-    isEdgeBrowser = false;
+    @observable isEdgeBrowser = false;
 
-    @observable
-    stats = null;
+    @observable stats = null;
 
-    @observable
-    selectedTimeRange = TIME_RANGES.WEEK;
+    @observable selectedTimeRange = TIME_RANGES.WEEK;
 
-    @observable
-    selectedBlockedType = this.TOTAL_BLOCKED_GROUP_ID;
+    @observable selectedBlockedType = this.TOTAL_BLOCKED_GROUP_ID;
 
-    @observable
-    promoNotification = null;
+    @observable promoNotification = null;
 
-    @observable
-    hasCustomRulesToReset = false;
+    @observable hasCustomRulesToReset = false;
 
-    @observable
-    settings = null;
+    @observable settings = null;
 
     currentTabId = null;
 
@@ -145,7 +127,7 @@ class PopupStore {
 
     @computed
     get currentSite() {
-        if (this.applicationAvailable) {
+        if (this.applicationAvailable === true) {
             return this.domainName ? punycode.toUnicode(this.domainName) : this.url;
         }
         return this.url;
@@ -155,10 +137,10 @@ class PopupStore {
     get currentStatusMessage() {
         let messageKey;
 
-        if (!this.applicationAvailable) {
+        if (this.applicationAvailable === false) {
             messageKey = 'popup_site_filtering_state_secure_page';
         }
-        else if (!this.canAddRemoveRule) {
+        else if (this.canAddRemoveRule === false) {
             messageKey = 'popup_site_exception_information';
         }
         else if (this.applicationFilteringDisabled) {
@@ -180,7 +162,7 @@ class PopupStore {
 
     @action
     toggleAllowlisted = () => {
-        if (!this.applicationAvailable || this.applicationFilteringDisabled || !this.canAddRemoveRule) {
+        if (this.applicationAvailable === false || this.applicationFilteringDisabled || this.canAddRemoveRule === false) {
             return;
         }
 
@@ -208,11 +190,11 @@ class PopupStore {
             return POPUP_STATES.APPLICATION_FILTERING_DISABLED;
         }
 
-        if (!this.applicationAvailable) {
+        if (this.applicationAvailable === false) {
             return POPUP_STATES.APPLICATION_UNAVAILABLE;
         }
 
-        if (!this.canAddRemoveRule) {
+        if (this.canAddRemoveRule === false) {
             return POPUP_STATES.SITE_IN_EXCEPTION;
         }
 
@@ -233,12 +215,14 @@ class PopupStore {
 
     getDataByRange = (stats, range) => {
         switch (range) {
-            case TIME_RANGES.DAY:
+            case TIME_RANGES.DAY: {
                 return stats.lastMonth[stats.lastMonth.length - 1];
+            }
             case TIME_RANGES.WEEK: {
                 const result = {};
-                for (let i = 0; i < stats.lastWeek.length; ++i) {
-                    const day = stats.lastWeek[i];
+                const { lastWeek } = stats;
+                for (let i = 0; i < lastWeek.length; ++i) {
+                    const day = lastWeek[i];
                     // eslint-disable-next-line no-restricted-syntax
                     for (const type of Object.keys(day)) {
                         result[type] = (result[type] || 0) + day[type];
@@ -246,12 +230,14 @@ class PopupStore {
                 }
                 return result;
             }
-            case TIME_RANGES.MONTH:
+            case TIME_RANGES.MONTH: {
                 return stats.lastYear[stats.lastYear.length - 1];
+            }
             case TIME_RANGES.YEAR: {
                 const result = {};
-                for (let i = 0; i < stats.lastYear.length; ++i) {
-                    const month = stats.lastYear[i];
+                const { lastYear } = stats;
+                for (let i = 0; i < lastYear.length; ++i) {
+                    const month = lastYear[i];
                     // eslint-disable-next-line no-restricted-syntax
                     for (const type of Object.keys(month)) {
                         result[type] = (result[type] || 0) + month[type];
@@ -259,8 +245,9 @@ class PopupStore {
                 }
                 return result;
             }
-            default:
+            default: {
                 throw new Error('There is no such time range type');
+            }
         }
     };
 
@@ -279,7 +266,7 @@ class PopupStore {
         return blockedGroups
             .slice()
             .sort((groupA, groupB) => groupA.displayNumber - groupB.displayNumber)
-            .map((group) => {
+            .map(group => {
                 const { groupId, groupName } = group;
                 const blocked = statsDataForCurrentRange[group.groupId];
                 return {
@@ -288,7 +275,7 @@ class PopupStore {
                     groupName
                 };
             })
-            .filter((group) => group.blocked > 0 || group.groupId === this.TOTAL_BLOCKED_GROUP_ID);
+            .filter(group => group.blocked > 0 || group.groupId === this.TOTAL_BLOCKED_GROUP_ID);
     }
 
     @action

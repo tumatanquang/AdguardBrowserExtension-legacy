@@ -22,8 +22,7 @@ class UiStore {
 
     @action
     removeNotification(id) {
-        this.notifications = this.notifications
-            .filter((notification) => notification.id !== id);
+        this.notifications = this.notifications.filter(notification => notification.id !== id);
     }
 }
 

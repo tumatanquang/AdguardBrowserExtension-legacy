@@ -87,8 +87,10 @@ export const customFilters = (() => {
                 }
             }
 
-            if (tagName === 'Expires') {
-                result = parseExpiresStr(result);
+            switch (tagName) {
+                case 'Expires':
+                    result = parseExpiresStr(result);
+                    break;
             }
 
             return result;
@@ -111,11 +113,12 @@ export const customFilters = (() => {
     const addCustomFilterId = () => {
         let max = 0;
         const filters = metadataCache.getFilters();
-        filters.forEach((f) => {
+        for (let i = 0; i < filters.length; ++i) {
+            const f = filters[i];
             if (f.filterId > max) {
                 max = f.filterId;
             }
-        });
+        }
 
         return max >= CUSTOM_FILTERS_START_ID ? max + 1 : CUSTOM_FILTERS_START_ID;
     };
@@ -391,9 +394,13 @@ export const customFilters = (() => {
 
     // Add event listener to persist filter metadata to local storage
     listeners.addListener((event, payload) => {
-        if (event === listeners.FILTER_ADD_REMOVE && payload && payload.removed) {
-            removeCustomFilter(payload);
-            removeCustomFilterFromStorage(payload);
+        switch (event) {
+            case listeners.FILTER_ADD_REMOVE:
+                if (payload && payload.removed) {
+                    removeCustomFilter(payload);
+                    removeCustomFilterFromStorage(payload);
+                }
+                break;
         }
     });
 

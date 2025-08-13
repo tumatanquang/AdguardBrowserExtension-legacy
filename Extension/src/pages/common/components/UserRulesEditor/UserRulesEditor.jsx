@@ -89,7 +89,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
 
             editorRef.current.editor.setValue(editorContent, 1);
             editorRef.current.editor.session.getUndoManager().reset();
-            if (resetInfoThatContentChanged) {
+            if (resetInfoThatContentChanged === true) {
                 store.setUserRulesEditorContentChangedState(false);
             }
 
@@ -195,7 +195,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
             const rawNewRules = await handleFileUpload(file, 'txt');
             const trimmedNewRules = rawNewRules.trim();
 
-            if (trimmedNewRules.length < 0) {
+            if (trimmedNewRules.length === 0) {
                 return;
             }
 
@@ -268,18 +268,19 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
                     return rowLine.trim().startsWith(SimpleRegex.MASK_COMMENT);
                 });
 
-                rowsSelected.forEach((row) => {
+                for (let i = 0; i < rowsSelected.length; ++i) {
+                    const row = rowsSelected[i];
                     const rawLine = editor.session.getLine(row);
                     // if all lines start with comment mark we remove it
                     if (allRowsCommented) {
                         const lineWithRemovedComment = rawLine.replace(SimpleRegex.MASK_COMMENT, '');
                         editor.session.replace(new Range(row, 0, row), lineWithRemovedComment);
-                        // otherwise we add it
                     }
                     else {
+                        // otherwise we add it
                         editor.session.insert({ row, column: 0 }, SimpleRegex.MASK_COMMENT);
                     }
-                });
+                }
             }
         }
     ];
@@ -316,7 +317,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
         window.close();
     };
 
-    const handleUserRulesToggle = debounce((e) => {
+    const handleUserRulesToggle = debounce(e => {
         store.updateSetting(e.id, e.data);
     }, HANDLER_DELAY_MS);
 

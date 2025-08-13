@@ -167,12 +167,15 @@ export const settings = (() => {
             defaultValues: Object.create(null)
         };
 
-        Object.entries(settings).forEach(([key, value]) => {
+        const allSettings = Object.entries(settings);
+        for (let i = 0; i < allSettings.length; ++i) {
+            const userSetting = allSettings[i];
+            const [key, value] = userSetting;
             const setting = settings[key];
             result.names[key] = setting;
             result.values[value] = getProperty(setting);
             result.defaultValues[value] = defaultProperties.defaults[setting];
-        });
+        }
 
         return result;
     };
