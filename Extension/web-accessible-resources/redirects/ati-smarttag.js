@@ -34,7 +34,9 @@
                 products: setNoopFuncWrapper
             }
         };
-        var tag = function tag() {};
+        class tag {
+            constructor() {}
+        }
         tag.prototype = {
             setConfig: noopFunc,
             setParam: noopFunc,

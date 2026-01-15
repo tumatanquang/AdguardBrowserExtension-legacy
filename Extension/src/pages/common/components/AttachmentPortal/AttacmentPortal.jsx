@@ -34,14 +34,14 @@ export const AttachmentPortal = ({ rootId, position, children }) => {
         if (offsetEdge.right < TOOLTIP_EDGE_PADDING) {
             nextPosition.x = rect.x + offsetEdge.right - TOOLTIP_EDGE_PADDING;
         }
-        else if (offsetEdge.left < TOOLTIP_EDGE_PADDING) {
+        if (offsetEdge.left < TOOLTIP_EDGE_PADDING) {
             nextPosition.x = rect.x - offsetEdge.left + TOOLTIP_EDGE_PADDING;
         }
 
         if (offsetEdge.top < TOOLTIP_EDGE_PADDING) {
             nextPosition.y = rect.y - offsetEdge.top + TOOLTIP_EDGE_PADDING;
         }
-        else if (offsetEdge.bottom < TOOLTIP_EDGE_PADDING) {
+        if (offsetEdge.bottom < TOOLTIP_EDGE_PADDING) {
             nextPosition.y = rect.y + offsetEdge.bottom - TOOLTIP_EDGE_PADDING;
         }
 

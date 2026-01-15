@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 /**
  * Used for new type of redirects, i.e. click2load.html
  */
-export const redirectsTokensCache = (function () {
+export const redirectsTokensCache = (() => {
     const cache = new LRUMap(1000);
 
     /**

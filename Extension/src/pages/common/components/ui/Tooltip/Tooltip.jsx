@@ -4,13 +4,13 @@ import cn from 'classnames';
 
 import './tooltip.pcss';
 
-export function Tooltip({ text, visible }) {
+export const Tooltip = ({ text, visible }) => {
     return (
         <div className={cn('tooltip', visible ? 'tooltip--on' : 'tooltip--off')}>
             {text}
         </div>
     );
-}
+};
 
 Tooltip.propTypes = {
     text: PropTypes.string.isRequired,

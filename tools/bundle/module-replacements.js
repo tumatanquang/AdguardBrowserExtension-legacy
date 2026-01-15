@@ -10,6 +10,7 @@ import { BROWSERS } from '../constants';
  */
 export const getModuleReplacements = (browserConfig) => {
     const apiRegexp = /(\.\/.*)__ABSTRACT_API__(\.*)/;
+    const browsersRegexp = /(\.\/.*)__ABSTRACT_BROWSERS__(\.*)/;
 
     const apiModuleReplacement = new NormalModuleReplacementPlugin(apiRegexp, (resource) => {
         const from = resource.request;
@@ -25,7 +26,6 @@ export const getModuleReplacements = (browserConfig) => {
         console.info(`resource.request was replaced from: "${from}" to: "${to}"`);
     });
 
-    const browsersRegexp = /(\.\/.*)__ABSTRACT_BROWSERS__(\.*)/;
     const browserModuleReplacement = new NormalModuleReplacementPlugin(browsersRegexp, (resource) => {
         const from = resource.request;
         switch (browserConfig.browser) {

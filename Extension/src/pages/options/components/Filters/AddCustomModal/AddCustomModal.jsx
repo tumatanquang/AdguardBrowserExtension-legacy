@@ -36,12 +36,12 @@ const customStyles = {
     }
 };
 
-function AddCustomModal({
+const AddCustomModal = ({
     closeModalHandler,
     modalIsOpen,
     initialUrl,
     initialTitle
-}) {
+}) => {
     const STEPS = {
         INPUT: 'input',
         CHECKING: 'checking',
@@ -281,7 +281,7 @@ function AddCustomModal({
             {renderStep()}
         </Modal>
     );
-}
+};
 
 AddCustomModal.propTypes = {
     closeModalHandler: PropTypes.func.isRequired,

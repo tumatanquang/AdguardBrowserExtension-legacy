@@ -31,7 +31,7 @@ export const log = (() => {
     /**
      * Pretty-print javascript error
      */
-    const errorToString = function (error) {
+    const errorToString = (error) => {
         return `${error.toString()}\nStack trace:\n${error.stack}`;
     };
 
@@ -41,11 +41,10 @@ export const log = (() => {
         return localTime.toISOString().replace('Z', '');
     };
 
-    const PRINT_LOG_FORMAT_PATTERN = /{(\d+)}/g;
     /**
      * Prints log message
      */
-    const print = function (level, method, args) {
+    const print = (level, method, args) => {
         // check log level
         if (LEVELS[CURRENT_LEVEL] < LEVELS[level]) {
             return;
@@ -56,6 +55,7 @@ export const log = (() => {
 
         const str = `${args[0]}`;
         args = Array.prototype.slice.call(args, 1);
+        const PRINT_LOG_FORMAT_PATTERN = /{(\d+)}/g;
         let formatted = str.replace(PRINT_LOG_FORMAT_PATTERN, (match, number) => {
             if (args[number] !== undefined) {
                 let value = args[number];

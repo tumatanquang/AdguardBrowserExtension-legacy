@@ -24,7 +24,6 @@ import { listeners } from './notifier';
 import { settings } from './settings/user-settings';
 import { tabsApi } from './tabs/tabs-api';
 import { prefs } from './prefs';
-import { localStorage } from './storage';
 import { pageStats } from './filter/page-stats';
 import { frames } from './tabs/frames';
 import { notifications } from './utils/notifications';
@@ -48,7 +47,7 @@ import {
 /**
  * UI service
  */
-export const uiService = (function () {
+export const uiService = (() => {
     // styles for alert popup and update info popup
     // should be used inside iframe
     const alertStylesUrl = backgroundPage.getURL('/assets/css/alert-popup.css');
@@ -64,54 +63,54 @@ export const uiService = (function () {
     const browserActionTitle = translator.getMessage('name');
 
     const contextMenuCallbackMappings = {
-        'context_block_site_ads': function () {
+        'context_block_site_ads': () => {
             openAssistant();
         },
-        'context_block_site_element': function () {
+        'context_block_site_element': () => {
             openAssistant(true);
         },
-        'context_security_report': async function () {
+        'context_security_report': async () => {
             const tab = await tabsApi.getActive();
             if (tab) {
                 openSiteReportTab(tab.url);
             }
         },
-        'context_complaint_website': async function () {
+        'context_complaint_website': async () => {
             const tab = await tabsApi.getActive();
             if (tab) {
                 openAbuseTab(tab.url, 'context_menu');
             }
         },
-        'context_site_filtering_on': async function () {
+        'context_site_filtering_on': async () => {
             const tab = await tabsApi.getActive();
             if (tab) {
                 unAllowlistTab(tab);
             }
         },
-        'context_site_filtering_off': async function () {
+        'context_site_filtering_off': async () => {
             const tab = await tabsApi.getActive();
             if (tab) {
                 allowlistTab(tab);
             }
         },
-        'context_enable_protection': function () {
+        'context_enable_protection': () => {
             changeApplicationFilteringDisabled(false);
         },
-        'context_disable_protection': function () {
+        'context_disable_protection': () => {
             changeApplicationFilteringDisabled(true);
         },
-        'context_open_settings': function () {
+        'context_open_settings': () => {
             openSettingsTab();
         },
-        'context_open_log': function () {
+        'context_open_log': () => {
             openFilteringLog();
         },
-        'context_update_antibanner_filters': function () {
+        'context_update_antibanner_filters': () => {
             checkFiltersUpdates();
         }
     };
 
-    const extensionStoreLink = (function () {
+    const extensionStoreLink = (() => {
         let browser;
         if (browserUtils.isOperaBrowser()) {
             browser = 'opera';
@@ -136,7 +135,7 @@ export const uiService = (function () {
      * @param tab Tab
      * @param options Options for icon or badge values
      */
-    async function updateTabIcon(tab, options) {
+    const updateTabIcon = async (tab, options) => {
         if (tab.tabId === BACKGROUND_TAB_ID) {
             return;
         }
@@ -178,7 +177,7 @@ export const uiService = (function () {
 
                     const hasSpecialIcons = !!notification.icons;
 
-                    if (hasSpecialIcons) {
+                    if (hasSpecialIcons === true) {
                         if (disabled) {
                             icon = notification.icons.ICON_GRAY;
                         }
@@ -194,13 +193,13 @@ export const uiService = (function () {
         catch (ex) {
             log.error('Error while updating icon for tab {0}: {1}', tab.tabId, new Error(ex));
         }
-    }
+    };
 
     // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1915
     let lastCallArgs = null;
     let isWorking = false;
     const updateTabIconAsync = utils.concurrent.debounce(async (...args) => {
-        if (isWorking) {
+        if (isWorking === true) {
             lastCallArgs = args;
             return;
         }
@@ -219,7 +218,7 @@ export const uiService = (function () {
      * Update extension browser action popup window
      * @param tab - active tab
      */
-    function updatePopupStats(tab) {
+    const updatePopupStats = (tab) => {
         const tabInfo = frames.getFrameInfo(tab);
         if (!tabInfo) {
             return;
@@ -231,9 +230,9 @@ export const uiService = (function () {
         }).catch(() => {
             // throws errors if popup is closed, ignore them
         });
-    }
+    };
 
-    const updatePopupStatsAsync = utils.concurrent.debounce((tab) => {
+    const updatePopupStatsAsync = utils.concurrent.debounce(tab => {
         updatePopupStats(tab);
     }, 250);
 
@@ -242,7 +241,7 @@ export const uiService = (function () {
      * @param title Title id
      * @param options Create options
      */
-    function addMenu(title, options) {
+    const addMenu = (title, options) => {
         const createProperties = {
             contexts: ['all'],
             title: translator.getMessage(title)
@@ -281,15 +280,15 @@ export const uiService = (function () {
             createProperties.onclick = callback;
         }
         backgroundPage.contextMenus.create(createProperties);
-    }
+    };
 
-    function customizeContextMenu(tab) {
-        function addSeparator() {
+    const customizeContextMenu = (tab) => {
+        const addSeparator = () => {
             backgroundPage.contextMenus.create({
                 type: 'separator',
                 contexts: ['all']
             });
-        }
+        };
 
         const tabInfo = frames.getFrameInfo(tab);
 
@@ -334,9 +333,9 @@ export const uiService = (function () {
             addMenu('context_open_log');
             addMenu('context_disable_protection');
         }
-    }
+    };
 
-    function customizeMobileContextMenu(tab) {
+    const customizeMobileContextMenu = (tab) => {
         const tabInfo = frames.getFrameInfo(tab);
 
         if (tabInfo.applicationFilteringDisabled) {
@@ -388,13 +387,13 @@ export const uiService = (function () {
             addMenu('popup_open_settings', { action: 'context_open_settings' });
             addMenu('context_update_antibanner_filters');
         }
-    }
+    };
 
     /**
      * Update context menu for tab
      * @param tab Tab
      */
-    function updateTabContextMenu(tab) {
+    const updateTabContextMenu = (tab) => {
         // Isn't supported by Android WebExt
         if (!backgroundPage.contextMenus) {
             return;
@@ -412,19 +411,19 @@ export const uiService = (function () {
                 backgroundPage.contextMenus.render();
             }
         }
-    }
+    };
 
-    function closeAllPages() {
+    const closeAllPages = () => {
         tabsApi.forEach(tab => {
             if (tab.url.indexOf(backgroundPage.getURL('')) >= 0) {
                 tabsApi.remove(tab.tabId);
             }
         });
-    }
+    };
 
-    function getPageUrl(page) {
+    const getPageUrl = (page) => {
         return backgroundPage.getURL(`pages/${page}`);
-    }
+    };
 
     const isAdguardTab = (tab) => {
         const { url } = tab;
@@ -462,14 +461,14 @@ export const uiService = (function () {
      * @param currentVersion
      * @param previousVersion
      */
-    function getUpdateDescriptionMessage(currentVersion, previousVersion) {
+    const getUpdateDescriptionMessage = (currentVersion, previousVersion) => {
         if (browserUtils.getMajorVersionNumber(currentVersion) > browserUtils.getMajorVersionNumber(previousVersion)
             || browserUtils.getMinorVersionNumber(currentVersion) > browserUtils.getMinorVersionNumber(previousVersion)) {
             return translator.getMessage('options_popup_version_update_description_major');
         }
 
         return translator.getMessage('options_popup_version_update_description_minor');
-    }
+    };
 
     /**
      * Shows application updated popup
@@ -524,7 +523,7 @@ export const uiService = (function () {
 
     let sendMessageTries = 0;
     const MAX_TRIES = 500; // 2500 sec
-    const TRIES_TIMEOUT = 5000;
+    const TRIES_TIMEOUT = 5 * 1000;
 
     /**
      * Tries to send message to an active tab,
@@ -565,7 +564,7 @@ export const uiService = (function () {
         return true;
     };
 
-    function getFiltersUpdateResultMessage(success, updatedFilters) {
+    const getFiltersUpdateResultMessage = (success, updatedFilters) => {
         let title;
         let text;
         if (success && updatedFilters) {
@@ -601,13 +600,14 @@ export const uiService = (function () {
             title,
             text
         };
-    }
+    };
 
-    function getFiltersEnabledResultMessage(enabledFilters) {
+    const getFiltersEnabledResultMessage = (enabledFilters) => {
         const title = translator.getMessage('alert_popup_filter_enabled_title');
         const text = [];
         enabledFilters.sort((a, b) => a.displayNumber - b.displayNumber);
-        for (let i = 0; i < enabledFilters.length; ++i) {
+        const len = enabledFilters.length;
+        for (let i = 0; i < len; ++i) {
             const filter = enabledFilters[i];
             text.push(translator.getMessage(
                 'alert_popup_filter_enabled_desc',
@@ -618,7 +618,7 @@ export const uiService = (function () {
             title,
             text
         };
-    }
+    };
 
     /**
      * Updates extension icon and context menu for tab
@@ -626,18 +626,18 @@ export const uiService = (function () {
      * @param {boolean} reloadFrameData
      * @param {boolean} [changeIcon=true]
      */
-    const updateTabIconAndContextMenu = function (tab, reloadFrameData, changeIcon = true) {
-        if (reloadFrameData) {
+    const updateTabIconAndContextMenu = (tab, reloadFrameData, changeIcon = true) => {
+        if (reloadFrameData === true) {
             frames.reloadFrameData(tab);
         }
         // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1917
-        if (changeIcon) {
+        if (changeIcon === true) {
             updateTabIconAsync(tab);
         }
         updateTabContextMenu(tab);
     };
 
-    const openExportRulesTab = function (hash) {
+    const openExportRulesTab = (hash) => {
         openTab(getPageUrl(`export.html#${hash}`));
     };
 
@@ -646,7 +646,7 @@ export const uiService = (function () {
      * @param anchor
      * @param hashParameters
      */
-    const openSettingsTab = function (anchor, hashParameters = {}) {
+    const openSettingsTab = (anchor, hashParameters = {}) => {
         if (anchor) {
             hashParameters.anchor = anchor;
         }
@@ -659,7 +659,7 @@ export const uiService = (function () {
         openTab(getPageUrl('options.html'), options);
     };
 
-    const openSiteReportTab = function (url) {
+    const openSiteReportTab = (url) => {
         const domain = utils.url.toPunyCode(utils.url.getDomainName(url));
         if (domain) {
             openTab(ADGUARD_OPEN_SITE_REPORT_URL(encodeURIComponent(domain), 'context_menu'));
@@ -695,7 +695,7 @@ export const uiService = (function () {
             return `&stealth.enabled=${stealthEnabled}`;
         }
 
-        let stealthOptionsString = stealthOptions.map((option) => {
+        let stealthOptionsString = stealthOptions.map(option => {
             const { queryKey, settingKey, settingValueKey } = option;
             const setting = settings.getProperty(settingKey);
             if (!setting) {
@@ -714,7 +714,7 @@ export const uiService = (function () {
             .join('&');
 
         // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1937
-        if (filterIds.includes(ANTIBANNER_FILTERS_ID.URL_TRACKING_FILTER_ID)) {
+        if (filterIds.includes(ANTIBANNER_FILTERS_ID.URL_TRACKING_FILTER_ID) === true) {
             stealthOptionsString = `${stealthOptionsString}&stealth.strip_url=true`;
         }
 
@@ -797,7 +797,8 @@ export const uiService = (function () {
         const tabs = await tabsApi.getAll();
         // try to find between opened tabs
         if (activateSameTab) {
-            for (let i = 0; i < tabs.length; ++i) {
+            const len = tabs.length;
+            for (let i = 0; i < len; ++i) {
                 const tab = tabs[i];
                 if (utils.url.urlEquals(tab.url, url)) {
                     return onTabFound(tab);
@@ -825,7 +826,7 @@ export const uiService = (function () {
      * https://github.com/AdguardTeam/ReportsWebApp#pre-filling-the-app-with-query-parameters
      * @param url
      */
-    const openAbuseTab = function (url, from) {
+    const openAbuseTab = (url, from) => {
         let browser;
         let browserDetails;
 
@@ -850,7 +851,7 @@ export const uiService = (function () {
         ${getStealthString(filterIds)}${getBrowserSecurityString()}`);
     };
 
-    const openFilteringLog = async function (tabId) {
+    const openFilteringLog = async (tabId) => {
         const FILTERING_LOG_PAGE = 'filtering-log.html';
         const windowState = filteringLogWindowState.getState();
         const options = {
@@ -893,7 +894,8 @@ export const uiService = (function () {
         const tabs = await tabsApi.getAll();
 
         // Finds the filter-download page and reload it within the thank-you page URL
-        for (let i = 0; i < tabs.length; ++i) {
+        const len = tabs.length;
+        for (let i = 0; i < len; ++i) {
             const tab = tabs[i];
             if (tab.url === filtersDownloadUrl) {
                 tabsApi.activate(tab.tabId);
@@ -909,12 +911,11 @@ export const uiService = (function () {
         await openTab(COMPARE_URL);
     };
 
-    const openExtensionStore = async function () {
+    const openExtensionStore = async () => {
         await openTab(extensionStoreLink);
     };
 
-    const openFiltersDownloadPage = function () {
-        localStorage.setItem('useDefaultSettings', false);
+    const openFiltersDownloadPage = () => {
         openTab(getPageUrl('filter-download.html'));
     };
 
@@ -929,21 +930,21 @@ export const uiService = (function () {
         await tabsApi.reload(tab.tabId);
     };
 
-    const allowlistTab = function (tab) {
+    const allowlistTab = (tab) => {
         const tabInfo = frames.getFrameInfo(tab);
         allowlist.allowlistUrl(tabInfo.url);
         updateTabIconAndContextMenu(tab, true);
         tabsApi.reload(tab.tabId);
     };
 
-    const unAllowlistTab = function (tab) {
+    const unAllowlistTab = (tab) => {
         const tabInfo = frames.getFrameInfo(tab);
         userrules.unAllowlistFrame(tabInfo);
         updateTabIconAndContextMenu(tab, true);
         tabsApi.reload(tab.tabId);
     };
 
-    const changeApplicationFilteringDisabled = async function (disabled) {
+    const changeApplicationFilteringDisabled = async (disabled) => {
         settings.changeFilteringDisabled(disabled);
         const tab = await tabsApi.getActive();
         if (tab) {
@@ -1059,7 +1060,7 @@ export const uiService = (function () {
         });
 
         // Update tab icon and context menu on active tab changed
-        tabsApi.onActivated.addListener((tab) => {
+        tabsApi.onActivated.addListener(tab => {
             updateTabIconAndContextMenu(tab, true);
         });
 

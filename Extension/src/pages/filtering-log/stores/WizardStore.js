@@ -316,39 +316,40 @@ class WizardStore {
     @computed
     get rulePatterns() {
         const { selectedEvent } = this.rootStore.logStore;
-        if (this.requestModalState === WIZARD_STATES.UNBLOCK_REQUEST) {
-            let patterns;
-            if (selectedEvent.requestUrl && selectedEvent.requestDomain) {
-                patterns = splitToPatterns(
-                    selectedEvent.requestUrl,
-                    selectedEvent.requestDomain,
-                    true
-                );
-            }
+        switch (this.requestModalState) {
+            case WIZARD_STATES.UNBLOCK_REQUEST:
+                let patterns;
+                if (selectedEvent.requestUrl && selectedEvent.requestDomain) {
+                    patterns = splitToPatterns(
+                        selectedEvent.requestUrl,
+                        selectedEvent.requestDomain,
+                        true
+                    );
+                }
 
-            if (selectedEvent.element) {
-                patterns = [createExceptionCssRule(selectedEvent.requestRule, selectedEvent)];
-            }
+                if (selectedEvent.element) {
+                    patterns = [createExceptionCssRule(selectedEvent.requestRule, selectedEvent)];
+                }
 
-            if (selectedEvent.cookieName) {
-                patterns = createExceptionCookieRules(selectedEvent);
-            }
+                if (selectedEvent.cookieName) {
+                    patterns = createExceptionCookieRules(selectedEvent);
+                }
 
-            if (selectedEvent.script) {
-                patterns = [createExceptionScriptRule(selectedEvent.requestRule, selectedEvent)];
-            }
+                if (selectedEvent.script) {
+                    patterns = [createExceptionScriptRule(selectedEvent.requestRule, selectedEvent)];
+                }
 
-            if (selectedEvent.removeParam) {
-                patterns = createExceptionRemoveParamRules(selectedEvent);
-            }
+                if (selectedEvent.removeParam) {
+                    patterns = createExceptionRemoveParamRules(selectedEvent);
+                }
 
-            if (selectedEvent.removeHeader) {
-                patterns = createExceptionRemoveHeaderRules(selectedEvent);
-            }
+                if (selectedEvent.removeHeader) {
+                    patterns = createExceptionRemoveHeaderRules(selectedEvent);
+                }
 
-            this.setRulePattern(patterns[0]);
+                this.setRulePattern(patterns[0]);
 
-            return patterns;
+                return patterns;
         }
 
         let patterns = [];

@@ -31,24 +31,10 @@ export const RequestFilter = (() => {
      *
      * @type {Function}
      */
-    const RequestFilter = function () {};
-
-    RequestFilter.prototype = {
-
+    class RequestFilter {
         getRulesCount() {
             return engine.getRulesCount();
-        },
-
-        /**
-         * An object with the information on the CSS and ExtendedCss stylesheets which
-         * need to be injected into a web page.
-         *
-         * @typedef {Object} SelectorsData
-         * @property {Array.<string>} css Regular CSS stylesheets
-         * @property {Array.<string>} extendedCss ExtendedCSS stylesheets
-         * @property {boolean} cssHitsCounterEnabled If true - collecting CSS rules hits stats
-         * is enabled
-         */
+        }
 
         /**
          * Builds CSS for the specified web page.
@@ -76,22 +62,22 @@ export const RequestFilter = (() => {
             ];
 
             const collectingCosmeticRulesHits = webRequestService.isCollectingCosmeticRulesHits();
-            if (collectingCosmeticRulesHits) {
-                const styles = !ignoreTraditionalCss ? cssService.buildStyleSheetHits(elemhideCss, injectCss) : [];
-                const extStyles = !ignoreExtCss ? cssService.buildStyleSheetHits(elemhideExtCss, injectExtCss) : [];
+            if (collectingCosmeticRulesHits === true) {
+                const styles = ignoreTraditionalCss === false ? cssService.buildStyleSheetHits(elemhideCss, injectCss) : [];
+                const extStyles = ignoreExtCss === false ? cssService.buildStyleSheetHits(elemhideExtCss, injectExtCss) : [];
                 return {
                     css: styles,
                     extendedCss: extStyles
                 };
             }
 
-            const styles = !ignoreTraditionalCss ? cssService.buildStyleSheet(elemhideCss, injectCss, true) : [];
-            const extStyles = !ignoreExtCss ? cssService.buildStyleSheet(elemhideExtCss, injectExtCss, false) : [];
+            const styles = ignoreTraditionalCss === false ? cssService.buildStyleSheet(elemhideCss, injectCss, true) : [];
+            const extStyles = ignoreExtCss === false ? cssService.buildStyleSheet(elemhideExtCss, injectExtCss, false) : [];
             return {
                 css: styles,
                 extendedCss: extStyles
             };
-        },
+        }
 
         /**
          * Builds domain-specific JS injection for the specified page.
@@ -105,7 +91,7 @@ export const RequestFilter = (() => {
             const cosmeticResult = engine.getCosmeticResult(url, cosmeticOptions);
 
             return cosmeticResult.getScriptRules();
-        },
+        }
 
         /**
          * Builds the final output string for the specified page.
@@ -123,7 +109,7 @@ export const RequestFilter = (() => {
 
             const isFirefox = browserUtils.isFirefoxBrowser();
 
-            const selectedScriptRules = scriptRules.filter((scriptRule) => {
+            const selectedScriptRules = scriptRules.filter(scriptRule => {
                 // Scriptlets should not be excluded for remote filters
                 if (scriptRule.isScriptlet) {
                     return true;
@@ -148,16 +134,16 @@ export const RequestFilter = (() => {
                  * Look at localScriptRulesService.isLocal to learn more.
                  * Commented instructions are preprocessed during compilation by webpack
                  */
-                if (!isLocal && isFirefox) {
+                if (!isLocal && isFirefox === true) {
                     return false;
                 }
                 /* @endif */
-
                 return true;
             });
 
             if (debug) {
-                for (let i = 0; i < selectedScriptRules.length; ++i) {
+                const len = selectedScriptRules.length;
+                for (let i = 0; i < len; ++i) {
                     const scriptRule = selectedScriptRules[i];
                     if (!scriptRule.isGeneric()) {
                         filteringLog.addScriptInjectionEvent({
@@ -181,16 +167,14 @@ export const RequestFilter = (() => {
             // remove repeating scripts
             const scriptsCode = [...new Set(scripts)].join('\r\n');
 
-            return `
-            (function () {
+            return `(() => {
                 try {
                     ${scriptsCode}
                 } catch (ex) {
                     console.error('Error executing AG js: ' + ex);
                 }
-            })();
-            `;
-        },
+            })();`;
+        }
 
         /**
          * Gets or creates matching result
@@ -205,7 +189,7 @@ export const RequestFilter = (() => {
             }
 
             return result;
-        },
+        }
 
         /**
          * Searches for the allowlist rule for the specified pair (url/referrer)
@@ -223,11 +207,11 @@ export const RequestFilter = (() => {
             }
 
             return null;
-        },
+        }
 
         findDocumentRule(documentUrl) {
             return engine.matchFrame(documentUrl);
-        },
+        }
 
         /**
          * Searches for stealth allowlist rule for the specified pair (url/referrer)
@@ -239,7 +223,7 @@ export const RequestFilter = (() => {
         findStealthAllowlistRule(matchQuery) {
             const result = this.getMatchingResult(matchQuery);
             return result.stealthRule;
-        },
+        }
 
         /**
          * Searches for the filter rule for the specified request.
@@ -250,7 +234,7 @@ export const RequestFilter = (() => {
         findRuleForRequest(matchQuery) {
             const result = this.getMatchingResult(matchQuery);
             return result.getBasicResult();
-        },
+        }
 
         /**
          * Searches for content rules for the specified domain
@@ -262,7 +246,7 @@ export const RequestFilter = (() => {
             const cosmeticResult = engine.getCosmeticResult(documentUrl, TSUrlFilter.CosmeticOption.CosmeticOptionHtml);
 
             return cosmeticResult.Html.getRules();
-        },
+        }
 
         /**
          * Searches for CSP rules for the specified request
@@ -273,7 +257,7 @@ export const RequestFilter = (() => {
         findCspRules(matchQuery) {
             const result = this.getMatchingResult(matchQuery);
             return result.getCspRules();
-        },
+        }
 
         /**
          * Searches for replace modifier rules
@@ -284,7 +268,7 @@ export const RequestFilter = (() => {
         findReplaceRules(matchQuery) {
             const result = this.getMatchingResult(matchQuery);
             return result.getReplaceRules();
-        },
+        }
 
         /**
          * Searches for cookie rules matching specified request.
@@ -296,7 +280,7 @@ export const RequestFilter = (() => {
             const result = this.getMatchingResult(matchQuery);
             return result.getCookieRules();
         }
-    };
+    }
 
     return RequestFilter;
 })();

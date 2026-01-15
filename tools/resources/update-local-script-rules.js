@@ -22,7 +22,8 @@ import {
  * @returns {boolean}
  */
 const isInArray = (arr, domainsToCheck, scriptToCheck) => {
-    for (let i = 0; i < arr.length; ++i) {
+    const len = arr.length;
+    for (let i = 0; i < len; ++i) {
         const element = arr[i];
         const { domains, script } = element;
         if (domains === domainsToCheck && script === scriptToCheck) {
@@ -42,8 +43,8 @@ const updateLocalScriptRulesForBrowser = async (browser) => {
         rules: []
     };
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (let i = 0; i < ADGUARD_DOWNLOAD_UPDATE_FILTERS_IDS.length; ++i) {
+    const len = ADGUARD_DOWNLOAD_UPDATE_FILTERS_IDS.length;
+    for (let i = 0; i < len; ++i) {
         const filterId = ADGUARD_DOWNLOAD_UPDATE_FILTERS_IDS[i];
         // eslint-disable-next-line no-await-in-loop
         const filters = (await fs.readFile(`${folder}/filter_${filterId}.txt`)).toString();

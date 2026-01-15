@@ -24,9 +24,11 @@ Modal.setAppElement('#root');
 
 const RequestModal = observer(() => {
     const { wizardStore } = useContext(rootStore);
-    const onKeyUp = useCallback((e) => {
-        if (e.key === 'Escape') {
-            wizardStore.closeModal();
+    const onKeyUp = useCallback(e => {
+        switch (e.key) {
+            case 'Escape':
+                wizardStore.closeModal();
+                break;
         }
     }, [wizardStore]);
 

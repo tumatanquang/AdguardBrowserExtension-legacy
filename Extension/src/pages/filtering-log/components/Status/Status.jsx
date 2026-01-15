@@ -11,7 +11,7 @@ import { getStatusTitle } from './statusTitles';
 
 import './status.pcss';
 
-export function Status(props) {
+export const Status = (props) => {
     const {
         statusCode,
         timestamp,
@@ -47,7 +47,7 @@ export function Status(props) {
                             </Popover>
                         </div>
                         <div className={cn(itemClassNames, 'status__item_centered')}>
-                            {isBlocked ? (
+                            {isBlocked === true ? (
                                 <Popover text={reactTranslator.getMessage('filtering_log_status_blocked')}>
                                     <Icon id='#ban' classname='status__icon' />
                                 </Popover>
@@ -82,4 +82,4 @@ export function Status(props) {
             </div>
         </div>
     );
-}
+};

@@ -29,7 +29,7 @@ const renderSavingState = (savingRulesState) => {
     );
 };
 
-export function SavingButton({ onClick, savingState, contentChanged }) {
+export const SavingButton = ({ onClick, savingState, contentChanged }) => {
     return (
         <div className='actions__saving'>
             {renderSavingState(savingState)}
@@ -43,4 +43,4 @@ export function SavingButton({ onClick, savingState, contentChanged }) {
             </button>
         </div>
     );
-}
+};

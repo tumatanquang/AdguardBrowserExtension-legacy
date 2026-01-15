@@ -4,11 +4,11 @@
  */
 export const channels = (() => {
     const EventChannels = (() => {
-        const EventChannel = function () {
+        const EventChannel = () => {
             let listeners = null;
             let listenerCallback = null;
 
-            const addListener = function (callback) {
+            const addListener = (callback) => {
                 if (typeof callback !== 'function') {
                     throw new Error('Illegal callback');
                 }
@@ -27,11 +27,11 @@ export const channels = (() => {
                 }
             };
 
-            const removeListener = function (callback) {
+            const removeListener = (callback) => {
                 if (listenerCallback !== null) {
                     listenerCallback = null;
                 }
-                else {
+                else if (listeners !== null) {
                     const index = listeners.indexOf(callback);
                     if (index >= 0) {
                         listeners.splice(index, 1);
@@ -39,26 +39,27 @@ export const channels = (() => {
                 }
             };
 
-            const notify = function () {
+            const notify = (...args) => {
                 if (listenerCallback !== null) {
-                    return listenerCallback.apply(listenerCallback, arguments);
+                    return listenerCallback.apply(listenerCallback, args);
                 }
                 if (listeners !== null) {
-                    for (let i = 0; i < listeners.length; ++i) {
+                    const len = listeners.length;
+                    for (let i = 0; i < len; ++i) {
                         const listener = listeners[i];
-                        listener.apply(listener, arguments);
+                        listener.apply(listener, args);
                     }
                 }
             };
 
-            const notifyInReverseOrder = function () {
+            const notifyInReverseOrder = (...args) => {
                 if (listenerCallback !== null) {
-                    return listenerCallback.apply(listenerCallback, arguments);
+                    return listenerCallback.apply(listenerCallback, args);
                 }
                 if (listeners !== null) {
-                    for (let i = listeners.length; --i >= 0;) {
+                    for (let i = listeners.length - 1; i >= 0; --i) {
                         const listener = listeners[i];
-                        listener.apply(listener, arguments);
+                        listener.apply(listener, args);
                     }
                 }
             };
@@ -73,17 +74,17 @@ export const channels = (() => {
 
         const namedChannels = Object.create(null);
 
-        const newChannel = function () {
-            return new EventChannel();
+        const newChannel = () => {
+            return EventChannel();
         };
 
-        const newNamedChannel = function (name) {
+        const newNamedChannel = (name) => {
             const channel = newChannel();
             namedChannels[name] = channel;
             return channel;
         };
 
-        const getNamedChannel = function (name) {
+        const getNamedChannel = (name) => {
             return namedChannels[name];
         };
 

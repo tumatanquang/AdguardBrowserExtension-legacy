@@ -29,7 +29,7 @@ import { browser } from '../../extension-api/browser';
  *
  * This service is used to auto-enable language-specific filters.
  */
-export const localeDetect = (function () {
+export const localeDetect = (() => {
     const browsingLanguages = [];
 
     const SUCCESS_HIT_COUNT = 3;
@@ -106,7 +106,7 @@ export const localeDetect = (function () {
      * @param filterIds List of detected language-specific filters identifiers
      * @private
      */
-    async function onFilterDetectedByLocale(filterIds) {
+    const onFilterDetectedByLocale = async (filterIds) => {
         if (!filterIds) {
             return;
         }
@@ -116,7 +116,7 @@ export const localeDetect = (function () {
         if (enabledFilters.length !== 0) {
             listeners.notifyListeners(listeners.ENABLE_FILTER_SHOW_POPUP, enabledFilters);
         }
-    }
+    };
 
     /**
      * Stores language in the special array containing languages of the last visited pages.
@@ -126,7 +126,7 @@ export const localeDetect = (function () {
      * @param language Page language
      * @private
      */
-    function detectLanguage(language) {
+    const detectLanguage = (language) => {
         /**
          * For an unknown language "und" will be returned
          * https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/tabs/detectLanguage
@@ -143,7 +143,7 @@ export const localeDetect = (function () {
             browsingLanguages.shift();
         }
 
-        const history = browsingLanguages.filter((h) => {
+        const history = browsingLanguages.filter(h => {
             return h.language === language;
         });
 
@@ -151,26 +151,26 @@ export const localeDetect = (function () {
             const filterIds = subscriptions.getFilterIdsForLanguage(language);
             onFilterDetectedByLocale(filterIds);
         }
-    }
+    };
 
     /**
      * Detects language for the specified page
      * @param tab    Tab
      * @param url    Page URL
      */
-    async function detectTabLanguage(tab, url) {
+    const detectTabLanguage = async (tab, url) => {
         if (!settings.isAutodetectFilters() || settings.isFilteringDisabled()) {
             return;
         }
 
         // Check language only for http://... tabs
-        if (!utils.url.isHttpRequest(url)) {
+        if (utils.url.isHttpRequest(url) === false) {
             return;
         }
 
         // tabs.detectLanguage doesn't work in Opera
         // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/997
-        if (!browserUtils.isOperaBrowser()) {
+        if (browserUtils.isOperaBrowser() === false) {
             if (tab.tabId && browser.tabs && browser.tabs.detectLanguage) {
                 // https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/tabs/detectLanguage
                 try {
@@ -194,13 +194,15 @@ export const localeDetect = (function () {
             const lang = domainToLanguagesMap[tld];
             detectLanguage(lang);
         }
-    }
+    };
 
     const init = () => {
         // Locale detect
         tabsApi.onUpdated.addListener((tab) => {
-            if (tab.status === 'complete') {
-                detectTabLanguage(tab, tab.url);
+            switch (tab.status) {
+                case 'complete':
+                    detectTabLanguage(tab, tab.url);
+                    break;
             }
         });
     };

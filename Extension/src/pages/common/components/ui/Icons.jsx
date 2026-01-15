@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function Icons() {
+export const Icons = () => {
     /* eslint max-len:'off' */
     return (
         <svg xmlns='http://www.w3.org/2000/svg' display='none'>
@@ -233,4 +233,4 @@ export function Icons() {
             </symbol>
         </svg>
     );
-}
+};

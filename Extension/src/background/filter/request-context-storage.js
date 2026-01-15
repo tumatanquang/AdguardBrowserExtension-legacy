@@ -36,7 +36,7 @@ import { webRequestService } from './request-blocking';
  * - onRequestCompleted - Finishes request processing on request complete/error event.
  * - onContentModificationFinished - After content modification and applying all rules (replace and content)
  */
-export const requestContextStorage = (function () {
+export const requestContextStorage = (() => {
     /**
      * @typedef {object} RequestContext
      * @property {string} requestId - Request identifier
@@ -343,7 +343,8 @@ export const requestContextStorage = (function () {
                 }
 
                 if (cspRules) {
-                    for (let i = 0; i < cspRules.length; ++i) {
+                    const len = cspRules.length;
+                    for (let i = 0; i < len; ++i) {
                         const cspRule = cspRules[i];
                         filteringLog.addHttpRequestEvent({
                             tab,
@@ -380,10 +381,12 @@ export const requestContextStorage = (function () {
                 }
 
                 if (contentRules) {
-                    for (let i = 0; i < contentRules.length; ++i) {
+                    const len = contentRules.length;
+                    for (let i = 0; i < len; ++i) {
                         const contentRule = contentRules[i];
                         const elements = context.elements.get(contentRule) || [];
-                        for (let j = 0; j < elements.length; ++j) {
+                        const { length } = elements;
+                        for (let j = 0; j < length; ++j) {
                             const element = elements[j];
                             filteringLog.addCosmeticEvent({
                                 tab,
@@ -401,7 +404,8 @@ export const requestContextStorage = (function () {
                 break;
         }
 
-        for (let i = 0; i < ruleHitsRecords.length; ++i) {
+        const len = ruleHitsRecords.length;
+        for (let i = 0; i < len; ++i) {
             const ruleHitsRecord = ruleHitsRecords[i];
             webRequestService.recordRuleHit(tab, ruleHitsRecord, requestUrl);
         }

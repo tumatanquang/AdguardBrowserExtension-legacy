@@ -21,7 +21,7 @@ import { log } from '../../common/log';
 /**
  * Local storage implementation for chromium-based browsers
  */
-export const localStorageImpl = (function () {
+export const localStorageImpl = (() => {
     const ADGUARD_SETTINGS_PROP = 'adguard-settings';
     let values = null;
 
@@ -29,72 +29,72 @@ export const localStorageImpl = (function () {
      * Reads data from storage.local
      * @param path Path
      */
-    async function read(path) {
+    const read = async (path) => {
         const results = await browser.storage.local.get(path);
         return results ? results[path] : null;
-    }
+    };
 
     /**
      * Writes data to storage.local
      * @param path Path
      * @param data Data to write
      */
-    async function write(path, data) {
+    const write = async (path, data) => {
         const item = {};
         item[path] = data;
         await browser.storage.local.set(item);
-    }
+    };
 
     /**
      * Due to async initialization of storage, we have to check it before accessing values object
      * @returns {boolean}
      */
-    function isInitialized() {
+    const isInitialized = () => {
         return values !== null;
-    }
+    };
 
     /**
      * Retrieves value by key from cached values
      * @param key
      * @returns {*}
      */
-    function getItem(key) {
-        if (!isInitialized()) {
+    const getItem = (key) => {
+        if (isInitialized() === false) {
             return null;
         }
         return values[key];
-    }
+    };
 
-    function setItem(key, value) {
-        if (!isInitialized()) {
+    const setItem = (key, value) => {
+        if (isInitialized() === false) {
             return;
         }
         values[key] = value;
         write(ADGUARD_SETTINGS_PROP, values);
-    }
+    };
 
-    function removeItem(key) {
-        if (!isInitialized()) {
+    const removeItem = (key) => {
+        if (isInitialized() === false) {
             return;
         }
         delete values[key];
         write(ADGUARD_SETTINGS_PROP, values);
-    }
+    };
 
-    function hasItem(key) {
-        if (!isInitialized()) {
+    const hasItem = (key) => {
+        if (isInitialized() === false) {
             return false;
         }
         return key in values;
-    }
+    };
 
     /**
      * We can't use localStorage object anymore and we've decided to store all data into storage.local
      * localStorage is affected by cleaning tools: https://github.com/AdguardTeam/AdguardBrowserExtension/issues/681
      * storage.local has async nature and we have to preload all key-values pairs into memory on extension startup
      */
-    async function init() {
-        if (isInitialized()) {
+    const init = async () => {
+        if (isInitialized() === true) {
             // Already initialized
             return;
         }
@@ -108,7 +108,7 @@ export const localStorageImpl = (function () {
         }
 
         values = items || Object.create(null);
-    }
+    };
 
     return {
         getItem,

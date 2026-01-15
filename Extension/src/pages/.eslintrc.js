@@ -9,7 +9,7 @@ module.exports = {
         '../../../.eslintrc.js'
     ],
     'parserOptions': {
-        'ecmaVersion': 12,
+        'ecmaVersion': 7,
         'sourceType': 'module',
         'ecmaFeatures': {
             'jsx': true

@@ -12,14 +12,14 @@ const renderFilters = (matchedFilters) => {
         .map((filter) => <Filter key={filter.filterId} filter={filter} />);
 };
 
-function SearchGroup({
+const SearchGroup = ({
     groupName,
     groupId,
     filtersToShow,
     groupClickHandler,
     checkboxHandler,
     checkboxValue
-}) {
+}) => {
     const groupClassName = cn('setting group', { 'group--disabled': !checkboxValue });
     const filtersClassName = cn('filters', {
         'filters--disabled': !checkboxValue
@@ -59,6 +59,6 @@ function SearchGroup({
             </div>
         </>
     );
-}
+};
 
 export { SearchGroup };

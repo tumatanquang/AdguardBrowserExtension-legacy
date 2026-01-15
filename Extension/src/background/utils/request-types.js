@@ -111,7 +111,7 @@ export const RequestTypes = {
  * @param path Path
  * @returns {*} content type (RequestTypes.*) or null
  */
-export function parseContentTypeFromUrlPath(path) {
+export const parseContentTypeFromUrlPath = (path) => {
     const objectContentTypes = '.jar.swf.';
     const mediaContentTypes = '.mp4.flv.avi.m3u.webm.mpeg.3gp.3gpp.3g2.3gpp2.ogg.mov.qt.';
     const fontContentTypes = '.ttf.otf.woff.woff2.eot.';
@@ -140,4 +140,4 @@ export function parseContentTypeFromUrlPath(path) {
     }
 
     return null;
-}
+};

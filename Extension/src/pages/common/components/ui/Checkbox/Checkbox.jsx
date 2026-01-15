@@ -4,7 +4,7 @@ import cn from 'classnames';
 
 import './checkbox.pcss';
 
-function Checkbox(props) {
+const Checkbox = (props) => {
     const {
         id,
         handler,
@@ -50,7 +50,7 @@ function Checkbox(props) {
             </label>
         </div>
     );
-}
+};
 
 Checkbox.defaultProps = {
     value: false,

@@ -62,7 +62,7 @@ export const resources = (function () {
 
         return () => {
             if (secrets.length !== 0) {
-                if (Date.now() - lastSecretTime > 5000) {
+                if (Date.now() - lastSecretTime > 5 * 1000) {
                     secrets.splice(0);
                 }
                 else if (secrets.length > 256) {
@@ -97,7 +97,7 @@ export const resources = (function () {
      */
     const createRedirectFileUrl = (redirectFile, requestUrl) => {
         const params = new URLSearchParams(warSecret());
-        if (redirectService.getBlockingRedirects().includes(redirectFile)) {
+        if (redirectService.getBlockingRedirects().includes(redirectFile) === true) {
             const unblockToken = redirectsTokensCache.generateToken();
             params.set('__unblock', unblockToken);
             params.set('__origin', requestUrl);

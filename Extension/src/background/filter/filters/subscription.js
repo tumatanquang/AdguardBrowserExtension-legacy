@@ -57,7 +57,8 @@ export const subscriptions = (() => {
         const filtersStateInfo = filtersState.getFiltersState();
 
         const filters = metadataCache.getFilters();
-        for (let i = 0; i < filters.length; ++i) {
+        const len = filters.length;
+        for (let i = 0; i < len; ++i) {
             const filter = filters[i];
             const { filterId } = filter;
             const versionInfo = filtersVersionInfo[filterId];
@@ -89,8 +90,8 @@ export const subscriptions = (() => {
         // Load filters state from the storage
         const groupsStateInfo = filtersState.getGroupsState();
         const groups = metadataCache.getGroups();
-
-        for (let i = 0; i < groups.length; ++i) {
+        const len = groups.length;
+        for (let i = 0; i < len; ++i) {
             const group = groups[i];
             const { groupId } = group;
             const stateInfo = groupsStateInfo[groupId];
@@ -113,18 +114,24 @@ export const subscriptions = (() => {
         const filters = [];
         const filtersMap = {};
 
-        for (let i = 0; i < metadata.tags.length; ++i) {
-            tags.push(metadataFactory.createFilterTagFromJSON(metadata.tags[i]));
+        const metadataTags = metadata.tags;
+        const tlen = metadataTags.length;
+        for (let i = 0; i < tlen; ++i) {
+            tags.push(metadataFactory.createFilterTagFromJSON(metadataTags[i]));
         }
 
-        for (let j = 0; j < metadata.filters.length; ++j) {
-            const filter = metadataFactory.createSubscriptionFilterFromJSON(metadata.filters[j]);
+        const metadataFilters = metadata.filters;
+        const flen = metadataFilters.length;
+        for (let j = 0; j < flen; ++j) {
+            const filter = metadataFactory.createSubscriptionFilterFromJSON(metadataFilters[j]);
             filters.push(filter);
             filtersMap[filter.filterId] = filter;
         }
 
-        for (let k = 0; k < metadata.groups.length; ++k) {
-            const group = metadataFactory.createSubscriptionGroupFromJSON(metadata.groups[k]);
+        const metadataGroups = metadata.groups;
+        const glen = metadataGroups.length;
+        for (let k = 0; k < glen; ++k) {
+            const group = metadataFactory.createSubscriptionGroupFromJSON(metadataGroups[k]);
             groups.push(group);
             groupsMap[group.groupId] = group;
         }
@@ -139,7 +146,8 @@ export const subscriptions = (() => {
 
         // Load custom filters
         const customFiltersList = customFilters.loadCustomFilters();
-        for (let i = 0; i < customFiltersList.length; ++i) {
+        const len = customFiltersList.length;
+        for (let i = 0; i < len; ++i) {
             const f = customFiltersList[i];
             const customFilter = metadataFactory.createSubscriptionFilterFromJSON(f);
             filters.push(customFilter);
@@ -202,7 +210,8 @@ export const subscriptions = (() => {
 
         const metadata = await backend.downloadMetadataFromBackend();
         const filterMetadataList = [];
-        for (let i = 0; i < filterIds.length; ++i) {
+        const len = filterIds.length;
+        for (let i = 0; i < len; ++i) {
             const filter = utils.collections.find(metadata.filters, 'filterId', filterIds[i]);
             if (filter) {
                 filterMetadataList.push(metadataFactory.createSubscriptionFilterFromJSON(filter));
@@ -279,15 +288,18 @@ export const subscriptions = (() => {
 
         const { tags, groups, filters } = metadataCache.getData();
 
-        for (let i = 0; i < tags.length; ++i) {
+        const tlen = tags.length;
+        for (let i = 0; i < tlen; ++i) {
             applyFilterTagLocalization(tags[i], tagsI18n);
         }
 
-        for (let j = 0; j < filters.length; ++j) {
+        const flen = filters.length;
+        for (let j = 0; j < flen; ++j) {
             applyFilterLocalization(filters[j], filtersI18n);
         }
 
-        for (let k = 0; k < groups.length; ++k) {
+        const glen = groups.length;
+        for (let k = 0; k < glen; ++k) {
             applyGroupLocalization(groups[k], groupsI18n);
         }
 
@@ -358,7 +370,7 @@ export const subscriptions = (() => {
      * Initialize subscription service, loading local filters metadata
      * @return {Promise}
      */
-    const init = async function () {
+    const init = async () => {
         try {
             await loadMetadata();
             await loadMetadataI18n();
@@ -373,14 +385,14 @@ export const subscriptions = (() => {
     /**
      * @returns Array of Filters metadata
      */
-    const getFilters = function () {
+    const getFilters = () => {
         return metadataCache.getFilters();
     };
 
     /**
      * Gets filter metadata by filter identifier
      */
-    const getFilter = function (filterId) {
+    const getFilter = (filterId) => {
         return metadataCache.getFilter(filterId);
     };
 
@@ -395,7 +407,7 @@ export const subscriptions = (() => {
     /**
      * @returns Array of Tags metadata
      */
-    const getTags = function () {
+    const getTags = () => {
         return metadataCache.getTags();
     };
 
@@ -416,7 +428,7 @@ export const subscriptions = (() => {
      */
     const groupHasEnabledStatus = (groupId) => {
         const group = metadataCache.getGroup(groupId);
-        return group.enabled !== undefined;
+        return typeof group.enabled !== 'undefined';
     };
 
     /**
@@ -425,14 +437,15 @@ export const subscriptions = (() => {
      * @param locale Locale to check
      * @returns {Array} List of filters identifiers
      */
-    const getFilterIdsForLanguage = function (locale) {
+    const getFilterIdsForLanguage = (locale) => {
         if (!locale) {
             return [];
         }
 
         const filters = metadataCache.getFilters();
         const filterIds = [];
-        for (let i = 0; i < filters.length; ++i) {
+        const len = filters.length;
+        for (let i = 0; i < len; ++i) {
             const filter = filters[i];
             const { languages } = filter;
             if (languages && languages.length !== 0) {
@@ -458,7 +471,8 @@ export const subscriptions = (() => {
         // Get language-specific filters by navigator languages
         // Get all used languages
         const languages = browserUtils.getNavigatorLanguages();
-        for (let i = 0; i < languages.length; ++i) {
+        const len = languages.length;
+        for (let i = 0; i < len; ++i) {
             const language = languages[i];
             localeFilterIds = getFilterIdsForLanguage(language);
             filterIds = filterIds.concat(localeFilterIds);

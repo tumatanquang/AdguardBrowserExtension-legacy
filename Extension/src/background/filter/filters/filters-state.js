@@ -22,7 +22,7 @@ import { listeners } from '../../notifier';
 /**
  * Helper class for working with filters metadata storage (local storage)
  */
-export const filtersState = (function () {
+export const filtersState = (() => {
     const FILTERS_STATE_PROP = 'filters-state';
     const FILTERS_VERSION_PROP = 'filters-version';
     const GROUPS_STATE_PROP = 'groups-state';
@@ -31,7 +31,7 @@ export const filtersState = (function () {
      * Gets filter version from the local storage
      * @returns {*}
      */
-    const getFiltersVersion = function () {
+    const getFiltersVersion = () => {
         let filters = Object.create(null);
         try {
             const json = localStorage.getItem(FILTERS_VERSION_PROP);
@@ -49,7 +49,7 @@ export const filtersState = (function () {
      * Gets filters state from the local storage
      * @returns {*}
      */
-    const getFiltersState = function () {
+    const getFiltersState = () => {
         let filters = Object.create(null);
         try {
             const json = localStorage.getItem(FILTERS_STATE_PROP);
@@ -67,7 +67,7 @@ export const filtersState = (function () {
      * Gets groups state from the local storage
      * @returns {any}
      */
-    const getGroupsState = function () {
+    const getGroupsState = () => {
         let groups = Object.create(null);
         try {
             const json = localStorage.getItem(GROUPS_STATE_PROP);
@@ -86,7 +86,7 @@ export const filtersState = (function () {
      *
      * @param filter Filter version metadata
      */
-    const updateFilterVersion = function (filter) {
+    const updateFilterVersion = (filter) => {
         const filters = getFiltersVersion();
         filters[filter.filterId] = {
             version: filter.version,
@@ -103,7 +103,7 @@ export const filtersState = (function () {
      *
      * @param filter Filter state object
      */
-    const updateFilterState = function (filter) {
+    const updateFilterState = (filter) => {
         const filters = getFiltersState();
         filters[filter.filterId] = {
             loaded: filter.loaded,
@@ -124,7 +124,7 @@ export const filtersState = (function () {
      *
      * @param group - SubscriptionGroup object
      */
-    const updateGroupState = function (group) {
+    const updateGroupState = (group) => {
         const groups = getGroupsState();
 
         if (typeof group.enabled === 'undefined') {

@@ -33,7 +33,7 @@ class UserRulesEditorStore {
     constructor() {
         makeObservable(this);
 
-        savingService.onTransition((state) => {
+        savingService.onTransition(state => {
             runInAction(() => {
                 this.savingUserRulesState = state.value;
                 switch (state.value) {

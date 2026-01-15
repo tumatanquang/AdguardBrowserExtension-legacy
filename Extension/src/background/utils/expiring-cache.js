@@ -26,13 +26,13 @@ export const ExpiringCache = (() => {
      * @param {string} storagePropertyName      Name of the local storage property.
      * @param {number} size                     Max cache size
      */
-    function ExpiringCache(storagePropertyName, size) {
+    const ExpiringCache = (storagePropertyName, size) => {
         const maxCacheSize = size || EXPIRING_CACHE_SIZE;
 
         let cache;
         let cacheSize;
 
-        function getCacheFromLocalStorage() {
+        const getCacheFromLocalStorage = () => {
             let data = Object.create(null);
             try {
                 const json = localStorage.getItem(storagePropertyName);
@@ -46,23 +46,23 @@ export const ExpiringCache = (() => {
                 localStorage.removeItem(storagePropertyName);
             }
             return data;
-        }
+        };
 
-        function saveCacheToLocalStorage() {
+        const saveCacheToLocalStorage = () => {
             try {
                 localStorage.setItem(storagePropertyName, JSON.stringify(cache));
             }
             catch (ex) {
                 log.error('Error save to {0} cache, cause: {1}', storagePropertyName, ex);
             }
-        }
+        };
 
         /**
          * Retrieves value from cache and checks if saved data is not expired yet.
          * @param {string} key
          * @returns {null|object} saved data
          */
-        function getValue(key) {
+        const getValue = (key) => {
             const value = cache[key];
             if (value !== undefined) {
                 const expires = +value.expires;
@@ -72,11 +72,12 @@ export const ExpiringCache = (() => {
                 return value.data;
             }
             return null;
-        }
+        };
 
-        function cleanup() {
+        const cleanup = () => {
             const cacheKeys = Object.keys(cache);
-            for (let i = 0; i < cacheKeys.length; ++i) {
+            const len = cacheKeys.length;
+            for (let i = 0; i < len; ++i) {
                 const key = cacheKeys[i];
                 const foundItem = getValue(key);
                 if (!foundItem) {
@@ -87,7 +88,8 @@ export const ExpiringCache = (() => {
             const halfMaxCacheSize = maxCacheSize >> 1;
             if (cacheSize > halfMaxCacheSize) {
                 const cacheKeys = Object.keys(cache);
-                for (let i = 0; i < cacheKeys.length; ++i) {
+                const len = cacheKeys.length;
+                for (let i = 0; i < len; ++i) {
                     const key = cacheKeys[i];
                     delete cache[key];
                     if (--cacheSize <= halfMaxCacheSize) {
@@ -96,9 +98,9 @@ export const ExpiringCache = (() => {
                 }
             }
             saveCacheToLocalStorage();
-        }
+        };
 
-        const saveValue = function (key, data, expires) {
+        const saveValue = (key, data, expires) => {
             if (!key) {
                 return;
             }
@@ -125,7 +127,7 @@ export const ExpiringCache = (() => {
             getValue,
             saveValue
         };
-    }
+    };
 
     /**
      * Expose

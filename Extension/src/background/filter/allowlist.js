@@ -64,7 +64,7 @@ class DomainsHolder {
     }
 
     includes(domain) {
-        return this.domains.some((d) => {
+        return this.domains.some(d => {
             return d === domain || utils.url.getCroppedDomainName(d) === domain;
         });
     }
@@ -88,17 +88,17 @@ export const allowlist = (() => {
      * In default mode the filtering is enabled for all sites
      * In inverted model the filtering is disabled for all sites
      */
-    function isDefaultAllowlistMode() {
+    const isDefaultAllowlistMode = () => {
         return settings.isDefaultAllowlistMode();
-    }
+    };
 
     const allowlistDomainsHolder = new DomainsHolder(ALLOWLIST_DOMAINS_LS_PROP);
 
     const blocklistDomainsHolder = new DomainsHolder(BLOCKLIST_DOMAINS_LS_PROP);
 
-    function notifyAllowlistUpdated() {
+    const notifyAllowlistUpdated = () => {
         listeners.notifyListeners(listeners.UPDATE_ALLOWLIST_FILTER_RULES);
-    }
+    };
 
     /**
      * Create allowlist rule from input text
@@ -106,8 +106,8 @@ export const allowlist = (() => {
      * @returns {*}
      * @private
      */
-    function createAllowlistRule(domain) {
-        if (utils.strings.isEmpty(domain)) {
+    const createAllowlistRule = (domain) => {
+        if (utils.strings.isEmpty(domain) === true) {
             return null;
         }
 
@@ -116,29 +116,29 @@ export const allowlist = (() => {
             utils.filters.ALLOWLIST_FILTER_ID
         );
         return rule;
-    }
+    };
 
     /**
      * Adds domain to array of allowlist domains
      * @param domain
      */
-    function addDomainToAllowlist(domain) {
+    const addDomainToAllowlist = (domain) => {
         if (!domain) {
             return;
         }
-        if (isDefaultAllowlistMode()) {
+        if (isDefaultAllowlistMode() === true) {
             allowlistDomainsHolder.add(domain);
         }
         else {
             blocklistDomainsHolder.add(domain);
         }
-    }
+    };
 
     /**
      * Remove domain form allowlist domains
      * @param domain
      */
-    function removeDomainFromAllowlist(domain) {
+    const removeDomainFromAllowlist = (domain) => {
         if (!domain) {
             return;
         }
@@ -152,52 +152,52 @@ export const allowlist = (() => {
                 || utils.url.getCroppedDomainName(domainFromCollection) === domain;
         };
 
-        if (isDefaultAllowlistMode()) {
+        if (isDefaultAllowlistMode() === true) {
             utils.collections.removeBy(allowlistDomainsHolder.domains, predicate);
         }
         else {
             utils.collections.removeBy(blocklistDomainsHolder.domains, predicate);
         }
-    }
+    };
 
     /**
      * Save domains to local storage
      */
-    function saveDomainsToLocalStorage() {
+    const saveDomainsToLocalStorage = () => {
         localStorage.setItem(ALLOWLIST_DOMAINS_LS_PROP,
             JSON.stringify(allowlistDomainsHolder.domains));
         localStorage.setItem(BLOCKLIST_DOMAINS_LS_PROP,
             JSON.stringify(blocklistDomainsHolder.domains));
-    }
+    };
 
     /**
      * Remove domain from allowlist
      * @param domain
      */
-    function removeFromAllowlist(domain) {
+    const removeFromAllowlist = (domain) => {
         removeDomainFromAllowlist(domain);
         saveDomainsToLocalStorage();
         notifyAllowlistUpdated();
-    }
+    };
 
     /**
      * Adds domain to allowlist
      * @param domain
      */
-    function addToAllowlist(domain) {
-        if (utils.strings.isEmpty(domain)) {
+    const addToAllowlist = (domain) => {
+        if (utils.strings.isEmpty(domain) === true) {
             return;
         }
 
         addDomainToAllowlist(domain);
         saveDomainsToLocalStorage();
         notifyAllowlistUpdated();
-    }
+    };
 
     /**
      * Search for allowlist rule by url.
      */
-    const findAllowlistRule = function (url) {
+    const findAllowlistRule = (url) => {
         if (!url) {
             return null;
         }
@@ -205,8 +205,8 @@ export const allowlist = (() => {
         const host = utils.url.getDomainName(url);
         const allowlistEnabled = settings.getAllowlistEnabledState();
 
-        if (isDefaultAllowlistMode()) {
-            if (allowlistEnabled && allowlistDomainsHolder.includes(host)) {
+        if (isDefaultAllowlistMode() === true) {
+            if (allowlistEnabled && allowlistDomainsHolder.includes(host) === true) {
                 return createAllowlistRule(host);
             }
 
@@ -214,7 +214,7 @@ export const allowlist = (() => {
         }
 
         // condition for inverted mode
-        if (allowlistEnabled && blocklistDomainsHolder.includes(host)) {
+        if (allowlistEnabled && blocklistDomainsHolder.includes(host) === true) {
             // filtering is enabled on this website
             return null;
         }
@@ -226,7 +226,7 @@ export const allowlist = (() => {
      * Changes allowlist mode
      * @param defaultMode
      */
-    const changeDefaultAllowlistMode = function (defaultMode) {
+    const changeDefaultAllowlistMode = (defaultMode) => {
         settings.changeDefaultAllowlistMode(defaultMode);
         notifyAllowlistUpdated();
     };
@@ -235,9 +235,9 @@ export const allowlist = (() => {
      * Stop (or start in case of inverted mode) filtration for url
      * @param url
      */
-    const allowlistUrl = function (url) {
+    const allowlistUrl = (url) => {
         const domain = utils.url.getDomainName(url);
-        if (isDefaultAllowlistMode()) {
+        if (isDefaultAllowlistMode() === true) {
             addToAllowlist(domain);
         }
         else {
@@ -249,9 +249,9 @@ export const allowlist = (() => {
      * Start (or stop in case of inverted mode) filtration for url
      * @param url
      */
-    const unAllowlistUrl = function (url) {
+    const unAllowlistUrl = (url) => {
         const domain = utils.url.getDomainName(url);
-        if (isDefaultAllowlistMode()) {
+        if (isDefaultAllowlistMode() === true) {
             removeFromAllowlist(domain);
         }
         else {
@@ -262,7 +262,7 @@ export const allowlist = (() => {
     /**
      * Clear allowlisted only
      */
-    const clearAllowlisted = function () {
+    const clearAllowlisted = () => {
         localStorage.removeItem(ALLOWLIST_DOMAINS_LS_PROP);
         lazyGetClear(allowlistDomainsHolder, 'domains');
     };
@@ -271,11 +271,13 @@ export const allowlist = (() => {
      * Add domains to allowlist
      * @param domains
      */
-    const addAllowlisted = function (domains) {
+    const addAllowlisted = (domains) => {
         if (!domains) {
             return;
         }
-        for (let i = 0; i < domains.length; ++i) {
+
+        const len = domains.length;
+        for (let i = 0; i < len; ++i) {
             const domain = domains[i];
             allowlistDomainsHolder.add(domain);
         }
@@ -285,7 +287,7 @@ export const allowlist = (() => {
     /**
      * Clear blocklisted only
      */
-    const clearBlocklisted = function () {
+    const clearBlocklisted = () => {
         localStorage.removeItem(BLOCKLIST_DOMAINS_LS_PROP);
         lazyGetClear(blocklistDomainsHolder, 'domains');
     };
@@ -294,11 +296,13 @@ export const allowlist = (() => {
      * Add domains to blocklist
      * @param domains
      */
-    const addBlocklisted = function (domains) {
+    const addBlocklisted = (domains) => {
         if (!domains) {
             return;
         }
-        for (let i = 0; i < domains.length; ++i) {
+
+        const len = domains.length;
+        for (let i = 0; i < len; ++i) {
             const domain = domains[i];
             blocklistDomainsHolder.add(domain);
         }
@@ -309,9 +313,9 @@ export const allowlist = (() => {
      * Updates domains in allowlist
      * @param domains
      */
-    const updateAllowlistDomains = function (domains) {
+    const updateAllowlistDomains = (domains) => {
         domains = domains || [];
-        if (isDefaultAllowlistMode()) {
+        if (isDefaultAllowlistMode() === true) {
             clearAllowlisted();
             addAllowlisted(domains);
         }
@@ -329,12 +333,12 @@ export const allowlist = (() => {
      * @param blocklist Blocklist domains
      * @param allowlistMode Allowlist mode
      */
-    const configure = function ({
+    const configure = ({
         allowlist,
         blocklist,
         mode,
         enabled
-    }) {
+    }) => {
         clearAllowlisted();
         clearBlocklisted();
         addAllowlisted(allowlist || []);
@@ -347,8 +351,8 @@ export const allowlist = (() => {
     /**
      * Returns the array of allowlist domains
      */
-    const getAllowlistDomains = function () {
-        if (isDefaultAllowlistMode()) {
+    const getAllowlistDomains = () => {
+        if (isDefaultAllowlistMode() === true) {
             return allowlistDomainsHolder.domains;
         }
         return blocklistDomainsHolder.domains;
@@ -357,21 +361,21 @@ export const allowlist = (() => {
     /**
      * Returns the array of allowlisted domains
      */
-    const getAllowlistedDomains = function () {
+    const getAllowlistedDomains = () => {
         return allowlistDomainsHolder.domains;
     };
 
     /**
      * Returns the array of blocklisted domains, inverted mode
      */
-    const getBlocklistedDomains = function () {
+    const getBlocklistedDomains = () => {
         return blocklistDomainsHolder.domains;
     };
 
     /**
      * Initializes allowlist filter
      */
-    const init = function () {
+    const init = () => {
         /**
          * Access to allowlist/blacklist domains before the proper initialization of localStorage
          * leads to wrong caching of its values

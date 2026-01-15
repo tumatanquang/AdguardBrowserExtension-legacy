@@ -26,7 +26,8 @@ import { translator } from '../../common/translators/translator';
 /**
  * Global stats
  */
-export const pageStats = (function () {
+export const pageStats = (() => {
+    const PAGE_STATISTIC_KEY = 'page-statistic';
     const MAX_HOURS_HISTORY = 24;
     const MAX_DAYS_HISTORY = 30;
     const MAX_MONTHS_HISTORY = 3;
@@ -35,8 +36,6 @@ export const pageStats = (function () {
         groupId: 'total',
         groupName: translator.getMessage('popup_statistics_total')
     };
-
-    const pageStatisticProperty = 'page-statistic';
 
     const pageStatsHolder = {
         /**
@@ -49,7 +48,7 @@ export const pageStats = (function () {
             return lazyGet(pageStatsHolder, 'stats', () => {
                 let stats;
                 try {
-                    const json = localStorage.getItem(pageStatisticProperty);
+                    const json = localStorage.getItem(PAGE_STATISTIC_KEY);
                     if (json) {
                         stats = JSON.parse(json);
                     }
@@ -61,12 +60,13 @@ export const pageStats = (function () {
             });
         },
 
-        save: utils.concurrent.throttle(function () {
-            localStorage.setItem(pageStatisticProperty, JSON.stringify(this.stats));
+        save: utils.concurrent.debounce(function () {
+            const json = JSON.stringify(this.stats);
+            localStorage.setItem(PAGE_STATISTIC_KEY, json);
         }, prefs.statsSaveInterval),
 
         clear() {
-            localStorage.removeItem(pageStatisticProperty);
+            localStorage.removeItem(PAGE_STATISTIC_KEY);
             lazyGetClear(pageStatsHolder, 'stats');
         }
     };
@@ -76,7 +76,7 @@ export const pageStats = (function () {
      *
      * @returns {Number} Count of blocked requests
      */
-    const getTotalBlocked = function () {
+    const getTotalBlocked = () => {
         const { stats } = pageStatsHolder;
         if (!stats) {
             return 0;
@@ -89,7 +89,7 @@ export const pageStats = (function () {
      *
      * @param blocked Count of blocked requests
      */
-    const updateTotalBlocked = function (blocked) {
+    const updateTotalBlocked = (blocked) => {
         const { stats } = pageStatsHolder;
         stats.totalBlocked = (stats.totalBlocked || 0) + blocked;
         pageStatsHolder.save();
@@ -98,7 +98,7 @@ export const pageStats = (function () {
     /**
      * Resets tab stats
      */
-    const resetStats = function () {
+    const resetStats = () => {
         pageStatsHolder.clear();
     };
 
@@ -116,7 +116,7 @@ export const pageStats = (function () {
      * @param {number} filterId
      * @returns
      */
-    const getBlockedGroupByFilterId = function (filterId) {
+    const getBlockedGroupByFilterId = (filterId) => {
         let blockedGroup = blockedGroupsFilters[filterId];
 
         if (blockedGroup !== undefined) {
@@ -140,7 +140,7 @@ export const pageStats = (function () {
         return blockedGroup;
     };
 
-    const createStatsDataItem = function (type, blocked) {
+    const createStatsDataItem = (type, blocked) => {
         const result = {};
         if (type) {
             result[type] = blocked;
@@ -152,7 +152,7 @@ export const pageStats = (function () {
     /**
      * Blocked types to filters relation dictionary
      */
-    const createStatsData = function (now, type, blocked) {
+    const createStatsData = (now, type, blocked) => {
         const result = Object.create(null);
         result.hours = [];
         result.days = [];
@@ -178,14 +178,14 @@ export const pageStats = (function () {
         return result;
     };
 
-    const updateStatsDataItem = function (type, blocked, current) {
+    const updateStatsDataItem = (type, blocked, current) => {
         current[type] = (current[type] || 0) + blocked;
         current[TOTAL_GROUP.groupId] = (current[TOTAL_GROUP.groupId] || 0) + blocked;
 
         return current;
     };
 
-    const updateStatsData = function (now, type, blocked, current) {
+    const updateStatsData = (now, type, blocked, current) => {
         const currentDate = new Date(current.updated);
 
         const result = current;
@@ -271,7 +271,7 @@ export const pageStats = (function () {
      * @param blocked count
      * @param now date
      */
-    const updateStats = function (filterId, blocked, now) {
+    const updateStats = (filterId, blocked, now) => {
         const blockedGroup = getBlockedGroupByFilterId(filterId);
 
         if (blockedGroup === undefined) {

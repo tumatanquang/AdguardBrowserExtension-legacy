@@ -38,7 +38,7 @@ const tabsApi = (tabsImpl => {
      * Saves tab to collection and notify listeners
      * @param aTab
      */
-    function onTabCreated(aTab) {
+    const onTabCreated = (aTab) => {
         const tab = tabs[aTab.tabId];
         if (tab) {
             // Tab has been already synchronized
@@ -46,12 +46,13 @@ const tabsApi = (tabsImpl => {
         }
         tabs[aTab.tabId] = aTab;
         onCreatedChannel.notify(aTab);
-    }
+    };
 
     // Synchronize opened tabs
     (async () => {
         const aTabs = await tabsImpl.getAll();
-        for (let i = 0; i < aTabs.length; ++i) {
+        const len = aTabs.length;
+        for (let i = 0; i < len; ++i) {
             const aTab = aTabs[i];
             tabs[aTab.tabId] = aTab;
         }
@@ -99,7 +100,7 @@ const tabsApi = (tabsImpl => {
     };
 
     // Activates tab (Also makes tab's window in focus).
-    const activate = function (tabId) {
+    const activate = (tabId) => {
         return tabsImpl.activate(tabId);
     };
 
@@ -150,7 +151,8 @@ const tabsApi = (tabsImpl => {
     const getAll = async () => {
         const aTabs = await tabsImpl.getAll();
         const result = [];
-        for (let i = 0; i < aTabs.length; ++i) {
+        const len = aTabs.length;
+        for (let i = 0; i < len; ++i) {
             const aTab = aTabs[i];
             const tab = syncTabs(tabs, aTab);
             result.push(tab);
@@ -162,7 +164,8 @@ const tabsApi = (tabsImpl => {
     const forEach = (callback) => {
         (async () => {
             const aTabs = await tabsImpl.getAll();
-            for (let i = 0; i < aTabs.length; ++i) {
+            const len = aTabs.length;
+            for (let i = 0; i < len; ++i) {
                 const aTab = aTabs[i];
                 let tab = tabs[aTab.tabId];
                 if (!tab) {
@@ -272,8 +275,10 @@ const tabsApi = (tabsImpl => {
             if (!tab.metadata) {
                 tab.metadata = Object.create(null);
             }
-            // eslint-disable-next-line no-restricted-syntax
-            for (const key in values) {
+            const keys = Object.keys(values);
+            const len = keys.length;
+            for (let i = 0; i < len; ++i) {
+                const key = keys[i];
                 if (values.hasOwnProperty && values.hasOwnProperty(key)) {
                     tab.metadata[key] = values[key];
                 }
@@ -290,7 +295,7 @@ const tabsApi = (tabsImpl => {
         return null;
     };
 
-    const clearTabMetadata = tabId => {
+    const clearTabMetadata = (tabId) => {
         const tab = tabs[tabId];
         if (tab) {
             tab.metadata = null;

@@ -72,7 +72,7 @@ export const prefs = (() => {
         },
 
         /**
-         * https://msdn.microsoft.com/ru-ru/library/hh869301(v=vs.85).aspx
+         * https://msdn.microsoft.com/en-us/library/hh869301(v=vs.85).aspx
          * @returns {*}
          */
         get edgeVersion() {
@@ -119,29 +119,30 @@ export const prefs = (() => {
 
         // interval 60 seconds in Firefox is set so big due to excessive IO operations on every storage save
         // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1006
+        // https://developer.chrome.com/docs/extensions/reference/api/storage?hl=vi#property-sync-sync-MAX_WRITE_OPERATIONS_PER_HOUR
         get statsSaveInterval() {
-            return this.browser === 'Firefox' ? 60 * 1000 : 1000;
+            return this.browser === 'Firefox' ? 60 * 1000 : 2 * 1000;
         }
     };
 
     /**
      * Collect browser specific features here
      */
-    Prefs.features = (function () {
+    Prefs.features = (() => {
         // Get the global extension object (browser for FF, chrome for Chromium)
         const browser = window.browser || window.chrome;
 
-        const responseContentFilteringSupported = browser !== undefined
-            && browser.webRequest !== undefined
-            && browser.webRequest.filterResponseData !== undefined;
+        const responseContentFilteringSupported = typeof browser !== 'undefined'
+            && typeof browser.webRequest !== 'undefined'
+            && typeof browser.webRequest.filterResponseData !== 'undefined';
 
-        const canUseInsertCSSAndExecuteScript = browser.tabs?.insertCSS !== undefined
-            && browser.tabs?.executeScript !== undefined;
+        const canUseInsertCSSAndExecuteScript = typeof browser.tabs?.insertCSS !== 'undefined'
+            && typeof browser.tabs?.executeScript !== 'undefined';
 
         return {
             responseContentFilteringSupported,
             canUseInsertCSSAndExecuteScript,
-            hasBackgroundTab: browser !== undefined // Background requests have sense only in case of webext
+            hasBackgroundTab: typeof browser !== 'undefined' // Background requests have sense only in case of webext
         };
     })();
 

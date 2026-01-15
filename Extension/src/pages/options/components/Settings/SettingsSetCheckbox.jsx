@@ -4,7 +4,7 @@ import { Setting, SETTINGS_TYPES } from './Setting';
 import { SettingsSet } from './SettingsSet';
 
 // clickable setting with a label wrap
-function SettingsSetCheckbox(props) {
+const SettingsSetCheckbox = (props) => {
     const {
         title, description, children, disabled,
         id, handler, label, inverted, value, sectionDisabled
@@ -35,7 +35,7 @@ function SettingsSetCheckbox(props) {
             </SettingsSet>
         </label>
     );
-}
+};
 
 SettingsSetCheckbox.propTypes = {
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired

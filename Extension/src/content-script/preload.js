@@ -22,7 +22,7 @@ import { contentPage } from './content-script';
 import { ElementCollapser } from './element-collapser';
 import { MESSAGE_TYPES } from '../common/constants';
 
-export const preload = (function () {
+export const preload = (() => {
     const requestTypeMap = {
         'img': 'IMAGE',
         'input': 'IMAGE',
@@ -119,7 +119,7 @@ export const preload = (function () {
             return;
         }
         // Wraps with try catch and appends cleanup
-        scripts.unshift('( function () { try {');
+        scripts.unshift('(() => { try {');
         scripts.push("} catch (ex) { console.error('Error executing AG js: ' + ex); } })();");
 
         executeScript(scripts.join('\r\n'));
@@ -227,7 +227,7 @@ export const preload = (function () {
             return;
         }
 
-        if (ElementCollapser.isCollapsed(element)) {
+        if (ElementCollapser.isCollapsed(element) === true) {
             return;
         }
 
@@ -300,7 +300,8 @@ export const preload = (function () {
         }
         /* observer, which observe protectStyleEl inner changes, without deleting styleEl */
         const innerObserver = new MutationObserver(mutations => {
-            for (let i = 0; i < mutations.length; ++i) {
+            const len = mutations.length;
+            for (let i = 0; i < len; ++i) {
                 const m = mutations[i];
                 if (protectStyleEl.hasAttribute('mod') && protectStyleEl.getAttribute('mod') === 'inner') {
                     protectStyleEl.removeAttribute('mod');
@@ -317,7 +318,8 @@ export const preload = (function () {
                 let isProtectStyleElModified = false;
                 const { removedNodes } = m;
                 if (removedNodes.length !== 0) {
-                    for (let j = 0; j < removedNodes.length; ++j) {
+                    const len = removedNodes.length;
+                    for (let j = 0; j < len; ++j) {
                         isProtectStyleElModified = true;
                         protectStyleEl.appendChild(removedNodes[j]);
                     }
@@ -368,7 +370,7 @@ export const preload = (function () {
      * @param extendedCss Array with ExtendedCss stylesheets
      */
     const applyExtendedCss = (extendedCss) => {
-        if (!extendedCss || !extendedCss.length) {
+        if (!extendedCss || extendedCss.length === 0) {
             return;
         }
 
@@ -409,7 +411,8 @@ export const preload = (function () {
         }
 
         const { requests } = response;
-        for (let i = 0; i < requests.length; ++i) {
+        const len = requests.length;
+        for (let i = 0; i < len; ++i) {
             const collapseRequest = requests[i];
             onProcessShouldCollapseResponse(collapseRequest);
         }
@@ -422,12 +425,15 @@ export const preload = (function () {
         const requests = [];
 
         // Collect collapse requests
-        // eslint-disable-next-line guard-for-in,no-restricted-syntax
-        for (const tagName in requestTypeMap) {
+        const tagNames = Object.keys(requestTypeMap);
+        const len = tagNames.length;
+        for (let i = 0; i < len; ++i) {
+            const tagName = tagNames[i];
             const requestType = requestTypeMap[tagName];
 
             const elements = document.getElementsByTagName(tagName);
-            for (let j = 0; j < elements.length; ++j) {
+            const { length } = elements;
+            for (let j = 0; j < length; ++j) {
                 const element = elements[j];
                 const elementUrl = getElementUrl(element);
                 if (!elementUrl) {
@@ -579,8 +585,8 @@ export const preload = (function () {
     /**
      * Initializing content script
      */
-    const init = function () {
-        if (!isHtml()) {
+    const init = () => {
+        if (isHtml() === false) {
             return;
         }
 

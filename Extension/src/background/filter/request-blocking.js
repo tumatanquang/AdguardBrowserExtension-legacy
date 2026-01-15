@@ -32,7 +32,7 @@ import { allowlist } from './allowlist';
 import { browserUtils } from '../utils/browser-utils';
 import { stealthService } from './services/stealth-service';
 
-export const webRequestService = (function () {
+export const webRequestService = (() => {
     const onRequestBlockedChannel = utils.channels.newChannel();
 
     /**
@@ -41,14 +41,14 @@ export const webRequestService = (function () {
      * @param {object} tab
      * @returns {boolean}
      */
-    const canCollectHitStatsForTab = function (tab) {
+    const canCollectHitStatsForTab = (tab) => {
         if (!tab) {
             return settings.collectHitsCount();
         }
 
         return tab
             && settings.collectHitsCount()
-            && !frames.isIncognitoTab(tab);
+            && frames.isIncognitoTab(tab) === false;
     };
 
     /**
@@ -58,11 +58,11 @@ export const webRequestService = (function () {
      * @param requestRule    Rule to record
      * @param requestUrl     Request URL
      */
-    const recordRuleHit = function (tab, requestRule, requestUrl) {
+    const recordRuleHit = (tab, requestRule, requestUrl) => {
         if (requestRule
-            && !utils.filters.isUserFilterRule(requestRule)
-            && !utils.filters.isAllowlistFilterRule(requestRule)
-            && canCollectHitStatsForTab(tab)) {
+            && utils.filters.isUserFilterRule(requestRule) === false
+            && utils.filters.isAllowlistFilterRule(requestRule) === false
+            && canCollectHitStatsForTab(tab) === true) {
             const domain = frames.getFrameDomain(tab);
             hitStats.addRuleHit(domain, requestRule.getText(), requestRule.getFilterListId(), requestUrl);
         }
@@ -89,14 +89,14 @@ export const webRequestService = (function () {
      *
      * @returns {SelectorsAndScripts} an object with the selectors and scripts to be injected into the page
      */
-    const processGetSelectorsAndScripts = function (tab, documentUrl, force) {
+    const processGetSelectorsAndScripts = (tab, documentUrl, force) => {
         const result = Object.create(null);
 
         if (!tab) {
             return result;
         }
 
-        if (!filteringApi.isReady()) {
+        if (filteringApi.isReady() === false) {
             result.requestFilterReady = false;
             return result;
         }
@@ -116,7 +116,7 @@ export const webRequestService = (function () {
             frameRule: frames.getFrameRule(tab)
         });
 
-        if (force || !prefs.features.canUseInsertCSSAndExecuteScript) {
+        if (force === true || !prefs.features.canUseInsertCSSAndExecuteScript) {
             // Retrieve ExtendedCss selectors only if canUseInsertCSSAndExecuteScript is unavailable
             result.selectors = filteringApi.getSelectorsForUrl(
                 documentUrl, cosmeticOptions, true, !prefs.features.canUseInsertCSSAndExecuteScript
@@ -153,7 +153,7 @@ export const webRequestService = (function () {
      * @param requestType   Request type (WEBSOCKET or WEBRTC)
      * @returns {boolean}   true if request is blocked
      */
-    const checkPageScriptWrapperRequest = function (tab, requestUrl, referrerUrl, requestType) {
+    const checkPageScriptWrapperRequest = (tab, requestUrl, referrerUrl, requestType) => {
         if (!tab) {
             return false;
         }
@@ -181,7 +181,7 @@ export const webRequestService = (function () {
      * @param requestType   one of RequestType
      * @returns {boolean}   true if request is blocked
      */
-    const processShouldCollapse = function (tab, requestUrl, referrerUrl, requestType) {
+    const processShouldCollapse = (tab, requestUrl, referrerUrl, requestType) => {
         if (!tab) {
             return false;
         }
@@ -199,12 +199,13 @@ export const webRequestService = (function () {
      * @param collapseRequests  requests array
      * @returns {*}             requests array
      */
-    const processShouldCollapseMany = function (tab, referrerUrl, collapseRequests) {
+    const processShouldCollapseMany = (tab, referrerUrl, collapseRequests) => {
         if (!tab) {
             return collapseRequests;
         }
 
-        for (let i = 0; i < collapseRequests.length; ++i) {
+        const len = collapseRequests.length;
+        for (let i = 0; i < len; ++i) {
             const request = collapseRequests[i];
             const requestRule = getRuleForRequest(tab, request.elementUrl, referrerUrl, request.requestType);
             request.collapse = isRequestBlockedByRule(requestRule);
@@ -256,12 +257,12 @@ export const webRequestService = (function () {
      * @param requestUrl    Request url
      * @returns {*} Blocked response or null
      */
-    const getBlockedResponseByRule = function (requestRule, requestType, requestUrl) {
+    const getBlockedResponseByRule = (requestRule, requestType, requestUrl) => {
         if (isRequestBlockedByRule(requestRule)) {
             const isDocumentLevel = requestType === RequestTypes.DOCUMENT
                 || requestType === RequestTypes.SUBDOCUMENT;
 
-            if (isDocumentLevel && isDocumentBlockingRule(requestRule)) {
+            if (isDocumentLevel === true && isDocumentBlockingRule(requestRule) === true) {
                 const documentBlockedPage = documentFilterService.getDocumentBlockPageUrl(
                     requestUrl,
                     requestRule.getText()
@@ -303,7 +304,7 @@ export const webRequestService = (function () {
      * @param requestType   one of RequestType
      * @returns {*}         rule or null
      */
-    const getRuleForRequest = function (tab, requestUrl, referrerUrl, requestType) {
+    const getRuleForRequest = (tab, requestUrl, referrerUrl, requestType) => {
         if (frames.isTabProtectionDisabled(tab)) {
             // don't process request
             return null;
@@ -351,8 +352,8 @@ export const webRequestService = (function () {
      * @param documentUrl Document URL
      * @returns collection of content rules or null
      */
-    const getContentRules = function (tab, documentUrl) {
-        if (frames.shouldStopRequestProcess(tab)) {
+    const getContentRules = (tab, documentUrl) => {
+        if (frames.shouldStopRequestProcess(tab) === true) {
             // don't process request
             return null;
         }
@@ -379,8 +380,8 @@ export const webRequestService = (function () {
      * @param requestType   Request type (DOCUMENT or SUBDOCUMENT)
      * @returns {Array}     Collection of rules or null
      */
-    const getCspRules = function (tab, requestUrl, referrerUrl, requestType) {
-        if (frames.shouldStopRequestProcess(tab)) {
+    const getCspRules = (tab, requestUrl, referrerUrl, requestType) => {
+        if (frames.shouldStopRequestProcess(tab) === true) {
             // don't process request
             return null;
         }
@@ -417,7 +418,7 @@ export const webRequestService = (function () {
      * @returns {Array}     Collection of rules or null
      */
     const getCookieRules = (tab, requestUrl, referrerUrl, requestType) => {
-        if (frames.shouldStopRequestProcess(tab)) {
+        if (frames.shouldStopRequestProcess(tab) === true) {
             // Don't process request
             return null;
         }
@@ -454,7 +455,7 @@ export const webRequestService = (function () {
      * @returns {*} Collection of rules or null
      */
     const getReplaceRules = (tab, requestUrl, referrerUrl, requestType) => {
-        if (frames.shouldStopRequestProcess(tab)) {
+        if (frames.shouldStopRequestProcess(tab) === true) {
             // don't process request
             return null;
         }
@@ -490,7 +491,7 @@ export const webRequestService = (function () {
      * @returns {*} Collection of rules or null
      */
     const removeParamFromUrl = (tab, requestUrl, referrerUrl, requestType, method) => {
-        if (frames.shouldStopRequestProcess(tab)) {
+        if (frames.shouldStopRequestProcess(tab) === true) {
             // don't process request
             return null;
         }
@@ -522,7 +523,8 @@ export const webRequestService = (function () {
         });
 
         let result = requestUrl;
-        for (let i = 0; i < rules.length; ++i) {
+        const len = rules.length;
+        for (let i = 0; i < len; ++i) {
             const r = rules[i];
             if (!r.isAllowlist()) {
                 const ruleResult = r.getAdvancedModifier().removeParameters(result);
@@ -559,9 +561,9 @@ export const webRequestService = (function () {
      * @param requestType Request type
      * @return {void}
      */
-    const processRequestResponse = function (tab, requestUrl, referrerUrl, requestType) {
+    const processRequestResponse = (tab, requestUrl, referrerUrl, requestType) => {
         // add page view to stats
-        if (requestType === RequestTypes.DOCUMENT && canCollectHitStatsForTab(tab)) {
+        if (requestType === RequestTypes.DOCUMENT && canCollectHitStatsForTab(tab) === true) {
             const domain = frames.getFrameDomain(tab);
             hitStats.addDomainView(domain);
         }
@@ -577,7 +579,7 @@ export const webRequestService = (function () {
      * @param requestRule   rule
      * @return {object} Request rule if suitable by its own type and request type or null
      */
-    const postProcessRequest = function (tab, requestUrl, referrerUrl, requestType, requestRule) {
+    const postProcessRequest = (tab, requestUrl, referrerUrl, requestType, requestRule) => {
         if (requestRule && !requestRule.isAllowlist()) {
             const isRequestBlockingRule = isRequestBlockedByRule(requestRule);
             const isReplaceRule = requestRule.isOptionEnabled(TSUrlFilter.NetworkRuleOption.Replace);
@@ -621,7 +623,7 @@ export const webRequestService = (function () {
          * :before and :after
          * Due to this we can't use cssHitsCounter for edge browser
          */
-        if (browserUtils.isEdgeBrowser()) {
+        if (browserUtils.isEdgeBrowser() === true) {
             return false;
         }
 

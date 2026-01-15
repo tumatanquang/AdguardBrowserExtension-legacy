@@ -2,7 +2,7 @@ import React from 'react';
 
 import './icons.pcss';
 
-export function Icons() {
+export const Icons = () => {
     /* eslint max-len:'off' */
     return (
         <svg xmlns='http://www.w3.org/2000/svg' className='hidden'>
@@ -111,4 +111,4 @@ export function Icons() {
             </symbol>
         </svg>
     );
-}
+};

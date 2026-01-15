@@ -22,12 +22,12 @@ import { rulesStorageImpl } from './rules-storage';
 /**
  * This class manages local storage
  */
-export const localStorage = (function (localStorageImpl) {
-    const getItem = function (key) {
+export const localStorage = (localStorageImpl => {
+    const getItem = (key) => {
         return localStorageImpl.getItem(key);
     };
 
-    const setItem = function (key, value) {
+    const setItem = (key, value) => {
         try {
             localStorageImpl.setItem(key, value);
         }
@@ -36,21 +36,21 @@ export const localStorage = (function (localStorageImpl) {
         }
     };
 
-    const removeItem = function (key) {
+    const removeItem = (key) => {
         localStorageImpl.removeItem(key);
     };
 
-    const hasItem = function (key) {
+    const hasItem = (key) => {
         return localStorageImpl.hasItem(key);
     };
 
-    const init = async function () {
+    const init = async () => {
         if (typeof localStorageImpl.init === 'function') {
             await localStorageImpl.init();
         }
     };
 
-    const isInitialized = function () {
+    const isInitialized = () => {
         // WebExtension storage has async initialization
         if (typeof localStorageImpl.isInitialized === 'function') {
             return localStorageImpl.isInitialized();
@@ -72,9 +72,9 @@ export const localStorage = (function (localStorageImpl) {
  * This class manages storage for filters.
  */
 export const rulesStorage = (rulesStorageImpl => {
-    function getFilePath(filterId) {
+    const getFilePath = (filterId) => {
         return `filterrules_${filterId}.txt`;
-    }
+    };
 
     /**
      * Loads filter from the storage

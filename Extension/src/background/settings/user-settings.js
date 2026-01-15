@@ -96,7 +96,7 @@ export const settings = (() => {
                 defaults[settings.ALLOWLIST_ENABLED] = true;
                 defaults[settings.USE_OPTIMIZED_FILTERS] = prefs.mobile;
                 defaults[settings.DISABLE_DETECT_FILTERS] = false;
-                defaults[settings.DISABLE_SHOW_APP_UPDATED_NOTIFICATION] = false;
+                defaults[settings.DISABLE_SHOW_APP_UPDATED_NOTIFICATION] = isUseDefaultSettings;
                 defaults[settings.FILTERS_UPDATE_PERIOD] = isUseDefaultSettings
                     ? DEFAULT_FILTERS_UPDATE_PERIOD : DISABLE_FILTERS_UPDATE_PERIOD;
                 defaults[settings.DISABLE_STEALTH_MODE] = true;
@@ -122,7 +122,7 @@ export const settings = (() => {
         }
     };
 
-    const getProperty = function (propertyName) {
+    const getProperty = (propertyName) => {
         if (propertyName in properties) {
             return properties[propertyName];
         }
@@ -130,13 +130,13 @@ export const settings = (() => {
         /**
          * Don't cache values in case of uninitialized storage
          */
-        if (!localStorage.isInitialized()) {
+        if (localStorage.isInitialized() === false) {
             return defaultProperties.defaults[propertyName];
         }
 
         let propertyValue = null;
 
-        if (localStorage.hasItem(propertyName)) {
+        if (localStorage.hasItem(propertyName) === true) {
             try {
                 propertyValue = JSON.parse(localStorage.getItem(propertyName));
             }
@@ -160,7 +160,7 @@ export const settings = (() => {
         listeners.notifyListeners(listeners.SETTING_UPDATED, { propertyName, propertyValue });
     };
 
-    const getAllSettings = function () {
+    const getAllSettings = () => {
         const result = {
             names: Object.create(null),
             values: Object.create(null),
@@ -168,7 +168,8 @@ export const settings = (() => {
         };
 
         const allSettings = Object.entries(settings);
-        for (let i = 0; i < allSettings.length; ++i) {
+        const len = allSettings.length;
+        for (let i = 0; i < len; ++i) {
             const userSetting = allSettings[i];
             const [key, value] = userSetting;
             const setting = settings[key];
@@ -185,99 +186,99 @@ export const settings = (() => {
      *
      * @returns {boolean} true if disabled
      */
-    const isFilteringDisabled = function () {
+    const isFilteringDisabled = () => {
         return getProperty(settings.DISABLE_FILTERING);
     };
 
-    const changeFilteringDisabled = function (disabled) {
+    const changeFilteringDisabled = (disabled) => {
         setProperty(settings.DISABLE_FILTERING, disabled);
     };
 
-    const isAutodetectFilters = function () {
+    const isAutodetectFilters = () => {
         return !getProperty(settings.DISABLE_DETECT_FILTERS);
     };
 
-    const changeAutodetectFilters = function (enabled, options) {
+    const changeAutodetectFilters = (enabled, options) => {
         setProperty(settings.DISABLE_DETECT_FILTERS, !enabled, options);
     };
 
-    const showPageStatistic = function () {
+    const showPageStatistic = () => {
         return !getProperty(settings.DISABLE_SHOW_PAGE_STATS);
     };
 
-    const changeShowPageStatistic = function (enabled, options) {
+    const changeShowPageStatistic = (enabled, options) => {
         setProperty(settings.DISABLE_SHOW_PAGE_STATS, !enabled, options);
     };
 
-    const isShowInfoAboutAdguardFullVersion = function () {
+    const isShowInfoAboutAdguardFullVersion = () => {
         return !getProperty(settings.DISABLE_SHOW_ADGUARD_PROMO_INFO);
     };
 
-    const changeShowInfoAboutAdguardFullVersion = function (show, options) {
+    const changeShowInfoAboutAdguardFullVersion = (show, options) => {
         setProperty(settings.DISABLE_SHOW_ADGUARD_PROMO_INFO, !show, options);
     };
 
-    const isShowAppUpdatedNotification = function () {
+    const isShowAppUpdatedNotification = () => {
         return !getProperty(settings.DISABLE_SHOW_APP_UPDATED_NOTIFICATION);
     };
 
-    const isHideRateBlock = function () {
+    const isHideRateBlock = () => {
         return getProperty(settings.HIDE_RATE_BLOCK);
     };
 
-    const isUserRulesEditorWrap = function () {
+    const isUserRulesEditorWrap = () => {
         return getProperty(settings.USER_RULES_EDITOR_WRAP);
     };
 
-    const changeShowAppUpdatedNotification = function (show, options) {
+    const changeShowAppUpdatedNotification = (show, options) => {
         setProperty(settings.DISABLE_SHOW_APP_UPDATED_NOTIFICATION, !show, options);
     };
 
-    const changeHideRateBlock = function (hide, options) {
+    const changeHideRateBlock = (hide, options) => {
         setProperty(settings.HIDE_RATE_BLOCK, hide, options);
     };
 
-    const changeUserRulesEditorWrap = function (enabled, options) {
+    const changeUserRulesEditorWrap = (enabled, options) => {
         setProperty(settings.USER_RULES_EDITOR_WRAP, enabled, options);
     };
 
-    const changeEnableSafebrowsing = function (enabled, options) {
+    const changeEnableSafebrowsing = (enabled, options) => {
         setProperty(settings.DISABLE_SAFEBROWSING, !enabled, options);
     };
 
-    const safebrowsingInfoEnabled = function () {
+    const safebrowsingInfoEnabled = () => {
         return !getProperty(settings.DISABLE_SAFEBROWSING);
     };
 
-    const collectHitsCount = function () {
+    const collectHitsCount = () => {
         return !getProperty(settings.DISABLE_COLLECT_HITS);
     };
 
-    const changeCollectHitsCount = function (enabled, options) {
+    const changeCollectHitsCount = (enabled, options) => {
         setProperty(settings.DISABLE_COLLECT_HITS, !enabled, options);
     };
 
-    const showContextMenu = function () {
+    const showContextMenu = () => {
         return !getProperty(settings.DISABLE_SHOW_CONTEXT_MENU);
     };
 
-    const changeShowContextMenu = function (enabled, options) {
+    const changeShowContextMenu = (enabled, options) => {
         setProperty(settings.DISABLE_SHOW_CONTEXT_MENU, !enabled, options);
     };
 
-    const isDefaultAllowlistMode = function () {
+    const isDefaultAllowlistMode = () => {
         return getProperty(settings.DEFAULT_ALLOWLIST_MODE);
     };
 
-    const isUseOptimizedFiltersEnabled = function () {
+    const isUseOptimizedFiltersEnabled = () => {
         return getProperty(settings.USE_OPTIMIZED_FILTERS);
     };
 
-    const changeUseOptimizedFiltersEnabled = function (enabled, options) {
+    const changeUseOptimizedFiltersEnabled = (enabled, options) => {
         setProperty(settings.USE_OPTIMIZED_FILTERS, !!enabled, options);
     };
 
-    const changeDefaultAllowlistMode = function (enabled) {
+    const changeDefaultAllowlistMode = (enabled) => {
         setProperty(settings.DEFAULT_ALLOWLIST_MODE, enabled);
     };
 
@@ -293,7 +294,7 @@ export const settings = (() => {
      * Sets filters update period after conversion in number
      * @param period
      */
-    const setFiltersUpdatePeriod = function (period) {
+    const setFiltersUpdatePeriod = (period) => {
         let parsed = Number.parseInt(period, 10);
         if (Number.isNaN(parsed)) {
             parsed = isUseDefaultSettings ? DEFAULT_FILTERS_UPDATE_PERIOD : DISABLE_FILTERS_UPDATE_PERIOD;
@@ -305,7 +306,7 @@ export const settings = (() => {
      * Returns filter update period, converted in number
      * @returns {number}
      */
-    const getFiltersUpdatePeriod = function () {
+    const getFiltersUpdatePeriod = () => {
         const value = getProperty(settings.FILTERS_UPDATE_PERIOD);
         let parsed = Number.parseInt(value, 10);
         if (Number.isNaN(parsed)) {
@@ -314,11 +315,11 @@ export const settings = (() => {
         return parsed;
     };
 
-    const disableShowAdguardPromoInfo = function () {
+    const disableShowAdguardPromoInfo = () => {
         setProperty(settings.DISABLE_SHOW_ADGUARD_PROMO_INFO, true);
     };
 
-    const isDisableShowAdguardPromoInfo = function () {
+    const isDisableShowAdguardPromoInfo = () => {
         return getProperty(settings.DISABLE_SHOW_ADGUARD_PROMO_INFO);
     };
 

@@ -82,7 +82,7 @@ export const application = (() => {
         const enabledGroupsIds = subscriptions.getGroups()
             .filter(g => g.enabled)
             .map(g => g.groupId);
-        return filters.filter(f => f.enabled && enabledGroupsIds.includes(f.groupId));
+        return filters.filter(f => f.enabled && enabledGroupsIds.includes(f.groupId) === true);
     };
 
     /**
@@ -200,7 +200,7 @@ export const application = (() => {
          */
         const { groupId } = filter;
         const forceGroupEnable = options && options.forceGroupEnable;
-        if (!subscriptions.groupHasEnabledStatus(groupId) || forceGroupEnable) {
+        if (subscriptions.groupHasEnabledStatus(groupId) === false || forceGroupEnable) {
             enableGroup(groupId);
         }
         listeners.notifyListeners(listeners.FILTER_ENABLE_DISABLE, filter);
@@ -221,13 +221,14 @@ export const application = (() => {
 
         filterIds = utils.collections.removeDuplicates(filterIds.slice(0));
 
-        for (let i = 0; i < filterIds.length; ++i) {
+        const len = filterIds.length;
+        for (let i = 0; i < len; ++i) {
             const filterId = filterIds[i];
             // eslint-disable-next-line no-await-in-loop
             const success = await antiBannerService.addAntiBannerFilter(filterId, options && options.forceRemote);
             if (success) {
                 const changed = enableFilter(filterId, options);
-                if (changed) {
+                if (changed === true) {
                     const filter = subscriptions.getFilter(filterId);
                     enabledFilters.push(filter);
                 }
@@ -246,7 +247,8 @@ export const application = (() => {
     const disableFilters = (filterIds) => {
         // Copy array to prevent parameter mutation
         filterIds = utils.collections.removeDuplicates(filterIds.slice(0));
-        for (let i = 0; i < filterIds.length; ++i) {
+        const len = filterIds.length;
+        for (let i = 0; i < len; ++i) {
             const filterId = filterIds[i];
             const filter = subscriptions.getFilter(filterId);
             if (!filter || !filter.enabled || !filter.installed) {
@@ -267,7 +269,8 @@ export const application = (() => {
         // Copy array to prevent parameter mutation
         filterIds = utils.collections.removeDuplicates(filterIds.slice(0));
 
-        for (let i = 0; i < filterIds.length; ++i) {
+        const len = filterIds.length;
+        for (let i = 0; i < len; ++i) {
             const filterId = filterIds[i];
             const filter = subscriptions.getFilter(filterId);
             if (!filter || !filter.installed) {

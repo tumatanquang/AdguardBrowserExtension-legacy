@@ -25,7 +25,7 @@ export const UrlUtils = {
         let resultUrl;
 
         const protocol = this.getProtocol(url);
-        if (this.isHierarchicUrl(url)) {
+        if (this.isHierarchicUrl(url) === true) {
             resultUrl = url.replace(`${protocol}//`, '');
         }
         else {

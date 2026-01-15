@@ -27,18 +27,19 @@ export const categories = (() => {
     /**
      * @returns {Array.<*>} filters
      */
-    const getFilters = function () {
-        const result = subscriptions.getFilters().filter((f) => {
+    const getFilters = () => {
+        const result = subscriptions.getFilters().filter(f => {
             return !f.removed;
         });
 
         const filterTags = tags.getTags();
-
-        for (let i = 0; i < result.length; ++i) {
+        const len = result.length;
+        for (let i = 0; i < len; ++i) {
             const f = result[i];
             f.tagsDetails = [];
             const { tags } = f;
-            for (let j = 0; j < tags.length; ++j) {
+            const tlen = tags.length;
+            for (let j = 0; j < tlen; ++j) {
                 const tagId = tags[j];
                 const tagDetails = filterTags.find(tag => {
                     return tag.tagId === tagId;
@@ -70,19 +71,20 @@ export const categories = (() => {
      * @param filters
      * @returns {Array.<SubscriptionFilter>}
      */
-    const selectFiltersByGroupId = function (groupId, filters) {
+    const selectFiltersByGroupId = (groupId, filters) => {
         return filters.filter(filter => filter.groupId === groupId);
     };
 
     /**
      * Constructs filters metadata for options.html page
      */
-    const getFiltersMetadata = function () {
+    const getFiltersMetadata = () => {
         const groupsMeta = subscriptions.getGroups();
         const filters = getFilters();
 
         const categories = [];
-        for (let i = 0; i < groupsMeta.length; ++i) {
+        const len = groupsMeta.length;
+        for (let i = 0; i < len; ++i) {
             const category = groupsMeta[i];
             category.filters = selectFiltersByGroupId(category.groupId, filters);
             categories.push(category);
@@ -114,16 +116,18 @@ export const categories = (() => {
      * @param groupId
      * @returns {Array} recommended filters by groupId
      */
-    const getRecommendedFilterIdsByGroupId = function (groupId) {
+    const getRecommendedFilterIdsByGroupId = (groupId) => {
         const metadata = getFiltersMetadata();
         const result = [];
         const langSuitableFilters = subscriptions.getLangSuitableFilters();
         const { categories } = metadata;
-        for (let i = 0; i < categories.length; ++i) {
+        const len = categories.length;
+        for (let i = 0; i < len; ++i) {
             const category = categories[i];
             if (category.groupId === groupId) {
                 const { filters } = category;
-                for (let j = 0; j < filters.length; ++j) {
+                const flen = filters.length;
+                for (let j = 0; j < flen; ++j) {
                     const filter = filters[j];
                     if (tags.isRecommendedFilter(filter) && doesFilterMatchPlatform(filter)) {
                         // get ids intersection to enable recommended filters matching the lang tag
@@ -150,9 +154,9 @@ export const categories = (() => {
      * On the next calls we just enable group
      * @param {number} groupId
      */
-    const enableFiltersGroup = async function (groupId) {
+    const enableFiltersGroup = async (groupId) => {
         const group = subscriptions.getGroup(groupId);
-        if (group && group.enabled === undefined) {
+        if (group && typeof group.enabled === 'undefined') {
             const recommendedFiltersIds = getRecommendedFilterIdsByGroupId(groupId);
             await application.addAndEnableFilters(recommendedFiltersIds);
         }
@@ -164,7 +168,7 @@ export const categories = (() => {
      * @param {number} groupId
      * @param {boolean} drop
      */
-    const disableFiltersGroup = function (groupId, drop) {
+    const disableFiltersGroup = (groupId, drop) => {
         application.disableGroup(groupId, drop);
     };
 

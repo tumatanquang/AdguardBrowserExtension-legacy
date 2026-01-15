@@ -18,11 +18,11 @@
 import Nanobar from 'nanobar';
 import Swal from 'sweetalert2';
 
+import { localStorage } from '../background/storage';
 import { contentPage } from '../content-script/content-script';
 import { MESSAGE_TYPES } from '../common/constants';
 
 import '../common/i18n'; // !!! DO NOT REMOVE, THIS MODULE HANDLES TRANSLATIONS
-import { localStorage } from '../background/storage';
 import { i18n } from '../common/common-script';
 
 export const init = () => {
@@ -33,16 +33,16 @@ export const init = () => {
 
         nanobar.go(15);
 
-        function onLoaded() {
+        const onLoaded = () => {
             nanobar.go(100);
             setTimeout(() => {
                 if (window) {
                     contentPage.sendMessage({ type: MESSAGE_TYPES.OPEN_THANKYOU_PAGE });
                 }
             }, 500);
-        }
+        };
 
-        async function checkRequestFilterReady() {
+        const checkRequestFilterReady = async () => {
             const response = await contentPage.sendMessage({
                 type: MESSAGE_TYPES.CHECK_REQUEST_FILTER_READY
             });
@@ -52,39 +52,44 @@ export const init = () => {
             else {
                 setTimeout(checkRequestFilterReady, 500);
             }
-        }
+        };
 
-        setTimeout(() => {
-            Swal.fire({
-                titleText: i18n.getMessage('filters_download_confirm_title'),
-                text: i18n.getMessage('filters_download_confirm_text'),
-                icon: 'question',
-                theme: 'auto',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                showConfirmButton: true,
-                showDenyButton: true,
-                confirmButtonText: i18n.getMessage('yes_button_title'),
-                denyButtonText: i18n.getMessage('no_button_title'),
-                confirmButtonColor: '#68BC86',
-                denyButtonColor: '#BF4829',
-                showLoaderOnConfirm: true,
-                preConfirm: async () => {
-                    nanobar.go(50);
-                }
-            }).then((result) => {
-                localStorage.setItem('useDefaultSettings', result.isConfirmed);
-                if (result.isConfirmed) {
-                    contentPage.sendMessage({
-                        type: MESSAGE_TYPES.INITIALIZE_ONINSTALL_DEFAULT_FILTERS
-                    });
-                    checkRequestFilterReady();
-                }
-                else {
-                    onLoaded();
-                }
-            });
-        }, 234);
+        if (localStorage.hasItem('useDefaultSettings')) {
+            checkRequestFilterReady();
+        }
+        else {
+            setTimeout(() => {
+                Swal.fire({
+                    titleText: i18n.getMessage('filters_download_confirm_title'),
+                    text: i18n.getMessage('filters_download_confirm_text'),
+                    icon: 'question',
+                    theme: 'auto',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: true,
+                    showDenyButton: true,
+                    confirmButtonText: i18n.getMessage('yes_button_title'),
+                    denyButtonText: i18n.getMessage('no_button_title'),
+                    confirmButtonColor: '#68BC86',
+                    denyButtonColor: '#BF4829',
+                    showLoaderOnConfirm: true,
+                    preConfirm: async () => {
+                        nanobar.go(50);
+                    }
+                }).then(result => {
+                    localStorage.setItem('useDefaultSettings', result.isConfirmed);
+                    if (result.isConfirmed) {
+                        contentPage.sendMessage({
+                            type: MESSAGE_TYPES.INITIALIZE_ONINSTALL_DEFAULT_FILTERS
+                        });
+                        checkRequestFilterReady();
+                    }
+                    else {
+                        onLoaded();
+                    }
+                });
+            }, 233);
+        }
     });
 };
 

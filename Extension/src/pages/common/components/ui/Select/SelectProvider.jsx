@@ -13,7 +13,7 @@ export const SelectContext = createContext({
     setCurrentSelect: noop
 });
 
-export function SelectProvider({ currentSelect: currentSelectProp = null, children }) {
+export const SelectProvider = ({ currentSelect: currentSelectProp = null, children }) => {
     const [currentSelect, setCurrentSelect] = useState(currentSelectProp);
 
     const context = useMemo(() => {
@@ -28,14 +28,14 @@ export function SelectProvider({ currentSelect: currentSelectProp = null, childr
             {children}
         </SelectContext.Provider>
     );
-}
+};
 
 export const useSelect = (id) => {
     const { currentSelect, setCurrentSelect } = useContext(SelectContext);
 
     const hidden = currentSelect !== id;
 
-    const setHidden = useCallback((hide) => {
+    const setHidden = useCallback(hide => {
         setCurrentSelect(hide ? null : id);
     }, [setCurrentSelect, id]);
 

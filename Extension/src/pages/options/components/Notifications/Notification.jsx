@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { rootStore } from '../../stores/RootStore';
 import { Icon } from '../../../common/components/ui/Icon';
 
-export function Notification(props) {
+export const Notification = (props) => {
     const [notificationOnClose, setNotificationOnClose] = useState(false);
 
     const { id, title, description } = props;
@@ -59,7 +59,7 @@ export function Notification(props) {
             </button>
         </div>
     );
-}
+};
 
 Notification.propTypes = {
     id: PropTypes.string.isRequired,

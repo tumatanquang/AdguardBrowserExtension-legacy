@@ -44,7 +44,7 @@ const STEALTH_ACTIONS_NAMES = {
  */
 const getStealthActionsNames = (actions) => {
     const result = Object.keys(STEALTH_ACTIONS)
-        .map((key) => {
+        .map(key => {
             const action = STEALTH_ACTIONS[key];
             if ((actions & action) === action) {
                 return STEALTH_ACTIONS_NAMES[key];
@@ -235,7 +235,7 @@ const RequestInfo = observer(() => {
     };
 
     const renderedInfo = infoElements
-        .map((elementId) => eventPartsMap[elementId])
+        .map(elementId => eventPartsMap[elementId])
         .map(({ data, title }) => {
             if (!data) {
                 return null;
@@ -251,15 +251,15 @@ const RequestInfo = observer(() => {
 
             let showMessage;
             let hideMessage;
-            if (isRequestUrl) {
+            if (isRequestUrl === true) {
                 showMessage = 'filtering_modal_show_full_url';
                 hideMessage = 'filtering_modal_hide_full_url';
             }
-            else if (isRule) {
+            else if (isRule === true) {
                 showMessage = 'filtering_modal_show_full_rule';
                 hideMessage = 'filtering_modal_hide_full_rule';
             }
-            else if (isElement) {
+            else if (isElement === true) {
                 showMessage = 'filtering_modal_show_full_element';
                 hideMessage = 'filtering_modal_hide_full_element';
             }
@@ -281,7 +281,7 @@ const RequestInfo = observer(() => {
                             collapsed
                             canCopy={canCopyToClipboard}
                         >
-                            {isRequestUrl && renderInfoUrlButtons(selectedEvent)}
+                            {isRequestUrl === true && renderInfoUrlButtons(selectedEvent)}
                         </TextCollapser>
                     </div>
                 </div>

@@ -20,7 +20,7 @@
 /**
  * Script used to subscribe to filters clicking to links with specified format
  */
-(function () {
+(() => {
     if (!(document instanceof HTMLDocument)) {
         return;
     }
@@ -29,7 +29,8 @@
         let title = null;
         let url = null;
 
-        for (let i = 0; i < urlParams.length; ++i) {
+        const len = urlParams.length;
+        for (let i = 0; i < len; ++i) {
             const parts = urlParams[i].split('=', 2);
             if (parts.length !== 2) {
                 continue;
@@ -50,10 +51,7 @@
         };
     };
 
-    const ABP_LINK_CLICKED_SUBCRIBE_PATTERN = /^abp:\/*subscribe\/*\?/i;
-    const ADGUARD_LINK_CLICKED_SUBCRIBE_PATTERN = /^adguard:\/*subscribe\/*\?/i;
-    const AMP_REPLACE_LINK_CLICKED_PATTERN = /&amp;/g;
-    const onLinkClicked = function (e) {
+    const onLinkClicked = (e) => {
         if (e.button === 2) {
             // ignore right-click
             return;
@@ -71,6 +69,8 @@
             return;
         }
 
+        const ABP_LINK_CLICKED_SUBCRIBE_PATTERN = /^abp:\/*subscribe\/*\?/i;
+        const ADGUARD_LINK_CLICKED_SUBCRIBE_PATTERN = /^adguard:\/*subscribe\/*\?/i;
         if (target.protocol === 'http:' || target.protocol === 'https:') {
             if (target.host !== 'subscribe.adblockplus.org' || target.pathname !== '/') {
                 return;
@@ -84,6 +84,7 @@
         e.preventDefault();
         e.stopPropagation();
 
+        const AMP_REPLACE_LINK_CLICKED_PATTERN = /&amp;/g;
         let urlParams;
         if (target.search) {
             urlParams = target.search.substring(1).replace(AMP_REPLACE_LINK_CLICKED_PATTERN, '&').split('&');

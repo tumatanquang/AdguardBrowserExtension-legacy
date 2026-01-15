@@ -5,7 +5,7 @@ import { reactTranslator } from '../../../../common/translators/reactTranslator'
 
 import './nav.pcss';
 
-function Nav({ closeSidebar }) {
+const Nav = ({ closeSidebar }) => {
     const onClick = () => {
         closeSidebar();
     };
@@ -71,6 +71,6 @@ function Nav({ closeSidebar }) {
             </NavLink>
         </div>
     );
-}
+};
 
 export { Nav };

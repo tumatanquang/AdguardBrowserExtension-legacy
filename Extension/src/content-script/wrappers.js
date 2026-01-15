@@ -37,7 +37,7 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
      * Otherwise creates new message channel that sends a message to the content-script
      * to check if request should be allowed or not.
      */
-    const messageChannel = isInjected ? window[scriptName] : (function () {
+    const messageChannel = isInjected ? window[scriptName] : (() => {
         // Save original postMessage and addEventListener functions to prevent webpage from tampering both.
         const { postMessage, addEventListener } = window;
 
@@ -50,7 +50,7 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
          *
          * @param event Event with necessary data
          */
-        const onMessageReceived = function (event) {
+        const onMessageReceived = (event) => {
             if (!event.data || !event.data.direction || event.data.direction !== 'to-page-script@adguard') {
                 return;
             }
@@ -69,7 +69,7 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
          * @param wrapper            WebSocket wrapper instance
          * @param onResponseReceived Called when response is received
          */
-        const sendMessage = function (url, requestType, wrapper, onResponseReceived) {
+        const sendMessage = (url, requestType, wrapper, onResponseReceived) => {
             if (currentRequestId === 0) {
                 // Subscribe to response when this method is called for the first time
                 addEventListener.call(window, 'message', onMessageReceived, false);
@@ -116,12 +116,12 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
     }
     else {
         const frames = [];
-        injectedFramesAdd = function (el) {
+        injectedFramesAdd = (el) => {
             if (frames.indexOf(el) < 0) {
                 frames.push(el);
             }
         };
-        injectedFramesHas = function (el) {
+        injectedFramesHas = (el) => {
             return frames.indexOf(el) >= 0;
         };
     }
@@ -130,7 +130,7 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
      * Injects wrapper's script into passed window
      * @param contentWindow Frame's content window
      */
-    function injectPageScriptAPIInWindow(contentWindow) {
+    const injectPageScriptAPIInWindow = (contentWindow) => {
         try {
             if (contentWindow && !injectedFramesHas(contentWindow)) {
                 injectedFramesAdd(contentWindow);
@@ -143,14 +143,14 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
         catch (e) {
             // ignore
         }
-    }
+    };
 
     /**
      * Overrides access to contentWindow/contentDocument for the passed HTML element's interface (iframe, frame, object)
      * If the content of one of these objects is requested we will inject our wrapper script.
      * @param iface HTML element's interface
      */
-    function overrideContentAccess(iface) {
+    const overrideContentAccess = (iface) => {
         const contentWindowDescriptor = Object.getOwnPropertyDescriptor(iface.prototype, 'contentWindow');
         const contentDocumentDescriptor = Object.getOwnPropertyDescriptor(iface.prototype, 'contentDocument');
 
@@ -175,10 +175,11 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
 
         Object.defineProperty(iface.prototype, 'contentWindow', contentWindowDescriptor);
         Object.defineProperty(iface.prototype, 'contentDocument', contentDocumentDescriptor);
-    }
+    };
 
     const interfaces = [HTMLFrameElement, HTMLIFrameElement, HTMLObjectElement];
-    for (let i = 0; i < interfaces.length; ++i) {
+    const len = interfaces.length;
+    for (let i = 0; i < len; ++i) {
         overrideContentAccess(interfaces[i]);
     }
 
@@ -188,8 +189,9 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
      * @param dest Destination object
      * @param properties Properties to copy
      */
-    const copyProperties = function (src, dest, properties) {
-        for (let i = 0; i < properties.length; ++i) {
+    const copyProperties = (src, dest, properties) => {
+        const len = properties.length;
+        for (let i = 0; i < len; ++i) {
             const prop = properties[i];
             const descriptor = Object.getOwnPropertyDescriptor(src, prop);
             // Passed property may be undefined
@@ -219,7 +221,7 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
      * This function is first loaded as a content script. The only purpose of it is to call
      * the "toString" method and use resulting string as a text content for injected script.
      */
-    const overrideWebRTC = function () {
+    const overrideWebRTC = () => {
         if (!(window.RTCPeerConnection instanceof Function)
             && !(window.webkitRTCPeerConnection instanceof Function)) {
             return;
@@ -249,11 +251,11 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
          * @param url URL
          * @returns {string}
          */
-        function urlToString(url) {
+        const urlToString = (url) => {
             if (url !== undefined) {
                 return RealString(url);
             }
-        }
+        };
 
         /**
          * Creates new immutable array from original with some transform function
@@ -261,13 +263,14 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
          * @param transform
          * @returns {*}
          */
-        function safeCopyArray(original, transform) {
+        const safeCopyArray = (original, transform) => {
             if (original === null || typeof original !== 'object') {
                 return original;
             }
 
             const immutable = RealArray(original.length);
-            for (let i = 0; i < immutable.length; ++i) {
+            const len = immutable.length;
+            for (let i = 0; i < len; ++i) {
                 defineProperty(immutable, i, {
                     configurable: false,
                     enumerable: false,
@@ -282,14 +285,14 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
                 value: immutable.length
             });
             return immutable;
-        }
+        };
 
         /**
          * Protect configuration from mutations
          * @param configuration RTCPeerConnection configuration object
          * @returns {*}
          */
-        function protectConfiguration(configuration) {
+        const protectConfiguration = (configuration) => {
             if (configuration === null || typeof configuration !== 'object') {
                 return configuration;
             }
@@ -330,14 +333,14 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
                     value: iceServers
                 }
             });
-        }
+        };
 
         /**
          * Check WebRTC connection's URL and close if it's blocked by rule
          * @param connection Connection
          * @param url URL to check
          */
-        function checkWebRTCRequest(connection, url) {
+        const checkWebRTCRequest = (connection, url) => {
             checkRequest(url, 'WEBRTC', (blocked) => {
                 if (blocked) {
                     try {
@@ -348,7 +351,7 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
                     }
                 }
             });
-        }
+        };
 
         /**
          * Check each URL of ice server in configuration for blocking.
@@ -357,13 +360,14 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
          * @param configuration Configuration for RTCPeerConnection
          * https://developer.mozilla.org/en-US/docs/Web/API/RTCConfiguration
          */
-        function checkConfiguration(connection, configuration) {
+        const checkConfiguration = (connection, configuration) => {
             if (!configuration || !configuration.iceServers) {
                 return;
             }
 
             const { iceServers } = configuration;
-            for (let i = 0; i < iceServers.length; ++i) {
+            const len = iceServers.length;
+            for (let i = 0; i < len; ++i) {
                 const iceServer = iceServers[i];
 
                 if (!iceServer) {
@@ -376,12 +380,13 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
 
                 const { urls } = iceServer;
                 if (urls) {
-                    for (let j = 0; j < urls.length; ++j) {
+                    const { length } = urls;
+                    for (let j = 0; j < length; ++j) {
                         checkWebRTCRequest(connection, urls[j]);
                     }
                 }
             }
-        }
+        };
 
         /**
          * Overrides setConfiguration method
@@ -440,13 +445,13 @@ export function injectPageScriptAPI(scriptName, shouldOverrideWebRTC, isInjected
  * This function is executed in the content script.
  * It starts listening to events from the page script and passes them further to the background page.
  */
-export const initPageMessageListener = function () {
+export const initPageMessageListener = () => {
     /**
      * Listener for websocket wrapper messages.
      *
      * @param event
      */
-    async function pageMessageListener(event) {
+    const pageMessageListener = async (event) => {
         if (!(event.source === window
             && event.data.direction
             && event.data.direction === 'from-page-script@adguard'
@@ -478,7 +483,7 @@ export const initPageMessageListener = function () {
         };
 
         event.source.postMessage(responseMessage, event.origin);
-    }
+    };
 
     window.addEventListener('message', pageMessageListener, false);
 };

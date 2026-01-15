@@ -25,7 +25,7 @@ import { log } from '../../common/log';
  * @param {string} storagePropertyName      Name of the local storage property.
  * @param {number} size                     Max cache size
  */
-export function LruCache(storagePropertyName, size) {
+export const LruCache = (storagePropertyName, size) => {
     const CACHE_SIZE = 1000;
 
     const maxCacheSize = size || CACHE_SIZE;
@@ -33,7 +33,7 @@ export function LruCache(storagePropertyName, size) {
     let cache;
     let cacheSize;
 
-    function getCacheFromLocalStorage() {
+    const getCacheFromLocalStorage = () => {
         let entries = null;
         try {
             const json = localStorage.getItem(storagePropertyName);
@@ -49,27 +49,27 @@ export function LruCache(storagePropertyName, size) {
         }
 
         return new LRUMap(maxCacheSize, entries);
-    }
+    };
 
-    function saveCacheToLocalStorage() {
+    const saveCacheToLocalStorage = () => {
         try {
             localStorage.setItem(storagePropertyName, JSON.stringify(cache.toJSON()));
         }
         catch (ex) {
             log.error('Error save to {0} cache, cause: {1}', storagePropertyName, ex);
         }
-    }
+    };
 
     /**
      * Retrieves value from cache and checks if saved data is not expired yet.
      * @param {string} key
      * @returns {null|object} saved data
      */
-    function getValue(key) {
+    const getValue = (key) => {
         return cache.get(key);
-    }
+    };
 
-    const saveValue = function (key, data) {
+    const saveValue = (key, data) => {
         if (!key) {
             return;
         }
@@ -100,4 +100,4 @@ export function LruCache(storagePropertyName, size) {
         saveValue,
         clear
     };
-}
+};

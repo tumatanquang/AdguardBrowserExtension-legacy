@@ -81,7 +81,8 @@ export const listeners = (() => {
             }
 
             const listenerEntries = Object.entries(this.listenersMap);
-            for (let i = 0; i < listenerEntries.length; ++i) {
+            const len = listenerEntries.length;
+            for (let i = 0; i < len; ++i) {
                 const nofifyListener = listenerEntries[i];
                 const [listenerId, listener] = nofifyListener;
                 const events = this.listenersEventsMap[listenerId];
@@ -114,7 +115,8 @@ export const listeners = (() => {
 
     // Copy global properties
     const notifierEntries = Object.entries(NOTIFIER_TYPES);
-    for (let i = 0; i < notifierEntries.length; ++i) {
+    const len = notifierEntries.length;
+    for (let i = 0; i < len; ++i) {
         const notifierType = notifierEntries[i];
         const [key, event] = notifierType;
         EventNotifier[key] = event;

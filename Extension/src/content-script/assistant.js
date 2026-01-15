@@ -52,7 +52,7 @@ export const startAssistant = () => {
     });
 
     let assistant;
-    contentPage.onMessage.addListener((message) => {
+    contentPage.onMessage.addListener(message => {
         switch (message.type) {
             case 'initAssistant':
                 const { options } = message;

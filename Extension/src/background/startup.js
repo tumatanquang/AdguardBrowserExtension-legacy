@@ -29,8 +29,8 @@ import { ADGUARD_UNINSTALL_URL } from '../pages/constants';
 /**
  * Extension initialize logic. Called from start.js
  */
-export const startup = async function () {
-    async function onLocalStorageLoaded() {
+export const startup = async () => {
+    const onLocalStorageLoaded = async () => {
         log.info(
             'Starting adguard... Version: {0}. Id: {1}',
             backgroundPage.app.getVersion(),
@@ -67,7 +67,7 @@ export const startup = async function () {
                 uiService.openFiltersDownloadPage();
             }
         });
-    }
+    };
 
     await rulesStorage.init();
     await localStorage.init();

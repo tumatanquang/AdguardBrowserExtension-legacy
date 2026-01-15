@@ -51,7 +51,7 @@ export const stealthService = (() => {
      * @param {Array} requestHeaders Request headers
      * @return {boolean} True if headers were modified
      */
-    const processRequestHeaders = function (requestId, requestHeaders) {
+    const processRequestHeaders = (requestId, requestHeaders) => {
         const context = requestContextStorage.get(requestId);
         if (!context) {
             return false;
@@ -60,7 +60,7 @@ export const stealthService = (() => {
         const { requestUrl, requestType } = context;
         log.debug('Stealth service processing request headers for {0}', requestUrl);
 
-        if (!canApplyStealthActionsToContext(context)) {
+        if (canApplyStealthActionsToContext(context) === false) {
             return false;
         }
 
@@ -129,7 +129,7 @@ export const stealthService = (() => {
      */
     const canApplyStealthActions = (tab, requestUrl, referrerUrl, requestType) => {
         // if stealth mode is disabled
-        if (isStealthModeDisabled()) {
+        if (isStealthModeDisabled() === true) {
             return false;
         }
 
@@ -163,7 +163,7 @@ export const stealthService = (() => {
      * @param requestType
      * @returns allowlist rule if found
      */
-    const findStealthAllowlistRule = function (requestUrl, referrerUrl, requestType) {
+    const findStealthAllowlistRule = (requestUrl, referrerUrl, requestType) => {
         if (referrerUrl) {
             const stealthDocumentAllowlistRule = filteringApi.findStealthAllowlistRule({
                 requestUrl: referrerUrl,
@@ -205,7 +205,7 @@ export const stealthService = (() => {
      * @returns {boolean}
      */
     const getStealthSettingValue = (stealthSettingName) => {
-        if (isStealthModeDisabled()) {
+        if (isStealthModeDisabled() === true) {
             return false;
         }
         return settings.getProperty(stealthSettingName);
@@ -230,7 +230,7 @@ export const stealthService = (() => {
         // Deprecated since Chrome 48
         if (typeof browser.privacy.network.webRTCMultipleRoutesEnabled === 'object') {
             try {
-                if (blockWebRTC) {
+                if (blockWebRTC === true) {
                     await browser.privacy.network.webRTCMultipleRoutesEnabled.set({
                         value: false,
                         scope: 'regular'
@@ -250,7 +250,7 @@ export const stealthService = (() => {
         // Since chromium 48
         if (typeof browser.privacy.network.webRTCIPHandlingPolicy === 'object') {
             try {
-                if (blockWebRTC) {
+                if (blockWebRTC === true) {
                     await browser.privacy.network.webRTCIPHandlingPolicy.set({
                         value: 'disable_non_proxied_udp',
                         scope: 'regular'
@@ -269,7 +269,7 @@ export const stealthService = (() => {
 
         if (typeof browser.privacy.network.peerConnectionEnabled === 'object') {
             try {
-                if (blockWebRTC) {
+                if (blockWebRTC === true) {
                     browser.privacy.network.peerConnectionEnabled.set({
                         value: false,
                         scope: 'regular'
@@ -294,7 +294,7 @@ export const stealthService = (() => {
      */
     const handlePrivacyPermissions = async (shouldBlock) => {
         try {
-            if (!shouldBlock) {
+            if (shouldBlock === false) {
                 // Unblocking WebRTC doesn't require any permissions
                 await setBlockWebRTC(shouldBlock);
                 return;
@@ -302,12 +302,12 @@ export const stealthService = (() => {
 
             let isPermissionsGranted = await browserUtils.containsPermissions(PRIVACY_PERMISSIONS);
 
-            if (!isPermissionsGranted) {
+            if (isPermissionsGranted === false) {
                 // If there is no permission already, request one
                 isPermissionsGranted = await browserUtils.requestPermissions(PRIVACY_PERMISSIONS);
             }
 
-            if (isPermissionsGranted) {
+            if (isPermissionsGranted === true) {
                 await setBlockWebRTC(true);
             }
             else {
@@ -331,7 +331,7 @@ export const stealthService = (() => {
      * @returns {boolean}
      */
     const canBlockWebRTC = () => {
-        return !browserUtils.isEdgeBrowser();
+        return browserUtils.isEdgeBrowser() === false;
     };
 
     /**
@@ -382,8 +382,8 @@ export const stealthService = (() => {
 
     let engine = new StealthService(getConfig());
 
-    settings.onUpdated.addListener((setting) => {
-        if (STEALTH_SETTINGS.includes(setting)) {
+    settings.onUpdated.addListener(setting => {
+        if (STEALTH_SETTINGS.includes(setting) === true) {
             // Rebuild engine on settings update
             engine = new StealthService(getConfig());
             listeners.notifyListeners(listeners.UPDATE_FILTER_RULES);
@@ -392,35 +392,38 @@ export const stealthService = (() => {
 
     if (canBlockWebRTC()) {
         settings.onUpdated.addListener(async (settingName, settingValue) => {
-            if (settingName === settings.BLOCK_WEBRTC || settingName === settings.DISABLE_STEALTH_MODE) {
-                let shouldBlock;
-                switch (settingName) {
-                    case settings.BLOCK_WEBRTC:
-                        if (!isStealthModeDisabled()) {
-                            shouldBlock = settingValue;
-                        }
-                        break;
-                    case settings.DISABLE_STEALTH_MODE:
-                        if (settings.getProperty(settings.BLOCK_WEBRTC)) {
+            switch (settingName) {
+                case settings.BLOCK_WEBRTC:
+                case settings.DISABLE_STEALTH_MODE:
+                    let shouldBlock;
+                    switch (settingName) {
+                        case settings.BLOCK_WEBRTC:
+                            if (isStealthModeDisabled() === false) {
+                                shouldBlock = settingValue;
+                            }
+                            break;
+                        case settings.DISABLE_STEALTH_MODE:
+                            if (settings.getProperty(settings.BLOCK_WEBRTC)) {
                             // Enable webRTC if stealth mode is disabled
-                            shouldBlock = !settingValue;
-                        }
-                        break;
-                }
+                                shouldBlock = !settingValue;
+                            }
+                            break;
+                    }
 
-                if (shouldBlock === undefined) {
+                    if (shouldBlock === undefined) {
                     // Nothing to change indeed
-                    return;
-                }
+                        return;
+                    }
 
-                if (shouldHandlePrivacyPermission()) {
+                    if (shouldHandlePrivacyPermission() === true) {
                     // Block or unblock WebRTC while handling privacy permission
-                    await handlePrivacyPermissions(shouldBlock);
-                }
-                else {
+                        await handlePrivacyPermissions(shouldBlock);
+                    }
+                    else {
                     // Set WebRTC blocking as is for everything else
-                    await setBlockWebRTC(shouldBlock);
-                }
+                        await setBlockWebRTC(shouldBlock);
+                    }
+                    break;
             }
         });
 

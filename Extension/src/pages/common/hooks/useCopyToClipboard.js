@@ -12,7 +12,7 @@ export const useCopyToClipboard = (duration) => {
 
     useEffect(() => {
         let timeout;
-        if (state.isCopied && duration) {
+        if (state.isCopied === true && duration) {
             timeout = setTimeout(() => {
                 setState({ isCopied: false });
             }, duration);
@@ -22,7 +22,7 @@ export const useCopyToClipboard = (duration) => {
         };
     }, [state, duration]);
 
-    const handleCopy = useCallback((text) => {
+    const handleCopy = useCallback(text => {
         copyToClipboard(text);
         setState({ isCopied: true });
     }, []);

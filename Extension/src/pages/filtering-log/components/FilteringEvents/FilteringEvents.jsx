@@ -107,11 +107,13 @@ const ruleAccessor = (props) => {
 
     let ruleText = '';
     if (requestRule) {
-        if (requestRule.filterId === ANTIBANNER_FILTERS_ID.ALLOWLIST_FILTER_ID) {
-            ruleText = reactTranslator.getMessage('filtering_log_in_allowlist');
-        }
-        else {
-            ruleText = requestRule.ruleText;
+        switch (requestRule.filterId) {
+            case ANTIBANNER_FILTERS_ID.ALLOWLIST_FILTER_ID:
+                ruleText = reactTranslator.getMessage('filtering_log_in_allowlist');
+                break;
+            default:
+                ruleText = requestRule.ruleText;
+                break;
         }
     }
 
@@ -180,11 +182,11 @@ const Row = observer(({
     );
 });
 
-function VirtualizedRow({
+const VirtualizedRow = ({
     index,
     style,
     data
-}) {
+}) => {
     const { events, columns, handleRowClick } = data;
     const event = events[index];
 
@@ -196,13 +198,13 @@ function VirtualizedRow({
             style={style}
         />
     );
-}
+};
 
 const ColumnsContext = React.createContext({});
 
 const ColumnsProvider = ColumnsContext.Provider;
 
-function TableHeader({ style }) {
+const TableHeader = ({ style }) => {
     const { columns } = useContext(ColumnsContext);
 
     return (
@@ -232,7 +234,7 @@ function TableHeader({ style }) {
             </div>
         </div>
     );
-}
+};
 
 const TableInnerWrapper = forwardRef(({ children, ...rest }, ref) => {
     return (
@@ -299,7 +301,7 @@ const FilteringEvents = observer(() => {
 
     const tableRef = useRef(null);
 
-    const handleRowClick = useCallback((e) => {
+    const handleRowClick = useCallback(e => {
         const { id } = e.currentTarget;
         logStore.handleSelectEvent(id);
     }, [logStore]);
@@ -389,15 +391,16 @@ const FilteringEvents = observer(() => {
 
     const onResizeStart = (e, columnId) => {
         let isTouchEvent = false;
-        if (e.type === 'touchstart') {
+        switch (e.type) {
+            case 'touchstart':
             // lets not respond to multiple touches (e.g. 2 or 3 fingers)
-            if (e.touches && e.touches.length > 1) {
-                return;
-            }
-            isTouchEvent = true;
+                if (e.touches && e.touches.length > 1) {
+                    return;
+                }
+                isTouchEvent = true;
         }
 
-        const clientX = isTouchEvent ? Math.round(e.touches[0].clientX) : e.clientX;
+        const clientX = isTouchEvent === true ? Math.round(e.touches[0].clientX) : e.clientX;
 
         const handlersAndEvents = {
             mouse: {
@@ -471,7 +474,7 @@ const FilteringEvents = observer(() => {
     };
 
     const addMethods = (columns) => {
-        return columns.map((column) => {
+        return columns.map(column => {
             return {
                 ...column,
                 getWidth: () => {

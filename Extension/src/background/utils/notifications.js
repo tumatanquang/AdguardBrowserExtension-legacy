@@ -27,7 +27,7 @@ import { localStorage } from '../storage';
  * Object that manages user settings.
  * @constructor
  */
-export const notifications = (function () {
+export const notifications = (() => {
     const VIEWED_NOTIFICATIONS = 'viewed-notifications';
     const LAST_NOTIFICATION_TIME = 'viewed-notification-time';
 
@@ -251,7 +251,7 @@ export const notifications = (function () {
      * Gets the last time a notification was shown.
      * If it was not shown yet, initialized with the current time.
      */
-    const getLastNotificationTime = function () {
+    const getLastNotificationTime = () => {
         let lastTime = +localStorage.getItem(LAST_NOTIFICATION_TIME);
         if (lastTime === 0) {
             lastTime = Date.now();
@@ -273,7 +273,7 @@ export const notifications = (function () {
      * @param {*} notification notification object
      * @returns {string} matching text or null
      */
-    const getNotificationText = function (notification) {
+    const getNotificationText = (notification) => {
         const language = normalizeLanguage(browser.i18n.getUILanguage());
 
         if (!language) {
@@ -291,10 +291,11 @@ export const notifications = (function () {
     /**
      * Scans notifications list and prepares them to be used (or removes expired)
      */
-    const initNotifications = function () {
+    const initNotifications = () => {
         const notificationsKeys = Object.keys(notifications);
 
-        for (let i = 0; i < notificationsKeys.length; ++i) {
+        const len = notificationsKeys.length;
+        for (let i = 0; i < len; ++i) {
             const notificationKey = notificationsKeys[i];
             const notification = notifications[notificationKey];
 
@@ -321,8 +322,8 @@ export const notifications = (function () {
      * Marks current notification as viewed
      * @param {boolean} withDelay if true, do this after a 30 sec delay
      */
-    const setNotificationViewed = async function (withDelay) {
-        if (withDelay) {
+    const setNotificationViewed = async (withDelay) => {
+        if (withDelay === true) {
             clearTimeout(timeoutId);
             timeoutId = setTimeout(() => {
                 setNotificationViewed(false);
@@ -334,7 +335,7 @@ export const notifications = (function () {
             const viewedNotifications = localStorage.getItem(VIEWED_NOTIFICATIONS) || [];
             const { id } = currentNotification;
 
-            if (!viewedNotifications.includes(id)) {
+            if (viewedNotifications.includes(id) === false) {
                 viewedNotifications.push(id);
                 localStorage.setItem(VIEWED_NOTIFICATIONS, viewedNotifications);
                 const tab = await tabsApi.getActive();
@@ -351,7 +352,7 @@ export const notifications = (function () {
      *
      * @returns {null|Notification} - notification
      */
-    const getCurrentNotification = function () {
+    const getCurrentNotification = () => {
         // Do not display notification on Firefox
         if (browserUtils.isFirefoxBrowser()) {
             return null;
@@ -374,13 +375,14 @@ export const notifications = (function () {
 
         const viewedNotifications = localStorage.getItem(VIEWED_NOTIFICATIONS) || [];
         const notificationsKeys = Object.keys(notifications);
-        for (let i = 0; i < notificationsKeys.length; ++i) {
+        const len = notificationsKeys.length;
+        for (let i = 0; i < len; ++i) {
             const notificationKey = notificationsKeys[i];
             const notification = notifications[notificationKey];
             const from = new Date(notification.from).getTime();
             const to = new Date(notification.to).getTime();
             if (from < currentTime && to > currentTime
-                && !viewedNotifications.includes(notification.id)) {
+                && viewedNotifications.includes(notification.id) === false) {
                 currentNotification = notification;
                 return currentNotification;
             }

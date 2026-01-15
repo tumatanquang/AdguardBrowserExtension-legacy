@@ -37,7 +37,7 @@ import validateJsonSchema from './validator';
 /**
  * Application settings provider.
  */
-export const settingsProvider = (function () {
+export const settingsProvider = (() => {
     const BACKUP_PROTOCOL_VERSION = '1.0';
 
     /**
@@ -141,7 +141,7 @@ export const settingsProvider = (function () {
     /**
      * Loads general settings section
      */
-    const loadGeneralSettingsSection = function () {
+    const loadGeneralSettingsSection = () => {
         const enabledFilterIds = collectEnabledFilterIds();
         // TODO update self search settings on filter status change
         const allowAcceptableAds = enabledFilterIds.indexOf(utils.filters.ids.SEARCH_AND_SELF_PROMO_FILTER_ID) >= 0;
@@ -164,7 +164,7 @@ export const settingsProvider = (function () {
     /**
      * Loads extension specific settings section
      */
-    const loadExtensionSpecificSettingsSection = function () {
+    const loadExtensionSpecificSettingsSection = () => {
         const section = {
             'extension-specific-settings': {
                 'use-optimized-filters': settings.isUseOptimizedFiltersEnabled(),
@@ -184,7 +184,7 @@ export const settingsProvider = (function () {
      * Applies general section settings to application
      * @param section Section
      */
-    const applyGeneralSettingsSection = async function (section) {
+    const applyGeneralSettingsSection = async (section) => {
         const set = section['general-settings'];
 
         settings.changeShowPageStatistic(!!set['show-blocked-ads-count']);
@@ -205,7 +205,7 @@ export const settingsProvider = (function () {
      * Applies extension specific section settings to application
      * @param section
      */
-    const applyExtensionSpecificSettingsSection = function (section) {
+    const applyExtensionSpecificSettingsSection = (section) => {
         const set = section['extension-specific-settings'];
 
         settings.changeUseOptimizedFiltersEnabled(!!set['use-optimized-filters']);
@@ -283,8 +283,9 @@ export const settingsProvider = (function () {
 
     const addCustomFilters = async (absentCustomFiltersInitials) => {
         const result = [];
-        // eslint-disable-next-line no-restricted-syntax
-        for (const customFilterInitial of absentCustomFiltersInitials) {
+        const len = absentCustomFiltersInitials.length;
+        for (let i = 0; i < len; ++i) {
+            const customFilterInitial = absentCustomFiltersInitials[i];
             try {
                 // eslint-disable-next-line no-await-in-loop
                 const customFilter = await addCustomFilter(customFilterInitial);
@@ -305,7 +306,8 @@ export const settingsProvider = (function () {
      * Remove existing custom filters before adding new custom filters
      */
     const removeCustomFilters = (filterIds) => {
-        for (let i = 0; i < filterIds.length; ++i) {
+        const len = filterIds.length;
+        for (let i = 0; i < len; ++i) {
             const filterId = filterIds[i];
             application.removeFilter(filterId);
         }
@@ -332,8 +334,9 @@ export const settingsProvider = (function () {
     const syncCustomFilters = async (customFiltersInitials) => {
         const presentCustomFilters = customFilters.getCustomFilters();
 
-        const enrichedFiltersInitials = customFiltersInitials.map((filterToAdd) => {
-            for (let i = 0; i < presentCustomFilters.length; ++i) {
+        const enrichedFiltersInitials = customFiltersInitials.map(filterToAdd => {
+            const len = presentCustomFilters.length;
+            for (let i = 0; i < len; ++i) {
                 const existingFilter = presentCustomFilters[i];
                 if (existingFilter.customUrl === filterToAdd.customUrl) {
                     filterToAdd.filterId = existingFilter.filterId;
@@ -387,7 +390,8 @@ export const settingsProvider = (function () {
      * @param {boolean} drop enabled flag
      */
     const syncEnabledGroups = (enabledGroups, drop) => {
-        for (let i = 0; i < enabledGroups.length; ++i) {
+        const len = enabledGroups.length;
+        for (let i = 0; i < len; ++i) {
             const groupId = enabledGroups[i];
             categories.enableFiltersGroup(groupId);
         }
@@ -400,7 +404,8 @@ export const settingsProvider = (function () {
             .map(group => group.groupId)
             .filter(groupId => !enabledGroups.includes(groupId));
 
-        for (let i = 0; i < groupIdsToDisable.length; ++i) {
+        const { length } = groupIdsToDisable;
+        for (let i = 0; i < length; ++i) {
             const groupId = groupIdsToDisable[i];
             categories.disableFiltersGroup(groupId, drop);
         }
@@ -411,7 +416,7 @@ export const settingsProvider = (function () {
      * @param section Section
      * @param dropGroupsEnabled
      */
-    const applyFiltersSection = async function (section, dropGroupsEnabled) {
+    const applyFiltersSection = async (section, dropGroupsEnabled) => {
         const allowlistSection = section.filters['whitelist'] || {};
         const allowlistDomains = allowlistSection.domains || [];
         const blacklistDomains = allowlistSection['inverted-domains'] || [];
@@ -442,7 +447,7 @@ export const settingsProvider = (function () {
 
         // STEP 2 get filters with enabled flag from export data
         const customFilterIdsToEnable = availableCustomFilters
-            .filter((availableCustomFilter) => {
+            .filter(availableCustomFilter => {
                 const filterData = customFiltersData
                     .find(filter => {
                         if (!filter.customUrl) {
@@ -466,7 +471,7 @@ export const settingsProvider = (function () {
     /**
      * Exports settings set in json format
      */
-    const loadSettingsBackupJson = async function () {
+    const loadSettingsBackupJson = async () => {
         const result = {
             'protocol-version': BACKUP_PROTOCOL_VERSION
         };
@@ -505,8 +510,8 @@ export const settingsProvider = (function () {
      * Imports settings set from json format
      * @param {string} json
      */
-    const applySettingsBackupJson = async function (json) {
-        function onFinished(success) {
+    const applySettingsBackupJson = async (json) => {
+        const onFinished = (success) => {
             if (success) {
                 log.info('Settings import finished successfully');
             }
@@ -515,7 +520,7 @@ export const settingsProvider = (function () {
             }
 
             listeners.notifyListeners(listeners.SETTINGS_UPDATED, success);
-        }
+        };
 
         let input = null;
 
@@ -528,10 +533,9 @@ export const settingsProvider = (function () {
             return false;
         }
 
-        if (
-            !input
+        if (!input
             || input['protocol-version'] !== BACKUP_PROTOCOL_VERSION
-            || !validateJSON(input)
+            || validateJSON(input) === false
         ) {
             log.error('Json input is invalid {0}', json);
             onFinished(false);

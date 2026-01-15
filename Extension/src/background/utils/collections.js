@@ -64,7 +64,9 @@ export const collections = (() => {
             if (!collection) {
                 return text;
             }
-            for (let i = 0; i < collection.length; ++i) {
+
+            const len = collection.length;
+            for (let i = 0; i < len; ++i) {
                 text.push(collection[i].getText());
             }
             return text;
@@ -81,7 +83,9 @@ export const collections = (() => {
             if (typeof array.find === 'function') {
                 return array.find(a => a[property] === value);
             }
-            for (let i = 0; i < array.length; ++i) {
+
+            const len = array.length;
+            for (let i = 0; i < len; ++i) {
                 const elem = array[i];
                 if (elem[property] === value) {
                     return elem;

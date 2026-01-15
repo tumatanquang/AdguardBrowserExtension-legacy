@@ -23,14 +23,14 @@ import { DevToolsRulesConstructor } from './devtools-rules-constructor';
  * https://developer.chrome.com/extensions/devtools_inspectedWindow#method-eval
  *
  */
-export const DevToolsHelper = (function () {
+export const DevToolsHelper = (() => {
     const PREVIEW_STYLE_ID = 'adguard-preview-style';
 
     /**
      * Add rule preview
      * @param options Object {ruleText: 'ruleText'}
      */
-    const applyPreview = function (options) {
+    const applyPreview = (options) => {
         const { ruleText } = options;
 
         const [head] = document.getElementsByTagName('head');
@@ -54,7 +54,7 @@ export const DevToolsHelper = (function () {
     /**
      * Cancel early applied preview
      */
-    const cancelPreview = function () {
+    const cancelPreview = () => {
         const [head] = document.getElementsByTagName('head');
         if (!head) {
             return;

@@ -15,7 +15,7 @@
  * @param calculateFunc Calculation function
  * @returns {*}
  */
-export const lazyGet = function (object, prop, calculateFunc) {
+export const lazyGet = (object, prop, calculateFunc) => {
     const cachedProp = `_${prop}`;
     if (cachedProp in object) {
         return object[cachedProp];
@@ -30,6 +30,6 @@ export const lazyGet = function (object, prop, calculateFunc) {
  * @param object Object
  * @param prop Original property name
  */
-export const lazyGetClear = function (object, prop) {
+export const lazyGetClear = (object, prop) => {
     delete object[`_${prop}`];
 };

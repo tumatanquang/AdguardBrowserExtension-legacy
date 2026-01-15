@@ -5,7 +5,7 @@ import { StatusMode } from '../../filteringLogStatus';
 import { getStatusTitle } from './statusTitles';
 import { colorMap, getItemClassName } from './statusStyles';
 
-export function FilterStatus({ statusCode, method, mode }) {
+export const FilterStatus = ({ statusCode, method, mode }) => {
     const title = getStatusTitle(mode);
     const color = colorMap[mode];
     const itemClassNames = getItemClassName(color);
@@ -17,7 +17,7 @@ export function FilterStatus({ statusCode, method, mode }) {
                 {title}
             </div>
             <div className={itemClassNames}>
-                {isBlocked ? (
+                {isBlocked === true ? (
                     <Icon id='#ban' classname='status__icon' />
                 ) : (
                     method && <Icon id={statusCode ? '#transfer-status' : '#arrow-status'} classname='status__icon' />
@@ -25,4 +25,4 @@ export function FilterStatus({ statusCode, method, mode }) {
             </div>
         </div>
     );
-}
+};

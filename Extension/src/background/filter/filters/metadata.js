@@ -33,13 +33,13 @@ export class SubscriptionFilter {
         this.subscriptionUrl = subscriptionUrl;
         this.tags = tags;
         // Custom filters data
-        if (customUrl !== undefined) {
+        if (typeof customUrl !== 'undefined') {
             this.customUrl = customUrl;
         }
-        if (trusted !== undefined) {
+        if (typeof trusted !== 'undefined') {
             this.trusted = trusted;
         }
-        if (checksum !== undefined) {
+        if (typeof checksum !== 'undefined') {
             this.checksum = checksum;
         }
     }

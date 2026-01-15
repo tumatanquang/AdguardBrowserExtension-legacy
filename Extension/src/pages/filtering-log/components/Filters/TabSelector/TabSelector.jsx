@@ -39,7 +39,8 @@ const TabSelector = observer(() => {
 
     useEffect(() => {
         if (resultItems) {
-            for (let i = 0; i < resultItems.length; ++i) {
+            const len = resultItems.length;
+            for (let i = 0; i < len; ++i) {
                 const el = resultItems[i];
                 el.classList.remove('selected');
             }
@@ -52,7 +53,7 @@ const TabSelector = observer(() => {
     }, [currentStep, resultItems]);
 
     const cancelTabSearch = () => {
-        if (!tabs.find((tab) => tab.title === searchValue)) {
+        if (!tabs.find(tab => tab.title === searchValue)) {
             setSearchValue(prevTabTitle);
         }
         logStore.setSelectIsOpenState(false);
@@ -81,9 +82,9 @@ const TabSelector = observer(() => {
 
         if (activeElem || targetElem) {
             (async () => {
-                await selectionHandlerSearch(Number(activeElem
+                await selectionHandlerSearch(Number.parseInt(activeElem
                     ? activeElem.id
-                    : targetElem.id));
+                    : targetElem.id, 10));
             })();
             document.activeElement.blur();
         }

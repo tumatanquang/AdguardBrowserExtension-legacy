@@ -61,7 +61,7 @@ export const utils = {
  * @param chromeTab
  * @returns tab
  */
-export function toTabFromChromeTab(chromeTab) {
+export const toTabFromChromeTab = (chromeTab) => {
     return {
         tabId: chromeTab.id,
         url: chromeTab.url,
@@ -69,17 +69,17 @@ export function toTabFromChromeTab(chromeTab) {
         incognito: chromeTab.incognito,
         status: chromeTab.status
     };
-}
+};
 
 /**
  * Unload handler. When extension is unload then 'fireUnload' is invoked.
  * You can add own handler with method 'when'
  * @type {{when, fireUnload}}
  */
-export const unload = (function () {
+export const unload = (() => {
     const unloadChannel = utils.channels.newChannel();
 
-    const when = function (callback) {
+    const when = (callback) => {
         if (typeof callback !== 'function') {
             return;
         }
@@ -94,7 +94,7 @@ export const unload = (function () {
         });
     };
 
-    const fireUnload = function (reason) {
+    const fireUnload = (reason) => {
         log.info(`Unload is fired: ${reason}`);
         unloadChannel.notifyInReverseOrder(reason);
     };

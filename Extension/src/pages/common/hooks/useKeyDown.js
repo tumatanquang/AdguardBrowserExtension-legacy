@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react';
 
 export const useKeyDown = (ref, key, callback) => {
-    const handleKeyDown = useCallback((e) => {
+    const handleKeyDown = useCallback(e => {
         if (ref.current && e.key === key) {
             callback();
         }

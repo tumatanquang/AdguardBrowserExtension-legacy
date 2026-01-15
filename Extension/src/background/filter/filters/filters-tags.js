@@ -32,20 +32,20 @@ export const tags = (() => {
     const PURPOSE_COOKIES_TAG_ID = 6;
     const PURPOSE_MOBILE_TAG_ID = 19;
 
-    const getTags = function () {
+    const getTags = () => {
         return subscriptions.getTags();
     };
 
-    const getFilters = function () {
+    const getFilters = () => {
         return subscriptions.getFilters()
             .filter(f => f.filterId !== utils.filters.SEARCH_AND_SELF_PROMO_FILTER_ID);
     };
 
-    const getFiltersByTagId = function (tagId, filters) {
+    const getFiltersByTagId = (tagId, filters) => {
         return filters.filter(f => f.tags.indexOf(tagId) >= 0);
     };
 
-    const getRecommendedFilters = function (filters) {
+    const getRecommendedFilters = (filters) => {
         return getFiltersByTagId(RECOMMENDED_TAG_ID, filters);
     };
 
@@ -53,7 +53,7 @@ export const tags = (() => {
 
     const isMobileFilter = filter => filter.tags.includes(PURPOSE_MOBILE_TAG_ID);
 
-    const getPurposeGroupedFilters = function () {
+    const getPurposeGroupedFilters = () => {
         const filters = getFilters();
         const adsFilters = getFiltersByTagId(PURPOSE_ADS_TAG_ID, filters);
         const socialFilters = getFiltersByTagId(PURPOSE_SOCIAL_TAG_ID, filters);

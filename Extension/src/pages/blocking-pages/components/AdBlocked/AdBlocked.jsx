@@ -10,15 +10,15 @@ import { messenger } from '../../../services/messenger';
 
 import '../../styles/index.pcss';
 
-export function AdBlocked() {
+export const AdBlocked = () => {
     const { rule, url } = getParams();
 
-    const handleGoBack = useCallback((e) => {
+    const handleGoBack = useCallback(e => {
         e.preventDefault();
         window.history.back();
     }, []);
 
-    const handleProceed = useCallback((e) => {
+    const handleProceed = useCallback(e => {
         e.preventDefault();
         messenger.sendMessage(MESSAGE_TYPES.ADD_URL_TO_TRUSTED, { url });
     }, [url]);
@@ -58,4 +58,4 @@ export function AdBlocked() {
             </div>
         </div>
     );
-}
+};

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-function SettingsSet(props) {
+const SettingsSet = (props) => {
     const {
         title, description, children, disabled, inlineControl, hideBorder
     } = props;
@@ -26,7 +26,7 @@ function SettingsSet(props) {
             </div>
         </div>
     );
-}
+};
 
 SettingsSet.defaultProps = {
     title: '',

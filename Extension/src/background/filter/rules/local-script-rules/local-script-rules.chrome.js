@@ -18,12 +18,12 @@
 /**
  * Empty module for chrome
  */
-const localScriptRulesService = (function () {
-    const setLocalScriptRules = function () {
+const localScriptRulesService = (() => {
+    const setLocalScriptRules = () => {
         // Do nothing
     };
 
-    const isLocal = function () {
+    const isLocal = () => {
         // For chrome all rules are 'local'
         return true;
     };

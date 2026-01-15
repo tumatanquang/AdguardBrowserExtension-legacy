@@ -45,7 +45,7 @@ export const metadataCache = (() => {
      * @param filterId
      */
     const removeFilter = (filterId) => {
-        filters = filters.filter((f) => f.filterId !== filterId);
+        filters = filters.filter(f => f.filterId !== filterId);
         delete filtersMap[filterId];
     };
 

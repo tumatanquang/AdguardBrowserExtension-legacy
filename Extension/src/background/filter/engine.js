@@ -24,8 +24,8 @@ import { utils } from '../utils/common';
 /**
  * TSUrlFilter Engine wrapper
  */
-export const engine = (function () {
-    const ASYNC_LOAD_CHUNK_SIZE = 5000;
+export const engine = (() => {
+    const ASYNC_LOAD_CHUNK_SIZE = 5 * 1000;
 
     let engine;
 
@@ -100,7 +100,7 @@ export const engine = (function () {
             requestType
         );
 
-        if (!isReady()) {
+        if (isReady() === false) {
             log.warn('Filtering engine is not ready');
             return null;
         }
@@ -135,7 +135,7 @@ export const engine = (function () {
      * @returns matching result or null
      */
     const matchFrame = (frameUrl) => {
-        if (!isReady()) {
+        if (isReady() === false) {
             log.warn('Filtering engine is not ready');
             return null;
         }
@@ -151,7 +151,7 @@ export const engine = (function () {
      * @returns CosmeticResult result
      */
     const getCosmeticResult = (url, option) => {
-        if (!isReady()) {
+        if (isReady() === false) {
             return new TSUrlFilter.CosmeticResult();
         }
 
@@ -165,7 +165,7 @@ export const engine = (function () {
      * @return Engine rules count
      */
     const getRulesCount = () => {
-        return isReady() ? engine.getRulesCount() : 0;
+        return isReady() === true ? engine.getRulesCount() : 0;
     };
 
     return {

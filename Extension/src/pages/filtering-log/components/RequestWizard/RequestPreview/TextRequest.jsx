@@ -17,11 +17,11 @@ const getBeautifier = (type) => {
     }
 };
 
-export function TextRequest({
+export const TextRequest = ({
     text,
     requestType,
     shouldBeautify
-}) {
+}) => {
     const [textState, setTextState] = useState(text);
 
     useEffect(() => {
@@ -45,4 +45,4 @@ export function TextRequest({
     }
 
     return null;
-}
+};

@@ -212,14 +212,14 @@ ace.define('ace/mode/doc_comment_highlight_rules', [], (require, exports, module
 
     oop.inherits(DocCommentHighlightRules, TextHighlightRules);
 
-    DocCommentHighlightRules.getTagRule = function (start) {
+    DocCommentHighlightRules.getTagRule = (start) => {
         return {
             token: 'comment.doc.tag.storage.type',
             regex: '\\b(?:TODO|FIXME|XXX|HACK)\\b'
         };
     };
 
-    DocCommentHighlightRules.getStartRule = function (start) {
+    DocCommentHighlightRules.getStartRule = (start) => {
         return {
             token: 'comment.doc', // doc comment
             regex: '\\/\\*(?=\\*)',
@@ -227,7 +227,7 @@ ace.define('ace/mode/doc_comment_highlight_rules', [], (require, exports, module
         };
     };
 
-    DocCommentHighlightRules.getEndRule = function (start) {
+    DocCommentHighlightRules.getEndRule = (start) => {
         return {
             token: 'comment.doc', // closing comment
             regex: '\\*\\/',
@@ -677,7 +677,7 @@ ace.define('ace/mode/javascript_highlight_rules', [], (require, exports, module)
         }];
     }
 
-    function comments(next) {
+    const comments = (next) => {
         return [
             {
                 token: 'comment', // multi line comment
@@ -1077,9 +1077,9 @@ ace.define('ace/mode/folding/cstyle', [], (require, exports, module) => {
             }
         };
 
-        const NOT_WHITESPACE_SEARCH_PATTERN = /\S/;
         this.getSectionRange = function (session, row) {
             let line = session.getLine(row);
+            const NOT_WHITESPACE_SEARCH_PATTERN = /\S/;
             const startIndent = line.search(NOT_WHITESPACE_SEARCH_PATTERN);
             const startRow = row;
             const startColumn = line.length;
@@ -1107,13 +1107,13 @@ ace.define('ace/mode/folding/cstyle', [], (require, exports, module) => {
 
             return new Range(startRow, startColumn, endRow, session.getLine(endRow).length);
         };
-        const WHITESPACE_SEARCH_PATTERN = /\s*$/;
-        const COMMENT_REGION_BLOCK_PATTERN = /^\s*(?:\/\*|\/\/|--)#?(end)?region\b/;
         this.getCommentRegionBlock = function (session, line, row) {
+            const WHITESPACE_SEARCH_PATTERN = /\s*$/;
             const startColumn = line.search(WHITESPACE_SEARCH_PATTERN);
             const startRow = row;
 
             let depth = 1;
+            const COMMENT_REGION_BLOCK_PATTERN = /^\s*(?:\/\*|\/\/|--)#?(end)?region\b/;
             for (const maxRow = session.getLength(); ++row < maxRow;) {
                 line = session.getLine(row);
                 const m = COMMENT_REGION_BLOCK_PATTERN.exec(line);

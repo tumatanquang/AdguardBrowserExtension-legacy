@@ -17,7 +17,7 @@
 export const I18nHelper = {
     translateElement(element, message) {
         try {
-            while (element.lastChild) {
+            for (; element.lastChild;) {
                 element.removeChild(element.lastChild);
             }
 
@@ -29,6 +29,8 @@ export const I18nHelper = {
     },
 
     processString(str, element) {
+        const PROCESS_STRING_MATCH1_PATTERN = /^([^]*?)<(a|strong|span|i)([^>]*)>(.*?)<\/\2>([^]*)$/m;
+        const PROCESS_STRING_MATCH2_PATTERN = /^([^]*?)<(br|input)([^>]*)\/?>([^]*)$/m;
         const match1 = PROCESS_STRING_MATCH1_PATTERN.exec(str);
         const match2 = PROCESS_STRING_MATCH2_PATTERN.exec(str);
         if (match1) {
@@ -50,6 +52,7 @@ export const I18nHelper = {
             this.processString(match2[4], element);
         }
         else {
+            const PROCESS_STRING_NON_BREAKING_SPACE_PATTERN = /&nbsp;/g;
             const nodeValue = str.replace(PROCESS_STRING_NON_BREAKING_SPACE_PATTERN, '\u00A0');
             element.appendChild(document.createTextNode(nodeValue));
         }
@@ -61,8 +64,10 @@ export const I18nHelper = {
             return el;
         }
 
+        const CREATE_ELEMENT_SPLIT_PATTERN = /([a-z]+='[^']+')/;
         const attrs = attributes.split(CREATE_ELEMENT_SPLIT_PATTERN);
-        for (let i = 0; i < attrs.length; ++i) {
+        const len = attrs.length;
+        for (let i = 0; i < len; ++i) {
             const attr = attrs[i].trim();
             if (!attr) {
                 continue;
@@ -82,7 +87,3 @@ export const I18nHelper = {
         return el;
     }
 };
-const PROCESS_STRING_MATCH1_PATTERN = /^([^]*?)<(a|strong|span|i)([^>]*)>(.*?)<\/\2>([^]*)$/m;
-const PROCESS_STRING_MATCH2_PATTERN = /^([^]*?)<(br|input)([^>]*)\/?>([^]*)$/m;
-const PROCESS_STRING_NON_BREAKING_SPACE_PATTERN = /&nbsp;/g;
-const CREATE_ELEMENT_SPLIT_PATTERN = /([a-z]+='[^']+')/;

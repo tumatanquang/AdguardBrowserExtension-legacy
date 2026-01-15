@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from '../../../../common/components/ui/Icon';
 
-function ModalContentWrapper({ closeModalHandler, children, title }) {
+const ModalContentWrapper = ({ closeModalHandler, children, title }) => {
     return (
         <div className='modal'>
             <button
@@ -18,7 +18,7 @@ function ModalContentWrapper({ closeModalHandler, children, title }) {
             {children}
         </div>
     );
-}
+};
 
 ModalContentWrapper.defaultProps = {
     title: ''

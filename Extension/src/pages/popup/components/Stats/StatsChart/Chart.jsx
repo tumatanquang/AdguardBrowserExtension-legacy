@@ -145,7 +145,7 @@ const getCategoriesLines = (statsData, range) => {
     };
 };
 
-export function Chart({ stats, range, type }) {
+export const Chart = ({ stats, range, type }) => {
     useEffect(() => {
         const statsData = selectRequestsStatsData(stats, range, type);
         const categoriesLines = getCategoriesLines(statsData, range);
@@ -242,4 +242,4 @@ export function Chart({ stats, range, type }) {
     }, [range, type, stats]);
 
     return <div className='chart' id='chart' />;
-}
+};

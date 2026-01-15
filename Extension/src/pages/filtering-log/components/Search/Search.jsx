@@ -6,9 +6,9 @@ import { isMacOs } from '../../../../common/user-agent-utils';
 
 import './search.pcss';
 
-function SearchControl({
+const SearchControl = ({
     value, select, onOpenSelect, onClear
-}) {
+}) => {
     if (value && !select) {
         return (
             <button
@@ -40,7 +40,7 @@ function SearchControl({
     }
 
     return <Icon id='#magnifying' classname='search__ico' />;
-}
+};
 
 const Search = forwardRef(({
     changeHandler, handleClear, onFocus, value, placeholder, select, onOpenSelect
@@ -50,16 +50,20 @@ const Search = forwardRef(({
     useEffect(() => {
         const modifierKeyProperty = isMacOs ? 'metaKey' : 'ctrlKey';
         const handleSearchHotkey = (e) => {
-            const { code } = e;
-            if (e[modifierKeyProperty] && code === 'KeyF') {
-                e.preventDefault();
-                localSearchInputRef.current.focus();
-                localSearchInputRef.current.select();
+            if (e[modifierKeyProperty]) {
+                const { code } = e;
+                switch (code) {
+                    case 'KeyF':
+                        e.preventDefault();
+                        localSearchInputRef.current.focus();
+                        localSearchInputRef.current.select();
+                        break;
+                }
             }
         };
 
         window.addEventListener('keydown', handleSearchHotkey);
-        return function onUnmount() {
+        return () => {
             window.removeEventListener('keydown', handleSearchHotkey);
         };
     }, [localSearchInputRef]);

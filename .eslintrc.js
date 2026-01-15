@@ -8,7 +8,7 @@ module.exports = {
     'extends': ['airbnb'],
     'parser': '@babel/eslint-parser',
     'parserOptions': {
-        'ecmaVersion': 12,
+        'ecmaVersion': 7,
         'sourceType': 'module',
         'ecmaFeatures': {
             'jsx': true
@@ -58,6 +58,7 @@ module.exports = {
                 'generators': 'as-needed'
             }
         ],
+        'func-style': 'off',
         'no-bitwise': 'off',
         'no-case-declarations': 'off',
         'no-continue': 'off',
@@ -126,6 +127,13 @@ module.exports = {
                 ],
                 'SwitchCase': 1,
                 'ignoreComments': false
+            }
+        ],
+        'react/function-component-definition': [
+            'error',
+            {
+                'namedComponents': 'arrow-function',
+                'unnamedComponents': 'arrow-function'
             }
         ],
         'react/jsx-indent': [

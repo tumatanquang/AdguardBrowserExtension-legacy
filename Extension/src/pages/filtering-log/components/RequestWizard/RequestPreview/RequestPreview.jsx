@@ -32,10 +32,10 @@ export const RequestPreview = observer(() => {
     const isImage = requestType === RequestTypes.IMAGE;
 
     const getFetcher = () => {
-        if (isText) {
+        if (isText === true) {
             return fetchText;
         }
-        if (isImage) {
+        if (isImage === true) {
             return fetchImage;
         }
         return null;
@@ -97,14 +97,14 @@ export const RequestPreview = observer(() => {
             );
         }
         if (previewState.matches(FetchStates.SUCCESS)) {
-            if (isImage) {
+            if (isImage === true) {
                 return (
                     <ImageRequest
                         src={previewState.context.data}
                     />
                 );
             }
-            if (isText) {
+            if (isText === true) {
                 return (
                     <TextRequest
                         text={previewState.context.data}
@@ -144,7 +144,7 @@ export const RequestPreview = observer(() => {
                 >
                     {backToRequestButtonTitle}
                 </button>
-                {isText && previewState.matches(FetchStates.SUCCESS) && (
+                {isText === true && previewState.matches(FetchStates.SUCCESS) && (
                     <button
                         type='button'
                         className='request-modal__button request-modal__button--white'

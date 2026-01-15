@@ -16,10 +16,10 @@ export const cssService = (() => {
 
         const elemhides = [];
 
-        let selectorsCount = 0;
-        // eslint-disable-next-line no-restricted-syntax
-        for (const selector of elemhideRules) {
-            ++selectorsCount;
+        const selectorsCount = 0;
+        const len = elemhideRules.length;
+        for (let i = 0; i < len; ++i) {
+            const selector = elemhideRules[i];
 
             elemhides.push(selector.getContent());
 
@@ -55,7 +55,6 @@ export const cssService = (() => {
     const INJECT_HIT_START = " content: 'adguard";
     const HIT_SEP = encodeURIComponent(';');
     const HIT_END = "' !important;}\r\n";
-    const ESCAPE_RULE_REPLACE_PATTERN = /['()]/g;
 
     /**
      * Urlencodes rule text.
@@ -63,9 +62,10 @@ export const cssService = (() => {
      * @param ruleText
      * @return {string}
      */
-    const escapeRule = ruleText => encodeURIComponent(ruleText)
-        .replace(ESCAPE_RULE_REPLACE_PATTERN, match => ({ "'": '%27', '(': '%28', ')': '%29' }[match]));
-
+    const escapeRule = (ruleText) => {
+        const ESCAPE_RULE_REPLACE_PATTERN = /['()]/g;
+        encodeURIComponent(ruleText).replace(ESCAPE_RULE_REPLACE_PATTERN, match => ({ "'": '%27', '(': '%28', ')': '%29' }[match]));
+    };
     /**
      * Patch rule selector adding adguard mark rule info in the content attribute
      * Example:
@@ -74,17 +74,11 @@ export const cssService = (() => {
      * @returns {String}
      */
     const addMarkerToElemhideRule = (rule) => {
-        const result = [];
-        result.push(rule.getContent());
-        result.push(ELEMHIDE_HIT_START);
-        result.push(rule.getFilterListId());
-        result.push(HIT_SEP);
-        result.push(escapeRule(rule.getText()));
-        result.push(HIT_END);
+        const result = [rule.getContent(), ELEMHIDE_HIT_START, rule.getFilterListId(),
+            HIT_SEP, escapeRule(rule.getText()), HIT_END];
         return result.join('');
     };
 
-    const CONTENT_ATTRIBUTE_PATTERN = /[{;"(]\s*content\s*:/gi;
     /**
      * Patch rule selector adding adguard mark and rule info in the content attribute
      * Example:
@@ -93,9 +87,9 @@ export const cssService = (() => {
      * @returns {String}
      */
     const addMarkerToInjectRule = (rule) => {
-        const result = [];
         const ruleContent = rule.getContent();
         // if rule text has content attribute we don't add rule marker
+        const CONTENT_ATTRIBUTE_PATTERN = /[{;"(]\s*content\s*:/gi;
         if (CONTENT_ATTRIBUTE_PATTERN.test(ruleContent)) {
             return ruleContent;
         }
@@ -106,12 +100,8 @@ export const cssService = (() => {
         const ruleTextWithSemicolon = ruleTextWithoutCloseBrace.endsWith(';')
             ? ruleTextWithoutCloseBrace
             : `${ruleTextWithoutCloseBrace};`;
-        result.push(ruleTextWithSemicolon);
-        result.push(INJECT_HIT_START);
-        result.push(rule.getFilterListId());
-        result.push(HIT_SEP);
-        result.push(escapeRule(rule.getText()));
-        result.push(HIT_END);
+        const result = [ruleTextWithSemicolon, INJECT_HIT_START, rule.getFilterListId(),
+            HIT_SEP, escapeRule(rule.getText()), HIT_END];
 
         return result.join('');
     };

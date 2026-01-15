@@ -55,7 +55,7 @@ const FilteringLog = observer(() => {
 
         window.addEventListener('hashchange', handleHashChange);
 
-        return function onUnmount() {
+        return () => {
             window.removeEventListener('hashchange', handleHashChange);
         };
     }, [logStore]);

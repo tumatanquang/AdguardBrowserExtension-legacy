@@ -3,7 +3,7 @@ import { reactTranslator } from '../../../../../common/translators/reactTranslat
 import { Icon } from '../../../../common/components/ui/Icon';
 import './compare.pcss';
 
-export function Compare({ click, hide }) {
+export const Compare = ({ click, hide }) => {
     return (
         <div className='compare'>
             <div className='compare__message'>
@@ -26,4 +26,4 @@ export function Compare({ click, hide }) {
             </button>
         </div>
     );
-}
+};

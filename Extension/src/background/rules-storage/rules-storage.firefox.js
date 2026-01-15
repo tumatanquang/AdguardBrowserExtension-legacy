@@ -28,20 +28,19 @@ import { log } from '../../common/log';
  * https://bugzilla.mozilla.org/show_bug.cgi?id=1371255
  * https://github.com/AdguardTeam/AdguardBrowserExtension/issues/892
  */
-const firefoxRulesStorageImpl = (function (initialAPI) {
+const firefoxRulesStorageImpl = (initialAPI => {
     const STORAGE_NAME = 'AdguardRulesStorage';
 
     let database;
 
-    function onError(error) {
+    const onError = (error) => {
         log.error('Adguard rulesStorage error: {0}', error.error || error);
-    }
+    };
 
-    const RESULT_SPLIT_PATTERN = /\r?\n/;
     /**
      * Gets value from the database by key
      */
-    function getFromDatabase(key) {
+    const getFromDatabase = (key) => {
         return new Promise((resolve, reject) => {
             const transaction = database.transaction(STORAGE_NAME);
             const table = transaction.objectStore(STORAGE_NAME);
@@ -57,6 +56,7 @@ const firefoxRulesStorageImpl = (function (initialAPI) {
                 let lines = [];
                 const { result } = request;
                 if (result && result.value) {
+                    const RESULT_SPLIT_PATTERN = /\r?\n/;
                     lines = result.value.split(RESULT_SPLIT_PATTERN);
                 }
                 resolve(lines);
@@ -65,12 +65,12 @@ const firefoxRulesStorageImpl = (function (initialAPI) {
             request.onsuccess = eventHandler;
             request.onerror = eventHandler;
         });
-    }
+    };
 
     /**
      * Puts key and value to the database
      */
-    function putToDatabase(key, value) {
+    const putToDatabase = (key, value) => {
         return new Promise((resolve, reject) => {
             const transaction = database.transaction(STORAGE_NAME, 'readwrite');
             const table = transaction.objectStore(STORAGE_NAME);
@@ -93,12 +93,12 @@ const firefoxRulesStorageImpl = (function (initialAPI) {
             request.onsuccess = eventHandler;
             request.onerror = eventHandler;
         });
-    }
+    };
 
     /**
      * Deletes value from the database
      */
-    function deleteFromDatabase(key) {
+    const deleteFromDatabase = (key) => {
         return new Promise((resolve, reject) => {
             const transaction = database.transaction(STORAGE_NAME, 'readwrite');
             const table = transaction.objectStore(STORAGE_NAME);
@@ -118,7 +118,7 @@ const firefoxRulesStorageImpl = (function (initialAPI) {
             request.onsuccess = eventHandler;
             request.onerror = eventHandler;
         });
-    }
+    };
 
     /**
      * Read rules
@@ -149,11 +149,11 @@ const firefoxRulesStorageImpl = (function (initialAPI) {
     /**
      * We can detect whether IndexedDB was initialized or not only in an async way
      */
-    const init = () => new Promise((resolve) => {
+    const init = () => new Promise(resolve => {
         // Failed in private browsing mode.
         const request = indexedDB.open(STORAGE_NAME, 1);
 
-        request.onupgradeneeded = function (ev) {
+        request.onupgradeneeded = (ev) => {
             database = ev.target.result;
             database.onerror = onError;
             database.onabort = onError;
@@ -162,7 +162,7 @@ const firefoxRulesStorageImpl = (function (initialAPI) {
             table.createIndex('value', 'value', { unique: false });
         };
 
-        request.onsuccess = function (ev) {
+        request.onsuccess = (ev) => {
             database = ev.target.result;
             database.onerror = onError;
             database.onabort = onError;

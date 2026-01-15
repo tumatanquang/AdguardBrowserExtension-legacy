@@ -19,7 +19,7 @@
  * Object that manages filtering log size and position.
  * @constructor
  */
-export const filteringLogWindowState = (function () {
+export const filteringLogWindowState = (() => {
     const FILTERING_LOG_WINDOW_STATE = 'filtering-log-window-state';
 
     const setState = (windowState) => {

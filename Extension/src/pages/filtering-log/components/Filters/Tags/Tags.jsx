@@ -5,15 +5,15 @@ import { reactTranslator } from '../../../../../common/translators/reactTranslat
 import { Popover } from '../../../../common/components/ui/Popover';
 import { isMacOs } from '../../../../../common/user-agent-utils';
 
-export function Tags({
+export const Tags = ({
     tags,
     setTags,
     type
-}) {
+}) => {
     const { allButtonEnabled, filters } = tags;
 
     const enableOne = (tagId) => {
-        const updatedTags = filters.map((tag) => {
+        const updatedTags = filters.map(tag => {
             return {
                 ...tag,
                 enabled: tag.id === tagId
@@ -24,7 +24,7 @@ export function Tags({
     };
 
     const enableAll = () => {
-        const updatedTags = filters.map((tag) => {
+        const updatedTags = filters.map(tag => {
             return { ...tag, enabled: true };
         });
 
@@ -33,11 +33,11 @@ export function Tags({
 
     const toggleMultiple = (tagId) => {
         let updatedTags;
-        const everyEnabled = filters.every((tag) => tag.enabled);
+        const everyEnabled = filters.every(tag => tag.enabled);
         if (everyEnabled) {
             if (allButtonEnabled) {
                 // disable all, except selected
-                updatedTags = filters.map((tag) => {
+                updatedTags = filters.map(tag => {
                     if (tag.id !== tagId) {
                         return {
                             ...tag,
@@ -50,7 +50,7 @@ export function Tags({
             }
             else {
                 // disable only selected
-                updatedTags = filters.map((tag) => {
+                updatedTags = filters.map(tag => {
                     if (tag.id === tagId) {
                         return {
                             ...tag,
@@ -63,17 +63,17 @@ export function Tags({
             }
         }
         else {
-            updatedTags = filters.map((tag) => {
+            updatedTags = filters.map(tag => {
                 return {
                     ...tag,
                     enabled: tag.id === tagId ? !tag.enabled : tag.enabled
                 };
             });
 
-            const allDisabled = updatedTags.every((tag) => !tag.enabled);
+            const allDisabled = updatedTags.every(tag => !tag.enabled);
             if (allDisabled) {
                 // set all enabled
-                updatedTags = filters.map((tag) => {
+                updatedTags = filters.map(tag => {
                     return {
                         ...tag,
                         enabled: true
@@ -101,7 +101,7 @@ export function Tags({
     };
 
     const renderTypes = () => {
-        return filters.map((tag) => {
+        return filters.map(tag => {
             const {
                 id,
                 title,
@@ -142,4 +142,4 @@ export function Tags({
             {renderTypes()}
         </>
     );
-}
+};

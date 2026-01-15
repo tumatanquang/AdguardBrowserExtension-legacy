@@ -26,8 +26,10 @@ export const TextCollapser = forwardRef(({
     };
 
     const handleKeyUp = (e) => {
-        if (e.key === 'Enter') {
-            toggleCollapsed();
+        switch (e.key) {
+            case 'Enter':
+                toggleCollapsed();
+                break;
         }
     };
 

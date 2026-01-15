@@ -36,61 +36,63 @@ import { uiService } from '../../src/background/ui-service';
  * Adguard simple api
  * @type {{start, stop, configure}}
  */
-export const adguardApi = (function () {
-    function noopFunc() {}
+export const adguardApi = (() => {
+    const noopFunc = () => {};
 
     /**
      * Validates filters identifiers
      * @param filters Array
      */
-    function validateFiltersConfiguration(filters) {
+    const validateFiltersConfiguration = (filters) => {
         if (!filters || filters.length === 0) {
             return;
         }
-        for (let i = 0; i < filters.length; ++i) {
+        const len = filters.length;
+        for (let i = 0; i < len; ++i) {
             const filterId = filters[i];
             if (typeof filterId !== 'number') {
                 throw new Error(`${filterId} is not a number`);
             }
         }
-    }
+    };
 
     /**
      * Validate domains
      * @param domains Array
      * @param prop Property name (allowlist or blacklist)
      */
-    function validateDomains(domains, prop) {
+    const validateDomains = (domains, prop) => {
         if (!domains || domains.length === 0) {
             return;
         }
-        for (let i = 0; i < domains.length; ++i) {
+        const len = domains.length;
+        for (let i = 0; i < len; ++i) {
             const domain = domains[i];
             if (typeof domain !== 'string') {
                 throw new Error(`Domain ${domain} at position ${i} in ${prop} is not a string`);
             }
         }
-    }
+    };
 
     /**
      * Validates configuration
      * @param configuration Configuration object
      */
-    function validateConfiguration(configuration) {
+    const validateConfiguration = (configuration) => {
         if (!configuration) {
             throw new Error('"configuration" parameter is required');
         }
         validateFiltersConfiguration(configuration.filters);
         validateDomains(configuration.whitelist, 'whitelist');
         validateDomains(configuration.blacklist, 'blacklist');
-    }
+    };
 
     /**
      * Configures white and black lists.
      * If blacklist is not null filtration will be in inverted mode, otherwise in default mode.
      * @param configuration Configuration object: {whitelist: [], blacklist: []}
      */
-    function configureWhiteBlackLists(configuration) {
+    const configureWhiteBlackLists = (configuration) => {
         if (!configuration.force && !configuration.blacklist && !configuration.whitelist) {
             return;
         }
@@ -108,14 +110,14 @@ export const adguardApi = (function () {
         domains = domains || [];
 
         allowlist.updateAllowlistDomains(domains);
-    }
+    };
 
     /**
      * Configures enabled filters
      * @param configuration Configuration object: {filters: [...]}
      * @param callback
      */
-    async function configureFilters(configuration, callback) {
+    const configureFilters = async (configuration, callback) => {
         if (!configuration.force && !configuration.filters) {
             callback();
             return;
@@ -134,40 +136,42 @@ export const adguardApi = (function () {
         await application.addAndEnableFilters(filterIds);
 
         const enabledFilters = application.getEnabledFilters();
-
-        for (let i = 0; i < enabledFilters.length; ++i) {
+        const len = enabledFilters.length;
+        for (let i = 0; i < len; ++i) {
             const filter = enabledFilters[i];
             if (filterIds.indexOf(filter.filterId) < 0) {
                 application.disableFilters([filter.filterId]);
             }
         }
 
-        const listenerId = listeners.addListener((event) => {
-            if (event === listeners.REQUEST_FILTER_UPDATED) {
-                listeners.removeListener(listenerId);
-                callback();
+        const listenerId = listeners.addListener(event => {
+            switch (event) {
+                case listeners.REQUEST_FILTER_UPDATED:
+                    listeners.removeListener(listenerId);
+                    callback();
+                    break;
             }
         });
-    }
+    };
 
     /**
      * Configures custom (user) rules
      * @param configuration Configuration object: {rules: [...]}
      */
-    function configureCustomRules(configuration) {
+    const configureCustomRules = (configuration) => {
         if (!configuration.force && !configuration.rules) {
             return;
         }
 
         const content = (configuration.rules || []).join('\r\n');
         userrules.updateUserRulesText(content);
-    }
+    };
 
     /**
      * Configures backend's URLs
      * @param configuration Configuration object: {filtersMetadataUrl: '...', filterRulesUrl: '...'}
      */
-    function configureFiltersUrl(configuration) {
+    const configureFiltersUrl = (configuration) => {
         if (!configuration.force && !configuration.filtersMetadataUrl && !configuration.filterRulesUrl) {
             return;
         }
@@ -175,14 +179,14 @@ export const adguardApi = (function () {
             filtersMetadataUrl: configuration.filtersMetadataUrl,
             filterRulesUrl: configuration.filterRulesUrl
         });
-    }
+    };
 
     /**
      * Configure current filtration settings
      * @param configuration Filtration configuration: {filters: [], whitelist: [], blacklist: []}
      * @param callback
      */
-    const configure = function (configuration, callback) {
+    const configure = (configuration, callback) => {
         if (!application.isInitialized()) {
             throw new Error('Applications is not initialized. Use \'start\' method.');
         }
@@ -202,7 +206,7 @@ export const adguardApi = (function () {
      * @param configuration Configuration object
      * @param callback Callback function
      */
-    const start = async function (configuration, callback) {
+    const start = async (configuration, callback) => {
         validateConfiguration(configuration);
 
         callback = callback || noopFunc;
@@ -221,14 +225,14 @@ export const adguardApi = (function () {
      * Stop filtration
      * @param callback Callback function
      */
-    const stop = async function (callback) {
+    const stop = async (callback) => {
         await application.stop();
         if (callback) {
             callback();
         }
     };
 
-    const initAssistant = function (tabId) {
+    const initAssistant = (tabId) => {
         const assistantOptions = {
             addRuleCallbackName: 'assistant-create-rule',
             token: uiService.getAssistantToken()
@@ -260,7 +264,7 @@ export const adguardApi = (function () {
      * Closes assistant dialog in the specified tab
      * @param tabId Tab identifier
      */
-    const closeAssistant = function (tabId) {
+    const closeAssistant = (tabId) => {
         tabsApi.sendMessage(tabId, {
             type: 'destroyAssistant'
         });
@@ -280,8 +284,10 @@ export const adguardApi = (function () {
 
     const handleMessage = async (message) => {
         const { type, data } = message;
-        if (type === 'openAssistantInTab') {
-            await openAssistant(data.tabId);
+        switch (type) {
+            case 'openAssistantInTab':
+                await openAssistant(data.tabId);
+                break;
         }
         return Promise.resolve();
     };

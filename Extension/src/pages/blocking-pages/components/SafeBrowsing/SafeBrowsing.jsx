@@ -10,22 +10,22 @@ import { messenger } from '../../../services/messenger';
 
 import '../../styles/index.pcss';
 
-export function SafeBrowsing() {
+export const SafeBrowsing = () => {
     const [advanced, setAdvanced] = useState(false);
 
     const { host, url, malware } = getParams();
 
-    const handleGoBack = useCallback((e) => {
+    const handleGoBack = useCallback(e => {
         e.preventDefault();
         window.history.back();
     }, []);
 
-    const handleEnableAdvanced = useCallback((e) => {
+    const handleEnableAdvanced = useCallback(e => {
         e.preventDefault();
         setAdvanced(true);
     }, []);
 
-    const handleProceed = useCallback((e) => {
+    const handleProceed = useCallback(e => {
         e.preventDefault();
         messenger.sendMessage(MESSAGE_TYPES.OPEN_SAFEBROWSING_TRUSTED, { url });
     }, [url]);
@@ -94,4 +94,4 @@ export function SafeBrowsing() {
             </div>
         </div>
     );
-}
+};

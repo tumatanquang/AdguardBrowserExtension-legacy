@@ -134,7 +134,7 @@ const createMessageHandler = () => {
      * @param events
      * @param sender
      */
-    function processAddEventListener(events, sender) {
+    const processAddEventListener = (events, sender) => {
         const listenerId = listeners.addSpecifiedListener(events, (...args) => {
             const sender = eventListeners[listenerId];
             if (sender) {
@@ -146,17 +146,18 @@ const createMessageHandler = () => {
         });
         eventListeners[listenerId] = sender;
         return { listenerId };
-    }
+    };
 
     /**
      * Constructs objects that uses on extension pages, like: options.html, thankyou.html etc
      */
-    function processInitializeFrameScriptRequest() {
+    const processInitializeFrameScriptRequest = () => {
         const AntiBannerFiltersId = utils.filters.ids;
 
         const enabledFilters = {};
         const antiBannerFiltersIds = Object.values(AntiBannerFiltersId);
-        for (let i = 0; i < antiBannerFiltersIds.length; ++i) {
+        const len = antiBannerFiltersIds.length;
+        for (let i = 0; i < len; ++i) {
             const filterId = antiBannerFiltersIds[i];
             const enabled = application.isFilterEnabled(filterId);
             enabledFilters[filterId] = !!enabled;
@@ -182,7 +183,7 @@ const createMessageHandler = () => {
                 EventNotifierTypes: listeners.events
             }
         };
-    }
+    };
 
     /**
      * Saves css hits from content-script.
@@ -190,12 +191,13 @@ const createMessageHandler = () => {
      * @param tab
      * @param stats
      */
-    function processSaveCssHitStats(tab, stats) {
-        if (!webRequestService.isCollectingCosmeticRulesHits(tab)) {
+    const processSaveCssHitStats = (tab, stats) => {
+        if (webRequestService.isCollectingCosmeticRulesHits(tab) === false) {
             return;
         }
         const frameUrl = frames.getMainFrameUrl(tab);
-        for (let i = 0; i < stats.length; ++i) {
+        const len = stats.length;
+        for (let i = 0; i < len; ++i) {
             const stat = stats[i];
             const rule = new TSUrlFilter.CosmeticRule(stat.ruleText, stat.filterId);
             webRequestService.recordRuleHit(tab, rule, frameUrl);
@@ -208,7 +210,7 @@ const createMessageHandler = () => {
                 timestamp: Date.now()
             });
         }
-    }
+    };
 
     const processGetOptionsData = () => {
         return {
@@ -261,7 +263,6 @@ const createMessageHandler = () => {
         return true;
     };
 
-    const SAVE_ALLOWLIST_DOMAIN_PATTERN = /[\r\n]+/;
     /**
      * Main function for processing messages from content-scripts
      *
@@ -270,7 +271,7 @@ const createMessageHandler = () => {
      * @returns {*}
      */
     const handleMessage = async (message, sender) => {
-        if (!isMessageAllowed(message, sender)) {
+        if (isMessageAllowed(message, sender) === false) {
             log.error('Message: {0} is not allowed for the sender: {1} ', message, sender);
             return;
         }
@@ -358,6 +359,7 @@ const createMessageHandler = () => {
             }
             case MESSAGE_TYPES.SAVE_ALLOWLIST_DOMAINS: {
                 const { value } = data;
+                const SAVE_ALLOWLIST_DOMAIN_PATTERN = /[\r\n]+/;
                 const domains = value.split(SAVE_ALLOWLIST_DOMAIN_PATTERN)
                     .map(string => string.trim())
                     .filter(string => string.length !== 0);
@@ -374,7 +376,7 @@ const createMessageHandler = () => {
                 userrules.updateUserRulesText(value);
                 // We are waiting until request filter is updated
                 return new Promise((resolve) => {
-                    const listenerId = listeners.addListener((event) => {
+                    const listenerId = listeners.addListener(event => {
                         switch (event) {
                             case listeners.USER_FILTER_UPDATED:
                                 listeners.removeListener(listenerId);
@@ -695,8 +697,8 @@ const createMessageHandler = () => {
                 const { url, tabId } = data;
                 await userrules.removeRulesByUrl(url);
                 // wait until request filter is updated
-                await new Promise((resolve) => {
-                    const listenerId = listeners.addListener((event) => {
+                await new Promise(resolve => {
+                    const listenerId = listeners.addListener(event => {
                         switch (event) {
                             case listeners.REQUEST_FILTER_UPDATED:
                                 listeners.removeListener(listenerId);

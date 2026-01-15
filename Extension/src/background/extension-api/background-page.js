@@ -26,7 +26,7 @@ import { prefs } from '../prefs';
 import { log } from '../../common/log';
 
 export const backgroundPage = (() => {
-    const runtime = (function () {
+    const runtime = (() => {
         const onMessage = {
             addListener(callback) {
                 // https://developer.chrome.com/extensions/runtime#event-onMessage
@@ -37,7 +37,7 @@ export const backgroundPage = (() => {
                         senderOverride.tab = toTabFromChromeTab(sender.tab);
                     }
 
-                    if (sender.frameId !== undefined) {
+                    if (typeof sender.frameId !== 'undefined') {
                         senderOverride.frameId = sender.frameId;
                     }
 
@@ -58,7 +58,7 @@ export const backgroundPage = (() => {
     })();
 
     // Calculates scheme of this extension (e.g.: chrome-extension:// or moz-extension://)
-    const extensionScheme = (function () {
+    const extensionScheme = (() => {
         const url = browser.runtime.getURL('');
         if (!url) {
             return url;
@@ -78,10 +78,10 @@ export const backgroundPage = (() => {
      * @param details Request details
      * @returns {boolean}
      */
-    function shouldSkipRequest(details) {
+    const shouldSkipRequest = (details) => {
         return details.tabId === BACKGROUND_TAB_ID
             && details.url.indexOf(extensionScheme) === 0;
-    }
+    };
 
     const linkHelper = document.createElement('a');
 
@@ -92,7 +92,7 @@ export const backgroundPage = (() => {
      * @param url Request url
      * @returns String Fixed object type
      */
-    function parseRequestTypeFromUrl(url) {
+    const parseRequestTypeFromUrl = (url) => {
         linkHelper.href = url;
         const path = linkHelper.pathname;
         let requestType = parseContentTypeFromUrlPath(path);
@@ -101,7 +101,7 @@ export const backgroundPage = (() => {
             requestType = RequestTypes.OBJECT;
         }
         return requestType;
-    }
+    };
 
     /**
      * An array of HTTP headers.
@@ -137,13 +137,12 @@ export const backgroundPage = (() => {
      * @typedef {Object} WebRequestDetails
      */
 
-    const DETAILS_URL_PATTERN = /^http(s)?:/;
     /**
      * Transforms raw request details from different browsers into unified format
      * @param {WebRequestDetails} details raw webRequest details
      * @returns {RequestDetails} prepared request details
      */
-    function getRequestDetails(details) {
+    const getRequestDetails = (details) => {
         const tab = { tabId: details.tabId };
 
         /**
@@ -152,6 +151,7 @@ export const backgroundPage = (() => {
          * we use a chromium based approach in this case.
          */
         if (details.type === 'websocket' && details.url.indexOf('http') === 0) {
+            const DETAILS_URL_PATTERN = /^http(s)?:/;
             details.url = details.url.replace(DETAILS_URL_PATTERN, 'ws$1:');
         }
 
@@ -242,7 +242,7 @@ export const backgroundPage = (() => {
         requestDetails.thirdParty = TSUrlFilter.isThirdPartyRequest(requestDetails.requestUrl, requestDetails.originUrl);
 
         return requestDetails;
-    }
+    };
 
     const onBeforeRequest = {
         /**
@@ -264,7 +264,8 @@ export const backgroundPage = (() => {
 
             const extraInfoSpec = ['blocking'];
             if (extraInfoSpecsDirty) {
-                for (let i = 0; i < extraInfoSpecsDirty.length; ++i) {
+                const len = extraInfoSpecsDirty.length;
+                for (let i = 0; i < len; ++i) {
                     const spec = extraInfoSpecsDirty[i];
                     extraInfoSpec.push(spec);
                 }
@@ -291,12 +292,12 @@ export const backgroundPage = (() => {
     const onBeforeSendHeadersExtraInfoSpec = ['requestHeaders', 'blocking'];
     const onHeadersReceivedExtraInfoSpec = ['responseHeaders', 'blocking'];
 
-    if (browser.webRequest.OnBeforeSendHeadersOptions !== undefined
+    if (typeof browser.webRequest.OnBeforeSendHeadersOptions !== 'undefined'
         && browser.webRequest.OnBeforeSendHeadersOptions.hasOwnProperty('EXTRA_HEADERS')) {
         onBeforeSendHeadersExtraInfoSpec.push('extraHeaders');
     }
 
-    if (browser.webRequest.OnHeadersReceivedOptions !== undefined
+    if (typeof browser.webRequest.OnHeadersReceivedOptions !== 'undefined'
         && browser.webRequest.OnHeadersReceivedOptions.hasOwnProperty('EXTRA_HEADERS')) {
         onHeadersReceivedExtraInfoSpec.push('extraHeaders');
     }
@@ -309,7 +310,7 @@ export const backgroundPage = (() => {
          * @param {Array.<String>} urls url match pattern https://developer.chrome.com/extensions/match_patterns
          */
         addListener(callback, urls) {
-            browser.webRequest.onHeadersReceived.addListener((details) => {
+            browser.webRequest.onHeadersReceived.addListener(details => {
                 if (shouldSkipRequest(details)) {
                     return;
                 }
@@ -373,7 +374,7 @@ export const backgroundPage = (() => {
                 requestFilter = Object.assign(requestFilter, { urls });
             }
 
-            browser.webRequest.onBeforeSendHeaders.addListener((details) => {
+            browser.webRequest.onBeforeSendHeaders.addListener(details => {
                 if (shouldSkipRequest(details)) {
                     return;
                 }
@@ -395,7 +396,7 @@ export const backgroundPage = (() => {
          * @param {String} urls url match pattern https://developer.chrome.com/extensions/match_patterns
          */
         addListener(callback, urls) {
-            browser.webRequest.onResponseStarted.addListener((details) => {
+            browser.webRequest.onResponseStarted.addListener(details => {
                 if (shouldSkipRequest(details)) {
                     return;
                 }
@@ -413,7 +414,7 @@ export const backgroundPage = (() => {
          * @param {String} urls url match pattern https://developer.chrome.com/extensions/match_patterns
          */
         addListener(callback, urls) {
-            browser.webRequest.onErrorOccurred.addListener((details) => {
+            browser.webRequest.onErrorOccurred.addListener(details => {
                 if (shouldSkipRequest(details)) {
                     return;
                 }
@@ -431,7 +432,7 @@ export const backgroundPage = (() => {
          * @param {String} urls url match pattern https://developer.chrome.com/extensions/match_patterns
          */
         addListener(callback, urls) {
-            browser.webRequest.onCompleted.addListener((details) => {
+            browser.webRequest.onCompleted.addListener(details => {
                 if (shouldSkipRequest(details)) {
                     return;
                 }
@@ -449,7 +450,7 @@ export const backgroundPage = (() => {
          * @param {Array.<String>} urls url match pattern https://developer.chrome.com/extensions/match_patterns
          */
         addListener(callback, urls) {
-            browser.webRequest.onBeforeRedirect.addListener((details) => {
+            browser.webRequest.onBeforeRedirect.addListener(details => {
                 if (shouldSkipRequest(details)) {
                     return;
                 }
@@ -530,7 +531,7 @@ export const backgroundPage = (() => {
         onBeforeSendHeaders,
         onResponseStarted,
         onBeforeRedirect,
-        webSocketSupported: browser.webRequest.ResourceType !== undefined
+        webSocketSupported: typeof browser.webRequest.ResourceType !== 'undefined'
             && browser.webRequest.ResourceType.WEBSOCKET === 'websocket',
         filterResponseData: browser.webRequest.filterResponseData
     };
@@ -539,11 +540,11 @@ export const backgroundPage = (() => {
 
         addListener(callback) {
             // https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webNavigation/onCreatedNavigationTarget#Browser_compatibility
-            if (browser.webNavigation.onCreatedNavigationTarget === undefined) {
+            if (typeof browser.webNavigation.onCreatedNavigationTarget === 'undefined') {
                 return;
             }
 
-            browser.webNavigation.onCreatedNavigationTarget.addListener((details) => {
+            browser.webNavigation.onCreatedNavigationTarget.addListener(details => {
                 if (details.tabId === BACKGROUND_TAB_ID) {
                     return;
                 }
@@ -566,7 +567,7 @@ export const backgroundPage = (() => {
          */
         addListener(callback) {
             // https://developer.chrome.com/extensions/webNavigation#event-onCommitted
-            browser.webNavigation.onCommitted.addListener((details) => {
+            browser.webNavigation.onCommitted.addListener(details => {
                 // makes webNavigation.onCommitted details similar to webRequestDetails
                 details.requestType = details.frameId === 0
                     ? RequestTypes.DOCUMENT
@@ -591,7 +592,7 @@ export const backgroundPage = (() => {
         onDOMContentLoaded: browser.webNavigation.onDOMContentLoaded
     };
 
-    const browserActionSupported = browser.browserAction.setIcon !== undefined;
+    const browserActionSupported = typeof browser.browserAction.setIcon !== 'undefined';
 
     const browserAction = {
         /* eslint-disable-next-line no-unused-vars */

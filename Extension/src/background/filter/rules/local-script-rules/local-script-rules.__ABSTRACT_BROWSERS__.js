@@ -23,7 +23,7 @@ const errorFunction = () => {
  * This is an abstract local script rules module with methods throwing errors if used,
  * because it should be replaced by webpack during compilation
  */
-const localScriptRulesService = (function () {
+const localScriptRulesService = (() => {
     return {
         setLocalScriptRules: errorFunction,
         isLocal: errorFunction

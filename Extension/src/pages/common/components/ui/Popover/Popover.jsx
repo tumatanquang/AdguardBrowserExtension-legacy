@@ -6,12 +6,12 @@ import { Tooltip } from '../Tooltip';
 /*
     Wrap child container for handle tooltips rendering in overlay on hover
 */
-export function Popover({
+export const Popover = ({
     text,
     delay,
     children,
     ...props
-}) {
+}) => {
     const [tooltip, setTooltip] = useState({
         visible: false,
         position: null
@@ -63,4 +63,4 @@ export function Popover({
             {children}
         </div>
     );
-}
+};

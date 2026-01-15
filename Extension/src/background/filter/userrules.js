@@ -26,7 +26,7 @@ import { log } from '../../common/log';
 /**
  * Class for manage user rules
  */
-export const userrules = (function () {
+export const userrules = (() => {
     /**
      * Synthetic user filter
      */
@@ -37,14 +37,14 @@ export const userrules = (function () {
      *
      * @param rulesText List of rules to add
      */
-    const addRules = function (rulesText) {
+    const addRules = (rulesText) => {
         listeners.notifyListeners(listeners.ADD_RULES, userFilter, rulesText);
     };
 
     /**
      * Removes all user's custom rules
      */
-    const clearRules = function () {
+    const clearRules = () => {
         listeners.notifyListeners(listeners.UPDATE_FILTER_RULES, userFilter, []);
     };
 
@@ -53,7 +53,7 @@ export const userrules = (function () {
      *
      * @param ruleText Rule text
      */
-    const removeRule = function (ruleText) {
+    const removeRule = (ruleText) => {
         listeners.notifyListeners(listeners.REMOVE_RULE, userFilter, [ruleText]);
     };
 
@@ -62,18 +62,17 @@ export const userrules = (function () {
      * Save user rules text to storage
      * @param content Rules text
      */
-    const updateUserRulesText = function (content) {
+    const updateUserRulesText = (content) => {
         const lines = content.length !== 0 ? content.split(USER_RULE_LINE_SEPARATOR_PATTERN) : [];
         listeners.notifyListeners(listeners.UPDATE_FILTER_RULES, userFilter, lines);
     };
 
-    const USER_RULE_JOIN_LINE_SEPARATOR = '\n';
     /**
      * Loads user rules text from storage
      */
-    const getUserRulesText = async function () {
+    const getUserRulesText = async () => {
         const rulesText = await rulesStorage.read(utils.filters.USER_FILTER_ID);
-        const content = (rulesText || []).join(USER_RULE_JOIN_LINE_SEPARATOR);
+        const content = (rulesText || []).join('\n');
         return content;
     };
 
@@ -106,7 +105,7 @@ export const userrules = (function () {
                     url
                 );
             })
-            .join(USER_RULE_JOIN_LINE_SEPARATOR);
+            .join('\n');
         updateUserRulesText(updatedUserRulesText);
     };
 
@@ -144,7 +143,8 @@ export const userrules = (function () {
         conversionMap.clear();
 
         const result = [];
-        for (let i = 0; i < rulesLines.length; ++i) {
+        const len = rulesLines.length;
+        for (let i = 0; i < len; ++i) {
             const line = rulesLines[i];
             let converted = [];
             try {
@@ -157,7 +157,8 @@ export const userrules = (function () {
 
             if (converted.length !== 0 && (converted.length > 1 || converted[0] !== line)) {
                 // Fill the map only for converted rules
-                for (let j = 0; j < converted.length; ++j) {
+                const { length } = converted;
+                for (let j = 0; j < length; ++j) {
                     const x = converted[i];
                     conversionMap.set(x, line);
                 }

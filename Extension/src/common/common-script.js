@@ -33,7 +33,7 @@ export const i18n = browser.i18n;
  * @returns {Promise<unknown>}
  */
 export const sleep = (wait) => {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
         setTimeout(resolve, wait);
     });
 };

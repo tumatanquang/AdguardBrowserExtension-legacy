@@ -28,7 +28,7 @@ import { localStorage } from '../storage';
 /**
  * Object that contains info about every browser tab.
  */
-export const frames = (function () {
+export const frames = (() => {
     /**
      * Adds frame to map. This method is called on first document request.
      * If this is a main frame - saves this info in frame data.
@@ -39,7 +39,7 @@ export const frames = (function () {
      * @param type      Request content type (UrlFilterRule.contentTypes)
      * @returns Frame data
      */
-    const recordFrame = function (tab, frameId, url, type) {
+    const recordFrame = (tab, frameId, url, type) => {
         const frame = tabsApi.getTabFrame(tab.tabId, frameId);
 
         let previousUrl = '';
@@ -106,7 +106,7 @@ export const frames = (function () {
      * @param frameId   Frame ID
      * @returns Frame URL
      */
-    const getFrameUrl = function (tab, frameId) {
+    const getFrameUrl = (tab, frameId) => {
         const frame = tabsApi.getTabFrame(tab.tabId, frameId);
         return frame ? frame.url : null;
     };
@@ -117,7 +117,7 @@ export const frames = (function () {
      * @param tab    Tab
      * @returns Frame URL
      */
-    const getMainFrameUrl = function (tab) {
+    const getMainFrameUrl = (tab) => {
         return getFrameUrl(tab, MAIN_FRAME_ID);
     };
 
@@ -127,7 +127,7 @@ export const frames = (function () {
      * @param tab       Tab
      * @returns Frame Domain
      */
-    const getFrameDomain = function (tab) {
+    const getFrameDomain = (tab) => {
         const frame = tabsApi.getTabFrame(tab.tabId, 0);
         return frame ? frame.domainName : null;
     };
@@ -136,7 +136,7 @@ export const frames = (function () {
      * @param tab Tab
      * @returns true if Tab have allowlist rule
      */
-    const isTabAllowlisted = function (tab) {
+    const isTabAllowlisted = (tab) => {
         const frameRule = tabsApi.getTabMetadata(tab.tabId, 'frameRule');
         return frameRule && frameRule.isDocumentAllowlistRule();
     };
@@ -145,7 +145,7 @@ export const frames = (function () {
      * @param tab Tab
      * @returns true if Tab have allowlist rule and allowlist isn't invert
      */
-    const isTabAllowlistedForSafebrowsing = function (tab) {
+    const isTabAllowlistedForSafebrowsing = (tab) => {
         return isTabAllowlisted(tab) && allowlist.isDefaultMode();
     };
 
@@ -153,7 +153,7 @@ export const frames = (function () {
      * @param tab Tab
      * @returns true if protection is paused
      */
-    const isTabProtectionDisabled = function (tab) {
+    const isTabProtectionDisabled = (tab) => {
         return tabsApi.getTabMetadata(tab.tabId, 'applicationFilteringDisabled');
     };
 
@@ -163,7 +163,7 @@ export const frames = (function () {
      * @param tab Tab
      * @returns true if Adguard for Windows/Android/Mac is detected and tab in allowlist
      */
-    const isTabAdguardAllowlisted = function (tab) {
+    const isTabAdguardAllowlisted = (tab) => {
         return tabsApi.getTabMetadata(tab.tabId, 'adguardDocumentAllowlisted');
     };
 
@@ -171,7 +171,7 @@ export const frames = (function () {
      * @param tab   Tab
      * @returns Adguard allowlist rule in user filter associated with this tab
      */
-    const getTabAdguardUserAllowlistRule = function (tab) {
+    const getTabAdguardUserAllowlistRule = (tab) => {
         const adguardUserAllowlisted = tabsApi.getTabMetadata(tab.tabId, 'adguardUserAllowlisted');
         if (adguardUserAllowlisted) {
             return tabsApi.getTabMetadata(tab.tabId, 'adguardAllowlistRule');
@@ -184,7 +184,7 @@ export const frames = (function () {
      * @param tab Tab to check
      * @returns allowlist rule applied to that tab (if any)
      */
-    const getFrameRule = function (tab) {
+    const getFrameRule = (tab) => {
         return tabsApi.getTabMetadata(tab.tabId, 'frameRule');
     };
 
@@ -193,7 +193,7 @@ export const frames = (function () {
      *
      * @param tab Tab to reload
      */
-    const reloadFrameData = function (tab) {
+    const reloadFrameData = (tab) => {
         const frame = tabsApi.getTabFrame(tab.tabId, 0);
         if (frame) {
             const applicationFilteringDisabled = settings.isFilteringDisabled();
@@ -220,7 +220,7 @@ export const frames = (function () {
      * @param tab Tab
      * @param referrerUrl Referrer to record
      */
-    const recordFrameReferrerHeader = function (tab, referrerUrl) {
+    const recordFrameReferrerHeader = (tab, referrerUrl) => {
         tabsApi.updateTabMetadata(tab.tabId, { referrerUrl });
     };
 
@@ -230,7 +230,7 @@ export const frames = (function () {
      * @param tab Tab
      * @returns {*} frame data
      */
-    const getFrameInfo = function (tab) {
+    const getFrameInfo = (tab) => {
         const { tabId } = tab;
         const frame = tabsApi.getTabFrame(tabId);
 
@@ -296,7 +296,7 @@ export const frames = (function () {
      * @param blocked - count of blocked requests
      * @returns  updated count of blocked requests
      */
-    const updateBlockedAdsCount = function (tab, blocked) {
+    const updateBlockedAdsCount = (tab, blocked) => {
         pageStats.updateTotalBlocked(blocked);
 
         blocked = (tabsApi.getTabMetadata(tab.tabId, 'blocked') || 0) + blocked;
@@ -309,7 +309,7 @@ export const frames = (function () {
      * Reset count of blocked requests for tab or overall stats
      * @param tab - Tab (optional)
      */
-    const resetBlockedAdsCount = function (tab) {
+    const resetBlockedAdsCount = (tab) => {
         if (tab) {
             tabsApi.updateTabMetadata(tab.tabId, { blocked: 0 });
         }
@@ -322,7 +322,7 @@ export const frames = (function () {
      * Is tab in incognito mode?
      * @param tab Tab
      */
-    const isIncognitoTab = function (tab) {
+    const isIncognitoTab = (tab) => {
         return tabsApi.isIncognito(tab.tabId);
     };
 
@@ -334,7 +334,7 @@ export const frames = (function () {
     const shouldStopRequestProcess = tab => isTabProtectionDisabled(tab) || isTabAllowlisted(tab);
 
     // Records frames on application initialization
-    listeners.addListener((event) => {
+    listeners.addListener(event => {
         switch (event) {
             case listeners.APPLICATION_INITIALIZED:
                 tabsApi.forEach(tab => {

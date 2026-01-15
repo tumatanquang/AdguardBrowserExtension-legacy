@@ -18,7 +18,7 @@
 /**
  * Object that collapses or hides DOM elements and able to roll it back.
  */
-export const ElementCollapser = (function () {
+export const ElementCollapser = (() => {
     /**
      * https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1436
      * Because Edge doesn't support CSS.escape use next function
@@ -49,7 +49,7 @@ export const ElementCollapser = (function () {
                 // (U+0030 to U+0039) and the first character is a `-` (U+002D), […]
                 || (index === 1
                     && codeUnit >= 0x0030 && codeUnit <= 0x0039
-                    && isHyphenMinus
+                    && isHyphenMinus === true
                 )) {
                 // https://drafts.csswg.org/cssom/#escape-a-character-as-code-point
                 result += `\\${codeUnit.toString(16)} `;
@@ -95,7 +95,7 @@ export const ElementCollapser = (function () {
      * @param selectorText
      * @param cssText optional
      */
-    const hideBySelector = function (selectorText, cssText) {
+    const hideBySelector = (selectorText, cssText) => {
         const rule = `${selectorText}{${cssText || 'display: none!important;'}}`;
 
         if (!styleNode) {
@@ -110,7 +110,7 @@ export const ElementCollapser = (function () {
     /**
      * Adds "selectorText { display:none!important; }" style
      */
-    const hideBySelectorAndTagName = function (selectorText, tagName) {
+    const hideBySelectorAndTagName = (selectorText, tagName) => {
         switch (tagName) {
             case 'frame':
             case 'iframe':
@@ -132,7 +132,7 @@ export const ElementCollapser = (function () {
     /**
      * Creates selector for specified tagName and src attribute
      */
-    const createSelectorForSrcAttr = function (srcAttrValue, tagName) {
+    const createSelectorForSrcAttr = (srcAttrValue, tagName) => {
         return `${tagName}[src="${cssEscape(srcAttrValue)}"]`;
     };
 
@@ -142,10 +142,11 @@ export const ElementCollapser = (function () {
      * @param {HTMLElement} element element affected
      * @param {Array.<string>} styles array of style names
      */
-    const clearElStylesPriority = function (element, styles) {
+    const clearElStylesPriority = (element, styles) => {
         const elementStyle = element.style;
 
-        for (let i = 0; i < styles.length; ++i) {
+        const len = styles.length;
+        for (let i = 0; i < len; ++i) {
             const prop = styles[i];
             const elCssPriority = elementStyle.getPropertyPriority(prop);
             if (elCssPriority && elCssPriority.toLowerCase() === 'important') {
@@ -162,7 +163,7 @@ export const ElementCollapser = (function () {
      *
      * @param {HTMLElement} element Element to check
      */
-    const isCollapsed = function (element) {
+    const isCollapsed = (element) => {
         const computedStyle = window.getComputedStyle(element);
         return computedStyle && computedStyle.display === 'none';
     };
@@ -173,8 +174,8 @@ export const ElementCollapser = (function () {
      * @param {HTMLElement} element Element to collapse
      * @param {string} elementUrl Element's source url
      */
-    const collapseElement = function (element, elementUrl) {
-        if (isCollapsed(element)) {
+    const collapseElement = (element, elementUrl) => {
+        if (isCollapsed(element) === true) {
             return;
         }
 
@@ -228,7 +229,7 @@ export const ElementCollapser = (function () {
     /**
      * Removes the collapser's style node
      */
-    const clear = function () {
+    const clear = () => {
         if (!styleNode) {
             return;
         }

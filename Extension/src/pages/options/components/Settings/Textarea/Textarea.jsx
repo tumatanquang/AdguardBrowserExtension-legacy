@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import './textarea.pcss';
 
-function Textarea(props) {
+const Textarea = (props) => {
     const {
         id, value, handler, placeholder, disabled
     } = props;
@@ -25,7 +25,7 @@ function Textarea(props) {
             placeholder={placeholder}
         />
     );
-}
+};
 
 Textarea.defaultProps = {
     placeholder: ''

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import '../RequestInfo/request-image.pcss';
 
-export function ImageRequest({ src }) {
+export const ImageRequest = ({ src }) => {
     useEffect(() => {
         // clean up blob src on component destroying for preventing memory leak
         return () => {
@@ -10,4 +10,4 @@ export function ImageRequest({ src }) {
         };
     });
     return <img src={src} className='request-image' alt='request' />;
-}
+};

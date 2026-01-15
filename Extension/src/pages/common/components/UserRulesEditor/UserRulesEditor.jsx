@@ -111,7 +111,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
             MESSAGE_TYPES.GET_USER_RULES_EDITOR_DATA
         );
 
-        if (!store.userRulesEditorContentChanged) {
+        if (store.userRulesEditorContentChanged === false) {
             if (editorRef.current) {
                 editorRef.current.editor.setValue(userRules, 1);
             }
@@ -125,7 +125,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
 
     // Append listeners
     useEffect(() => {
-        let removeListenerCallback = () => { };
+        let removeListenerCallback = () => {};
 
         (async () => {
             // Subscribe to events of request filter update
@@ -162,7 +162,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
     useEffect(() => {
         if (fullscreen) {
             const beforeUnloadListener = async () => {
-                if (store.userRulesEditorContentChanged) {
+                if (store.userRulesEditorContentChanged === true) {
                     // send content to the storage only before switching editors
                     const content = editorRef.current.editor.session.getValue();
                     await messenger.setEditorStorageContent(content);
@@ -186,7 +186,6 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
         editorRef.current.editor.session.setUseWrapMode(store.userRulesEditorWrapState);
     }, [store.userRulesEditorWrapState]);
 
-    const LINE_SEPARATOR = '\n';
     const inputChangeHandler = async (event) => {
         event.persist();
         const file = event.target.files[0];
@@ -199,6 +198,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
                 return;
             }
 
+            const LINE_SEPARATOR = '\n';
             const oldRulesString = editorRef.current.editor.getValue();
             const oldRules = oldRulesString.split(LINE_SEPARATOR);
             const newRules = trimmedNewRules.split(LINE_SEPARATOR);
@@ -237,7 +237,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
     };
 
     const saveClickHandler = async () => {
-        if (store.userRulesEditorContentChanged) {
+        if (store.userRulesEditorContentChanged === true) {
             const value = editorRef.current.editor.getValue();
             await store.saveUserRules(value);
         }
@@ -257,18 +257,19 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
                 const ranges = selection.getAllRanges();
 
                 const rowsSelected = ranges
-                    .map((range) => {
+                    .map(range => {
                         const [start, end] = [range.start.row, range.end.row];
                         return Array.from({ length: end - start + 1 }, (_, idx) => idx + start);
                     })
                     .flat();
 
-                const allRowsCommented = rowsSelected.every((row) => {
+                const allRowsCommented = rowsSelected.every(row => {
                     const rowLine = editor.session.getLine(row);
                     return rowLine.trim().startsWith(SimpleRegex.MASK_COMMENT);
                 });
 
-                for (let i = 0; i < rowsSelected.length; ++i) {
+                const len = rowsSelected.length;
+                for (let i = 0; i < len; ++i) {
                     const row = rowsSelected[i];
                     const rawLine = editor.session.getLine(row);
                     // if all lines start with comment mark we remove it
@@ -299,7 +300,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
 
     const openEditorFullscreen = async () => {
         // send dirty content to the storage only before switching editors
-        if (store.userRulesEditorContentChanged) {
+        if (store.userRulesEditorContentChanged === true) {
             const content = editorRef.current.editor.session.getValue();
             await messenger.setEditorStorageContent(content);
         }
@@ -309,7 +310,7 @@ export const UserRulesEditor = observer(({ fullscreen, uiStore }) => {
 
     const closeEditorFullscreen = async () => {
         // send dirty content to the storage only before switching editors
-        if (store.userRulesEditorContentChanged) {
+        if (store.userRulesEditorContentChanged === true) {
             const content = editorRef.current.editor.session.getValue();
             await messenger.setEditorStorageContent(content);
         }

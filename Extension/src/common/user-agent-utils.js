@@ -40,8 +40,9 @@ const isTargetBrowser = (browserName) => {
         return navigator.userAgent.indexOf(uaStringName) >= 0;
     }
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const data of brandsData) {
+    const len = brandsData.length;
+    for (let i = 0; i < len; ++i) {
+        const data = brandsData[i];
         if (data.brand === brand) {
             return true;
         }
@@ -87,8 +88,9 @@ const getBrowserVersion = (browserName) => {
         return match === null ? null : Number.parseInt(match[1], 10);
     }
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const data of brandsData) {
+    const len = brandsData.length;
+    for (let i = 0; i < len; ++i) {
+        const data = brandsData[i];
         if (data.brand === brand) {
             const { version } = data;
             return Number.parseInt(version, 10);

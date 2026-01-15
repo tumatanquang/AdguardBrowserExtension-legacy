@@ -26,7 +26,7 @@ const { Redirects } = redirects;
 /**
  * Redirects service class
  */
-export const redirectService = (function () {
+export const redirectService = (() => {
     let redirects = null;
     // list of blocking type redirects, i.e. for click2load.html
     let blockingRedirects = [];
@@ -38,7 +38,7 @@ export const redirectService = (function () {
         redirects = new Redirects(rawYaml);
         const redirectsData = redirects.redirects;
         blockingRedirects = Object.keys(redirectsData)
-            .filter((r) => redirectsData[r].isBlocking);
+            .filter(r => redirectsData[r].isBlocking);
     };
 
     /**
@@ -76,8 +76,8 @@ export const redirectService = (function () {
             cleanRequestUrl = `${url.origin}${url.pathname}?${params.toString}`;
             redirectsCache.add(cleanRequestUrl);
         }
-        return !redirectsCache.hasUrl(cleanRequestUrl)
-            || !redirectsTokensCache.hasToken(unblockToken);
+        return redirectsCache.hasUrl(cleanRequestUrl) === false
+            || redirectsTokensCache.hasToken(unblockToken) === false;
     };
 
     /**

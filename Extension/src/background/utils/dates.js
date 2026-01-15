@@ -1,17 +1,17 @@
 /**
  * Util class for dates
  */
-export const dates = (function () {
+export const dates = (() => {
     const DateUtils = {
         isSameHour(a, b) {
             return (
-                this.isSameDay(a, b)
+                this.isSameDay(a, b) === true
                 && a.getHours() === b.getHours()
             );
         },
         isSameDay(a, b) {
             return (
-                this.isSameMonth(a, b)
+                this.isSameMonth(a, b) === true
                 && a.getDate() === b.getDate()
             );
         },

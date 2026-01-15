@@ -29,7 +29,7 @@ import { SAFEBROWSING_LOOKUP_URL, LOCAL_FILTER_IDS } from '../../../common/const
  * All requests sent by this class are covered in the privacy policy:
  * http://adguard.com/en/privacy.html#browsers
  */
-export const backend = (function () {
+export const backend = (() => {
     /**
      * Settings
      */
@@ -141,7 +141,7 @@ export const backend = (function () {
      * @param url Url
      * @param contentType Content type
      */
-    function executeRequestAsync(url, contentType) {
+    const executeRequestAsync = (url, contentType) => {
         return new Promise((resolve, reject) => {
             const request = new XMLHttpRequest();
             try {
@@ -150,14 +150,14 @@ export const backend = (function () {
                 request.setRequestHeader('Pragma', 'no-cache');
                 request.overrideMimeType(contentType);
                 request.mozBackgroundRequest = true;
-                request.onload = function () {
+                request.onload = () => {
                     resolve(request);
                 };
 
                 const errorCallbackWrapper = (errorMessage) => {
                     return (e) => {
-                        const errorText = e?.message ? `${errorText}: ${e?.message}` : errorMessage;
-                        const error = new Error(`Error: "${errorText}", statusText: ${request.statusText}`);
+                        const errorText = e?.message ? `${errorMessage}: ${e?.message}` : errorMessage;
+                        const error = new Error(`${errorText}, statusText: ${request.statusText}`);
                         reject(error);
                     };
                 };
@@ -171,7 +171,7 @@ export const backend = (function () {
                 reject(ex);
             }
         });
-    }
+    };
 
     /**
      * URL for downloading AG filter
@@ -180,24 +180,24 @@ export const backend = (function () {
      * @param useOptimizedFilters
      * @private
      */
-    function getUrlForDownloadFilterRules(filterId, useOptimizedFilters) {
+    const getUrlForDownloadFilterRules = (filterId, useOptimizedFilters) => {
         const url = useOptimizedFilters ? settings.optimizedFilterRulesUrl : settings.filterRulesUrl;
         return utils.strings.replaceAll(url, '{filter_id}', filterId);
-    }
+    };
 
     /**
      * Appends request key to url
      */
-    function addKeyParameter(url) {
+    const addKeyParameter = (url) => {
         return `${url}&key=${settings.apiKey}`;
-    }
+    };
 
     /**
      * Safe json parsing
      * @param text
      * @private
      */
-    function parseJson(text) {
+    const parseJson = (text) => {
         try {
             return JSON.parse(text);
         }
@@ -205,7 +205,7 @@ export const backend = (function () {
             log.error('Error parse json {0}', ex);
             return null;
         }
-    }
+    };
 
     /**
      * Downloads metadata from backend
@@ -325,7 +325,7 @@ export const backend = (function () {
             response = await executeRequestAsync(url, 'application/json');
         }
         catch (e) {
-            const exMessage = e?.message || "couldn't load local filters metadata";
+            const exMessage = e?.message || 'couldn\'t load local filters metadata';
             throw createError(exMessage, url);
         }
 
@@ -353,7 +353,7 @@ export const backend = (function () {
             response = await executeRequestAsync(url, 'application/json');
         }
         catch (e) {
-            const exMessage = e?.message || "couldn't load local filters i18n metadata";
+            const exMessage = e?.message || 'couldn\'t load local filters i18n metadata';
             throw createError(exMessage, url);
         }
 
@@ -380,7 +380,7 @@ export const backend = (function () {
             response = await executeRequestAsync(url, 'application/json');
         }
         catch (e) {
-            const exMessage = e?.message || "couldn't load local script rules";
+            const exMessage = e?.message || 'couldn\'t load local script rules';
             throw createError(exMessage, url);
         }
 
@@ -411,7 +411,7 @@ export const backend = (function () {
             response = await executeRequestAsync(url, 'application/x-yaml');
         }
         catch (e) {
-            const exMessage = e?.message || "couldn't load redirect sources";
+            const exMessage = e?.message || 'couldn\'t load redirect sources';
             throw createError(exMessage, url);
         }
 
@@ -427,7 +427,7 @@ export const backend = (function () {
      *
      * @param hashes                Host hashes
      */
-    const lookupSafebrowsing = async function (hashes) {
+    const lookupSafebrowsing = async (hashes) => {
         const url = `${settings.safebrowsingLookupUrl}?prefixes=${encodeURIComponent(hashes.join('/'))}`;
         const response = await executeRequestAsync(url, 'application/json');
         return response;
@@ -440,7 +440,7 @@ export const backend = (function () {
      * @param messageType   Message type
      * @param comment       Message text
      */
-    const sendUrlReport = function (url, messageType, comment) {
+    const sendUrlReport = (url, messageType, comment) => {
         let params = `url=${encodeURIComponent(url)}&messageType=${encodeURIComponent(messageType)}`;
         if (comment) {
             params += `&comment=${encodeURIComponent(comment)}`;
@@ -462,10 +462,11 @@ export const backend = (function () {
      * @param stats             Stats
      * @param enabledFilters    List of enabled filters
      */
-    const sendHitStats = function (stats, enabledFilters) {
+    const sendHitStats = (stats, enabledFilters) => {
         let params = `stats=${encodeURIComponent(stats)}&v=${encodeURIComponent(backgroundPage.app.getVersion())}&b=${encodeURIComponent(prefs.browser)}`;
         if (enabledFilters) {
-            for (let i = 0; i < enabledFilters.length; ++i) {
+            const len = enabledFilters.length;
+            for (let i = 0; i < len; ++i) {
                 const filter = enabledFilters[i];
                 params += `&f=${encodeURIComponent(`${filter.filterId},${filter.version}`)}`;
             }
@@ -488,7 +489,7 @@ export const backend = (function () {
      *  localFilterIds: []
      * }
      */
-    const configure = function (configuration) {
+    const configure = (configuration) => {
         const { filtersMetadataUrl } = configuration;
         if (filtersMetadataUrl) {
             Object.defineProperty(settings, 'filtersMetadataUrl', {

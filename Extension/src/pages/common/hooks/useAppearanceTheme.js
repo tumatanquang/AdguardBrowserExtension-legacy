@@ -9,7 +9,7 @@ export const useAppearanceTheme = (appearanceTheme) => {
         const DARK_THEME_CLASS = 'dark-mode';
         const LIGHT_THEME_CLASS = 'light-mode';
 
-        const throttledSetToStorage = throttle((mode) => {
+        const throttledSetToStorage = throttle(mode => {
             localStorage.setItem(STORAGE_KEY, mode);
         }, 500);
 

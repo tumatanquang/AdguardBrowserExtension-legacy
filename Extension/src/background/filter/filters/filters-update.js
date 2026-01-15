@@ -34,6 +34,10 @@ export const filtersUpdate = (() => {
     const UPDATE_FILTERS_DELAY = 5 * 60 * 1000;
 
     const MINIMUM_EXPIRES_SECOND = 60 * 60;
+    /**
+     * Schedule update check timeout
+     */
+    const UPDATE_CHECK_TIMEOUT = 30 * 60 * 1000;
 
     // Get filters update period
     let filtersUpdatePeriod = settings.getFiltersUpdatePeriod();
@@ -83,7 +87,8 @@ export const filtersUpdate = (() => {
             return lastCheckTime + filtersUpdatePeriod <= Date.now();
         };
 
-        for (let i = 0; i < filters.length; ++i) {
+        const len = filters.length;
+        for (let i = 0; i < len; ++i) {
             const filter = filters[i];
             const group = subscriptions.getGroup(filter.groupId);
             if (filter.installed && filter.enabled && group.enabled && (forceUpdate || needUpdate(filter))) {
@@ -137,7 +142,7 @@ export const filtersUpdate = (() => {
      * (if false try to download local copy of rules if it's possible)
      * @private
      */
-    async function loadFilterRules(filterMetadata, forceRemote) {
+    const loadFilterRules = async (filterMetadata, forceRemote) => {
         const filter = subscriptions.getFilter(filterMetadata.filterId);
 
         filter._isDownloading = true;
@@ -175,7 +180,7 @@ export const filtersUpdate = (() => {
         listeners.notifyListeners(listeners.SUCCESS_DOWNLOAD_FILTER, filter);
         listeners.notifyListeners(listeners.UPDATE_FILTER_RULES, filter, filterRules);
         return true;
-    }
+    };
 
     /**
      * Loads filters (ony-by-one) from the remote server
@@ -203,7 +208,7 @@ export const filtersUpdate = (() => {
      *
      * @param customFilterIds
      */
-    async function updateCustomFilters(customFilterIds) {
+    const updateCustomFilters = async (customFilterIds) => {
         if (customFilterIds.length === 0) {
             return [];
         }
@@ -225,7 +230,7 @@ export const filtersUpdate = (() => {
         }
 
         return updatedFilters;
-    }
+    };
 
     /**
      * Filters update options
@@ -299,7 +304,8 @@ export const filtersUpdate = (() => {
          */
         const selectFilterMetadataListToUpdate = (filterMetadataList, forceUpdate) => {
             const filterMetadataListToUpdate = [];
-            for (let i = 0; i < filterMetadataList.length; ++i) {
+            const len = filterMetadataList.length;
+            for (let i = 0; i < len; ++i) {
                 const filterMetadata = filterMetadataList[i];
                 const filter = subscriptions.getFilter(filterMetadata.filterId);
                 if (filter && filterMetadata) {
@@ -331,13 +337,9 @@ export const filtersUpdate = (() => {
         return loadedFilters;
     };
 
-    /**
-     * Schedule update check timeout
-     */
-    const UPDATE_CHECK_TIMEOUT = 30 * 60 * 1000;
     // Scheduling job
     let scheduleUpdateTimeoutId;
-    function scheduleUpdate() {
+    const scheduleUpdate = () => {
         if (scheduleUpdateTimeoutId) {
             clearTimeout(scheduleUpdateTimeoutId);
         }
@@ -356,7 +358,7 @@ export const filtersUpdate = (() => {
             }
             scheduleUpdate();
         }, UPDATE_CHECK_TIMEOUT);
-    }
+    };
 
     /**
      * Schedules filters update job
@@ -364,7 +366,7 @@ export const filtersUpdate = (() => {
      * @param isFirstRun App first run flag
      * @private
      */
-    function scheduleFiltersUpdate(isFirstRun) {
+    const scheduleFiltersUpdate = (isFirstRun) => {
         filtersUpdatePeriod = settings.getFiltersUpdatePeriod();
         // First run delay
         if (isFirstRun) {
@@ -372,7 +374,7 @@ export const filtersUpdate = (() => {
         }
 
         scheduleUpdate();
-    }
+    };
 
     return {
         checkAntiBannerFiltersUpdate,

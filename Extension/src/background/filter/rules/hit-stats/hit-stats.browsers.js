@@ -28,7 +28,7 @@ import { lazyGet, lazyGetClear } from '../../../utils/lazy';
  * It is used if user has enabled "Send statistics for ad filters usage" option.
  * More info about ad filters stats: http://adguard.com/en/filter-rules-statistics.html
  */
-const browsersHitStats = (function () {
+const browsersHitStats = (() => {
     const MAX_PAGE_VIEWS_COUNT = 20;
     const HITS_COUNT_PROP = 'filters-hit-count';
     const HITS_PROP = 'h';
@@ -39,7 +39,7 @@ const browsersHitStats = (function () {
      * Reads hit stats from local storage
      * @returns {null}
      */
-    function getHitCountStats() {
+    const getHitCountStats = () => {
         const json = localStorage.getItem(HITS_COUNT_PROP);
         let stats = Object.create(null);
         try {
@@ -51,7 +51,7 @@ const browsersHitStats = (function () {
             log.error('Error retrieve hit count statistic, cause {0}', ex);
         }
         return stats;
-    }
+    };
 
     /**
      * Object for aggregation hit stats (Lazy initialized)
@@ -65,15 +65,15 @@ const browsersHitStats = (function () {
     /**
      * Cleanup stats
      */
-    function cleanup() {
+    const cleanup = () => {
         localStorage.removeItem(HITS_COUNT_PROP);
         lazyGetClear(hitStatsHolder, 'hitStats');
-    }
+    };
 
     /**
      * Sends hit stats to backend server
      */
-    function sendStats() {
+    const sendStats = () => {
         const overallViews = hitStatsHolder.hitStats.views || 0;
         if (overallViews < MAX_PAGE_VIEWS_COUNT) {
             return;
@@ -81,14 +81,14 @@ const browsersHitStats = (function () {
         const enabledFilters = application.getEnabledFilters();
         backend.sendHitStats(JSON.stringify(hitStatsHolder.hitStats), enabledFilters);
         cleanup();
-    }
+    };
 
     /**
      * Save hit stats to local storage and invoke sendStats
      * Throttled with 2 seconds delay
      * @param stats
      */
-    function saveHitsCountStats(stats) {
+    const saveHitsCountStats = (stats) => {
         if (throttleTimeoutId) {
             clearTimeout(throttleTimeoutId);
         }
@@ -100,14 +100,14 @@ const browsersHitStats = (function () {
                 log.error('Error save hit count statistic to storage, cause {0}', ex);
             }
             sendStats();
-        }, 2000);
-    }
+        }, 2 * 1000);
+    };
 
     /**
      * Add 1 domain view to stats
      * @param domain
      */
-    const addDomainView = function (domain) {
+    const addDomainView = (domain) => {
         if (!domain) {
             return;
         }
@@ -137,7 +137,7 @@ const browsersHitStats = (function () {
      * @param filterId
      * @param requestUrl Url to which rule was applied
      */
-    const addRuleHit = function (domain, ruleText, filterId, requestUrl) {
+    const addRuleHit = (domain, ruleText, filterId, requestUrl) => {
         if (!domain || !ruleText || !filterId) {
             return;
         }
@@ -187,14 +187,14 @@ const browsersHitStats = (function () {
     /**
      * Hit stats getter
      */
-    const getStats = function () {
+    const getStats = () => {
         return hitStatsHolder.hitStats;
     };
 
     /**
      * Cleanup stats on property disabled
      */
-    settings.onUpdated.addListener((setting) => {
+    settings.onUpdated.addListener(setting => {
         if (setting === settings.DISABLE_COLLECT_HITS && !settings.collectHitsCount()) {
             cleanup();
         }

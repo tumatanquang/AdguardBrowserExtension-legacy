@@ -44,7 +44,7 @@ export const CopyToClipboard = observer(forwardRef(({
         e.preventDefault();
         // if user highlights text, don't copy whole inner content
         const selectedText = document.getSelection().toString();
-        if (selectedText.length < 1) {
+        if (selectedText.length === 0) {
             copyInnerText(e);
 
             // shifting position for prevent cursor flashing on tooltip render
@@ -56,11 +56,13 @@ export const CopyToClipboard = observer(forwardRef(({
     };
 
     const handleKeyUp = (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            const rect = e.target.getBoundingClientRect();
-            copyInnerText(e);
-            setTooltipPosition({ x: rect.left, y: rect.bottom });
+        switch (e.key) {
+            case 'Enter':
+                e.preventDefault();
+                const rect = e.target.getBoundingClientRect();
+                copyInnerText(e);
+                setTooltipPosition({ x: rect.left, y: rect.bottom });
+                break;
         }
     };
 

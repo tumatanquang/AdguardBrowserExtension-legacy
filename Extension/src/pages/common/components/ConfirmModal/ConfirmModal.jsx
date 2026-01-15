@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 
-export function ConfirmModal({
+export const ConfirmModal = ({
     title,
     subtitle,
     isOpen,
@@ -9,7 +9,7 @@ export function ConfirmModal({
     onConfirm,
     customCancelTitle,
     customConfirmTitle
-}) {
+}) => {
     const confirmTitle = customConfirmTitle || 'OK';
     const cancelTitle = customCancelTitle || 'Cancel';
 
@@ -53,4 +53,4 @@ export function ConfirmModal({
             </div>
         </Modal>
     );
-}
+};

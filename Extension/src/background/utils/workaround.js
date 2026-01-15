@@ -3,7 +3,7 @@ import { CUSTOM_FILTERS_GROUP_DISPLAY_NUMBER } from '../../common/constants';
 /**
  * We collect here all workarounds and ugly hacks:)
  */
-export const workaround = (function () {
+export const workaround = (() => {
     const WorkaroundUtils = {
         /**
          * Converts blocked counter to the badge text.

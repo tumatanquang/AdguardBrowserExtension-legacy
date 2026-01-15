@@ -24,7 +24,7 @@ import { ExpiringCache } from '../../utils/expiring-cache';
 import { lazyGet } from '../../utils/lazy';
 import { browserUtils } from '../../utils/browser-utils';
 
-export const documentFilterService = (function () {
+export const documentFilterService = (() => {
     const trustedCache = {
         get cache() {
             return lazyGet(
@@ -36,7 +36,7 @@ export const documentFilterService = (function () {
     };
 
     const TRUSTED_TTL_MS = 1000 * 60 * 40; // 40 minutes
-    function documentFilterService() {
+    const documentFilterService = () => {
         const DOCUMENT_BLOCKED_URL = 'pages/ad-blocked.html';
 
         /**
@@ -60,7 +60,7 @@ export const documentFilterService = (function () {
          * @returns {null|string}
          */
         const getDocumentBlockPageUrl = (url, ruleText) => {
-            if (isTrusted(url)) {
+            if (isTrusted(url) === true) {
                 return null;
             }
 
@@ -95,7 +95,7 @@ export const documentFilterService = (function () {
         const showDocumentBlockPage = (tabId, url) => {
             const incognitoTab = frames.isIncognitoTab({ tabId });
             // Chrome doesn't allow to show extension pages in incognito mode
-            if (incognitoTab && browserUtils.isChromium()) {
+            if (incognitoTab && browserUtils.isChromium() === true) {
                 // Closing tab before opening a new one may lead to browser crash (Chromium)
                 uiService.openTab(url).then(() => {
                     tabsApi.remove(tabId);
@@ -111,7 +111,7 @@ export const documentFilterService = (function () {
             addToTrusted,
             showDocumentBlockPage
         };
-    }
+    };
 
     return documentFilterService();
 })();

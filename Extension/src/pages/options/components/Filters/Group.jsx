@@ -53,14 +53,14 @@ const renderEnabledFilters = (enabledFilters) => {
     return reactTranslator.getMessage('options_filters_no_enabled');
 };
 
-function Group({
+const Group = ({
     groupName,
     groupId,
     enabledFilters,
     groupClickHandler,
     checkboxHandler,
     checkboxValue
-}) {
+}) => {
     const groupClassName = classNames({
         setting: true,
         group: true,
@@ -99,6 +99,6 @@ function Group({
             </div>
         </div>
     );
-}
+};
 
 export { Group };

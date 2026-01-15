@@ -24,7 +24,7 @@ import { browser } from '../extension-api/browser';
  * Request sanitizer helper
  * Removes track-able data from extension initiated requests
  */
-export const requestSanitizer = (function () {
+export const requestSanitizer = (() => {
     /**
      * On before send headers listener
      *
@@ -47,7 +47,7 @@ export const requestSanitizer = (function () {
 
         // Chrome provides "initiator" and firefox "originUrl"
         const origin = initiator || originUrl;
-        if (backgroundPage.app.isOwnRequest(origin)) {
+        if (backgroundPage.app.isOwnRequest(origin) === true) {
             requestHeadersModified = browserUtils.removeHeader(requestHeaders, 'Cookie');
         }
 
@@ -62,7 +62,7 @@ export const requestSanitizer = (function () {
         // Firefox doesn't allow to use "extraHeaders" extra option,
         //  but chrome requires it in order to get access to "Cookie" header
         const onBeforeSendHeadersExtraInfoSpec = ['requestHeaders', 'blocking'];
-        if (browser.webRequest.OnBeforeSendHeadersOptions !== undefined
+        if (typeof browser.webRequest.OnBeforeSendHeadersOptions !== 'undefined'
             && browser.webRequest.OnBeforeSendHeadersOptions.hasOwnProperty('EXTRA_HEADERS')) {
             onBeforeSendHeadersExtraInfoSpec.push('extraHeaders');
         }

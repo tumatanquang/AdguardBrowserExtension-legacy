@@ -29,11 +29,6 @@ export const customFilters = (() => {
     const CUSTOM_FILTERS_STORAGE_KEY = 'custom_filters';
 
     /**
-     * Pattern of parseExpiresStr function
-     */
-    const PARSE_EXPIRES_STRING_PATTERN = /(\d+)\s+(day|hour)/;
-
-    /**
      * Limits filter download timeout
      */
     const DOWNLOAD_LIMIT_MS = 3 * 1000;
@@ -45,6 +40,7 @@ export const customFilters = (() => {
      * @return {number}
      */
     const parseExpiresStr = (str) => {
+        const PARSE_EXPIRES_STRING_PATTERN = /(\d+)\s+(day|hour)/;
         const parseRes = str.match(PARSE_EXPIRES_STRING_PATTERN);
 
         if (!parseRes) {
@@ -113,7 +109,8 @@ export const customFilters = (() => {
     const addCustomFilterId = () => {
         let max = 0;
         const filters = metadataCache.getFilters();
-        for (let i = 0; i < filters.length; ++i) {
+        const len = filters.length;
+        for (let i = 0; i < len; ++i) {
             const f = filters[i];
             if (f.filterId > max) {
                 max = f.filterId;
@@ -388,7 +385,7 @@ export const customFilters = (() => {
      *
      * @returns Array
      */
-    const getCustomFilters = function () {
+    const getCustomFilters = () => {
         return metadataCache.getFilters().filter(f => f.customUrl);
     };
 

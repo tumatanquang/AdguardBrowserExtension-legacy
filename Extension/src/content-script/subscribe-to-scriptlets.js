@@ -21,7 +21,7 @@ import { contentPage } from './content-script';
  * Script used to subscribe to scriptlets dispatched events
  * Loaded on content script start to ensure the fastest load
  */
-export const subscribeToScriptlets = (function () {
+export const subscribeToScriptlets = (() => {
     /**
      * Subscribe to close-window scriptlet's event
      * window.close() usage is restricted in Chrome so we use tabs API to do that
@@ -45,7 +45,7 @@ export const subscribeToScriptlets = (function () {
     /**
      * Initializing content script
      */
-    const init = function () {
+    const init = () => {
         subscribeToCloseWindow();
     };
 

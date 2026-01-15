@@ -33,11 +33,11 @@ import { listeners } from '../../../notifier';
  *
  * http://adguard.com/en/how-malware-blocked.html#extension
  */
-const safebrowsing = (function () {
+const safebrowsing = (() => {
     // Lazy initialized safebrowsing cache
     const safebrowsingCache = {
         get cache() {
-            return lazyGet(safebrowsingCache, 'cache', () => new LruCache('sb-lru-cache'));
+            return lazyGet(safebrowsingCache, 'cache', () => LruCache('sb-lru-cache'));
         }
     };
 
@@ -63,13 +63,13 @@ const safebrowsing = (function () {
      */
     const DOMAIN_HASH_LENGTH = 4;
 
-    function isMalwareList(listName) {
+    const isMalwareList = (listName) => {
         return utils.strings.contains(listName, 'malware');
-    }
+    };
 
-    function isPhishingList(listName) {
+    const isPhishingList = (listName) => {
         return utils.strings.contains(listName, 'phishing');
-    }
+    };
 
     /**
      * Parses safebrowsing service response
@@ -79,7 +79,7 @@ const safebrowsing = (function () {
      * @returns Safebrowsing list or null
      * @private
      */
-    function processSbResponse(responseText, hashesMap) {
+    const processSbResponse = (responseText, hashesMap) => {
         if (!responseText || responseText.length > SB_MAX_RESPONSE_LENGTH) {
             return null;
         }
@@ -87,7 +87,8 @@ const safebrowsing = (function () {
         try {
             let result;
             const lines = responseText.split('\n');
-            for (let i = 0; i < lines.length; ++i) {
+            const len = lines.length;
+            for (let i = 0; i < len; ++i) {
                 const r = lines[i].split(':');
                 const [list, , hash] = r;
 
@@ -107,7 +108,7 @@ const safebrowsing = (function () {
             log.error('Error parse safebrowsing response, cause {0}', ex);
         }
         return null;
-    }
+    };
 
     /**
      * Creates lookup callback parameter
@@ -115,29 +116,29 @@ const safebrowsing = (function () {
      * @returns Safebrowsing list or null if this list is SB_ALLOW_LIST (means that site was allowlisted).
      * @private
      */
-    function createResponse(sbList) {
+    const createResponse = (sbList) => {
         if (isMalwareList(sbList) || isPhishingList(sbList)) {
             return sbList;
         }
 
         return null;
-    }
+    };
 
     /**
      * Resumes previously suspended work of SafebrowsingFilter
      * @private
      */
-    function resumeSafebrowsing() {
+    const resumeSafebrowsing = () => {
         localStorage.removeItem(suspendedFromProperty);
-    }
+    };
 
     /**
      * Suspend work of SafebrowsingFilter (in case of backend error)
      * @private
      */
-    function suspendSafebrowsing() {
+    const suspendSafebrowsing = () => {
         localStorage.setItem(suspendedFromProperty, Date.now());
-    }
+    };
 
     /**
      * Calculates hash for host string
@@ -145,9 +146,9 @@ const safebrowsing = (function () {
      * @param host
      * @return {string}
      */
-    function createHash(host) {
+    const createHash = (host) => {
         return SHA256(`${host}/`).toString().toUpperCase();
-    }
+    };
 
     /**
      * Calculates SHA256 hashes for strings in hosts and then
@@ -157,17 +158,18 @@ const safebrowsing = (function () {
      * @returns Map object of prefixes
      * @private
      */
-    function createHashesMap(hosts) {
+    const createHashesMap = (hosts) => {
         const result = Object.create(null);
 
-        for (let i = 0; i < hosts.length; ++i) {
+        const len = hosts.length;
+        for (let i = 0; i < len; ++i) {
             const host = hosts[i];
             const hash = createHash(host);
             result[hash] = host;
         }
 
         return result;
-    }
+    };
 
     /**
      * Checks safebrowsing cache
@@ -176,15 +178,16 @@ const safebrowsing = (function () {
      * @returns Safebrowsing list (for blacklisted request) or null
      * @private
      */
-    function checkHostsInSbCache(hosts) {
-        for (let i = 0; i < hosts.length; ++i) {
+    const checkHostsInSbCache = (hosts) => {
+        const len = hosts.length;
+        for (let i = 0; i < len; ++i) {
             const sbList = safebrowsingCache.cache.getValue(createHash(hosts[i]));
             if (sbList) {
                 return sbList;
             }
         }
         return null;
-    }
+    };
 
     /**
      * Extracts hosts from one host.
@@ -194,7 +197,7 @@ const safebrowsing = (function () {
      * @returns Array of extracted host names
      * @private
      */
-    function extractHosts(host) {
+    const extractHosts = (host) => {
         const hosts = [];
         if (utils.url.isIpv4(host) || utils.url.isIpv6(host)) {
             hosts.push(host);
@@ -212,7 +215,7 @@ const safebrowsing = (function () {
         }
 
         return hosts;
-    }
+    };
 
     /**
      * Access Denied page URL
@@ -222,7 +225,7 @@ const safebrowsing = (function () {
      * @param sbList        Safebrowsing list
      * @returns page URL
      */
-    const getErrorPageURL = function (requestUrl, referrerUrl, sbList) {
+    const getErrorPageURL = (requestUrl, referrerUrl, sbList) => {
         const listName = sbList || 'malware';
         let url = 'pages/safebrowsing.html';
         url += `?malware=${isMalwareList(listName)}`;
@@ -237,7 +240,7 @@ const safebrowsing = (function () {
      *
      * @param requestUrl        Request URL
      */
-    const lookupUrl = async function (requestUrl) {
+    const lookupUrl = async (requestUrl) => {
         const host = utils.url.getHost(requestUrl);
         if (!host) {
             return;
@@ -263,7 +266,8 @@ const safebrowsing = (function () {
         const hashesMap = createHashesMap(hosts);
         const hashes = Object.keys(hashesMap);
         let shortHashes = [];
-        for (let i = 0; i < hashes.length; ++i) {
+        const len = hashes.length;
+        for (let i = 0; i < len; ++i) {
             shortHashes.push(hashes[i].substring(0, DOMAIN_HASH_LENGTH));
         }
 
@@ -300,7 +304,8 @@ const safebrowsing = (function () {
 
         resumeSafebrowsing();
 
-        for (let i = 0; i < shortHashes.length; ++i) {
+        const { length } = shortHashes;
+        for (let i = 0; i < length; ++i) {
             const x = shortHashes[i];
             safebrowsingRequestsCache.set(x, true);
         }
@@ -323,7 +328,7 @@ const safebrowsing = (function () {
      * @param requestUrl Request URL
      * @param referrerUrl Referrer URL
      */
-    const checkSafebrowsingFilter = async function (requestUrl, referrerUrl) {
+    const checkSafebrowsingFilter = async (requestUrl, referrerUrl) => {
         if (!settings.safebrowsingInfoEnabled()) {
             return;
         }
@@ -347,7 +352,7 @@ const safebrowsing = (function () {
      *
      * @param url URL
      */
-    const addToSafebrowsingTrusted = function (url) {
+    const addToSafebrowsingTrusted = (url) => {
         const host = utils.url.getHost(url);
         if (!host) {
             return;
@@ -368,8 +373,10 @@ const safebrowsing = (function () {
      */
     const init = () => {
         listeners.addSpecifiedListener(listeners.SETTING_UPDATED, (_, { propertyName }) => {
-            if (propertyName === settings.DISABLE_SAFEBROWSING) {
-                clearCache();
+            switch (propertyName) {
+                case (settings.DISABLE_SAFEBROWSING):
+                    clearCache();
+                    break;
             }
         });
     };

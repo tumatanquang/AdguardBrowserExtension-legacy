@@ -60,12 +60,12 @@ export const getCookieRulesDataForContentScript = (tab, url, referrer) => {
         return null;
     }
 
-    const blockingRules = cookieRules.filter((rule) => {
+    const blockingRules = cookieRules.filter(rule => {
         const cookieModifier = rule.getAdvancedModifier();
         return !cookieModifier.getSameSite() && !cookieModifier.getMaxAge();
     });
 
-    return blockingRules.map((rule) => {
+    return blockingRules.map(rule => {
         return {
             ruleText: rule.getText(),
             match: rule.getAdvancedModifierValue(),

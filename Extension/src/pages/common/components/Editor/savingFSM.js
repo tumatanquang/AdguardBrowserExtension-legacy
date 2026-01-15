@@ -1,5 +1,4 @@
-import { interpret, Machine } from 'xstate';
-
+import { createMachine, interpret } from 'xstate';
 import { log } from '../../../../common/log';
 
 export const STATES = {
@@ -15,8 +14,10 @@ export const EVENTS = {
     TIMEOUT: 'timeout'
 };
 
-const savingStateMachine = {
-    initial: 'idle',
+const SAVED_DISPLAY_TIMEOUT_MS = 1000;
+
+const savingStateMachine = createMachine({
+    initial: STATES.IDLE,
     states: {
         [STATES.IDLE]: {
             on: {
@@ -39,20 +40,22 @@ const savingStateMachine = {
             }
         },
         [STATES.SAVED]: {
-            after: [{
-                delay: 1000, target: STATES.IDLE
-            }]
+            after: {
+                [SAVED_DISPLAY_TIMEOUT_MS]: STATES.IDLE
+            }
         }
     }
-};
+});
 
 export const createSavingService = ({ id, services }) => {
-    return interpret(Machine({ ...savingStateMachine, id }, { services }))
+    const machineWithServices = savingStateMachine.withConfig({ services });
+
+    return interpret(machineWithServices)
         .start()
-        .onEvent((event) => {
+        .onEvent(event => {
             log.debug(id, event);
         })
-        .onTransition((state) => {
+        .onTransition(state => {
             log.debug(id, { currentState: state.value });
         });
 };

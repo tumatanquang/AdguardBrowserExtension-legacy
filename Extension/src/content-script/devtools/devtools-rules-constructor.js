@@ -109,7 +109,8 @@ export const DevToolsRulesConstructor = (() => {
                 let cldCount = 0;
                 if (el.parentNode) {
                     const { childNodes } = el.parentNode;
-                    for (let i = 0; i < childNodes.length; ++i) {
+                    const len = childNodes.length;
+                    for (let i = 0; i < len; ++i) {
                         if (childNodes[i].nodeType === 1) {
                             ++cldCount;
                         }
@@ -161,7 +162,8 @@ export const DevToolsRulesConstructor = (() => {
     const constructClassCssSelectorByAND = (classList) => {
         const selectors = [];
         if (classList) {
-            for (let i = 0; i < classList.length; ++i) {
+            const len = classList.length;
+            for (let i = 0; i < len; ++i) {
                 selectors.push(`.${CSS.escape(classList[i])}`);
             }
         }
@@ -176,7 +178,8 @@ export const DevToolsRulesConstructor = (() => {
     const constructClassCssSelectorByOR = (classList) => {
         const selectors = [];
         if (classList) {
-            for (let i = 0; i < classList.length; ++i) {
+            const len = classList.length;
+            for (let i = 0; i < len; ++i) {
                 selectors.push(`.${CSS.escape(classList[i])}`);
             }
         }
@@ -250,14 +253,14 @@ export const DevToolsRulesConstructor = (() => {
         return element.id && element.id.trim() !== '';
     };
 
-    const CROP_DOMAIN_PATTERN = /:\d+/;
     const cropDomain = (url) => {
         const domain = getUrl(url).host;
+        const CROP_DOMAIN_PATTERN = /:\d+/;
         return domain.replace('www.', '').replace(CROP_DOMAIN_PATTERN, '');
     };
 
-    const GET_URL_PATTERN = /^(?:(?:[^:/\\?#]+):)?(?:\/\/((?:[^:/\\?#]*)(?::(?:[^/\\?#]*))?))?([^\\?#]*)(?:\\?(?:[^#]*))?(?:#(?:.*))?$/;
     const getUrl = (url) => {
+        const GET_URL_PATTERN = /^(?:(?:[^:/\\?#]+):)?(?:\/\/((?:[^:/\\?#]*)(?::(?:[^/\\?#]*))?))?([^\\?#]*)(?:\\?(?:[^#]*))?(?:#(?:.*))?$/;
         const parts = GET_URL_PATTERN.exec(url);
 
         return {
@@ -266,12 +269,12 @@ export const DevToolsRulesConstructor = (() => {
         };
     };
 
-    const BLOCK_URL_TEXT_PATTERN = /^http:\/\/(?:www\.)?/;
     const constructUrlBlockRuleText = (element, urlBlockAttribute, oneDomain, domain) => {
         if (!urlBlockAttribute) {
             return null;
         }
 
+        const BLOCK_URL_TEXT_PATTERN = /^http:\/\/(?:www\.)?/;
         let blockUrlRuleText = urlBlockAttribute.replace(BLOCK_URL_TEXT_PATTERN, '||');
         if (blockUrlRuleText.indexOf('.') === 0) {
             blockUrlRuleText = blockUrlRuleText.substring(1);
@@ -289,7 +292,8 @@ export const DevToolsRulesConstructor = (() => {
             return null;
         }
 
-        for (let i = 0; i < URLBLOCK_ATTRIBUTES.length; ++i) {
+        const len = URLBLOCK_ATTRIBUTES.length;
+        for (let i = 0; i < len; ++i) {
             const attr = URLBLOCK_ATTRIBUTES[i];
             const value = element.getAttribute(attr);
             if (isValidUrl(value)) {
@@ -310,7 +314,8 @@ export const DevToolsRulesConstructor = (() => {
         const attributes = [];
         const elementAttributes = element.attributes;
         if (elementAttributes) {
-            for (let i = 0; i < elementAttributes.length; ++i) {
+            const len = elementAttributes.length;
+            for (let i = 0; i < len; ++i) {
                 const attr = elementAttributes[i];
                 attributes.push({
                     name: attr.name,
@@ -329,7 +334,6 @@ export const DevToolsRulesConstructor = (() => {
         };
     };
 
-    const CONSTRUCT_RULE_CSS_SELECTOR_PATTERN = /[\|]|[\^]/g;
     /**
      * Constructs css selector for specified rule
      *
@@ -348,6 +352,7 @@ export const DevToolsRulesConstructor = (() => {
             return ruleText.substring(index + CSS_RULE_MARK.length, optionsIndex >= 0 ? optionsIndex : ruleText.length);
         }
 
+        const CONSTRUCT_RULE_CSS_SELECTOR_PATTERN = /[\|]|[\^]/g;
         const s = ruleText.substring(0, optionsIndex).replace(CONSTRUCT_RULE_CSS_SELECTOR_PATTERN, '');
 
         if (isValidUrl(s)) {

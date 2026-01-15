@@ -23,15 +23,15 @@ import { engine } from './engine';
  *
  * TODO: Delete this service
  */
-export const filteringApi = (function () {
-    function getRequestFilter() {
+export const filteringApi = (() => {
+    const getRequestFilter = () => {
         return antiBannerService.getRequestFilter();
-    }
+    };
 
     /**
      * @returns boolean true when request filter was initialized first time
      */
-    const isReady = function () {
+    const isReady = () => {
         return engine.isReady();
     };
 
@@ -44,7 +44,7 @@ export const filteringApi = (function () {
      *
      * @returns boolean true if we should collapse elements with content script
      */
-    const shouldCollapseAllElements = function () {
+    const shouldCollapseAllElements = () => {
         // We assume that if content script is requesting CSS in first 5 seconds after request filter init,
         // then it is possible, that we've missed some elements and now we should collapse these elements
         const requestFilterInitTime = antiBannerService.getRequestFilterInitTime();
@@ -54,83 +54,83 @@ export const filteringApi = (function () {
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const findRuleForRequest = function (matchQuery) {
+    const findRuleForRequest = (matchQuery) => {
         return getRequestFilter().findRuleForRequest(matchQuery);
     };
 
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const findAllowlistRule = function (matchQuery) {
+    const findAllowlistRule = (matchQuery) => {
         return getRequestFilter().findAllowlistRule(matchQuery);
     };
 
-    const findDocumentRule = function (documentUrl) {
+    const findDocumentRule = (documentUrl) => {
         return getRequestFilter().findDocumentRule(documentUrl);
     };
 
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const findStealthAllowlistRule = function (matchQuery) {
+    const findStealthAllowlistRule = (matchQuery) => {
         return getRequestFilter().findStealthAllowlistRule(matchQuery);
     };
 
-    const getSelectorsForUrl = function (documentUrl, cosmeticOptions, traditionalCss, extCss) {
+    const getSelectorsForUrl = (documentUrl, cosmeticOptions, traditionalCss, extCss) => {
         return getRequestFilter().getSelectorsForUrl(documentUrl, cosmeticOptions, !traditionalCss, !extCss);
     };
 
-    const getScriptsStringForUrl = function (documentUrl, tab, cosmeticOptions) {
+    const getScriptsStringForUrl = (documentUrl, tab, cosmeticOptions) => {
         return getRequestFilter().getScriptsStringForUrl(documentUrl, tab, cosmeticOptions);
     };
 
-    const getContentRulesForUrl = function (documentUrl) {
+    const getContentRulesForUrl = (documentUrl) => {
         return getRequestFilter().getContentRulesForUrl(documentUrl);
     };
 
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const getCspRules = function (matchQuery) {
+    const getCspRules = (matchQuery) => {
         return getRequestFilter().findCspRules(matchQuery);
     };
 
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const getCookieRules = function (matchQuery) {
+    const getCookieRules = (matchQuery) => {
         return getRequestFilter().findCookieRules(matchQuery);
     };
 
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const getReplaceRules = function (matchQuery) {
+    const getReplaceRules = (matchQuery) => {
         return getRequestFilter().findReplaceRules(matchQuery);
     };
 
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const getCosmeticOption = function (matchQuery) {
+    const getCosmeticOption = (matchQuery) => {
         return getRequestFilter().getMatchingResult(matchQuery).getCosmeticOption();
     };
 
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const getRemoveParamRules = function (matchQuery) {
+    const getRemoveParamRules = (matchQuery) => {
         return getRequestFilter().getMatchingResult(matchQuery).getRemoveParamRules();
     };
 
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const getRemoveHeaderRules = function (matchQuery) {
+    const getRemoveHeaderRules = (matchQuery) => {
         return getRequestFilter().getMatchingResult(matchQuery).getRemoveHeaderRules();
     };
 
-    const getRequestFilterInfo = function () {
+    const getRequestFilterInfo = () => {
         return antiBannerService.getRequestFilterInfo();
     };
 

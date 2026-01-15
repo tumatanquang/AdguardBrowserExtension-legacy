@@ -1,11 +1,10 @@
-/* eslint-disable no-unused-vars */
 /**
  * This function patches if necessary browser.windows implementation for Firefox for Android
  */
-export const patchWindows = function (browser) {
+export const patchWindows = (browser) => {
     // Make compatible with Android WebExt
-    if (browser.windows === undefined) {
-        browser.windows = (function () {
+    if (typeof browser.windows === 'undefined') {
+        browser.windows = (() => {
             const defaultWindow = {
                 id: 1,
                 type: 'normal'
@@ -17,19 +16,19 @@ export const patchWindows = function (browser) {
                 }
             };
 
-            const create = function (createData) {
+            const create = () => {
                 return Promise.resolve(defaultWindow);
             };
 
-            const update = function (windowId, data) {
+            const update = () => {
                 return Promise.resolve();
             };
 
-            const getAll = function (query) {
+            const getAll = () => {
                 return Promise.resolve(defaultWindow);
             };
 
-            const getLastFocused = function () {
+            const getLastFocused = () => {
                 return Promise.resolve(defaultWindow);
             };
 

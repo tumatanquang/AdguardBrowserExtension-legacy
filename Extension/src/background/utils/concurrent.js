@@ -2,7 +2,7 @@
 /**
  * Util class for support timeout, retry operations, debounce
  */
-export const concurrent = (function () {
+export const concurrent = (() => {
     const ConcurrentUtils = {
         runAsync(callback, context) {
             const params = Array.prototype.slice.call(arguments, 2);
@@ -16,11 +16,11 @@ export const concurrent = (function () {
                 details = {};
             }
 
-            let now = 0;
             const next = details.next || 200;
-            const until = details.until || 2000;
+            const until = details.until || 2 * 1000;
 
-            const check = function () {
+            let now = 0;
+            const check = () => {
                 if (predicate() === true || now >= until) {
                     main();
                     return;
@@ -37,7 +37,7 @@ export const concurrent = (function () {
             return function () {
                 const context = this;
                 const args = arguments;
-                const later = function () {
+                const later = () => {
                     timeout = null;
                     func.apply(context, args);
                 };
@@ -61,13 +61,13 @@ export const concurrent = (function () {
             let timeoutID; // caching
             let last = 0;
 
-            function call() {
+            const call = () => {
                 timeoutID = 0;
                 last = Date.now();
                 rtn = func.apply(ctx, args);
                 ctx = null;
                 args = null;
-            }
+            };
 
             return function () {
                 ctx = this;

@@ -19,36 +19,40 @@ import { i18n } from './common-script';
 import { I18nHelper } from '../content-script/i18n-helper';
 
 const i18nPatched = (() => {
-    function translateElement(element, messageId, args) {
+    const translateElement = (element, messageId, args) => {
         const message = i18n.getMessage(messageId, args);
         I18nHelper.translateElement(element, message);
-    }
+    };
 
-    function init() {
+    const init = () => {
         document.addEventListener('DOMContentLoaded', () => {
             const i18nElements = document.querySelectorAll('[i18n]');
-            for (let i = 0; i < i18nElements.length; ++i) {
+            const elen = i18nElements.length;
+            for (let i = 0; i < elen; ++i) {
                 const el = i18nElements[i];
                 const message = i18n.getMessage(el.getAttribute('i18n'));
                 I18nHelper.translateElement(el, message);
             }
             const i18nPlhr = document.querySelectorAll('[i18n-plhr]');
-            for (let i = 0; i < i18nPlhr.length; ++i) {
+            const plen = i18nPlhr.length;
+            for (let i = 0; i < plen; ++i) {
                 const el = i18nPlhr[i];
                 el.setAttribute('placeholder', i18n.getMessage(el.getAttribute('i18n-plhr')));
             }
             const i18nHref = document.querySelectorAll('[i18n-href]');
-            for (let i = 0; i < i18nHref.length; ++i) {
+            const hlen = i18nHref.length;
+            for (let i = 0; i < hlen; ++i) {
                 const el = i18nHref[i];
                 el.setAttribute('href', i18n.getMessage(el.getAttribute('i18n-href')));
             }
             const i18nTitle = document.querySelectorAll('[i18n-title]');
-            for (let i = 0; i < i18nTitle.length; ++i) {
+            const tlen = i18nTitle.length;
+            for (let i = 0; i < tlen; ++i) {
                 const el = i18nTitle[i];
                 el.setAttribute('title', i18n.getMessage(el.getAttribute('i18n-title')));
             }
         });
-    }
+    };
 
     i18n.translateElement = translateElement;
     i18n.init = init;

@@ -12,7 +12,7 @@ export const SETTINGS_TYPES = {
     TEXTAREA: 'textarea'
 };
 
-export function Setting(props) {
+export const Setting = (props) => {
     const { type } = props;
 
     switch (type) {
@@ -100,4 +100,4 @@ export function Setting(props) {
                 Available types: ${Object.values(SETTINGS_TYPES).join(', ')}
             `);
     }
-}
+};

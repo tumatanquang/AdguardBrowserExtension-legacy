@@ -1,11 +1,11 @@
 import React from 'react';
 import cn from 'classnames';
 
-export function Icon({
+export const Icon = ({
     id,
     classname,
     title
-}) {
+}) => {
     const iconClassname = cn('icon', classname);
     return (
         <svg className={iconClassname}>
@@ -13,4 +13,4 @@ export function Icon({
             <use xlinkHref={id} />
         </svg>
     );
-}
+};

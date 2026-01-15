@@ -158,7 +158,7 @@ const initEventTypesFilters = {
 };
 
 const matchesFilter = ({ filters }, filterId, check) => {
-    return filters.find((f) => f.id === filterId).enabled && check;
+    return filters.find(f => f.id === filterId).enabled && check;
 };
 class LogStore {
     @observable filteringEvents = [];
@@ -208,7 +208,7 @@ class LogStore {
 
     @action
     resetAllFilters = () => {
-    // enable all eventTypesFilters
+        // enable all eventTypesFilters
         this.eventTypesFilters = initEventTypesFilters;
         // disable all miscellaneousFilters
         this.miscellaneousFilters = initMiscellaneousFilters;
@@ -283,7 +283,7 @@ class LogStore {
     get tabs() {
         // while tab select is open we return prev tabs
         // to stop select from re-rendering during selection
-        if (this.selectIsOpen) {
+        if (this.selectIsOpen === true) {
             if (!this.prevTabs) {
                 this.prevTabs = this.getTabs();
             }
@@ -321,7 +321,8 @@ class LogStore {
     synchronizeOpenTabs = async () => {
         const tabsInfo = await messenger.synchronizeOpenTabs();
         runInAction(() => {
-            for (let i = 0; i < tabsInfo.length; ++i) {
+            const len = tabsInfo.length;
+            for (let i = 0; i < len; ++i) {
                 const tabInfo = tabsInfo[i];
                 this.tabsMap[tabInfo.tabId] = tabInfo;
             }
@@ -458,7 +459,7 @@ class LogStore {
 
     toNumberOrString = (dirtyString) => {
         const num = Number.parseInt(dirtyString, 10);
-        if (Number.isNaN(num)) {
+        if (Number.isNaN(num) === true) {
             return dirtyString;
         }
         return String(num) === dirtyString ? num : dirtyString;

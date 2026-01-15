@@ -6,7 +6,7 @@
             return;
         }
     }
-    function AmazonApstag(source) {
+    const AmazonApstag = (source) => {
         var apstagWrapper = {
             fetchBids(a, b) {
                 if (typeof b === "function") {
@@ -20,7 +20,7 @@
         window.apstag = apstagWrapper;
         hit(source);
     }
-    function hit(source) {
+    const hit = (source) => {
         var ADGUARD_PREFIX = "[AdGuard]";
         if (!source.verbose) {
             return;
@@ -48,7 +48,7 @@
             window.__debug(source);
         }
     }
-    function noopFunc() {}
+    const noopFunc = () => {}
     const updatedArgs = args ? [].concat(source).concat(args) : [ source ];
     try {
         AmazonApstag.apply(this, updatedArgs);
@@ -60,7 +60,8 @@
                 configurable: false
             });
         }
-    } catch (e) {
+    }
+    catch (e) {
         console.log(e);
     }
 })({

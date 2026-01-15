@@ -20,7 +20,7 @@
 import punycode from 'punycode';
 import { strings } from '../../common/strings';
 
-export const url = (function () {
+export const url = (() => {
     const RE_V4 = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|0x[0-9a-f][0-9a-f]?|0[0-7]{3})\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|0x[0-9a-f][0-9a-f]?|0[0-7]{3})$/i;
     const RE_V4_HEX = /^0x(?:[0-9a-f]{8})$/i;
     const RE_V4_NUMERIC = /^[0-9]+$/;
@@ -111,13 +111,13 @@ export const url = (function () {
         },
 
         isIpv4(address) {
-            if (RE_V4.test(address)) {
+            if (RE_V4.test(address) === true) {
                 return true;
             }
-            if (RE_V4_HEX.test(address)) {
+            if (RE_V4_HEX.test(address) === true) {
                 return true;
             }
-            if (RE_V4_NUMERIC.test(address)) {
+            if (RE_V4_NUMERIC.test(address) === true) {
                 return true;
             }
             return false;
@@ -129,12 +129,12 @@ export const url = (function () {
             if (address4) {
                 const temp4 = address4[0].split('.');
                 for (let i = 0; i < 4; ++i) {
-                    if (RE_IS_IPV6_BLOCK_PATTERN.test(temp4[i])) {
+                    if (RE_IS_IPV6_BLOCK_PATTERN.test(temp4[i]) === true) {
                         return false;
                     }
                 }
                 address = address.replace(RE_V4inV6, '');
-                if (RE_IS_IPV6_V4INV6_PATTERN.test(address)) {
+                if (RE_IS_IPV6_V4INV6_PATTERN.test(address) === true) {
                     return false;
                 }
 
@@ -142,17 +142,17 @@ export const url = (function () {
                 a4addon = 2;
             }
 
-            if (RE_BAD_CHARACTERS.test(address)) {
+            if (RE_BAD_CHARACTERS.test(address) === true) {
                 return false;
             }
 
-            if (RE_BAD_ADDRESS.test(address)) {
+            if (RE_BAD_ADDRESS.test(address) === true) {
                 return false;
             }
 
-            function count(string, substring) {
+            const count = (string, substring) => {
                 return (string.length - string.replace(new RegExp(substring, 'g'), '').length) / substring.length;
-            }
+            };
 
             const halves = count(address, '::');
             if (halves === 1 && count(address, ':') <= 6 + 2 + a4addon) {

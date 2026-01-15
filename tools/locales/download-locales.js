@@ -61,8 +61,9 @@ const promiseBatchMap = async (arr, batchSize, handler) => {
 
     const result = [];
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const batch of batches) {
+    const len = batches.length;
+    for (let i = 0; i < len; ++i) {
+        const batch = batches[i];
         const promises = batch.map(handler);
         // eslint-disable-next-line no-await-in-loop
         const data = await Promise.all(promises);
@@ -73,7 +74,7 @@ const promiseBatchMap = async (arr, batchSize, handler) => {
 };
 
 const downloadLocales = async (locales) => {
-    const localeUrlPairs = locales.map((locale) => {
+    const localeUrlPairs = locales.map(locale => {
         const crowdinLocale = LOCALE_PAIRS[locale] || locale;
         const downloadUrl = `${LOCALES_DOWNLOAD_URL}?${getQueryString(crowdinLocale)}`;
         return { locale, url: downloadUrl };
@@ -100,7 +101,7 @@ const saveFile = async (path, data) => {
 };
 
 const saveLocales = async (localeDataPairs) => {
-    const promises = localeDataPairs.map((localeDataPair) => {
+    const promises = localeDataPairs.map(localeDataPair => {
         const { locale, data } = localeDataPair;
         const localeFilePath = path.join(LOCALES_DIR, locale, LOCALE_DATA_FILENAME);
         const localeDirPath = path.join(LOCALES_DIR, locale);

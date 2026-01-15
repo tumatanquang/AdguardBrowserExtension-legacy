@@ -30,7 +30,7 @@ import { userrules } from '../userrules';
 /**
  * Object for log http requests
  */
-const browsersFilteringLog = (function () {
+const browsersFilteringLog = (() => {
     const REQUESTS_SIZE_PER_TAB = 1000;
     const backgroundTab = {
         tabId: BACKGROUND_TAB_ID,
@@ -55,26 +55,27 @@ const browsersFilteringLog = (function () {
      * Checks if filtering log page is open
      * @return {boolean}
      */
-    const isOpen = function () {
+    const isOpen = () => {
         return openedFilteringLogsPage > 0;
     };
 
     /**
      * We collect filtering events if opened at least one page of log
      */
-    const onOpenFilteringLogPage = function () {
+    const onOpenFilteringLogPage = () => {
         ++openedFilteringLogsPage;
     };
 
     /**
      * Cleanup when last page of log closes
      */
-    const onCloseFilteringLogPage = function () {
+    const onCloseFilteringLogPage = () => {
         openedFilteringLogsPage = Math.max(openedFilteringLogsPage - 1, 0);
         if (openedFilteringLogsPage === 0) {
             // Clear events
             const tabIds = Object.keys(tabsInfoMap);
-            for (let i = 0; i < tabIds.length; ++i) {
+            const len = tabIds.length;
+            for (let i = 0; i < len; ++i) {
                 const tabId = tabIds[i];
                 const tabInfo = tabsInfoMap[tabId];
                 delete tabInfo.filteringEvents;
@@ -86,7 +87,7 @@ const browsersFilteringLog = (function () {
      * Get filtering info for tab
      * @param tabId
      */
-    const getFilteringInfoByTabId = tabId => {
+    const getFilteringInfoByTabId = (tabId) => {
         return tabsInfoMap[tabId];
     };
 
@@ -215,7 +216,7 @@ const browsersFilteringLog = (function () {
      * @param tabId
      */
     const canAddEvent = (tabId) => {
-        if (!isOpen()) {
+        if (isOpen() === false) {
             return false;
         }
 
@@ -278,7 +279,7 @@ const browsersFilteringLog = (function () {
      * @param {number} params.timestamp - Request UTC timestamp
      * @param params.eventId
      */
-    const addHttpRequestEvent = function ({
+    const addHttpRequestEvent = ({
         tab,
         requestUrl,
         frameUrl,
@@ -287,8 +288,8 @@ const browsersFilteringLog = (function () {
         timestamp,
         eventId,
         method
-    }) {
-        if (!canAddEvent(tab.tabId)) {
+    }) => {
+        if (canAddEvent(tab.tabId) === false) {
             return;
         }
 
@@ -321,15 +322,15 @@ const browsersFilteringLog = (function () {
      * @param {number} params.timestamp - Request UTC timestamp
      * @param {{ruleText: String, filterId: Number, isInjectRule: Boolean}} params.requestRule - Request rule
      */
-    const addCosmeticEvent = function ({
+    const addCosmeticEvent = ({
         tab,
         element,
         frameUrl,
         requestType,
         timestamp,
         requestRule
-    }) {
-        if (!requestRule || !canAddEvent(tab.tabId)) {
+    }) => {
+        if (!requestRule || canAddEvent(tab.tabId) === false) {
             return;
         }
 
@@ -362,7 +363,7 @@ const browsersFilteringLog = (function () {
         rule,
         timestamp
     }) => {
-        if (!rule || !canAddEvent(tab.tabId)) {
+        if (!rule || canAddEvent(tab.tabId) === false) {
             return;
         }
 
@@ -397,7 +398,7 @@ const browsersFilteringLog = (function () {
         rule,
         timestamp
     }) => {
-        if (!rule || !canAddEvent(tab.tabId)) {
+        if (!rule || canAddEvent(tab.tabId) === false) {
             return;
         }
 
@@ -424,7 +425,7 @@ const browsersFilteringLog = (function () {
      * @param rule
      */
     const addRemoveHeaderEvent = (tabId, frameUrl, headerName, rule) => {
-        if (!rule || !canAddEvent(tabId)) {
+        if (!rule || canAddEvent(tabId) === false) {
             return;
         }
 
@@ -453,7 +454,8 @@ const browsersFilteringLog = (function () {
         filteringEvent.requestRule = {};
         filteringEvent.requestRule.replaceRule = true;
         filteringEvent.replaceRules = [];
-        for (let i = 0; i < replaceRules.length; ++i) {
+        const len = replaceRules.length;
+        for (let i = 0; i < len; ++i) {
             const replaceRule = replaceRules[i];
             const ruleDTO = {};
             copyRuleProperties(ruleDTO, replaceRule);
@@ -503,7 +505,7 @@ const browsersFilteringLog = (function () {
         thirdParty,
         timestamp
     }) => {
-        if (!canAddEvent(tabId)) {
+        if (canAddEvent(tabId) === false) {
             return;
         }
 
@@ -544,7 +546,7 @@ const browsersFilteringLog = (function () {
      * @param eventId Event identifier
      */
     const bindRuleToHttpRequestEvent = function (tab, requestRule, eventId) {
-        if (!canAddEvent(tab.tabId)) {
+        if (canAddEvent(tab.tabId) === false) {
             return;
         }
 
@@ -569,7 +571,7 @@ const browsersFilteringLog = (function () {
      * @param eventId
      */
     const bindReplaceRulesToHttpRequestEvent = function (tab, replaceRules, eventId) {
-        if (!canAddEvent(tab.tabId)) {
+        if (canAddEvent(tab.tabId) === false) {
             return;
         }
 
@@ -594,7 +596,7 @@ const browsersFilteringLog = (function () {
      * @param {number} eventId Event identifier
      */
     const bindStealthActionsToHttpRequestEvent = (tab, actions, eventId) => {
-        if (!canAddEvent(tab.tabId)) {
+        if (canAddEvent(tab.tabId) === false) {
             return;
         }
 
@@ -619,7 +621,7 @@ const browsersFilteringLog = (function () {
      * @param {number} eventId Event identifier
      */
     const bindCspReportBlockedToHttpRequestEvent = (tab, cspReportBlocked, eventId) => {
-        if (!canAddEvent(tab.tabId)) {
+        if (canAddEvent(tab.tabId) === false) {
             return;
         }
 
@@ -644,7 +646,7 @@ const browsersFilteringLog = (function () {
      * @param {number} eventId Event identifier
      */
     const bindResponseDataToHttpRequestEvent = (tab, statusCode, eventId) => {
-        if (!canAddEvent(tab.tabId)) {
+        if (canAddEvent(tab.tabId) === false) {
             return;
         }
 
@@ -666,7 +668,7 @@ const browsersFilteringLog = (function () {
      * @param {number} tabId
      * @param {boolean} [ignorePreserveLog]
      */
-    const clearEventsByTabId = function (tabId, ignorePreserveLog) {
+    const clearEventsByTabId = (tabId, ignorePreserveLog) => {
         const tabInfo = tabsInfoMap[tabId];
 
         const preserveLog = ignorePreserveLog ? false : preserveLogEnabled;
@@ -680,12 +682,13 @@ const browsersFilteringLog = (function () {
     /**
      * Synchronize currently opened tabs with out state
      */
-    const synchronizeOpenTabs = async function () {
+    const synchronizeOpenTabs = async () => {
         const tabs = await tabsApi.getAll();
         // As Object.keys() returns strings we convert them to integers,
         // because tabId is integer in extension API
         const tabIdsToRemove = Object.keys(tabsInfoMap).map(id => Number.parseInt(id, 10));
-        for (let i = 0; i < tabs.length; ++i) {
+        const len = tabs.length;
+        for (let i = 0; i < len; ++i) {
             const openTab = tabs[i];
             const tabInfo = tabsInfoMap[openTab.tabId];
             if (!tabInfo) {
@@ -701,14 +704,16 @@ const browsersFilteringLog = (function () {
                 tabIdsToRemove.splice(index, 1);
             }
         }
-        for (let j = 0; j < tabIdsToRemove.length; ++j) {
+        const rlen = tabIdsToRemove.length;
+        for (let j = 0; j < rlen; ++j) {
             removeTabById(tabIdsToRemove[j]);
         }
 
         const syncTabs = [];
 
         const tabIds = Object.keys(tabsInfoMap);
-        for (let i = 0; i < tabIds.length; ++i) {
+        const slen = tabIds.length;
+        for (let i = 0; i < slen; ++i) {
             const tabId = tabIds[i];
             syncTabs.push(tabsInfoMap[tabId]);
         }

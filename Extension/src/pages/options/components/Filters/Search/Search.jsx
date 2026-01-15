@@ -45,24 +45,30 @@ const Search = observer(() => {
     useEffect(() => {
         const modifierKeyProperty = isMacOs ? 'metaKey' : 'ctrlKey';
         const handleSearchHotkey = (e) => {
-            const { code } = e;
-            if (e[modifierKeyProperty] && code === 'KeyF') {
-                e.preventDefault();
-                searchInputRef.current.focus();
-                searchInputRef.current.select();
+            if (e[modifierKeyProperty]) {
+                const { code } = e;
+                switch (code) {
+                    case 'KeyF':
+                        e.preventDefault();
+                        searchInputRef.current.focus();
+                        searchInputRef.current.select();
+                        break;
+                }
             }
         };
         const handleResetHotkey = (e) => {
             const { code } = e;
-            if (code === 'Escape') {
-                e.preventDefault();
-                setSearchInput('');
+            switch (code) {
+                case 'Escape':
+                    e.preventDefault();
+                    setSearchInput('');
+                    break;
             }
         };
 
         window.addEventListener('keydown', handleSearchHotkey);
         window.addEventListener('keydown', handleResetHotkey);
-        return function onUnmount() {
+        return () => {
             window.removeEventListener('keydown', handleSearchHotkey);
             window.removeEventListener('keydown', handleResetHotkey);
         };

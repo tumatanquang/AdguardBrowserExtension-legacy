@@ -4,7 +4,7 @@ import { Popover } from '../../../common/components/ui/Popover';
 import { reactTranslator } from '../../../../common/translators/reactTranslator';
 import { getBadgeClassNames, StatusColor } from './statusStyles';
 
-export function NetworkStatus({ method, statusCode, isThirdParty }) {
+export const NetworkStatus = ({ method, statusCode, isThirdParty }) => {
     const badgeClassNames = getBadgeClassNames(StatusColor.GRAY);
 
     return (
@@ -34,4 +34,4 @@ export function NetworkStatus({ method, statusCode, isThirdParty }) {
             )}
         </div>
     );
-}
+};

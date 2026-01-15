@@ -35,7 +35,7 @@ import { log } from '../common/log';
 import { browserUtils } from './utils/browser-utils';
 import { documentFilterService } from './filter/services/document-filter';
 
-const webrequestInit = function () {
+const webrequestInit = () => {
     const CSP_HEADER_NAME = 'Content-Security-Policy';
 
     /**
@@ -64,20 +64,19 @@ const webrequestInit = function () {
      * @param requestDetails
      * @returns {*|Frame}
      */
-    function getReferrerUrl(requestDetails) {
+    const getReferrerUrl = (requestDetails) => {
         return requestDetails.referrerUrl
             || frames.getFrameUrl(requestDetails.tab, requestDetails.requestFrameId)
             || frames.getMainFrameUrl(requestDetails.tab);
-    }
+    };
 
-    const MAX_URL_LENGTH = 16 * 1024;
     /**
      * Process request
      *
      * @param {RequestDetails} requestDetails
      * @returns {boolean|{Object}} False if request must be blocked, object if url was redirected
      */
-    function onBeforeRequest(requestDetails) {
+    const onBeforeRequest = (requestDetails) => {
         if (backgroundPage.app.isOwnRequest(requestDetails.referrerUrl)) {
             return;
         }
@@ -134,6 +133,7 @@ const webrequestInit = function () {
 
         // truncate too long urls
         // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1493
+        const MAX_URL_LENGTH = 16 * 1024;
         if (requestUrl.length > MAX_URL_LENGTH) {
             requestUrl = requestUrl.slice(0, MAX_URL_LENGTH);
         }
@@ -179,7 +179,7 @@ const webrequestInit = function () {
             && requestRule.isOptionEnabled(TSUrlFilter.NetworkRuleOption.Popup)
             && requestType === RequestTypes.DOCUMENT) {
             const isNewTab = tabsApi.isNewPopupTab(tabId);
-            if (isNewTab) {
+            if (isNewTab === true) {
                 tabsApi.remove(tabId);
                 return { cancel: true };
             }
@@ -242,7 +242,7 @@ const webrequestInit = function () {
         }
 
         return response;
-    }
+    };
 
     /**
      * Tries to collapse a blocked element using tabs.insertCSS.
@@ -260,7 +260,7 @@ const webrequestInit = function () {
      * @param {string} referrerUrl Referrer URL
      * @param {string} requestType A member of RequestTypes
      */
-    function collapseElement(tabId, requestFrameId, requestUrl, referrerUrl, requestType) {
+    const collapseElement = (tabId, requestFrameId, requestUrl, referrerUrl, requestType) => {
         if (!shouldUseInsertCSSAndExecuteScript) {
             return;
         }
@@ -294,7 +294,7 @@ const webrequestInit = function () {
         }
 
         tabsApi.insertCssCode(tabId, requestFrameId, css);
-    }
+    };
 
     /**
      * Called before request is sent to the remote endpoint.
@@ -304,7 +304,7 @@ const webrequestInit = function () {
      * @param requestDetails Request details
      * @returns {*} headers to send
      */
-    function onBeforeSendHeaders(requestDetails) {
+    const onBeforeSendHeaders = (requestDetails) => {
         const {
             tab,
             requestId,
@@ -343,7 +343,7 @@ const webrequestInit = function () {
         }
 
         return {};
-    }
+    };
 
     /**
      * Safebrowsing check
@@ -351,7 +351,7 @@ const webrequestInit = function () {
      * @param tab
      * @param mainFrameUrl
      */
-    async function filterSafebrowsing(tab, mainFrameUrl) {
+    const filterSafebrowsing = async (tab, mainFrameUrl) => {
         if (frames.isTabProtectionDisabled(tab)
             || frames.isTabAllowlistedForSafebrowsing(tab)) {
             return;
@@ -376,7 +376,7 @@ const webrequestInit = function () {
         else {
             tabsApi.reload(tab.tabId, safebrowsingUrl);
         }
-    }
+    };
 
     /**
      * On headers received callback function.
@@ -387,7 +387,7 @@ const webrequestInit = function () {
      * @param requestDetails Request details
      * @returns {{responseHeaders: *}} Headers to send
      */
-    function onHeadersReceived(requestDetails) {
+    const onHeadersReceived = (requestDetails) => {
         const {
             tab,
             requestUrl,
@@ -440,18 +440,18 @@ const webrequestInit = function () {
             requestContextStorage.update(requestId, { modifiedResponseHeaders: responseHeaders });
             return { responseHeaders };
         }
-    }
+    };
 
     /**
      * Modify CSP header to block WebSocket, prohibit data: and blob: frames and WebWorkers
      * @param requestDetails
      * @returns {{responseHeaders: *}} CSP headers
      */
-    function getCSPHeaders(requestDetails) {
+    const getCSPHeaders = (requestDetails) => {
         // Please note, that we do not modify response headers in Edge before Creators update:
         // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/401
         // https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/8796739/
-        if (browserUtils.isEdgeBeforeCreatorsUpdate()) {
+        if (browserUtils.isEdgeBeforeCreatorsUpdate() === true) {
             return;
         }
 
@@ -469,7 +469,8 @@ const webrequestInit = function () {
          */
         const cspRules = webRequestService.getCspRules(tab, requestUrl, frameUrl, requestType);
         if (cspRules) {
-            for (let i = 0; i < cspRules.length; ++i) {
+            const len = cspRules.length;
+            for (let i = 0; i < len; ++i) {
                 const rule = cspRules[i];
                 // Don't forget: getCspRules returns all $csp rules, we must directly check that the rule is blocking.
                 if (webRequestService.isRequestBlockedByRule(rule)) {
@@ -498,7 +499,7 @@ const webrequestInit = function () {
          * https://bugs.chromium.org/p/chromium/issues/detail?id=513860
          */
         return cspHeaders;
-    }
+    };
 
     /**
      * Intercepts csp_report requests.
@@ -511,7 +512,7 @@ const webrequestInit = function () {
      * @param {RequestDetails} details
      * @returns {{cancel: boolean}}
      */
-    function handleCspReportRequests(details) {
+    const handleCspReportRequests = (details) => {
         const {
             requestBody,
             requestUrl,
@@ -538,7 +539,7 @@ const webrequestInit = function () {
         // block if request is third party
         const thirdParty = TSUrlFilter.isThirdPartyRequest(requestUrl, originUrl);
 
-        if (frames.shouldStopRequestProcess(tab)) {
+        if (frames.shouldStopRequestProcess(tab) === true) {
             return;
         }
 
@@ -548,7 +549,7 @@ const webrequestInit = function () {
         }
 
         // block if requestBody contains moz://extension with our extension ID
-        if (browserUtils.isFirefoxBrowser()) {
+        if (browserUtils.isFirefoxBrowser() === true) {
             try {
                 const extensionUrl = backgroundPage.app.getExtensionUrl();
                 const report = String.fromCharCode.apply(null, new Uint8Array(requestBody.raw[0].bytes));
@@ -561,7 +562,7 @@ const webrequestInit = function () {
                 log.debug('Unable to parse CSP report request body content', details.url);
             }
         }
-    }
+    };
 
     /**
      * Add listeners described above.
@@ -780,7 +781,7 @@ const webrequestInit = function () {
              * {@link https://github.com/seanl-adg/InlineResourceLiteral/blob/master/index.js#L136}
              * {@link https://github.com/joliss/js-string-escape/blob/master/index.js}
              */
-            function escapeJs(match) {
+            const escapeJs = (match) => {
                 switch (match) {
                     case '"':
                     case "'":
@@ -797,7 +798,7 @@ const webrequestInit = function () {
                     case '\u2029':
                         return '\\u2029';
                 }
-            }
+            };
 
             /**
              * We use changing variable name because global properties
@@ -805,9 +806,8 @@ const webrequestInit = function () {
              * https://bugs.chromium.org/p/project-zero/issues/detail?id=1225&desc=6
              */
             const variableName = `scriptExecuted${Date.now()}`;
-            const reJsEscape = /["'\\\n\r\u2028\u2029]/g;
 
-            function buildScriptText(scriptText) {
+            const buildScriptText = (scriptText) => {
                 if (!scriptText) {
                     return null;
                 }
@@ -820,7 +820,8 @@ const webrequestInit = function () {
                  * script stops waiting with the error.
                  * Description of the issue: https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1004
                  */
-                const injectedScript = `(function() {\
+                const reJsEscape = /["'\\\n\r\u2028\u2029]/g;
+                const injectedScript = `(() => {\
                     if (window.${variableName}) {\
                         return;\
                     }\
@@ -829,7 +830,7 @@ const webrequestInit = function () {
                     script.textContent = "${scriptText.replace(reJsEscape, escapeJs)}";\
                     var FRAME_REQUESTS_LIMIT = 500;\
                     var frameRequests = 0;\
-                    function waitParent () {\
+                    const waitParent = () => {\
                         ++frameRequests;\
                         var parent = document.head || document.documentElement;\
                         if (parent) {\
@@ -847,23 +848,23 @@ const webrequestInit = function () {
                         } else {\
                             console.log("AdGuard: document.head or document.documentElement were unavailable too long");\
                         }\
-                    }\
+                    };\
                     waitParent();\
                 })()`;
 
                 return injectedScript;
-            }
+            };
 
             /**
              * @param {SelectorsData} selectorsData Selectors data
              * @returns {string} CSS to be supplied to insertCSS or null if selectors data is empty
              */
-            function buildCssText(selectorsData) {
+            const buildCssText = (selectorsData) => {
                 if (!selectorsData || !selectorsData.css) {
                     return null;
                 }
                 return selectorsData.css.join('\n');
-            }
+            };
 
             /**
              * Checks requestType, tabId and event
@@ -874,7 +875,7 @@ const webrequestInit = function () {
              * @param {String} eventName
              * @returns {Boolean}
              */
-            function shouldSkipInjection(requestType, tabId, eventName) {
+            const shouldSkipInjection = (requestType, tabId, eventName) => {
                 /**
                  * onCompleted event is used only to inject code to the Firefox iframes
                  * because in current Firefox implementation webNavigation.onCommitted event for iframes
@@ -892,13 +893,13 @@ const webrequestInit = function () {
                     return true;
                 }
                 return false;
-            }
+            };
 
             /**
              * Prepares injection content (scripts and css) for a given frame.
              * @param {RequestDetails} details
              */
-            function prepareInjection(details) {
+            const prepareInjection = (details) => {
                 const { requestType } = details;
                 const { tab } = details;
                 const { tabId } = tab;
@@ -926,13 +927,13 @@ const webrequestInit = function () {
                         url
                     });
                 }
-            }
+            };
 
             /**
              * Injects js code in the page on responseStarted event only if event was fired from the main_frame
              * @param {RequestDetails} details Details about the webrequest event
              */
-            function tryInjectOnResponseStarted(details) {
+            const tryInjectOnResponseStarted = (details) => {
                 const { tab } = details;
                 const { tabId } = tab;
                 const { requestType } = details;
@@ -945,7 +946,7 @@ const webrequestInit = function () {
                     // grep "localScriptRulesService" for details about script source
                     tabsApi.executeScriptCode(tabId, frameId, injection.jsScriptText);
                 }
-            }
+            };
 
             /**
              * Function checks if injection corresponds to url
@@ -956,9 +957,9 @@ const webrequestInit = function () {
              * @param url
              * @returns {boolean}
              */
-            function isInjectionForUrl(injection, url) {
+            const isInjectionForUrl = (injection, url) => {
                 return injection && injection.url === url;
-            }
+            };
 
             const REQUEST_FILTER_READY_TIMEOUT = 100;
             /**
@@ -966,7 +967,7 @@ const webrequestInit = function () {
              * @param {RequestDetails} details Details about the navigation event
              * @param {String} eventName Event name
              */
-            function tryInject(details, eventName) {
+            const tryInject = (details, eventName) => {
                 const { tab } = details;
                 const { tabId } = tab;
                 const { frameId } = details;
@@ -1027,22 +1028,22 @@ const webrequestInit = function () {
                 }
 
                 injections.removeTabFrameInjection(tabId, frameId);
-            }
+            };
 
             /**
              * Removes injection if onErrorOccured event fires for corresponding tabId and frameId
              * @param {RequestDetails} details
              */
-            function removeInjection(details) {
+            const removeInjection = (details) => {
                 const { requestType } = details;
                 const { tab } = details;
                 const { tabId } = tab;
-                if (shouldSkipInjection(requestType, tabId)) {
+                if (shouldSkipInjection(requestType, tabId) === true) {
                     return;
                 }
                 const { frameId } = details;
                 injections.removeTabFrameInjection(tabId, frameId);
-            }
+            };
 
             /**
              * Checks if iframe does not have a remote source
@@ -1054,14 +1055,14 @@ const webrequestInit = function () {
              * @param {number} frameId unique id of frame in the tab
              * @param {string} mainFrameUrl url of tab where iframe exists
              */
-            function isIframeWithoutSrc(frameUrl, frameId, mainFrameUrl) {
+            const isIframeWithoutSrc = (frameUrl, frameId, mainFrameUrl) => {
                 return (frameUrl === mainFrameUrl
                         || frameUrl === 'about:blank'
                         || frameUrl === 'about:srcdoc'
                         // eslint-disable-next-line no-script-url
                         || frameUrl.indexOf('javascript:') >= 0)
                     && frameId !== MAIN_FRAME_ID;
-            }
+            };
 
             /**
              * This method injects css and js code in iframes without remote source
@@ -1072,7 +1073,7 @@ const webrequestInit = function () {
              * https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1046
              * @param {{tabId: Number, url: String, processId: Number, frameId: Number, timeStamp: Number}} details
              */
-            function tryInjectInIframesWithoutSrc(details) {
+            const tryInjectInIframesWithoutSrc = (details) => {
                 const { frameId, tabId, url: frameUrl } = details;
                 /**
                  * Get url of the tab where iframe exists
@@ -1098,7 +1099,7 @@ const webrequestInit = function () {
                         tabsApi.insertCssCode(tabId, frameId, cssText);
                     }
                 }
-            }
+            };
             /**
              * https://developer.chrome.com/extensions/webRequest
              * https://developer.chrome.com/extensions/webNavigation
@@ -1112,7 +1113,7 @@ const webrequestInit = function () {
             // onHeadersReceived for SUBDOCUMENT requests
             // This is true only for SUBDOCUMENTS i.e. iframes
             // so we inject code when onCompleted event fires
-            if (browserUtils.isFirefoxBrowser()) {
+            if (browserUtils.isFirefoxBrowser() === true) {
                 backgroundPage.webRequest.onCompleted.addListener(details => { tryInject(details, 'onCompleted') }, ['<all_urls>']);
             }
             // Remove injections when tab is closed
@@ -1139,7 +1140,7 @@ const webrequestInit = function () {
         }
     }, ['<all_urls>']);
 
-    backgroundPage.webRequest.onErrorOccurred.addListener((requestDetails) => {
+    backgroundPage.webRequest.onErrorOccurred.addListener(requestDetails => {
         cookieService.onErrorOccurred(requestDetails);
 
         requestContextStorage.onRequestCompleted(requestDetails.requestId);

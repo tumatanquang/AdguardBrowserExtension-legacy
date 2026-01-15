@@ -2,7 +2,6 @@
  * Util class for work with strings
  */
 export const strings = (() => {
-    const ESCAPE_DOUBLE_QUOTES_PATTERN = /"/g;
     const StringUtils = {
         isEmpty(str) {
             return !str || str.trim().length === 0;
@@ -92,7 +91,8 @@ export const strings = (() => {
                 return -1;
             }
 
-            for (let i = start; i < str.length; ++i) {
+            const len = str.length;
+            for (let i = start; i < len; ++i) {
                 const c = str.charAt(i);
                 if (chars.indexOf(c) >= 0) {
                     return i;
@@ -112,12 +112,13 @@ export const strings = (() => {
         splitByDelimiterWithEscapeCharacter(str, delimiter, escapeCharacter, preserveAllTokens) {
             const parts = [];
 
-            if (this.isEmpty(str)) {
+            if (this.isEmpty(str) === true) {
                 return parts;
             }
 
             let sb = [];
-            for (let i = 0; i < str.length; ++i) {
+            const len = str.length;
+            for (let i = 0; i < len; ++i) {
                 const c = str.charAt(i);
 
                 if (c === delimiter) {
@@ -150,11 +151,11 @@ export const strings = (() => {
          * @param element
          */
         elementToString(element) {
-            const s = [];
-            s.push('<');
-            s.push(element.localName);
+            const s = ['<', element.localName];
             const { attributes } = element;
-            for (let i = 0; i < attributes.length; ++i) {
+            const ESCAPE_DOUBLE_QUOTES_PATTERN = /"/g;
+            const len = attributes.length;
+            for (let i = 0; i < len; ++i) {
                 const attr = attributes[i];
                 s.push(' ');
                 s.push(attr.name);
@@ -179,7 +180,8 @@ export const strings = (() => {
                 return false;
             }
 
-            for (let i = 0; i < substr.length; ++i) {
+            const len = substr.length;
+            for (let i = 0; i < len; ++i) {
                 if (str.charAt(startIndex + i) !== substr.charAt(i)) {
                     return false;
                 }
@@ -197,7 +199,8 @@ export const strings = (() => {
             const quotes = ['"', "'", '/'];
 
             const stack = [];
-            for (let i = 0; i < str.length; ++i) {
+            const len = str.length;
+            for (let i = 0; i < len; ++i) {
                 const cursor = str[i];
 
                 if (stack.length === 0 && this.startsAtIndexWith(str, i, substr)) {

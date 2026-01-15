@@ -13,17 +13,17 @@ export const defaultSettings = {
     'general-settings': {
         'allow-acceptable-ads': isUseDefaultSettings,
         'show-blocked-ads-count': !settings.defaultProperties[settings.DISABLE_SHOW_PAGE_STATS],
-        'autodetect-filters': !settings.defaultProperties[settings.DISABLE_DETECT_FILTERS],
-        'safebrowsing-enabled': !settings.defaultProperties[settings.DISABLE_SAFEBROWSING],
+        'autodetect-filters': settings.defaultProperties[settings.DISABLE_DETECT_FILTERS],
+        'safebrowsing-enabled': settings.defaultProperties[settings.DISABLE_SAFEBROWSING],
         'filters-update-period': settings.defaultProperties[settings.FILTERS_UPDATE_PERIOD],
         'appearance-theme': settings.defaultProperties[settings.APPEARANCE_THEME]
     },
     'extension-specific-settings': {
         'use-optimized-filters': settings.defaultProperties[settings.USE_OPTIMIZED_FILTERS],
-        'collect-hits-count': !settings.defaultProperties[settings.DISABLE_COLLECT_HITS],
+        'collect-hits-count': settings.defaultProperties[settings.DISABLE_COLLECT_HITS],
         'show-context-menu': !settings.defaultProperties[settings.DISABLE_SHOW_CONTEXT_MENU],
         'show-info-about-adguard': !settings.defaultProperties[settings.DISABLE_SHOW_ADGUARD_PROMO_INFO],
-        'show-app-updated-info': !settings.defaultProperties[settings.DISABLE_SHOW_APP_UPDATED_NOTIFICATION],
+        'show-app-updated-info': settings.defaultProperties[settings.DISABLE_SHOW_APP_UPDATED_NOTIFICATION],
         'hide-rate-adguard': settings.defaultProperties[settings.HIDE_RATE_BLOCK],
         'user-rules-editor-wrap': settings.defaultProperties[settings.USER_RULES_EDITOR_WRAP]
     },

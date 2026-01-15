@@ -3,7 +3,7 @@ import { Popover } from '../../../../common/components/ui/Popover';
 
 import { FilterTag } from './FilterTag';
 
-export function FilterTags({ tags }) {
+export const FilterTags = ({ tags }) => {
     if (tags.length === 0) {
         return null;
     }
@@ -17,4 +17,4 @@ export function FilterTags({ tags }) {
             ))}
         </div>
     );
-}
+};

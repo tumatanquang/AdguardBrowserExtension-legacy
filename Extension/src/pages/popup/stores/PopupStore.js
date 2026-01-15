@@ -221,10 +221,13 @@ class PopupStore {
             case TIME_RANGES.WEEK: {
                 const result = {};
                 const { lastWeek } = stats;
-                for (let i = 0; i < lastWeek.length; ++i) {
+                const len = lastWeek.length;
+                for (let i = 0; i < len; ++i) {
                     const day = lastWeek[i];
-                    // eslint-disable-next-line no-restricted-syntax
-                    for (const type of Object.keys(day)) {
+                    const types = Object.keys(day);
+                    const { length } = types;
+                    for (let i = 0; i < length; ++i) {
+                        const type = types[i];
                         result[type] = (result[type] || 0) + day[type];
                     }
                 }
@@ -236,10 +239,13 @@ class PopupStore {
             case TIME_RANGES.YEAR: {
                 const result = {};
                 const { lastYear } = stats;
-                for (let i = 0; i < lastYear.length; ++i) {
+                const len = lastYear.length;
+                for (let i = 0; i < len; ++i) {
                     const month = lastYear[i];
-                    // eslint-disable-next-line no-restricted-syntax
-                    for (const type of Object.keys(month)) {
+                    const types = Object.keys(month);
+                    const { length } = types;
+                    for (let i = 0; i < length; ++i) {
+                        const type = types[i];
                         result[type] = (result[type] || 0) + month[type];
                     }
                 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-function SettingsSection(props) {
+const SettingsSection = (props) => {
     const {
         title,
         description,
@@ -57,6 +57,6 @@ function SettingsSection(props) {
             </div>
         </div>
     );
-}
+};
 
 export { SettingsSection };

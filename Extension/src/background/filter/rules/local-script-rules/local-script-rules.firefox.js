@@ -25,7 +25,7 @@
  * 3. We also allow "User rules" to work since those rules are added manually by the user.
  *  This way filters maintainers can test new rules before including them in the filters.
  */
-const localScriptRulesService = (function () {
+const localScriptRulesService = (() => {
     /**
      * Storage for script rule texts from the local_script_rules.json
      */
@@ -35,16 +35,20 @@ const localScriptRulesService = (function () {
      * Saves local script rules to object
      * @param json JSON object loaded from the filters/local_script_rules.json file
      */
-    const setLocalScriptRules = function (json) {
+    const setLocalScriptRules = (json) => {
         LOCAL_SCRIPT_RULES = Object.create(null);
 
         const { rules } = json;
-        for (let i = 0; i < rules.length; ++i) {
+        const len = rules.length;
+        for (let i = 0; i < len; ++i) {
             const rule = rules[i];
             const { domains, script } = rule;
-            let ruleText = '';
+            let ruleText;
             if (domains !== '<any>') {
                 ruleText = domains;
+            }
+            else {
+                ruleText = '';
             }
             ruleText += `#%#${script}`;
             LOCAL_SCRIPT_RULES[ruleText] = true;
@@ -56,7 +60,7 @@ const localScriptRulesService = (function () {
      * @param ruleText Rule text
      * @returns {boolean}
      */
-    const isLocal = function (ruleText) {
+    const isLocal = (ruleText) => {
         return ruleText in LOCAL_SCRIPT_RULES;
     };
 

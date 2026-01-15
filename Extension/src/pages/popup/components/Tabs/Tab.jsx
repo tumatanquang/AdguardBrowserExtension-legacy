@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 
-export function Tab({ title, active, onClick }) {
+export const Tab = ({ title, active, onClick }) => {
     const tabClass = classnames('tabs__tab', { tabs__tab_active: active });
 
     return (
@@ -13,4 +13,4 @@ export function Tab({ title, active, onClick }) {
             {title}
         </button>
     );
-}
+};

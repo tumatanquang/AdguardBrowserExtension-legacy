@@ -33,17 +33,18 @@ import { notifications } from './utils/notifications';
  * Service that manages extension version information and handles
  * extension update. For instance we may need to change storage schema on update.
  */
-export const applicationUpdateService = (function () {
+export const applicationUpdateService = (() => {
     /**
      * Helper to execute promises one by one
      *
      * @param methods Methods to execute
      * @private
      */
-    async function executeMethods(methods) {
+    const executeMethods = async (methods) => {
         try {
-            // eslint-disable-next-line no-restricted-syntax
-            for (const method of methods) {
+            const len = methods.length;
+            for (let i = 0; i < len; ++i) {
+                const method = methods[i];
                 // eslint-disable-next-line no-await-in-loop
                 await method();
             }
@@ -53,9 +54,9 @@ export const applicationUpdateService = (function () {
             await settingsProvider.applyDefaultSettings();
             backgroundPage.runtime.reload();
         }
-    }
+    };
 
-    function handleUndefinedGroupStatuses() {
+    const handleUndefinedGroupStatuses = () => {
         const filters = subscriptions.getFilters();
 
         const filtersStateInfo = filtersState.getFiltersState();
@@ -67,32 +68,33 @@ export const applicationUpdateService = (function () {
 
         const groupState = filtersState.getGroupsState();
 
-        for (let i = 0; i < enabledFilters.length; ++i) {
+        const len = enabledFilters.length;
+        for (let i = 0; i < len; ++i) {
             const filter = enabledFilters[i];
             const { groupId } = filter;
             if (groupState[groupId] === undefined) {
                 application.enableGroup(filter.groupId);
             }
         }
-    }
+    };
 
     const UPDATE_PREVIOUS_DEFAULT_VALUE = 48 * 60 * 60 * 1000;
-    function handleDefaultUpdatePeriodSetting() {
+    const handleDefaultUpdatePeriodSetting = () => {
         const currentUpdatePeriod = settings.getFiltersUpdatePeriod();
 
         if (currentUpdatePeriod === UPDATE_PREVIOUS_DEFAULT_VALUE) {
             settings.setFiltersUpdatePeriod(settings.DEFAULT_FILTERS_UPDATE_PERIOD);
         }
-    }
+    };
 
-    function clearCaches() {
+    const clearCaches = () => {
         safebrowsing.clearCache();
-    }
+    };
 
     /**
      * From that version we store already converted rule texts in storage
      */
-    async function onUpdateRuleConverter() {
+    const onUpdateRuleConverter = async () => {
         const filtersStateInfo = filtersState.getFiltersState();
         const installedFiltersIds = Object.keys(filtersStateInfo)
             .map(filterId => Number.parseInt(filterId, 10));
@@ -115,22 +117,22 @@ export const applicationUpdateService = (function () {
         });
 
         await Promise.all(reloadRulesPromises);
-    }
+    };
 
     /**
      * In the v4.0.171 we have littered window.localStorage with proms used in the promo notifications module, now we
      * are clearing them
      */
-    function onUpdateClearPromoDetails() {
+    const onUpdateClearPromoDetails = () => {
         window.localStorage.removeItem(notifications.VIEWED_NOTIFICATIONS);
         window.localStorage.removeItem(notifications.LAST_NOTIFICATION_TIME);
-    }
+    };
 
     /**
      * Function removes obsolete filters from the storage
      * @returns {Promise<any>}
      */
-    async function handleObsoleteFiltersRemoval() {
+    const handleObsoleteFiltersRemoval = async () => {
         const filtersStateInfo = filtersState.getFiltersState();
         const allFiltersMetadata = subscriptions.getFilters();
 
@@ -145,18 +147,19 @@ export const applicationUpdateService = (function () {
             return !existingFiltersIds.includes(id);
         });
 
-        for (let i = 0; i < filtersIdsToRemove.length; ++i) {
+        const len = filtersIdsToRemove.length;
+        for (let i = 0; i < len; ++i) {
             const filterId = filtersIdsToRemove[i];
             filtersState.removeFilter(filterId);
         }
 
-        const removePromises = filtersIdsToRemove.map(async filterId => {
+        const removePromises = filtersIdsToRemove.map(async (filterId) => {
             await rulesStorage.remove(filterId);
             log.info(`Filter with id: ${filterId} removed from the storage`);
         });
 
         await Promise.all(removePromises);
-    }
+    };
 
     /**
      * Async returns extension run info
@@ -183,7 +186,7 @@ export const applicationUpdateService = (function () {
      * Handle extension update
      * @param runInfo   Run info
      */
-    const onUpdate = async function (runInfo) {
+    const onUpdate = async (runInfo) => {
         const methods = [];
 
         log.info(`The extension was updated from ${runInfo.prevVersion}`);

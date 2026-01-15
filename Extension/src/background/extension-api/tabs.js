@@ -25,24 +25,24 @@ import { log } from '../../common/log';
  * Chromium tabs implementation
  * @type {{onCreated, onRemoved, onUpdated, onActivated, create, remove, activate, reload, sendMessage, getAll, getActive, fromChromeTab}}
  */
-export const tabsImpl = (function () {
+export const tabsImpl = (() => {
     /**
      * tabId parameter must be integer
      * @param tabId
      */
-    function tabIdToInt(tabId) {
+    const tabIdToInt = (tabId) => {
         return Number.parseInt(tabId, 10);
-    }
+    };
 
-    function logOperationError(operation, e) {
+    const logOperationError = (operation, e) => {
         log.error('Error while executing operation{1}: {0}', e, operation ? ` '${operation}'` : '');
-    }
+    };
 
     /**
      * Returns id of active tab
      * @returns {Promise<number|null>}
      */
-    const getActive = async function () {
+    const getActive = async () => {
         /**
          * lastFocusedWindow parameter isn't supported by Opera
          * But seems currentWindow has the same effect in our case.
@@ -68,13 +68,13 @@ export const tabsImpl = (function () {
 
     // https://developer.chrome.com/extensions/tabs#event-onCreated
     const onCreatedChannel = utils.channels.newChannel();
-    browser.tabs.onCreated.addListener((chromeTab) => {
+    browser.tabs.onCreated.addListener(chromeTab => {
         onCreatedChannel.notify(toTabFromChromeTab(chromeTab));
     });
 
     // https://developer.chrome.com/extensions/tabs#event-onCreated
     const onRemovedChannel = utils.channels.newChannel();
-    browser.tabs.onRemoved.addListener((tabId) => {
+    browser.tabs.onRemoved.addListener(tabId => {
         onRemovedChannel.notify(tabId);
     });
 
@@ -86,7 +86,7 @@ export const tabsImpl = (function () {
 
     // https://developer.chrome.com/extensions/tabs#event-onActivated
     const onActivatedChannel = utils.channels.newChannel();
-    browser.tabs.onActivated.addListener((activeInfo) => {
+    browser.tabs.onActivated.addListener(activeInfo => {
         onActivatedChannel.notify(activeInfo.tabId);
     });
 
@@ -106,7 +106,7 @@ export const tabsImpl = (function () {
      * @param tabId Tab identifier
      * @param windowId Window identifier
      */
-    async function focusWindow(tabId, windowId) {
+    const focusWindow = async (tabId, windowId) => {
         /**
          * Updating already focused window produces bug in Edge browser
          * https://github.com/AdguardTeam/AdguardBrowserExtension/issues/675
@@ -121,13 +121,13 @@ export const tabsImpl = (function () {
                 logOperationError(`Update window ${windowId}`, e);
             }
         }
-    }
+    };
 
     /**
      * Creates new tab
      * @param createData
      */
-    const create = async function (createData) {
+    const create = async (createData) => {
         const {
             url,
             inNewWindow,
@@ -187,7 +187,7 @@ export const tabsImpl = (function () {
             return;
         }
 
-        async function onWindowFound(win) {
+        const onWindowFound = async (win) => {
             // https://developer.chrome.com/extensions/tabs#method-create
             const chromeTab = await browser.tabs.create({
                 /**
@@ -205,7 +205,7 @@ export const tabsImpl = (function () {
             }
 
             return toTabFromChromeTab(chromeTab);
-        }
+        };
 
         const onWindowCreatedWithTab = async (win) => {
             const [tab] = win.tabs;
@@ -215,10 +215,10 @@ export const tabsImpl = (function () {
             return toTabFromChromeTab(tab);
         };
 
-        function isAppropriateWindow(win) {
+        const isAppropriateWindow = (win) => {
             // We can't open not-http (e.g. 'chrome-extension://') urls in incognito mode
             return win.type === 'normal' && (!win.incognito || url.indexOf('http') === 0);
-        }
+        };
 
         if (!inNewWindow) {
             // https://developer.chrome.com/extensions/windows#method-create
@@ -235,7 +235,8 @@ export const tabsImpl = (function () {
             const wins = await browser.windows.getAll({});
 
             if (wins) {
-                for (let i = 0; i < wins.length; ++i) {
+                const len = wins.length;
+                for (let i = 0; i < len; ++i) {
                     const win = wins[i];
                     if (isAppropriateWindow(win)) {
                         return onWindowFound(win);
@@ -266,7 +267,7 @@ export const tabsImpl = (function () {
         return tabId;
     };
 
-    const activate = async function (tabId) {
+    const activate = async (tabId) => {
         try {
             // https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/tabs/update
             const chromeTab = await browser.tabs.update(tabIdToInt(tabId), { active: true });
@@ -355,7 +356,8 @@ export const tabsImpl = (function () {
         // https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/tabs/query
         const chromeTabs = await browser.tabs.query({});
         const result = [];
-        for (let i = 0; i < chromeTabs.length; ++i) {
+        const len = chromeTabs.length;
+        for (let i = 0; i < len; ++i) {
             const chromeTab = chromeTabs[i];
             result.push(toTabFromChromeTab(chromeTab));
         }
@@ -398,7 +400,6 @@ export const tabsImpl = (function () {
      */
     let userCSSSupport = true;
 
-    const CSS_ORIGIN_PATTERN = /\bcssOrigin\b/;
     /**
      * Inserts CSS using the `browser.tabs.insertCSS` under the hood.
      * This method always injects CSS using `runAt: document_start`/
@@ -415,7 +416,7 @@ export const tabsImpl = (function () {
             matchAboutBlank: true
         };
 
-        if (userCSSSupport) {
+        if (userCSSSupport === true) {
             // If this is set for not supporting browser, it will throw an error.
             injectDetails.cssOrigin = 'user';
         }
@@ -427,9 +428,8 @@ export const tabsImpl = (function () {
             // e.message in edge is undefined
             const errorMessage = e.message || e;
             // Some browsers do not support user css origin // TODO which one?
-            if (CSS_ORIGIN_PATTERN.test(errorMessage)) {
-                userCSSSupport = false;
-            }
+            const CSS_ORIGIN_PATTERN = /\bcssOrigin\b/;
+            userCSSSupport = CSS_ORIGIN_PATTERN.test(errorMessage);
         }
     };
 

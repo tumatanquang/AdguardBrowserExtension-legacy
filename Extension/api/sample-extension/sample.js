@@ -21,30 +21,31 @@ const configuration = {
 };
 
 // Add event listener for blocked requests
-const onBlocked = function (details) {
+const onBlocked = (details) => {
     console.log(details);
 };
 
 adguardApi.onRequestBlocked.addListener(onBlocked);
 
 // Add event listener for rules created by Adguard Assistant
-chrome.runtime.onMessage.addListener((message) => {
-    if (message.type === 'assistant-create-rule') {
-        const { token, ruleText } = message.data;
-        const expectedToken = adguardApi.getAssistantToken();
-        // check for token to avoid possible vulnerabilities AG-12883
-        // https://groups.google.com/a/chromium.org/g/chromium-extensions/c/0ei-UCHNm34/m/lDaXwQhzBAAJ?pli=1
-        // https://bugs.chromium.org/p/chromium/issues/detail?id=982326
-        if (token !== expectedToken) {
-            console.error(`Tokens for message ${message} does not not match. Expected token: ${token}. Received token: ${expectedToken}`);
-            return;
-        }
+chrome.runtime.onMessage.addListener(message => {
+    switch (message.type) {
+        case 'assistant-create-rule':
+            const { token, ruleText } = message.data;
+            const expectedToken = adguardApi.getAssistantToken();
+            // check for token to avoid possible vulnerabilities AG-12883
+            // https://groups.google.com/a/chromium.org/g/chromium-extensions/c/0ei-UCHNm34/m/lDaXwQhzBAAJ?pli=1
+            // https://bugs.chromium.org/p/chromium/issues/detail?id=982326
+            if (token !== expectedToken) {
+                console.error(`Tokens for message ${message} does not not match. Expected token: ${token}. Received token: ${expectedToken}`);
+                return;
+            }
 
-        console.log(`Rule ${ruleText} was created by Adguard Assistant`);
-        configuration.rules.push(ruleText);
-        adguardApi.configure(configuration, () => {
-            console.log('Finished Adguard API re-configuration');
-        });
+            console.log(`Rule ${ruleText} was created by Adguard Assistant`);
+            configuration.rules.push(ruleText);
+            adguardApi.configure(configuration, () => {
+                console.log('Finished Adguard API re-configuration');
+            });
     }
 });
 

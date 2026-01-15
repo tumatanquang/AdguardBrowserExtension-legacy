@@ -2,19 +2,19 @@ import { pageStats } from '../../../../Extension/src/background/filter/page-stat
 import { subscriptions } from '../../../../Extension/src/background/filter/filters/subscription';
 
 jest.mock('../../../../Extension/src/background/utils/local-storage', () => {
-    const getItem = function (key) {
+    const getItem = (key) => {
         return global.localStorage.getItem(key);
     };
 
-    const setItem = function (key, value) {
+    const setItem = (key, value) => {
         global.localStorage.setItem(key, value);
     };
 
-    const removeItem = function (key) {
+    const removeItem = (key) => {
         global.localStorage.removeItem(key);
     };
 
-    const hasItem = function (key) {
+    const hasItem = (key) => {
         return key in global.localStorage;
     };
 
@@ -47,7 +47,7 @@ describe('pageStats', () => {
         });
     });
 
-    jest.spyOn(subscriptions, 'getGroup').mockImplementation((groupId) => {
+    jest.spyOn(subscriptions, 'getGroup').mockImplementation(groupId => {
         return groupsMap[groupId];
     });
 
@@ -59,7 +59,7 @@ describe('pageStats', () => {
         5: { filterId: 5, groupId: 5 }
     };
 
-    jest.spyOn(subscriptions, 'getFilter').mockImplementation((filterId) => {
+    jest.spyOn(subscriptions, 'getFilter').mockImplementation(filterId => {
         return filtersMap[filterId];
     });
 

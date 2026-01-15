@@ -23,47 +23,48 @@ import { backgroundPage } from '../extension-api/background-page';
 import { browser } from '../extension-api/browser';
 import { isMacOs, isWindowsOs } from '../../common/user-agent-utils';
 
-export const browserUtils = (function () {
+export const browserUtils = (() => {
     /**
      * Extension version (x.x.x)
      * @param version
      * @constructor
      */
-    const Version = function (version) {
-        this.version = Object.create(null);
+    class Version {
+        constructor(version) {
+            this.version = Object.create(null);
 
-        const parts = String(version || '').split('.');
+            const parts = String(version || '').split('.');
 
-        function parseVersionPart(part) {
-            if (Number.isNaN(part)) {
-                return 0;
-            }
-            return Math.max(+part, 0);
-        }
+            const parseVersionPart = (part) => {
+                if (Number.isNaN(part)) {
+                    return 0;
+                }
+                return Math.max(+part, 0);
+            };
 
-        for (let i = 4; --i >= 0;) {
-            this.version[i] = parseVersionPart(parts[i]);
-        }
-    };
-
-    /**
-     * Compares with other version
-     * @param o
-     * @returns {number}
-     */
-    Version.prototype.compare = function (o) {
-        for (let i = 0; i < 4; ++i) {
-            if (this.version[i] > o.version[i]) {
-                return 1;
-            }
-            if (this.version[i] < o.version[i]) {
-                return -1;
+            for (let i = 4; --i >= 0;) {
+                this.version[i] = parseVersionPart(parts[i]);
             }
         }
-        return 0;
-    };
 
-    const SEMVER_PATTERN = /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)$/;
+        /**
+         * Compares with other version
+         * @param o
+         * @returns {number}
+         */
+        compare(o) {
+            for (let i = 0; i < 4; ++i) {
+                if (this.version[i] > o.version[i]) {
+                    return 1;
+                }
+                if (this.version[i] < o.version[i]) {
+                    return -1;
+                }
+            }
+            return 0;
+        }
+    }
+
     const browserUtils = {
         getClientId() {
             let clientId = localStorage.getItem('client-id');
@@ -89,6 +90,7 @@ export const browserUtils = (function () {
          * @return {boolean}
          */
         isSemver(version) {
+            const SEMVER_PATTERN = /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)$/;
             return SEMVER_PATTERN.test(version);
         },
 
@@ -266,7 +268,7 @@ export const browserUtils = (function () {
         getNavigatorLanguages(limit) {
             let languages = [];
             // https://developer.mozilla.org/ru/docs/Web/API/NavigatorLanguage/languages
-            if (collections.isArray(navigator.languages)) {
+            if (collections.isArray(navigator.languages) === true) {
                 // get all languages if 'limit' is not specified
                 const langLimit = limit || navigator.languages.length;
                 languages = navigator.languages.slice(0, langLimit);
@@ -298,11 +300,10 @@ export const browserUtils = (function () {
             const locale = encodeURIComponent(backgroundPage.app.getLocale());
             const version = encodeURIComponent(backgroundPage.app.getVersion());
             const id = encodeURIComponent(backgroundPage.app.getId());
-            const params = [];
-            params.push(`v=${version}`);
-            params.push(`cid=${clientId}`);
-            params.push(`lang=${locale}`);
-            params.push(`id=${id}`);
+            const params = [`v=${version}`,
+                `cid=${clientId}`,
+                `lang=${locale}`,
+                `id=${id}`];
             return params;
         },
 

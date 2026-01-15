@@ -43,7 +43,8 @@ export const splitToPatterns = (requestUrl, domain, isAllowlist) => {
         const parts = path.split('/');
 
         let pattern = `${domain}/`;
-        for (let i = 0; i < Math.min(parts.length - 1, PATTERNS_COUNT); ++i) {
+        const len = Math.min(parts.length - 1, PATTERNS_COUNT);
+        for (let i = 0; i < len; ++i) {
             pattern += `${parts[i]}/`;
             patterns.push(prefix + pattern);
         }

@@ -9,7 +9,9 @@ import { useResizeObserver } from '../../../common/hooks/useResizeObserver';
 
 import './filters.pcss';
 
-function Filters() {
+const RESIZE_OBSERVER_THROTTLE_MS = 500;
+
+const Filters = () => {
     const [leftArrow, setLeftArrow] = useState(false);
     const [rightArrow, setRightArrow] = useState(true);
     const ref = useRef();
@@ -26,7 +28,7 @@ function Filters() {
         });
     }, []);
 
-    useResizeObserver(ref, calcArrowState, 500);
+    useResizeObserver(ref, calcArrowState, RESIZE_OBSERVER_THROTTLE_MS);
 
     const scrollTags = () => {
         const { scrollLeft, scrollWidth, clientWidth } = ref.current;
@@ -46,7 +48,7 @@ function Filters() {
     };
 
     const handleWheel = (e) => {
-        if (isVerticalScroll(e.deltaY, e.deltaX)) {
+        if (isVerticalScroll(e.deltaY, e.deltaX) === true) {
             if (e.deltaY < 0) ref.current.scrollLeft += 10;
             else ref.current.scrollLeft -= 10;
         }
@@ -89,6 +91,6 @@ function Filters() {
             </div>
         </div>
     );
-}
+};
 
 export { Filters };

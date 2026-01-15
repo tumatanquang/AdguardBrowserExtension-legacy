@@ -18,7 +18,7 @@
 import { contentPage } from './content-script';
 import { MESSAGE_TYPES } from '../common/constants';
 
-export const contentUtils = (function () {
+export const contentUtils = (() => {
     const MAX_Z_INDEX = '2147483647';
 
     /**
@@ -110,16 +110,13 @@ export const contentUtils = (function () {
                 </div>`;
     };
 
-    const MAX_TRIES_COUNT = 10;
-    const APPEND_POPUP_TIMEOUT_MS = 500;
-    const BODY_POPUP_TIMEOUT_MS = 4 * 1000;
     /**
      * Shows alert popup.
      * Popup content is added right to the page content.
      *
      * @param message Message text
      */
-    function showAlertPopup(message) {
+    const showAlertPopup = (message) => {
         const {
             text,
             title,
@@ -133,7 +130,7 @@ export const contentUtils = (function () {
         }
 
         let messages = [];
-        if (Array.isArray(text)) {
+        if (Array.isArray(text) === true) {
             messages = text;
         }
         else {
@@ -141,7 +138,8 @@ export const contentUtils = (function () {
         }
 
         let fullText = '';
-        for (let i = 0; i < messages.length; ++i) {
+        const len = messages.length;
+        for (let i = 0; i < len; ++i) {
             if (i !== 0) {
                 fullText += ', ';
             }
@@ -150,8 +148,8 @@ export const contentUtils = (function () {
 
         const alertDivHtml = genAlertHtml(title, fullText);
 
-        function appendPopup(count) {
-            if (count >= MAX_TRIES_COUNT) {
+        const appendPopup = (count) => {
+            if (count >= 10) {
                 return;
             }
 
@@ -171,17 +169,17 @@ export const contentUtils = (function () {
                     if (alertElement && alertElement.parentNode) {
                         alertElement.parentNode.removeChild(alertElement);
                     }
-                }, BODY_POPUP_TIMEOUT_MS);
+                }, 4 * 1000);
             }
             else {
                 setTimeout(() => {
                     appendPopup(count + 1);
-                }, APPEND_POPUP_TIMEOUT_MS);
+                }, 500);
             }
-        }
+        };
 
         appendPopup(0);
-    }
+    };
 
     /**
      * Shows version updated popup.
@@ -189,7 +187,7 @@ export const contentUtils = (function () {
      *
      * @param {{title,description, changelogHref, changelogText, offer, offerDesc, offerButtonHref, offerButtonText}} message
      */
-    function showVersionUpdatedPopup(message) {
+    const showVersionUpdatedPopup = (message) => {
         const {
             title,
             offer,
@@ -241,7 +239,8 @@ export const contentUtils = (function () {
             if (closeElements.length === 0) {
                 return false;
             }
-            for (let i = 0; i < closeElements.length; ++i) {
+            const len = closeElements.length;
+            for (let i = 0; i < len; ++i) {
                 const element = closeElements[i];
                 element.addEventListener('click', () => {
                     if (element.classList.contains('disable-notifications')) {
@@ -253,7 +252,7 @@ export const contentUtils = (function () {
                         });
                     }
                     if (showPromoNotification
-                        && element.classList.contains('set-notification-viewed')) {
+                        && element.classList.contains('set-notification-viewed') === true) {
                         contentPage.sendMessage({
                             type: 'setNotificationViewed',
                             withDelay: false
@@ -275,8 +274,8 @@ export const contentUtils = (function () {
             return true;
         };
 
-        function appendPopup(count) {
-            if (count >= MAX_TRIES_COUNT) {
+        const appendPopup = (count) => {
+            if (count >= 10) {
                 return;
             }
 
@@ -287,7 +286,7 @@ export const contentUtils = (function () {
                 const iframe = appendIframe(document.body, updateIframeHtml, alertStyles);
                 iframe.classList.add('adguard-update-iframe');
                 const isListening = handleCloseIframe(iframe);
-                if (!isListening) {
+                if (isListening === false) {
                     iframe.addEventListener('load', () => {
                         handleCloseIframe(iframe);
                     });
@@ -296,22 +295,22 @@ export const contentUtils = (function () {
             else {
                 setTimeout(() => {
                     appendPopup(count + 1);
-                }, APPEND_POPUP_TIMEOUT_MS);
+                }, 500);
             }
-        }
+        };
 
         appendPopup(0);
-    }
+    };
 
     /**
      * Reload page without cache
      */
-    function noCacheReload() {
+    const noCacheReload = () => {
         const xhr = new XMLHttpRequest();
         xhr.open('GET', document.location.href);
+        xhr.setRequestHeader('Cache-Control', 'no-cache');
         xhr.setRequestHeader('Pragma', 'no-cache');
         xhr.setRequestHeader('Expires', '-1');
-        xhr.setRequestHeader('Expires', 'no-cache');
 
         const reload = () => {
             document.location.reload(true);
@@ -321,7 +320,7 @@ export const contentUtils = (function () {
         xhr.onerror = reload;
         xhr.onabort = reload;
         xhr.send(null);
-    }
+    };
 
     const init = () => {
         if (window !== window.top) {

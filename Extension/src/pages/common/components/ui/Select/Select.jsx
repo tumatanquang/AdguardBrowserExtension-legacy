@@ -6,12 +6,12 @@ import { Icon } from '../Icon';
 
 import './select.pcss';
 
-export function Select({
+export const Select = ({
     id,
     handler,
     options,
     value
-}) {
+}) => {
     const ref = useRef(null);
     const refList = useRef(null);
 
@@ -58,7 +58,7 @@ export function Select({
         setHidden(!hidden);
     };
 
-    const currentValue = options.find((i) => i.value === value);
+    const currentValue = options.find(i => i.value === value);
     const currentTitle = currentValue.title;
 
     return (
@@ -84,4 +84,4 @@ export function Select({
             )}
         </div>
     );
-}
+};
