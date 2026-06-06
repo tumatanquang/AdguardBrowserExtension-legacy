@@ -54,26 +54,26 @@ export const filteringApi = (() => {
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const findRuleForRequest = (matchQuery) => {
-        return getRequestFilter().findRuleForRequest(matchQuery);
+    const findRuleForRequest = async (matchQuery) => {
+        return await getRequestFilter().findRuleForRequest(matchQuery);
     };
 
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const findAllowlistRule = (matchQuery) => {
-        return getRequestFilter().findAllowlistRule(matchQuery);
+    const findAllowlistRule = async (matchQuery) => {
+        return await getRequestFilter().findAllowlistRule(matchQuery);
     };
 
-    const findDocumentRule = (documentUrl) => {
-        return getRequestFilter().findDocumentRule(documentUrl);
+    const findDocumentRule = async (documentUrl) => {
+        return await getRequestFilter().findDocumentRule(documentUrl);
     };
 
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const findStealthAllowlistRule = (matchQuery) => {
-        return getRequestFilter().findStealthAllowlistRule(matchQuery);
+    const findStealthAllowlistRule = async (matchQuery) => {
+        return await getRequestFilter().findStealthAllowlistRule(matchQuery);
     };
 
     const getSelectorsForUrl = (documentUrl, cosmeticOptions, traditionalCss, extCss) => {
@@ -84,50 +84,50 @@ export const filteringApi = (() => {
         return getRequestFilter().getScriptsStringForUrl(documentUrl, tab, cosmeticOptions);
     };
 
-    const getContentRulesForUrl = (documentUrl) => {
-        return getRequestFilter().getContentRulesForUrl(documentUrl);
+    const getContentRulesForUrl = async (documentUrl) => {
+        return await getRequestFilter().getContentRulesForUrl(documentUrl);
     };
 
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const getCspRules = (matchQuery) => {
-        return getRequestFilter().findCspRules(matchQuery);
+    const getCspRules = async (matchQuery) => {
+        return await getRequestFilter().findCspRules(matchQuery);
     };
 
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const getCookieRules = (matchQuery) => {
-        return getRequestFilter().findCookieRules(matchQuery);
+    const getCookieRules = async (matchQuery) => {
+        return await getRequestFilter().findCookieRules(matchQuery);
     };
 
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const getReplaceRules = (matchQuery) => {
-        return getRequestFilter().findReplaceRules(matchQuery);
+    const getReplaceRules = async (matchQuery) => {
+        return await getRequestFilter().findReplaceRules(matchQuery);
     };
 
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const getCosmeticOption = (matchQuery) => {
-        return getRequestFilter().getMatchingResult(matchQuery).getCosmeticOption();
+    const getCosmeticOption = async (matchQuery) => {
+        return (await getRequestFilter().getMatchingResult(matchQuery)).getCosmeticOption();
     };
 
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const getRemoveParamRules = (matchQuery) => {
-        return getRequestFilter().getMatchingResult(matchQuery).getRemoveParamRules();
+    const getRemoveParamRules = async (matchQuery) => {
+        return (await getRequestFilter().getMatchingResult(matchQuery)).getRemoveParamRules();
     };
 
     /**
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      */
-    const getRemoveHeaderRules = (matchQuery) => {
-        return getRequestFilter().getMatchingResult(matchQuery).getRemoveHeaderRules();
+    const getRemoveHeaderRules = async (matchQuery) => {
+        return (await getRequestFilter().getMatchingResult(matchQuery)).getRemoveHeaderRules();
     };
 
     const getRequestFilterInfo = () => {

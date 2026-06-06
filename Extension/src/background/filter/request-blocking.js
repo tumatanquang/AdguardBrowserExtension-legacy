@@ -304,7 +304,7 @@ export const webRequestService = (() => {
      * @param requestType   one of RequestType
      * @returns {*}         rule or null
      */
-    const getRuleForRequest = (tab, requestUrl, referrerUrl, requestType) => {
+    const getRuleForRequest = async (tab, requestUrl, referrerUrl, requestType) => {
         if (frames.isTabProtectionDisabled(tab)) {
             // don't process request
             return null;
@@ -331,14 +331,14 @@ export const webRequestService = (() => {
 
         if (!allowlistRule) {
             // If allowlist rule is not found for the main frame, we check it for referrer
-            allowlistRule = filteringApi.findAllowlistRule({
+            allowlistRule = await filteringApi.findAllowlistRule({
                 requestUrl,
                 frameUrl: referrerUrl,
                 requestType: RequestTypes.DOCUMENT
             });
         }
 
-        return filteringApi.findRuleForRequest({
+        return await filteringApi.findRuleForRequest({
             requestUrl,
             frameUrl: referrerUrl,
             requestType,
@@ -352,13 +352,13 @@ export const webRequestService = (() => {
      * @param documentUrl Document URL
      * @returns collection of content rules or null
      */
-    const getContentRules = (tab, documentUrl) => {
+    const getContentRules = async (tab, documentUrl) => {
         if (frames.shouldStopRequestProcess(tab) === true) {
             // don't process request
             return null;
         }
 
-        const allowlistRule = filteringApi.findAllowlistRule({
+        const allowlistRule = await filteringApi.findAllowlistRule({
             requestUrl: documentUrl,
             frameUrl: documentUrl,
             requestType: RequestTypes.DOCUMENT,
@@ -369,7 +369,7 @@ export const webRequestService = (() => {
             return null;
         }
 
-        return filteringApi.getContentRulesForUrl(documentUrl);
+        return await filteringApi.getContentRulesForUrl(documentUrl);
     };
 
     /**
@@ -380,7 +380,7 @@ export const webRequestService = (() => {
      * @param requestType   Request type (DOCUMENT or SUBDOCUMENT)
      * @returns {Array}     Collection of rules or null
      */
-    const getCspRules = (tab, requestUrl, referrerUrl, requestType) => {
+    const getCspRules = async (tab, requestUrl, referrerUrl, requestType) => {
         if (frames.shouldStopRequestProcess(tab) === true) {
             // don't process request
             return null;
@@ -390,7 +390,7 @@ export const webRequestService = (() => {
 
         // @@||example.org^$document or @@||example.org^$urlblock —
         // disables all the $csp rules on all the pages matching the rule pattern.
-        const allowlistRule = filteringApi.findAllowlistRule({
+        const allowlistRule = await filteringApi.findAllowlistRule({
             requestUrl,
             frameUrl: referrerUrl,
             requestType: RequestTypes.DOCUMENT,
@@ -401,7 +401,7 @@ export const webRequestService = (() => {
             return null;
         }
 
-        return filteringApi.getCspRules({
+        return await filteringApi.getCspRules({
             requestUrl,
             frameUrl: referrerUrl,
             requestType,
@@ -417,7 +417,7 @@ export const webRequestService = (() => {
      * @param requestType   Request type
      * @returns {Array}     Collection of rules or null
      */
-    const getCookieRules = (tab, requestUrl, referrerUrl, requestType) => {
+    const getCookieRules = async (tab, requestUrl, referrerUrl, requestType) => {
         if (frames.shouldStopRequestProcess(tab) === true) {
             // Don't process request
             return null;
@@ -425,7 +425,7 @@ export const webRequestService = (() => {
 
         const frameRule = frames.getFrameRule(tab);
 
-        const allowlistRule = filteringApi.findAllowlistRule({
+        const allowlistRule = await filteringApi.findAllowlistRule({
             requestUrl,
             frameUrl: referrerUrl,
             requestType: RequestTypes.DOCUMENT,
@@ -438,7 +438,7 @@ export const webRequestService = (() => {
         }
 
         // Get all $cookie rules matching the specified request
-        return filteringApi.getCookieRules({
+        return await filteringApi.getCookieRules({
             requestUrl,
             frameUrl: referrerUrl,
             requestType,
@@ -454,7 +454,7 @@ export const webRequestService = (() => {
      * @param requestType
      * @returns {*} Collection of rules or null
      */
-    const getReplaceRules = (tab, requestUrl, referrerUrl, requestType) => {
+    const getReplaceRules = async (tab, requestUrl, referrerUrl, requestType) => {
         if (frames.shouldStopRequestProcess(tab) === true) {
             // don't process request
             return null;
@@ -462,7 +462,7 @@ export const webRequestService = (() => {
 
         const frameRule = frames.getFrameRule(tab);
 
-        const allowlistRule = filteringApi.findAllowlistRule({
+        const allowlistRule = await filteringApi.findAllowlistRule({
             requestUrl,
             frameUrl: referrerUrl,
             requestType: RequestTypes.DOCUMENT,
@@ -473,7 +473,7 @@ export const webRequestService = (() => {
             return null;
         }
 
-        return filteringApi.getReplaceRules({
+        return await filteringApi.getReplaceRules({
             requestUrl,
             frameUrl: referrerUrl,
             requestType,
@@ -490,7 +490,7 @@ export const webRequestService = (() => {
      * @param method
      * @returns {*} Collection of rules or null
      */
-    const removeParamFromUrl = (tab, requestUrl, referrerUrl, requestType, method) => {
+    const removeParamFromUrl = async (tab, requestUrl, referrerUrl, requestType, method) => {
         if (frames.shouldStopRequestProcess(tab) === true) {
             // don't process request
             return null;
@@ -504,7 +504,7 @@ export const webRequestService = (() => {
 
         const frameRule = frames.getFrameRule(tab);
 
-        const allowlistRule = filteringApi.findAllowlistRule({
+        const allowlistRule = await filteringApi.findAllowlistRule({
             requestUrl,
             frameUrl: referrerUrl,
             requestType: RequestTypes.DOCUMENT,
@@ -515,7 +515,7 @@ export const webRequestService = (() => {
             return null;
         }
 
-        const rules = filteringApi.getRemoveParamRules({
+        const rules = await filteringApi.getRemoveParamRules({
             requestUrl,
             frameUrl: referrerUrl,
             requestType,

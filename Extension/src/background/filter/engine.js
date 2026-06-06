@@ -28,7 +28,9 @@ export const engine = (() => {
     const ASYNC_LOAD_CHUNK_SIZE = 5 * 1000;
 
     let engine;
-
+    let pendingLists;
+    let engineInitializationPromise;
+    
     /**
      * Do not allow match requests until engine didn't load all rules
      * Otherwise engine can cache empty results for match requests
@@ -43,30 +45,65 @@ export const engine = (() => {
         // reset engine instance to avoid cached null values,
         // which may occur if try to get match result before all rules are loaded
         engine = null;
+        engineInitializationPromise = null;
+        pendingLists = lists;
 
-        const ruleStorage = new TSUrlFilter.RuleStorage(lists);
+        try {
+            const ruleStorage = new TSUrlFilter.RuleStorage(lists);
 
-        const config = {
-            engine: 'extension',
-            version: backgroundPage.app && backgroundPage.app.getVersion(),
-            verbose: true,
-            compatibility: TSUrlFilter.CompatibilityTypes.extension
-        };
+            const config = {
+                engine: 'extension',
+                version: backgroundPage.app && backgroundPage.app.getVersion(),
+                verbose: true,
+                compatibility: TSUrlFilter.CompatibilityTypes.extension
+            };
 
-        TSUrlFilter.setConfiguration(config);
+            TSUrlFilter.setConfiguration(config);
 
-        const engineInstance = new TSUrlFilter.Engine(ruleStorage, true);
+            const engineInstance = new TSUrlFilter.Engine(ruleStorage, true);
 
-        /*
-         * UI thread becomes blocked on the options page while request filter is created
-         * that's why we create filter rules using chunks of the specified length
-         * Request filter creation is rather slow operation so we should
-         * use setTimeout calls to give UI thread some time.
-        */
-        await engineInstance.loadRulesAsync(ASYNC_LOAD_CHUNK_SIZE);
+            /*
+             * UI thread becomes blocked on the options page while request filter is created
+             * that's why we create filter rules using chunks of the specified length
+             * Request filter creation is rather slow operation so we should
+             * use setTimeout calls to give UI thread some time.
+            */
+            await engineInstance.loadRulesAsync(ASYNC_LOAD_CHUNK_SIZE);
 
-        engine = engineInstance;
-        log.info('Starting url filter engine..ok');
+            engine = engineInstance;
+            log.info('Starting url filter engine..ok');
+        } catch (e) {
+            // Silently handle errors to avoid console pollution
+            // Engine will be retried on next request via ensureEngineReady
+            engine = null;
+        } finally {
+            engineInitializationPromise = null;
+        }
+    };
+
+    /**
+     * Ensures engine is ready, reinitializing if necessary.
+     * This is a self-healing mechanism to handle cases where engine becomes stale
+     * after browser suspend/resume or other lifecycle events.
+     * @returns {Promise<boolean>} true if engine is ready
+     */
+    const ensureEngineReady = async () => {
+        if (isReady()) {
+            return true;
+        }
+
+        if (engineInitializationPromise) {
+            await engineInitializationPromise;
+            return isReady();
+        }
+
+        if (pendingLists) {
+            engineInitializationPromise = startEngine(pendingLists);
+            await engineInitializationPromise;
+            return isReady();
+        }
+
+        return false;
     };
 
     /**
@@ -84,7 +121,7 @@ export const engine = (() => {
      * @param {MatchQuery} matchQuery - {@link MatchQuery}
      * @returns matching result or null
      */
-    const matchRequest = (matchQuery) => {
+    const matchRequest = async (matchQuery) => {
         const {
             requestUrl,
             frameUrl,
@@ -100,8 +137,9 @@ export const engine = (() => {
             requestType
         );
 
+        await ensureEngineReady();
+
         if (isReady() === false) {
-            log.warn('Filtering engine is not ready');
             return null;
         }
 
@@ -134,9 +172,10 @@ export const engine = (() => {
      * @param frameUrl    Frame URL
      * @returns matching result or null
      */
-    const matchFrame = (frameUrl) => {
+    const matchFrame = async (frameUrl) => {
+        await ensureEngineReady();
+
         if (isReady() === false) {
-            log.warn('Filtering engine is not ready');
             return null;
         }
 
@@ -150,7 +189,9 @@ export const engine = (() => {
      * @param option
      * @returns CosmeticResult result
      */
-    const getCosmeticResult = (url, option) => {
+    const getCosmeticResult = async (url, option) => {
+        await ensureEngineReady();
+
         if (isReady() === false) {
             return new TSUrlFilter.CosmeticResult();
         }
@@ -172,6 +213,7 @@ export const engine = (() => {
         startEngine,
         getRulesCount,
         isReady,
+        ensureEngineReady,
 
         matchRequest,
         matchFrame,

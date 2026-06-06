@@ -181,8 +181,8 @@ export const RequestFilter = (() => {
          *
          * @param {MatchQuery} matchQuery - {@link MatchQuery}
          */
-        getMatchingResult(matchQuery) {
-            const result = engine.matchRequest(matchQuery);
+        async getMatchingResult(matchQuery) {
+            const result = await engine.matchRequest(matchQuery);
 
             if (!result) {
                 return new TSUrlFilter.MatchingResult([], null);
@@ -198,8 +198,8 @@ export const RequestFilter = (() => {
          *
          * @returns NetworkRule found or null
          */
-        findAllowlistRule(matchQuery) {
-            const result = this.getMatchingResult(matchQuery);
+        async findAllowlistRule(matchQuery) {
+            const result = await this.getMatchingResult(matchQuery);
 
             const basicResult = result.getBasicResult();
             if (basicResult && basicResult.isAllowlist()) {
@@ -209,8 +209,8 @@ export const RequestFilter = (() => {
             return null;
         }
 
-        findDocumentRule(documentUrl) {
-            return engine.matchFrame(documentUrl);
+        async findDocumentRule(documentUrl) {
+            return await engine.matchFrame(documentUrl);
         }
 
         /**
@@ -220,8 +220,8 @@ export const RequestFilter = (() => {
          *
          * @returns NetworkRule found or null
          */
-        findStealthAllowlistRule(matchQuery) {
-            const result = this.getMatchingResult(matchQuery);
+        async findStealthAllowlistRule(matchQuery) {
+            const result = await this.getMatchingResult(matchQuery);
             return result.stealthRule;
         }
 
@@ -231,8 +231,8 @@ export const RequestFilter = (() => {
          * @param {MatchQuery} matchQuery - {@link MatchQuery}
          * @returns NetworkRule found or null
          */
-        findRuleForRequest(matchQuery) {
-            const result = this.getMatchingResult(matchQuery);
+        async findRuleForRequest(matchQuery) {
+            const result = await this.getMatchingResult(matchQuery);
             return result.getBasicResult();
         }
 
@@ -242,8 +242,8 @@ export const RequestFilter = (() => {
          * @param documentUrl Document URL
          * @returns CosmeticRule[] of content rules
          */
-        getContentRulesForUrl(documentUrl) {
-            const cosmeticResult = engine.getCosmeticResult(documentUrl, TSUrlFilter.CosmeticOption.CosmeticOptionHtml);
+        async getContentRulesForUrl(documentUrl) {
+            const cosmeticResult = await engine.getCosmeticResult(documentUrl, TSUrlFilter.CosmeticOption.CosmeticOptionHtml);
 
             return cosmeticResult.Html.getRules();
         }
@@ -254,8 +254,8 @@ export const RequestFilter = (() => {
          * @param {MatchQuery} matchQuery - {@link MatchQuery}
          * @returns NetworkRule[] of CSP rules for applying to the request or null
          */
-        findCspRules(matchQuery) {
-            const result = this.getMatchingResult(matchQuery);
+        async findCspRules(matchQuery) {
+            const result = await this.getMatchingResult(matchQuery);
             return result.getCspRules();
         }
 
@@ -265,8 +265,8 @@ export const RequestFilter = (() => {
          * @param {MatchQuery} matchQuery - {@link MatchQuery}
          * @returns NetworkRule[] matching
          */
-        findReplaceRules(matchQuery) {
-            const result = this.getMatchingResult(matchQuery);
+        async findReplaceRules(matchQuery) {
+            const result = await this.getMatchingResult(matchQuery);
             return result.getReplaceRules();
         }
 
@@ -276,8 +276,8 @@ export const RequestFilter = (() => {
          * @param {MatchQuery} matchQuery - {@link MatchQuery}
          * @returns NetworkRule[] matching
          */
-        findCookieRules(matchQuery) {
-            const result = this.getMatchingResult(matchQuery);
+        async findCookieRules(matchQuery) {
+            const result = await this.getMatchingResult(matchQuery);
             return result.getCookieRules();
         }
     }
