@@ -5,6 +5,18 @@
     "short_name": {
         "message": "AdGuard"
     },
+    "filters_download_confirm_title": {
+        "message": "డిఫాల్ట్ సెట్టింగ్‌లు మరియు ఫిల్టర్లను ఉపయోగించండి"
+    },
+    "filters_download_confirm_text": {
+        "message": "మీరు డిఫాల్ట్ సెట్టింగ్‌లు మరియు ఫిల్టర్లను ఉపయోగించాలనుకుంటున్నారా?"
+    },
+    "yes_button_title": {
+        "message": "అవును"
+    },
+    "no_button_title": {
+        "message": "కాదు"
+    },
     "description": {
         "message": "Unmatched adblock extension against advertising and pop-ups. Blocks ads on Facebook, Youtube and all other websites."
     }

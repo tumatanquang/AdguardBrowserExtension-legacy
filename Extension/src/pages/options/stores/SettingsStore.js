@@ -60,6 +60,8 @@ class SettingsStore {
 
     @observable rulesCount = 0;
 
+    @observable userRulesLastUpdateTime = 0;
+
     @observable allowAcceptableAds = false;
 
     @observable blockKnownTrackers = null;
@@ -129,6 +131,7 @@ class SettingsStore {
                 this.setGroups(data.filtersMetadata.categories);
             }
             this.rulesCount = data.filtersInfo.rulesCount;
+            this.userRulesLastUpdateTime = data.filtersInfo.userRulesLastUpdateTime || 0;
             this.version = data.appVersion;
             this.constants = data.constants;
             this.setAllowAcceptableAds(data.filtersMetadata.filters);
@@ -283,7 +286,8 @@ class SettingsStore {
 
     @computed
     get lastUpdateTime() {
-        return Math.max(...this.filters.map(filter => filter.lastCheckTime || 0));
+        const filtersTime = Math.max(...this.filters.map(filter => filter.lastCheckTime || 0));
+        return Math.max(filtersTime, this.userRulesLastUpdateTime || 0);
     }
 
     @action

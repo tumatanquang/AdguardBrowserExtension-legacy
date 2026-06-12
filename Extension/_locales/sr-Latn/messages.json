@@ -407,6 +407,12 @@
     "alert_popup_filter_enabled_desc": {
         "message": "%filter_name% je automatski aktiviran."
     },
+    "filters_download_confirm_title": {
+        "message": "Koristi podrazumevana podešavanja i filtere"
+    },
+    "filters_download_confirm_text": {
+        "message": "Da li želite da koristite podrazumevana podešavanja i filtere?"
+    },
     "filters_download_title": {
         "message": "Baza filtera se učitava..."
     },
@@ -1042,6 +1048,12 @@
     },
     "text_collapser_hide_default": {
         "message": "Sakrij pun tekst"
+    },
+    "yes_button_title": {
+        "message": "Da"
+    },
+    "no_button_title": {
+        "message": "Ne"
     },
     "close_button_title": {
         "message": "zatvori"

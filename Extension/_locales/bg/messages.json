@@ -155,6 +155,12 @@
     "alert_popup_filter_enabled_title": {
         "message": "Автоматична активация на филтрите"
     },
+    "filters_download_confirm_title": {
+        "message": "Използване на настройките и филтрите по подразбиране"
+    },
+    "filters_download_confirm_text": {
+        "message": "Искате ли да използвате настройките и филтрите по подразбиране?"
+    },
     "filtering_modal_important": {
         "message": "Задай висок приоритет за правилото"
     },
@@ -379,6 +385,12 @@
     },
     "blocking_pages_advanced_button": {
         "message": "Разширени"
+    },
+    "yes_button_title": {
+        "message": "Да"
+    },
+    "no_button_title": {
+        "message": "Не"
     },
     "close_button_title": {
         "message": "Затвори"

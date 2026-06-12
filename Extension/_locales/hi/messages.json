@@ -80,6 +80,12 @@
     "name": {
         "message": "एडवर्ड टब्लिकर"
     },
+    "yes_button_title": {
+        "message": "हाँ"
+    },
+    "no_button_title": {
+        "message": "नहीं"
+    },
     "description": {
         "message": "विज्ञापन और पॉप अप के खिलाफ बेजोड़ एडब्लॉक विस्तारफेसबुक, यूट्यूब और अन्य सभी वेबसाइटों पर विज्ञापन ब्लॉक करता है"
     },
@@ -331,6 +337,12 @@
     },
     "alert_popup_filter_enabled_title": {
         "message": "\tफ़िल्टर का स्वतः सक्रियण"
+    },
+    "filters_download_confirm_title": {
+        "message": "डिफ़ॉल्ट सेटिंग्स और फ़िल्टर का उपयोग करें"
+    },
+    "filters_download_confirm_text": {
+        "message": "क्या आप डिफ़ॉल्ट सेटिंग्स और फ़िल्टर का उपयोग करना चाहते हैं?"
     },
     "filtering_modal_element": {
         "message": "तत्व:"

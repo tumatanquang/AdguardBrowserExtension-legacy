@@ -20,6 +20,7 @@ import { RequestFilter } from './request-filter';
 import { listeners } from '../notifier';
 import { applicationUpdateService } from '../update-service';
 import { subscriptions } from './filters/subscription';
+import { filtersState } from './filters/filters-state';
 import { utils } from '../utils/common';
 import { settings } from '../settings/user-settings';
 import { log } from '../../common/log';
@@ -176,8 +177,12 @@ export const antiBannerService = (() => {
      */
     const getRequestFilterInfo = () => {
         const rulesCount = requestFilter ? requestFilter.getRulesCount() : 0;
+        const filtersVersionInfo = filtersState.getFiltersVersion();
+        const userRulesVersionInfo = filtersVersionInfo[utils.filters.USER_FILTER_ID];
+        const userRulesLastUpdateTime = userRulesVersionInfo ? userRulesVersionInfo.lastCheckTime : 0;
         return {
-            rulesCount
+            rulesCount,
+            userRulesLastUpdateTime
         };
     };
 
@@ -634,6 +639,12 @@ export const antiBannerService = (() => {
         await rulesStorage.write(filterId, rulesTextToSave);
         // notify that user rules were saved, to update saving button on options page
         if (Number.parseInt(filterId, 10) === utils.filters.USER_FILTER_ID) {
+            filtersState.updateFilterVersion({
+                filterId: utils.filters.USER_FILTER_ID,
+                version: '1.0',
+                lastCheckTime: Date.now(),
+                lastUpdateTime: Date.now()
+            });
             listeners.notifyListeners(listeners.USER_FILTER_UPDATED);
         }
     };

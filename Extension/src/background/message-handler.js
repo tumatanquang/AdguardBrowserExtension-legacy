@@ -588,8 +588,8 @@ const createMessageHandler = () => {
                 break;
             }
             case MESSAGE_TYPES.GET_FILTERING_INFO_BY_TAB_ID: {
-                const { tabId } = data;
-                return filteringLog.getFilteringInfoByTabId(tabId);
+                const { tabId, lastEventId } = data;
+                return filteringLog.getFilteringInfoByTabId(tabId, lastEventId);
             }
             case MESSAGE_TYPES.SYNCHRONIZE_OPEN_TABS: {
                 return filteringLog.synchronizeOpenTabs();

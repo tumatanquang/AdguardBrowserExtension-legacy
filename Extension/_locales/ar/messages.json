@@ -407,6 +407,12 @@
     "alert_popup_filter_enabled_desc": {
         "message": "%filter_name% تم تنشيطه تلقائيا."
     },
+    "filters_download_confirm_title": {
+        "message": "استخدام الإعدادات والفلاتر الافتراضية"
+    },
+    "filters_download_confirm_text": {
+        "message": "هل تريد استخدام الإعدادات والفلاتر الافتراضية؟"
+    },
     "filters_download_title": {
         "message": "قاعدة بيانات الفلاتر قيد التحميل..."
     },
@@ -1033,6 +1039,12 @@
     },
     "text_collapser_hide_default": {
         "message": "إخفاء النص بالكامل"
+    },
+    "yes_button_title": {
+        "message": "نعم"
+    },
+    "no_button_title": {
+        "message": "لا"
     },
     "close_button_title": {
         "message": "إغلاق"

@@ -407,6 +407,12 @@
     "alert_popup_filter_enabled_desc": {
         "message": "Το %filter_name% ενεργοποιήθηκε αυτόματα"
     },
+    "filters_download_confirm_title": {
+        "message": "Χρήση προεπιλεγμένων ρυθμίσεων και φίλτρων"
+    },
+    "filters_download_confirm_text": {
+        "message": "Θέλετε να χρησιμοποιήσετε τις προεπιλεγμένες ρυθμίσεις και φίλτρα;"
+    },
     "filters_download_title": {
         "message": "Η βάση δεδομένων φίλτρων φορτώνει..."
     },
@@ -1042,6 +1048,12 @@
     },
     "text_collapser_hide_default": {
         "message": "Απόκρυψη πλήρους κειμένου"
+    },
+    "yes_button_title": {
+        "message": "Ναι"
+    },
+    "no_button_title": {
+        "message": "Όχι"
     },
     "close_button_title": {
         "message": "Κλείσιμο"

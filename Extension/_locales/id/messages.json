@@ -407,6 +407,12 @@
     "alert_popup_filter_enabled_desc": {
         "message": "%filter_name% telah diaktifkan secara otomatis."
     },
+    "filters_download_confirm_title": {
+        "message": "Gunakan pengaturan dan penyaring default"
+    },
+    "filters_download_confirm_text": {
+        "message": "Apakah Anda ingin menggunakan pengaturan dan penyaring default?"
+    },
     "filters_download_title": {
         "message": "Memuat basis data penyaring..."
     },
@@ -1003,6 +1009,12 @@
     },
     "blocking_pages_btn_proceed": {
         "message": "Tetap melanjutkan"
+    },
+    "yes_button_title": {
+        "message": "Ya"
+    },
+    "no_button_title": {
+        "message": "Tidak"
     },
     "close_button_title": {
         "message": "Tutup"

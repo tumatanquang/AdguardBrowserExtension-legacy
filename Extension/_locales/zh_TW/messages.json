@@ -407,6 +407,12 @@
     "alert_popup_filter_enabled_desc": {
         "message": "%filter_name% 已被自動地啟動。"
     },
+    "filters_download_confirm_title": {
+        "message": "使用預設設定和篩選器"
+    },
+    "filters_download_confirm_text": {
+        "message": "您要使用預設設定和篩選器嗎？"
+    },
     "filters_download_title": {
         "message": "過濾器資料庫正在載入…"
     },
@@ -1042,6 +1048,12 @@
     },
     "text_collapser_hide_default": {
         "message": "隱藏全文"
+    },
+    "yes_button_title": {
+        "message": "是"
+    },
+    "no_button_title": {
+        "message": "否"
     },
     "close_button_title": {
         "message": "關閉"

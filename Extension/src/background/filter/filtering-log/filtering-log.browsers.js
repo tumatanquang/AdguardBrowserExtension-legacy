@@ -86,9 +86,27 @@ const browsersFilteringLog = (() => {
     /**
      * Get filtering info for tab
      * @param tabId
+     * @param lastEventId
      */
-    const getFilteringInfoByTabId = (tabId) => {
-        return tabsInfoMap[tabId];
+    const getFilteringInfoByTabId = (tabId, lastEventId) => {
+        const tabInfo = tabsInfoMap[tabId];
+        if (!tabInfo) {
+            return null;
+        }
+
+        const events = tabInfo.filteringEvents || [];
+        const currentLastEventId = events.length > 0 ? events[events.length - 1].eventId : null;
+
+        if (lastEventId && currentLastEventId === lastEventId) {
+            return {
+                unchanged: true,
+                tabId: tabInfo.tabId,
+                title: tabInfo.title,
+                isExtensionTab: tabInfo.isExtensionTab
+            };
+        }
+
+        return tabInfo;
     };
 
     /**

@@ -5,6 +5,18 @@
     "short_name": {
         "message": "AdGuard"
     },
+    "filters_download_confirm_title": {
+        "message": "இயல்புநிலை அமைப்புகள் மற்றும் வடிப்பான்களைப் பயன்படுத்தவும்"
+    },
+    "filters_download_confirm_text": {
+        "message": "இயல்புநிலை அமைப்புகள் மற்றும் வடிப்பான்களைப் பயன்படுத்த விரும்புகிறீர்களா?"
+    },
+    "yes_button_title": {
+        "message": "ஆம்"
+    },
+    "no_button_title": {
+        "message": "இல்லை"
+    },
     "description": {
         "message": "Unmatched adblock extension against advertising and pop-ups. Blocks ads on Facebook, Youtube and all other websites."
     }

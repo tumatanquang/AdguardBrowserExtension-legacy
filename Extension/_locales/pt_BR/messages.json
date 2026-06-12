@@ -407,6 +407,12 @@
     "alert_popup_filter_enabled_desc": {
         "message": "%filter_name% foi ativado com sucesso."
     },
+    "filters_download_confirm_title": {
+        "message": "Usar configurações e filtros padrão"
+    },
+    "filters_download_confirm_text": {
+        "message": "Deseja usar as configurações e filtros padrão?"
+    },
     "filters_download_title": {
         "message": "O banco de dados de filtros está carregando..."
     },
@@ -1042,6 +1048,12 @@
     },
     "text_collapser_hide_default": {
         "message": "Ocultar texto completo"
+    },
+    "yes_button_title": {
+        "message": "Sim"
+    },
+    "no_button_title": {
+        "message": "Não"
     },
     "close_button_title": {
         "message": "Fechar"

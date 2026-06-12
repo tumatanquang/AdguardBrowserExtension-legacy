@@ -103,20 +103,18 @@ const webrequestInit = () => {
 
         switch (requestType) {
             case RequestTypes.DOCUMENT:
-            // Reset tab button state
+                // Reset tab button state
                 listeners.notifyListeners(listeners.UPDATE_TAB_BUTTON_STATE, tab, true);
 
                 /**
-             * Just to remember!
-             * In the case of the "about:newtab" pages we don't receive onResponseReceived event for the main_frame
-             * Also if chrome://newtab is overwritten, we won't receive any webRequest events for the main_frame
-             * Unfortunately, we can't do anything in this case and just must remember about it
-             */
-
-                /**
-             * Binds rule to the main_frame request
-             * In integration mode, rule from the headers will override this value
-             */
+                 * Just to remember!
+                 * In the case of the "about:newtab" pages we don't receive onResponseReceived event for the main_frame
+                 * Also if chrome://newtab is overwritten, we won't receive any webRequest events for the main_frame
+                 * Unfortunately, we can't do anything in this case and just must remember about it
+                 *
+                 * Binds rule to the main_frame request
+                 * In integration mode, rule from the headers will override this value
+                 */
                 const tabRequestRule = frames.getFrameRule(tab);
                 if (tabRequestRule) {
                     requestContextStorage.update(requestId, { requestRule: tabRequestRule });
@@ -319,7 +317,7 @@ const webrequestInit = () => {
 
         switch (requestType) {
             case RequestTypes.DOCUMENT:
-            // Save ref header
+                // Save ref header
                 const refHeader = browserUtils.findHeaderByName(requestHeaders, 'Referer');
                 if (refHeader) {
                     frames.recordFrameReferrerHeader(tab, refHeader.value);

@@ -407,6 +407,12 @@
     "alert_popup_filter_enabled_desc": {
         "message": "%filter_name%\" bol aktivovaný automaticky."
     },
+    "filters_download_confirm_title": {
+        "message": "Použiť predvolené nastavenia a filtre"
+    },
+    "filters_download_confirm_text": {
+        "message": "Chcete použiť predvolené nastavenia a filtre?"
+    },
     "filters_download_title": {
         "message": "Zavádza sa databáza filtrov..."
     },
@@ -1021,6 +1027,12 @@
     },
     "text_collapser_hide_default": {
         "message": "Skryť celý text"
+    },
+    "yes_button_title": {
+        "message": "Áno"
+    },
+    "no_button_title": {
+        "message": "Nie"
     },
     "close_button_title": {
         "message": "Ukončiť"

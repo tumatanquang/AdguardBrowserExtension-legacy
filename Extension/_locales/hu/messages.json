@@ -407,6 +407,12 @@
     "alert_popup_filter_enabled_desc": {
         "message": "%filter_name%\" automatikusan bekapcsolva."
     },
+    "filters_download_confirm_title": {
+        "message": "Alapértelmezett beállítások és szűrők használata"
+    },
+    "filters_download_confirm_text": {
+        "message": "Szeretné az alapértelmezett beállításokat és szűrőket használni?"
+    },
     "filters_download_title": {
         "message": "A szűrők adatbázisa töltődik..."
     },
@@ -1042,6 +1048,12 @@
     },
     "text_collapser_hide_default": {
         "message": "Teljes szöveg elrejtése"
+    },
+    "yes_button_title": {
+        "message": "Igen"
+    },
+    "no_button_title": {
+        "message": "Nem"
     },
     "close_button_title": {
         "message": "Bezárás"

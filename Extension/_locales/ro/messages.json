@@ -407,6 +407,12 @@
     "alert_popup_filter_enabled_desc": {
         "message": "%filter_name% a fost activat automat"
     },
+    "filters_download_confirm_title": {
+        "message": "Utilizați setările și filtrele implicite"
+    },
+    "filters_download_confirm_text": {
+        "message": "Doriți să utilizați setările și filtrele implicite?"
+    },
     "filters_download_title": {
         "message": "Baza de date a filtrelor se încarcă..."
     },
@@ -1042,6 +1048,12 @@
     },
     "text_collapser_hide_default": {
         "message": "Ascundeți textul complet"
+    },
+    "yes_button_title": {
+        "message": "Da"
+    },
+    "no_button_title": {
+        "message": "Nu"
     },
     "close_button_title": {
         "message": "Închideți"

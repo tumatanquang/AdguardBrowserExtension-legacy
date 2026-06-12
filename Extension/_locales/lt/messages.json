@@ -407,6 +407,12 @@
     "alert_popup_filter_enabled_desc": {
         "message": "%filter_name% buvo aktyvuotas automatiškai"
     },
+    "filters_download_confirm_title": {
+        "message": "Naudoti numatytuosius nustatymus ir filtrus"
+    },
+    "filters_download_confirm_text": {
+        "message": "Ar norite naudoti numatytuosius nustatymus ir filtrus?"
+    },
     "filters_download_title": {
         "message": "Įkeliama filtrų duomenų bazė..."
     },
@@ -1042,6 +1048,12 @@
     },
     "text_collapser_hide_default": {
         "message": "Slėpti visą tekstą"
+    },
+    "yes_button_title": {
+        "message": "Taip"
+    },
+    "no_button_title": {
+        "message": "Ne"
     },
     "close_button_title": {
         "message": "Uždaryti"

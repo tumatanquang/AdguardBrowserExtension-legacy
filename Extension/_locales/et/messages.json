@@ -80,6 +80,12 @@
     "name": {
         "message": "AdGuardi reklaamiblokeerija"
     },
+    "yes_button_title": {
+        "message": "Jah"
+    },
+    "no_button_title": {
+        "message": "Ei"
+    },
     "description": {
         "message": "Konkurentsitult parim reklaamiblokeerija, mis blokeerib reklaame ja hüpikaknaid kõikjal, sh Facebookis, Youtubes ja teistel lehtedel."
     },
@@ -331,6 +337,12 @@
     },
     "alert_popup_filter_enabled_title": {
         "message": "Toimus automaatne filtri aktiveerimine"
+    },
+    "filters_download_confirm_title": {
+        "message": "Kasuta vaikesätteid ja filtreid"
+    },
+    "filters_download_confirm_text": {
+        "message": "Kas soovid kasutada vaikesätteid ja filtreid?"
     },
     "filtering_modal_element": {
         "message": "Element:"

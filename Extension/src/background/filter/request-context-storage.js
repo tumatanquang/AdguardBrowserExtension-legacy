@@ -106,7 +106,7 @@ export const requestContextStorage = (() => {
      * @param headers Headers to copy
      * @return {{name: *, value: *}[]}
      */
-    const copyHeaders = (headers) => (headers || []).map(h => ({ name: h.name, value: h.value }));
+    const copyHeaders = headers => (headers || []).map(h => ({ name: h.name, value: h.value }));
 
     /**
      * Generates next event identifier
@@ -120,7 +120,7 @@ export const requestContextStorage = (() => {
      * Gets request context
      * @param {string} requestId Request identifier
      */
-    const get = (requestId) => {
+    const get = requestId => {
         return contexts.get(String(requestId));
     };
 
@@ -312,7 +312,7 @@ export const requestContextStorage = (() => {
      *
      * @param {string} requestId Request identifier
      */
-    const remove = (requestId) => {
+    const remove = requestId => {
         const context = contexts.get(String(requestId));
         if (!context) {
             return;
@@ -433,7 +433,7 @@ export const requestContextStorage = (() => {
      *
      * @param {string} requestId Request identifier
      */
-    const onContentModificationStarted = (requestId) => {
+    const onContentModificationStarted = requestId => {
         update(requestId, { contentModifyingState: States.PROCESSING });
     };
 
@@ -442,10 +442,21 @@ export const requestContextStorage = (() => {
      *
      * @param {string} requestId Request identifier
      */
-    const onContentModificationFinished = (requestId) => {
+    const onContentModificationFinished = requestId => {
         update(requestId, { contentModifyingState: States.DONE });
         remove(requestId);
     };
+
+    // Periodic cleanup of stale contexts to prevent memory leaks
+    setInterval(() => {
+        const now = Date.now();
+        const MAX_CONTEXT_AGE = 5 * 60 * 1000; // 5 minutes
+        contexts.forEach((context, requestId) => {
+            if (now - context.timestamp > MAX_CONTEXT_AGE) {
+                contexts.delete(requestId);
+            }
+        });
+    }, 60 * 1000); // Check every minute
 
     // Expose
     return {

@@ -83,6 +83,12 @@
     "alert_popup_filter_enabled_title": {
         "message": "Auto-aktifkan penyaring"
     },
+    "filters_download_confirm_title": {
+        "message": "Gunakan tetapan dan penapis lalai"
+    },
+    "filters_download_confirm_text": {
+        "message": "Adakah anda mahu menggunakan tetapan dan penapis lalai?"
+    },
     "filtering_modal_important": {
         "message": "Beri keutamaan lebih tinggi kepada peraturan"
     },
@@ -199,6 +205,12 @@
     },
     "short_name": {
         "message": "AdGuard"
+    },
+    "yes_button_title": {
+        "message": "Ya"
+    },
+    "no_button_title": {
+        "message": "Tidak"
     },
     "description": {
         "message": "Unmatched adblock extension against advertising and pop-ups. Blocks ads on Facebook, YouTube and all other websites."

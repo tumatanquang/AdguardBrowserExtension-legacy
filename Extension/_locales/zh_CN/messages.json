@@ -407,6 +407,12 @@
     "alert_popup_filter_enabled_desc": {
         "message": "%filter_name% 已被自动激活。"
     },
+    "filters_download_confirm_title": {
+        "message": "使用默认设置和过滤器"
+    },
+    "filters_download_confirm_text": {
+        "message": "是否要使用默认设置和过滤器？"
+    },
     "filters_download_title": {
         "message": "正在加载过滤器数据库..."
     },
@@ -1042,6 +1048,12 @@
     },
     "text_collapser_hide_default": {
         "message": "隐藏完整文本"
+    },
+    "yes_button_title": {
+        "message": "是"
+    },
+    "no_button_title": {
+        "message": "否"
     },
     "close_button_title": {
         "message": "关闭"

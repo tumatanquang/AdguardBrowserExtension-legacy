@@ -5,6 +5,18 @@
     "short_name": {
         "message": "AdGuard"
     },
+    "filters_download_confirm_title": {
+        "message": "Izmantot noklusējuma iestatījumus un filtrus"
+    },
+    "filters_download_confirm_text": {
+        "message": "Vai vēlaties izmantot noklusējuma iestatījumus un filtrus?"
+    },
+    "yes_button_title": {
+        "message": "Jā"
+    },
+    "no_button_title": {
+        "message": "Nē"
+    },
     "description": {
         "message": "Unmatched adblock extension against advertising and pop-ups. Blocks ads on Facebook, Youtube and all other websites."
     }

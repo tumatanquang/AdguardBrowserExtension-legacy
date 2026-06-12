@@ -407,6 +407,12 @@
     "alert_popup_filter_enabled_desc": {
         "message": "%filter_name%\" er blevet aktiveret automatisk."
     },
+    "filters_download_confirm_title": {
+        "message": "Brug standardindstillinger og filtre"
+    },
+    "filters_download_confirm_text": {
+        "message": "Vil du bruge standardindstillinger og filtre?"
+    },
     "filters_download_title": {
         "message": "Filterdatabasen indlæses..."
     },
@@ -1042,6 +1048,12 @@
     },
     "text_collapser_hide_default": {
         "message": "Skjul fuld tekst"
+    },
+    "yes_button_title": {
+        "message": "Ja"
+    },
+    "no_button_title": {
+        "message": "Nej"
     },
     "close_button_title": {
         "message": "Luk"

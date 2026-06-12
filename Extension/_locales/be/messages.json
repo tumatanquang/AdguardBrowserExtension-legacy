@@ -407,6 +407,12 @@
     "alert_popup_filter_enabled_desc": {
         "message": "%filter_name%\" быў падключаны аўтаматычна."
     },
+    "filters_download_confirm_title": {
+        "message": "Выкарыстоўваць стандартныя налады і фільтры"
+    },
+    "filters_download_confirm_text": {
+        "message": "Хочаце выкарыстоўваць стандартныя налады і фільтры?"
+    },
     "filters_download_title": {
         "message": "Загрузка базы фільтраў..."
     },
@@ -1042,6 +1048,12 @@
     },
     "text_collapser_hide_default": {
         "message": "Схаваць поўны тэкст"
+    },
+    "yes_button_title": {
+        "message": "Так"
+    },
+    "no_button_title": {
+        "message": "Не"
     },
     "close_button_title": {
         "message": "Закрыць"

@@ -407,6 +407,12 @@
     "alert_popup_filter_enabled_desc": {
         "message": "%filter_name% aktivoitiin automaattisesti."
     },
+    "filters_download_confirm_title": {
+        "message": "Käytä oletusasetuksia ja suodattimia"
+    },
+    "filters_download_confirm_text": {
+        "message": "Haluatko käyttää oletusasetuksia ja suodattimia?"
+    },
     "filters_download_title": {
         "message": "Suodatintietokanta latautuu..."
     },
@@ -1042,6 +1048,12 @@
     },
     "text_collapser_hide_default": {
         "message": "Piilota koko teksti"
+    },
+    "yes_button_title": {
+        "message": "Kyllä"
+    },
+    "no_button_title": {
+        "message": "Ei"
     },
     "close_button_title": {
         "message": "Sulje"

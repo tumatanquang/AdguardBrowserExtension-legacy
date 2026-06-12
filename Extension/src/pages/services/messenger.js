@@ -259,8 +259,8 @@ class Messenger {
         await this.sendMessage(MESSAGE_TYPES.ON_CLOSE_FILTERING_LOG_PAGE);
     }
 
-    async getFilteringInfoByTabId(tabId) {
-        return this.sendMessage(MESSAGE_TYPES.GET_FILTERING_INFO_BY_TAB_ID, { tabId });
+    async getFilteringInfoByTabId(tabId, lastEventId) {
+        return this.sendMessage(MESSAGE_TYPES.GET_FILTERING_INFO_BY_TAB_ID, { tabId, lastEventId });
     }
 
     async synchronizeOpenTabs() {
